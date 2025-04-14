@@ -13,6 +13,7 @@ import TicketDashboard from "./pages/TicketDashboard";
 import TicketDetail from "./pages/TicketDetail";
 import CreateTicket from "./pages/CreateTicket";
 import KnowledgeBase from "./pages/KnowledgeBase";
+import Settings from "./pages/Settings";
 
 const queryClient = new QueryClient();
 
@@ -31,6 +32,7 @@ const App = () => (
           <Route path="/tickets/new" element={<CreateTicket />} />
           <Route path="/tickets/:id" element={<TicketDetail />} />
           <Route path="/knowledge" element={<KnowledgeBase />} />
+          <Route path="/settings" element={<Settings />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
