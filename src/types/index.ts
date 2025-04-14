@@ -1,0 +1,84 @@
+
+export type User = {
+  id: string;
+  email: string;
+  name: string;
+  role: "admin" | "agent" | "client";
+  companyId: string;
+};
+
+export type Company = {
+  id: string;
+  name: string;
+  domain: string;
+  supportEmail?: string;
+  plan: "free" | "basic" | "premium";
+  createdAt: Date;
+};
+
+export type TicketStatus = 
+  | "new" 
+  | "waiting_for_client" 
+  | "waiting_for_agent" 
+  | "in_progress" 
+  | "resolved" 
+  | "closed";
+
+export type TicketPriority = "low" | "medium" | "high" | "critical";
+
+export type TicketCategory = 
+  | "technical_issue" 
+  | "feature_request" 
+  | "billing" 
+  | "general_inquiry" 
+  | "other";
+
+export type Ticket = {
+  id: string;
+  title: string;
+  description: string;
+  status: TicketStatus;
+  priority: TicketPriority;
+  category: TicketCategory;
+  userId: string;
+  agentId?: string;
+  companyId: string;
+  createdAt: Date;
+  updatedAt: Date;
+  source: "web" | "email" | "whatsapp";
+  aiProcessed: boolean;
+  needsHumanReview: boolean;
+};
+
+export type Attachment = {
+  id: string;
+  fileName: string;
+  fileType: string;
+  fileSize: number;
+  fileUrl: string;
+  ticketId: string;
+  messageId?: string;
+  createdAt: Date;
+};
+
+export type Message = {
+  id: string;
+  content: string;
+  ticketId: string;
+  userId: string;
+  createdAt: Date;
+  isFromClient: boolean;
+  isAutomatic: boolean;
+};
+
+export type KnowledgeArticle = {
+  id: string;
+  title: string;
+  content: string;
+  ticketId?: string;
+  keywords: string[];
+  companyId: string;
+  createdAt: Date;
+  updatedAt: Date;
+  isPublic: boolean;
+};
