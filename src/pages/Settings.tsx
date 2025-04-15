@@ -1,6 +1,7 @@
-
 import React, { useState, useEffect } from "react";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { useTheme } from "next-themes";
+import { Moon, Sun } from "lucide-react";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -13,6 +14,18 @@ const Settings = () => {
   const [n8nWebhookUrl, setN8nWebhookUrl] = useState<string>("");
   const [enableAiProcessing, setEnableAiProcessing] = useState<boolean>(true);
   const [isSaving, setIsSaving] = useState<boolean>(false);
+  const { theme, setTheme } = useTheme();
+  const [isDarkMode, setIsDarkMode] = useState(theme === "dark");
+
+  const toggleTheme = (checked: boolean) => {
+    setIsDarkMode(checked);
+    setTheme(checked ? "dark" : "light");
+    
+    toast({
+      title: checked ? "Tema escuro ativado" : "Tema claro ativado",
+      description: `Você mudou para o tema ${checked ? 'escuro' : 'claro'}.`
+    });
+  };
 
   // Em um app real, isso viria do Supabase
   useEffect(() => {
@@ -97,6 +110,33 @@ const Settings = () => {
     }
   };
 
+  // Modify the General tab content
+  const renderGeneralTab = () => (
+    <TabsContent value="general">
+      <Card>
+        <CardHeader>
+          <CardTitle>Configurações Gerais</CardTitle>
+          <CardDescription>
+            Configure as opções básicas do sistema
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-2">
+              {isDarkMode ? <Moon className="h-5 w-5" /> : <Sun className="h-5 w-5" />}
+              <Label htmlFor="theme-toggle">Tema Escuro</Label>
+            </div>
+            <Switch
+              id="theme-toggle"
+              checked={isDarkMode}
+              onCheckedChange={toggleTheme}
+            />
+          </div>
+        </CardContent>
+      </Card>
+    </TabsContent>
+  );
+
   return (
     <div className="container mx-auto py-8 px-4">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
@@ -115,6 +155,8 @@ const Settings = () => {
           <TabsTrigger value="notifications">Notificações</TabsTrigger>
           <TabsTrigger value="ai">Inteligência Artificial</TabsTrigger>
         </TabsList>
+        
+        {renderGeneralTab()}
         
         <TabsContent value="integrations">
           <Card>
@@ -177,22 +219,6 @@ const Settings = () => {
                 {isSaving ? "Salvando..." : "Salvar Configurações"}
               </Button>
             </CardFooter>
-          </Card>
-        </TabsContent>
-        
-        <TabsContent value="general">
-          <Card>
-            <CardHeader>
-              <CardTitle>Configurações Gerais</CardTitle>
-              <CardDescription>
-                Configure as opções básicas do sistema.
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <p className="text-sm text-muted-foreground">
-                As configurações gerais serão implementadas em breve.
-              </p>
-            </CardContent>
           </Card>
         </TabsContent>
         
