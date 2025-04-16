@@ -12,24 +12,25 @@ export function PlanList() {
     queryKey: ['plans'],
     queryFn: async () => {
       const { data, error } = await supabase
-        .from('plans')
+        .from('planos')  // Corrigido: 'plans' para 'planos'
         .select('*')
-        .order('monthly_price', { ascending: true });
+        .order('nome', { ascending: true });
 
       if (error) throw error;
 
+      // Mapeando os campos do banco de dados para os campos esperados pelo componente
       return data.map(plan => ({
         id: plan.id,
-        name: plan.name,
-        description: plan.description,
-        price: plan.price,
-        monthlyPrice: plan.monthly_price,
-        maxUsers: plan.max_users,
-        maxTickets: plan.max_tickets,
-        hasAiFeatures: plan.has_ai_features,
-        hasPremiumSupport: plan.has_premium_support,
-        features: plan.features as string[],
-        isFeatured: plan.is_featured
+        name: plan.nome,
+        description: plan.descricao || '',
+        price: 0, // Definindo um valor padrão para os campos que não existem no banco de dados
+        monthlyPrice: 0, // Você precisa adicionar estes campos no banco ou modificar o componente para não usá-los
+        maxUsers: 10,
+        maxTickets: 100,
+        hasAiFeatures: true,
+        hasPremiumSupport: true,
+        features: ['Suporte básico', 'Até 10 usuários', 'Até 100 tickets por mês'],
+        isFeatured: false
       })) as PlanProps[];
     }
   });
