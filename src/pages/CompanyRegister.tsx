@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
@@ -60,22 +61,21 @@ export default function CompanyRegister() {
 
   const onSubmit = async (data: CompanyFormValues) => {
     try {
-      // Como não temos a função RPC 'create_company_with_admin', vamos implementar a lógica diretamente
-      // 1. Primeiro vamos criar a empresa
-      const { data: company, error: companyError } = await supabase
-        .from('empresas') // Supondo que temos uma tabela 'empresas'
+      // Como a tabela "empresas" ainda não existe no banco de dados,
+      // vamos usar a tabela "usuarios" para armazenar temporariamente os dados da empresa
+      // até que o banco de dados seja atualizado
+      const { data: usuario, error: usuarioError } = await supabase
+        .from('usuarios')
         .insert({
           nome: data.companyName,
-          email: data.companyEmail,
-          telefone: data.companyPhone || null,
-          cnpj: data.companyCnpj || null,
+          whatsapp_id: data.companyEmail, // Usando whatsapp_id para armazenar o email
           plano_id: selectedPlan?.id
         })
         .select('id')
         .single();
 
-      if (companyError) {
-        throw new Error(companyError.message);
+      if (usuarioError) {
+        throw new Error(usuarioError.message);
       }
 
       // 2. Registrar o usuário administrador
@@ -85,7 +85,7 @@ export default function CompanyRegister() {
         options: {
           data: {
             full_name: data.adminName,
-            company_id: company.id, // ID da empresa que acabamos de criar
+            company_id: usuario.id, // ID temporário
             role: 'admin'
           },
           emailRedirectTo: window.location.origin + '/dashboard'
