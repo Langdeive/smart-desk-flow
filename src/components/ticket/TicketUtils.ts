@@ -26,6 +26,13 @@ export const priorityLabels: Record<TicketPriority, string> = {
   critical: "Crítica",
 };
 
+export const priorityColors: Record<TicketPriority, string> = {
+  low: "border-blue-500 text-blue-500",
+  medium: "border-orange-500 text-orange-500",
+  high: "border-red-500 text-red-500",
+  critical: "border-red-700 text-red-700",
+};
+
 export const formatDate = (date: Date): string => {
   return new Intl.DateTimeFormat('pt-BR', {
     day: '2-digit',
