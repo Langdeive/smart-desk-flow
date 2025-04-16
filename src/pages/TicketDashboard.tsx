@@ -1,66 +1,15 @@
-
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Search, Filter, RefreshCw } from "lucide-react";
+import { Search, Filter, RefreshCw, Plus } from "lucide-react";
 import { Ticket, TicketStatus } from "@/types";
-
-// Função mockada para demonstração - será substituída pela integração com Supabase
-const getMockTickets = (): Ticket[] => {
-  return [
-    {
-      id: "1",
-      title: "Aplicativo trava ao iniciar",
-      description: "Estou enfrentando problemas ao abrir o aplicativo. Ele trava na tela inicial.",
-      status: "new",
-      priority: "high",
-      category: "technical_issue",
-      userId: "user1",
-      companyId: "company1",
-      createdAt: new Date(Date.now() - 86400000),
-      updatedAt: new Date(Date.now() - 86400000),
-      source: "web",
-      aiProcessed: true,
-      needsHumanReview: false,
-    },
-    {
-      id: "2",
-      title: "Solicitação de novo recurso",
-      description: "Gostaria de sugerir a adição de um novo recurso que permitiria aos usuários exportar relatórios.",
-      status: "in_progress",
-      priority: "medium",
-      category: "feature_request",
-      userId: "user2",
-      agentId: "agent1",
-      companyId: "company1",
-      createdAt: new Date(Date.now() - 172800000),
-      updatedAt: new Date(Date.now() - 86400000),
-      source: "email",
-      aiProcessed: true,
-      needsHumanReview: true,
-    },
-    {
-      id: "3",
-      title: "Dúvida sobre cobrança",
-      description: "Notei uma cobrança duplicada na minha fatura. Poderia verificar?",
-      status: "waiting_for_client",
-      priority: "low",
-      category: "billing",
-      userId: "user3",
-      agentId: "agent2",
-      companyId: "company2",
-      createdAt: new Date(Date.now() - 259200000),
-      updatedAt: new Date(Date.now() - 172800000),
-      source: "web",
-      aiProcessed: true,
-      needsHumanReview: true,
-    },
-  ];
-};
+import { getAllTickets } from "@/services/ticketService";
+import { useToast } from "@/hooks/use-toast";
 
 const statusColors: Record<TicketStatus, string> = {
   new: "bg-blue-500",
@@ -81,9 +30,33 @@ const statusLabels: Record<TicketStatus, string> = {
 };
 
 const TicketDashboard = () => {
-  const [tickets, setTickets] = useState<Ticket[]>(getMockTickets());
+  const [tickets, setTickets] = useState<Ticket[]>([]);
+  const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState<TicketStatus | "all">("all");
+  const { toast } = useToast();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchTickets = async () => {
+      try {
+        setLoading(true);
+        const data = await getAllTickets();
+        setTickets(data);
+      } catch (error) {
+        console.error("Error fetching tickets:", error);
+        toast({
+          title: "Erro ao carregar tickets",
+          description: "Não foi possível carregar a lista de tickets. Tente novamente mais tarde.",
+          variant: "destructive",
+        });
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchTickets();
+  }, [toast]);
 
   const filteredTickets = tickets.filter(ticket => {
     const matchesSearch = ticket.title.toLowerCase().includes(searchTerm.toLowerCase()) || 
@@ -93,7 +66,36 @@ const TicketDashboard = () => {
     return matchesSearch && matchesStatus;
   });
 
-  const formatDate = (date: Date) => {
+  const handleRefresh = async () => {
+    try {
+      setLoading(true);
+      const data = await getAllTickets();
+      setTickets(data);
+      toast({
+        title: "Lista atualizada",
+        description: "Os tickets foram atualizados com sucesso.",
+      });
+    } catch (error) {
+      toast({
+        title: "Erro ao atualizar",
+        description: "Não foi possível atualizar a lista de tickets.",
+        variant: "destructive",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleCreateTicket = () => {
+    navigate("/tickets/new");
+  };
+
+  const handleViewTicket = (id: string) => {
+    navigate(`/tickets/${id}`);
+  };
+
+  const formatDate = (dateString: Date) => {
+    const date = new Date(dateString);
     return new Intl.DateTimeFormat('pt-BR', {
       day: '2-digit',
       month: '2-digit',
@@ -110,7 +112,10 @@ const TicketDashboard = () => {
           <h1 className="text-3xl font-bold">Tickets</h1>
           <p className="text-muted-foreground">Gerencie e visualize todos os chamados</p>
         </div>
-        <Button>Novo Ticket</Button>
+        <Button onClick={handleCreateTicket}>
+          <Plus className="mr-2 h-4 w-4" />
+          Novo Ticket
+        </Button>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
@@ -166,11 +171,11 @@ const TicketDashboard = () => {
               />
             </div>
             <div className="flex gap-2">
-              <Button variant="outline" size="icon">
+              <Button variant="outline" size="icon" onClick={() => {}}>
                 <Filter className="h-4 w-4" />
               </Button>
-              <Button variant="outline" size="icon">
-                <RefreshCw className="h-4 w-4" />
+              <Button variant="outline" size="icon" onClick={handleRefresh}>
+                <RefreshCw className={`h-4 w-4 ${loading ? 'animate-spin' : ''}`} />
               </Button>
             </div>
           </div>
@@ -209,7 +214,13 @@ const TicketDashboard = () => {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {filteredTickets.length === 0 ? (
+                {loading ? (
+                  <TableRow>
+                    <TableCell colSpan={7} className="text-center py-8">
+                      Carregando tickets...
+                    </TableCell>
+                  </TableRow>
+                ) : filteredTickets.length === 0 ? (
                   <TableRow>
                     <TableCell colSpan={7} className="text-center py-8">
                       Nenhum ticket encontrado
@@ -218,7 +229,7 @@ const TicketDashboard = () => {
                 ) : (
                   filteredTickets.map((ticket) => (
                     <TableRow key={ticket.id}>
-                      <TableCell className="font-medium">#{ticket.id}</TableCell>
+                      <TableCell className="font-medium">#{ticket.id.substring(0, 8)}</TableCell>
                       <TableCell>{ticket.title}</TableCell>
                       <TableCell>
                         <Badge
@@ -246,7 +257,13 @@ const TicketDashboard = () => {
                         </Badge>
                       </TableCell>
                       <TableCell>
-                        <Button variant="ghost" size="sm">Ver</Button>
+                        <Button 
+                          variant="ghost" 
+                          size="sm"
+                          onClick={() => handleViewTicket(ticket.id)}
+                        >
+                          Ver
+                        </Button>
                       </TableCell>
                     </TableRow>
                   ))

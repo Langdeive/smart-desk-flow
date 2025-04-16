@@ -9,6 +9,54 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      attachments: {
+        Row: {
+          created_at: string
+          file_name: string
+          file_size: number
+          file_type: string
+          file_url: string
+          id: string
+          message_id: string | null
+          ticket_id: string
+        }
+        Insert: {
+          created_at?: string
+          file_name: string
+          file_size: number
+          file_type: string
+          file_url: string
+          id?: string
+          message_id?: string | null
+          ticket_id: string
+        }
+        Update: {
+          created_at?: string
+          file_name?: string
+          file_size?: number
+          file_type?: string
+          file_url?: string
+          id?: string
+          message_id?: string | null
+          ticket_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "attachments_message_id_fkey"
+            columns: ["message_id"]
+            isOneToOne: false
+            referencedRelation: "messages"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "attachments_ticket_id_fkey"
+            columns: ["ticket_id"]
+            isOneToOne: false
+            referencedRelation: "tickets"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       documents: {
         Row: {
           content: string | null
@@ -29,6 +77,77 @@ export type Database = {
           metadata?: Json | null
         }
         Relationships: []
+      }
+      knowledge_articles: {
+        Row: {
+          company_id: string
+          content: string
+          created_at: string
+          id: string
+          is_public: boolean
+          keywords: string[]
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          company_id: string
+          content: string
+          created_at?: string
+          id?: string
+          is_public?: boolean
+          keywords?: string[]
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          company_id?: string
+          content?: string
+          created_at?: string
+          id?: string
+          is_public?: boolean
+          keywords?: string[]
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      messages: {
+        Row: {
+          content: string
+          created_at: string
+          id: string
+          is_automatic: boolean
+          is_from_client: boolean
+          ticket_id: string
+          user_id: string
+        }
+        Insert: {
+          content: string
+          created_at?: string
+          id?: string
+          is_automatic?: boolean
+          is_from_client?: boolean
+          ticket_id: string
+          user_id: string
+        }
+        Update: {
+          content?: string
+          created_at?: string
+          id?: string
+          is_automatic?: boolean
+          is_from_client?: boolean
+          ticket_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "messages_ticket_id_fkey"
+            columns: ["ticket_id"]
+            isOneToOne: false
+            referencedRelation: "tickets"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       n8n_chat_histories: {
         Row: {
@@ -69,6 +188,57 @@ export type Database = {
           eventos_por_semana?: number | null
           id?: string
           nome?: string
+        }
+        Relationships: []
+      }
+      tickets: {
+        Row: {
+          agent_id: string | null
+          ai_processed: boolean
+          category: string
+          company_id: string
+          created_at: string
+          description: string
+          id: string
+          needs_human_review: boolean
+          priority: string
+          source: string
+          status: string
+          title: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          agent_id?: string | null
+          ai_processed?: boolean
+          category: string
+          company_id: string
+          created_at?: string
+          description: string
+          id?: string
+          needs_human_review?: boolean
+          priority?: string
+          source?: string
+          status?: string
+          title: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          agent_id?: string | null
+          ai_processed?: boolean
+          category?: string
+          company_id?: string
+          created_at?: string
+          description?: string
+          id?: string
+          needs_human_review?: boolean
+          priority?: string
+          source?: string
+          status?: string
+          title?: string
+          updated_at?: string
+          user_id?: string
         }
         Relationships: []
       }
