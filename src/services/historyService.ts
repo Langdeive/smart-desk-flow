@@ -15,7 +15,7 @@ export interface TicketHistoryItem {
 export const getTicketHistory = async (ticketId: string): Promise<TicketHistoryItem[]> => {
   // Using a more generic query approach that doesn't rely on typed tables
   const { data, error } = await supabase
-    .from<TicketHistoryItem>('historico_tickets')
+    .from('historico_tickets')
     .select('*')
     .eq('ticket_id', ticketId)
     .order('created_at', { ascending: false });
@@ -37,7 +37,7 @@ export const addManualHistoryEntry = async (
 ): Promise<TicketHistoryItem> => {
   // Using a more generic query approach that doesn't rely on typed tables
   const { data, error } = await supabase
-    .from<TicketHistoryItem>('historico_tickets')
+    .from('historico_tickets')
     .insert([{
       ticket_id: ticketId,
       tipo_acao: tipoAcao,
