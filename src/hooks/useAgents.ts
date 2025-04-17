@@ -21,7 +21,7 @@ export const useAgents = () => {
       // Since we can't directly query 'agentes' due to type issues,
       // we'll use a raw query instead
       const { data, error } = await supabase
-        .from('agentes')
+        .from('agentes' as any)
         .select('*')
         .returns<Agent[]>();
       
