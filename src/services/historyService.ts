@@ -13,6 +13,7 @@ export interface TicketHistoryItem {
 
 // Get history for a specific ticket
 export const getTicketHistory = async (ticketId: string): Promise<TicketHistoryItem[]> => {
+  // Using 'from' method with string parameter to handle tables that might not be in the types yet
   const { data, error } = await supabase
     .from('historico_tickets')
     .select('*')
@@ -24,7 +25,7 @@ export const getTicketHistory = async (ticketId: string): Promise<TicketHistoryI
     throw error;
   }
   
-  return data;
+  return data as TicketHistoryItem[];
 };
 
 // Add a manual history entry
@@ -34,6 +35,7 @@ export const addManualHistoryEntry = async (
   valorAnterior: string | null,
   valorNovo: string | null
 ): Promise<TicketHistoryItem> => {
+  // Using 'from' method with string parameter to handle tables that might not be in the types yet
   const { data, error } = await supabase
     .from('historico_tickets')
     .insert([{
@@ -49,5 +51,5 @@ export const addManualHistoryEntry = async (
     throw error;
   }
   
-  return data[0];
+  return data[0] as TicketHistoryItem;
 };

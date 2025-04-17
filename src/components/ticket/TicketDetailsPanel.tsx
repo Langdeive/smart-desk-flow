@@ -5,20 +5,10 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Ticket, TicketStatus, TicketPriority, Client } from "@/types";
+import { Ticket, TicketStatus, TicketPriority, Client, HistoricoTicket } from "@/types";
 import { useClients } from "@/hooks/useClients";
 import { Loader2 } from "lucide-react";
-import { supabase } from "@/integrations/supabase/client";
-
-interface TicketHistoryItem {
-  id: string;
-  ticket_id: string;
-  user_id: string;
-  tipo_acao: string;
-  valor_anterior: string | null;
-  valor_novo: string | null;
-  created_at: string;
-}
+import { getTicketHistory } from "@/services/historyService";
 
 interface TicketDetailsPanelProps {
   ticket: Ticket;
@@ -39,7 +29,7 @@ const TicketDetailsPanel: React.FC<TicketDetailsPanelProps> = ({
 }) => {
   const { clients, loading: clientsLoading, fetchClients } = useClients();
   const [clientData, setClientData] = useState<Client | null>(null);
-  const [historyItems, setHistoryItems] = useState<TicketHistoryItem[]>([]);
+  const [historyItems, setHistoryItems] = useState<HistoricoTicket[]>([]);
   const [loadingHistory, setLoadingHistory] = useState(false);
 
   useEffect(() => {
@@ -61,14 +51,8 @@ const TicketDetailsPanel: React.FC<TicketDetailsPanelProps> = ({
       
       setLoadingHistory(true);
       try {
-        const { data, error } = await supabase
-          .from('historico_tickets')
-          .select('*')
-          .eq('ticket_id', ticket.id)
-          .order('created_at', { ascending: false });
-          
-        if (error) throw error;
-        setHistoryItems(data || []);
+        const data = await getTicketHistory(ticket.id);
+        setHistoryItems(data);
       } catch (error) {
         console.error('Error fetching ticket history:', error);
       } finally {

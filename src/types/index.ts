@@ -107,7 +107,7 @@ export type Client = {
 
 export type ClientFormData = Omit<Client, 'id' | 'empresa_id' | 'created_at' | 'status'>;
 
-// Adicionando interface para histórico de tickets
+// Interface for history items from the database
 export interface HistoricoTicket {
   id: string;
   ticket_id: string;

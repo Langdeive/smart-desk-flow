@@ -5,6 +5,7 @@ import { useToast } from "@/hooks/use-toast";
 import { Ticket, Message, Attachment, TicketStatus, TicketPriority } from "@/types";
 import { Skeleton } from "@/components/ui/skeleton";
 import { getTicketById, updateTicketStatus, updateTicketPriority, getMessagesForTicket, getAttachmentsForTicket, addMessageToTicket, uploadAttachment } from "@/services/ticketService";
+import { addManualHistoryEntry } from "@/services/historyService";
 
 // Import our new components
 import TicketHeader from "@/components/ticket/TicketHeader";
@@ -59,8 +60,20 @@ const TicketDetail = () => {
     if (!ticket || !id) return;
     
     try {
+      // Store old status for history
+      const oldStatus = ticket.status;
+      
+      // Update ticket status
       const updatedTicket = await updateTicketStatus(id, status as TicketStatus);
       setTicket(updatedTicket);
+      
+      // Add a history entry manually (this should be automatic with trigger, but as a fallback)
+      await addManualHistoryEntry(
+        id,
+        'status_alterado',
+        oldStatus,
+        status
+      );
       
       toast({
         title: "Status atualizado",
@@ -80,8 +93,20 @@ const TicketDetail = () => {
     if (!ticket || !id) return;
     
     try {
+      // Store old priority for history
+      const oldPriority = ticket.priority;
+      
+      // Update ticket priority
       const updatedTicket = await updateTicketPriority(id, priority as TicketPriority);
       setTicket(updatedTicket);
+      
+      // Add a history entry manually (this should be automatic with trigger, but as a fallback)
+      await addManualHistoryEntry(
+        id,
+        'prioridade_alterada',
+        oldPriority,
+        priority
+      );
       
       toast({
         title: "Prioridade atualizada",
