@@ -30,7 +30,7 @@ import {
 } from '@/components/ui/form';
 import { useClients } from '@/hooks/useClients';
 import { User, Edit, Trash2 } from 'lucide-react';
-import { Client } from '@/types';
+import { Client, ClientFormData } from '@/types';
 
 const clientSchema = z.object({
   nome: z.string().min(2, 'Nome é obrigatório'),
@@ -61,10 +61,19 @@ export default function ClientManagement() {
   });
 
   const onSubmit = async (data: z.infer<typeof clientSchema>) => {
+    // Create a properly typed ClientFormData object
+    const clientData: ClientFormData = {
+      nome: data.nome,
+      email: data.email,
+      telefone: data.telefone,
+      documento: data.documento,
+      observacoes: data.observacoes
+    };
+
     if (editingClient) {
-      await updateClient(editingClient.id, data);
+      await updateClient(editingClient.id, clientData);
     } else {
-      await addClient(data);
+      await addClient(clientData);
     }
     form.reset();
     setEditingClient(null);
