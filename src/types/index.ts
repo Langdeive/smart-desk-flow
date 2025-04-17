@@ -56,7 +56,7 @@ export type TicketHistoryItem = {
   tipo_acao: string;
   valor_anterior?: string | null;
   valor_novo?: string | null;
-  created_at: Date;
+  created_at: string;
 };
 
 export type Attachment = {

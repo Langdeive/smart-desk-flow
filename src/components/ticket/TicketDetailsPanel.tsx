@@ -1,14 +1,13 @@
-
 import React, { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Ticket, TicketStatus, TicketPriority, Client } from "@/types";
+import { Ticket, TicketStatus, TicketPriority, Client, TicketHistoryItem } from "@/types";
 import { useClients } from "@/hooks/useClients";
 import { Loader2 } from "lucide-react";
-import { getTicketHistory, TicketHistoryItem } from "@/services/historyService";
+import { getTicketHistory } from "@/services/historyService";
 
 interface TicketDetailsPanelProps {
   ticket: Ticket;
@@ -72,6 +71,10 @@ const TicketDetailsPanel: React.FC<TicketDetailsPanelProps> = ({
     };
     
     return actionMap[tipo] || tipo;
+  };
+
+  const formatHistoryDate = (dateString: string): string => {
+    return formatDate(new Date(dateString));
   };
 
   return (
@@ -192,7 +195,7 @@ const TicketDetailsPanel: React.FC<TicketDetailsPanelProps> = ({
                       </p>
                     )}
                     <p className="text-xs text-muted-foreground">
-                      {formatDate(new Date(item.created_at))}
+                      {formatHistoryDate(item.created_at)}
                     </p>
                   </div>
                 ))}
