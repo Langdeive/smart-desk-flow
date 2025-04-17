@@ -1,19 +1,10 @@
 
 import { supabase } from "@/integrations/supabase/client";
-
-export interface TicketHistoryItem {
-  id: string;
-  ticket_id: string;
-  user_id: string | null;
-  tipo_acao: string;
-  valor_anterior: string | null;
-  valor_novo: string | null;
-  created_at: string;
-}
+import { TicketHistoryItem } from "@/types";
+import { Tables } from "@/integrations/supabase/types";
 
 // Get history for a specific ticket
 export const getTicketHistory = async (ticketId: string): Promise<TicketHistoryItem[]> => {
-  // Using a table name as a string without type checking
   const { data, error } = await supabase
     .from('historico_tickets')
     .select('*')
@@ -25,9 +16,7 @@ export const getTicketHistory = async (ticketId: string): Promise<TicketHistoryI
     throw error;
   }
   
-  // Since we're getting data from a table that's not in the types,
-  // we need to manually cast the result
-  return (data || []) as unknown as TicketHistoryItem[];
+  return (data || []) as TicketHistoryItem[];
 };
 
 // Add a manual history entry
@@ -37,15 +26,14 @@ export const addManualHistoryEntry = async (
   valorAnterior: string | null,
   valorNovo: string | null
 ): Promise<TicketHistoryItem> => {
-  // Using a table name as a string without type checking
   const { data, error } = await supabase
     .from('historico_tickets')
-    .insert([{
+    .insert({
       ticket_id: ticketId,
       tipo_acao: tipoAcao,
       valor_anterior: valorAnterior,
       valor_novo: valorNovo
-    }])
+    })
     .select();
   
   if (error) {
@@ -57,6 +45,5 @@ export const addManualHistoryEntry = async (
     throw new Error('No data returned after inserting history entry');
   }
   
-  // Cast the result to our interface
-  return data[0] as unknown as TicketHistoryItem;
+  return data[0] as TicketHistoryItem;
 };

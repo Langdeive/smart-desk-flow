@@ -51,12 +51,12 @@ export type Ticket = {
 
 export type TicketHistoryItem = {
   id: string;
-  ticketId: string;
-  userId?: string;
-  tipoAcao: string;
-  valorAnterior?: string;
-  valorNovo?: string;
-  createdAt: Date;
+  ticket_id: string;
+  user_id?: string | null;
+  tipo_acao: string;
+  valor_anterior?: string | null;
+  valor_novo?: string | null;
+  created_at: Date;
 };
 
 export type Attachment = {

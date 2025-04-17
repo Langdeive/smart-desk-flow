@@ -117,6 +117,44 @@ export type Database = {
         }
         Relationships: []
       }
+      historico_tickets: {
+        Row: {
+          created_at: string
+          id: string
+          ticket_id: string
+          tipo_acao: string
+          user_id: string | null
+          valor_anterior: string | null
+          valor_novo: string | null
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          ticket_id: string
+          tipo_acao: string
+          user_id?: string | null
+          valor_anterior?: string | null
+          valor_novo?: string | null
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          ticket_id?: string
+          tipo_acao?: string
+          user_id?: string | null
+          valor_anterior?: string | null
+          valor_novo?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "historico_tickets_ticket_id_fkey"
+            columns: ["ticket_id"]
+            isOneToOne: false
+            referencedRelation: "tickets"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       knowledge_articles: {
         Row: {
           company_id: string
