@@ -13,7 +13,7 @@ export interface TicketHistoryItem {
 
 // Get history for a specific ticket
 export const getTicketHistory = async (ticketId: string): Promise<TicketHistoryItem[]> => {
-  // Using a more generic query approach that doesn't rely on typed tables
+  // Using a table name as a string without type checking
   const { data, error } = await supabase
     .from('historico_tickets')
     .select('*')
@@ -25,7 +25,9 @@ export const getTicketHistory = async (ticketId: string): Promise<TicketHistoryI
     throw error;
   }
   
-  return data || [];
+  // Since we're getting data from a table that's not in the types,
+  // we need to manually cast the result
+  return (data || []) as unknown as TicketHistoryItem[];
 };
 
 // Add a manual history entry
@@ -35,7 +37,7 @@ export const addManualHistoryEntry = async (
   valorAnterior: string | null,
   valorNovo: string | null
 ): Promise<TicketHistoryItem> => {
-  // Using a more generic query approach that doesn't rely on typed tables
+  // Using a table name as a string without type checking
   const { data, error } = await supabase
     .from('historico_tickets')
     .insert([{
@@ -55,5 +57,6 @@ export const addManualHistoryEntry = async (
     throw new Error('No data returned after inserting history entry');
   }
   
-  return data[0];
+  // Cast the result to our interface
+  return data[0] as unknown as TicketHistoryItem;
 };
