@@ -5,10 +5,10 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Ticket, TicketStatus, TicketPriority, Client, HistoricoTicket } from "@/types";
+import { Ticket, TicketStatus, TicketPriority, Client } from "@/types";
 import { useClients } from "@/hooks/useClients";
 import { Loader2 } from "lucide-react";
-import { getTicketHistory } from "@/services/historyService";
+import { getTicketHistory, TicketHistoryItem } from "@/services/historyService";
 
 interface TicketDetailsPanelProps {
   ticket: Ticket;
@@ -29,7 +29,7 @@ const TicketDetailsPanel: React.FC<TicketDetailsPanelProps> = ({
 }) => {
   const { clients, loading: clientsLoading, fetchClients } = useClients();
   const [clientData, setClientData] = useState<Client | null>(null);
-  const [historyItems, setHistoryItems] = useState<HistoricoTicket[]>([]);
+  const [historyItems, setHistoryItems] = useState<TicketHistoryItem[]>([]);
   const [loadingHistory, setLoadingHistory] = useState(false);
 
   useEffect(() => {

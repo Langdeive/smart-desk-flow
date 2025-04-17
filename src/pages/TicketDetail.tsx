@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
@@ -7,7 +6,6 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { getTicketById, updateTicketStatus, updateTicketPriority, getMessagesForTicket, getAttachmentsForTicket, addMessageToTicket, uploadAttachment } from "@/services/ticketService";
 import { addManualHistoryEntry } from "@/services/historyService";
 
-// Import our new components
 import TicketHeader from "@/components/ticket/TicketHeader";
 import TicketConversation from "@/components/ticket/TicketConversation";
 import TicketDetailsPanel from "@/components/ticket/TicketDetailsPanel";
@@ -30,15 +28,12 @@ const TicketDetail = () => {
       
       setIsLoading(true);
       try {
-        // Fetch ticket data
         const ticketData = await getTicketById(id);
         setTicket(ticketData);
         
-        // Fetch messages
         const messagesData = await getMessagesForTicket(id);
         setMessages(messagesData);
         
-        // Fetch attachments
         const attachmentsData = await getAttachmentsForTicket(id);
         setAttachments(attachmentsData);
       } catch (error) {
@@ -60,14 +55,11 @@ const TicketDetail = () => {
     if (!ticket || !id) return;
     
     try {
-      // Store old status for history
       const oldStatus = ticket.status;
       
-      // Update ticket status
       const updatedTicket = await updateTicketStatus(id, status as TicketStatus);
       setTicket(updatedTicket);
       
-      // Add a history entry manually (this should be automatic with trigger, but as a fallback)
       await addManualHistoryEntry(
         id,
         'status_alterado',
@@ -93,14 +85,11 @@ const TicketDetail = () => {
     if (!ticket || !id) return;
     
     try {
-      // Store old priority for history
       const oldPriority = ticket.priority;
       
-      // Update ticket priority
       const updatedTicket = await updateTicketPriority(id, priority as TicketPriority);
       setTicket(updatedTicket);
       
-      // Add a history entry manually (this should be automatic with trigger, but as a fallback)
       await addManualHistoryEntry(
         id,
         'prioridade_alterada',
@@ -127,16 +116,14 @@ const TicketDetail = () => {
     
     setIsSubmitting(true);
     try {
-      // Add the message
       const newMessage = await addMessageToTicket({
         content,
         ticketId: id,
-        userId: "agent1", // Would be the current user's ID in a real app
+        userId: "agent1",
         isFromClient: false,
         isAutomatic: false
       });
       
-      // Upload attachments if any
       const newAttachments: Attachment[] = [];
       
       for (const file of files) {
@@ -144,7 +131,6 @@ const TicketDetail = () => {
         newAttachments.push(attachment);
       }
       
-      // Update the local state
       setMessages(prev => [...prev, newMessage]);
       setAttachments(prev => [...prev, ...newAttachments]);
       
@@ -174,7 +160,6 @@ const TicketDetail = () => {
       description: "O ticket está sendo reanalisado pela IA.",
     });
     
-    // This would be an actual API call in a real implementation
     setTimeout(() => {
       toast({
         title: "Reanálise concluída",

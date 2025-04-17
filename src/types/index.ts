@@ -1,4 +1,3 @@
-
 export type User = {
   id: string;
   email: string;
@@ -106,14 +105,3 @@ export type Client = {
 };
 
 export type ClientFormData = Omit<Client, 'id' | 'empresa_id' | 'created_at' | 'status'>;
-
-// Interface for history items from the database
-export interface HistoricoTicket {
-  id: string;
-  ticket_id: string;
-  user_id: string | null;
-  tipo_acao: string;
-  valor_anterior: string | null;
-  valor_novo: string | null;
-  created_at: string;
-}
