@@ -57,6 +57,45 @@ export type Database = {
           },
         ]
       }
+      clientes: {
+        Row: {
+          created_at: string | null
+          documento: string | null
+          email: string
+          empresa_id: string
+          id: string
+          nome: string
+          observacoes: string | null
+          status: string | null
+          telefone: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          documento?: string | null
+          email: string
+          empresa_id: string
+          id?: string
+          nome: string
+          observacoes?: string | null
+          status?: string | null
+          telefone?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          documento?: string | null
+          email?: string
+          empresa_id?: string
+          id?: string
+          nome?: string
+          observacoes?: string | null
+          status?: string | null
+          telefone?: string | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       documents: {
         Row: {
           content: string | null

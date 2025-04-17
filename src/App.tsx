@@ -19,6 +19,7 @@ import Settings from "./pages/Settings";
 import PlanSelect from "./pages/PlanSelect";
 import CompanyRegister from "./pages/CompanyRegister";
 import AgentManagement from './pages/AgentManagement';
+import ClientManagement from './pages/ClientManagement';
 
 const queryClient = new QueryClient();
 
@@ -41,6 +42,7 @@ const App = () => {
                 <Route path="/settings" element={<Settings />} />
                 <Route path="/selecionar-plano" element={<PlanSelect />} />
                 <Route path="/configuracoes/agentes" element={<AgentManagement />} />
+                <Route path="/configuracoes/clientes" element={<ClientManagement />} />
               </Route>
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />

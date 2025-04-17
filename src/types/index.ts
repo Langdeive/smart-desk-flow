@@ -1,4 +1,3 @@
-
 export type User = {
   id: string;
   email: string;
@@ -82,3 +81,17 @@ export type KnowledgeArticle = {
   updatedAt: Date;
   isPublic: boolean;
 };
+
+export type Client = {
+  id: string;
+  empresa_id: string;
+  nome: string;
+  email: string;
+  telefone?: string;
+  documento?: string;
+  observacoes?: string;
+  status: 'ativo' | 'inativo';
+  created_at: Date;
+};
+
+export type ClientFormData = Omit<Client, 'id' | 'empresa_id' | 'created_at' | 'status'>;
