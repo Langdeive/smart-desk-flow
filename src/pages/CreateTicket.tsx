@@ -1,5 +1,5 @@
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -11,15 +11,20 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { FileUploader } from "@/components/FileUploader";
 import { useToast } from "@/hooks/use-toast";
-import { TicketCategory } from "@/types";
+import { useNavigate } from "react-router-dom";
+import { TicketCategory, TicketPriority, Client } from "@/types";
+import { createTicket, uploadAttachment } from "@/services/ticketService";
+import { useClients } from "@/hooks/useClients";
+import { Loader2 } from "lucide-react";
 
 const ticketFormSchema = z.object({
   title: z.string().min(5, { message: "O título deve ter pelo menos 5 caracteres" }),
   description: z.string().min(20, { message: "A descrição deve ter pelo menos 20 caracteres" }),
   category: z.enum(["technical_issue", "feature_request", "billing", "general_inquiry", "other"]),
-  email: z.string().email({ message: "Por favor, insira um e-mail válido" }),
+  priority: z.enum(["low", "medium", "high", "critical"]),
+  clientId: z.string().min(1, { message: "Selecione um cliente" }),
   name: z.string().min(2, { message: "Por favor, insira seu nome" }),
-  company: z.string().optional(),
+  email: z.string().email({ message: "Por favor, insira um e-mail válido" }),
 });
 
 type TicketFormValues = z.infer<typeof ticketFormSchema>;
@@ -32,9 +37,23 @@ const categoryLabels: Record<TicketCategory, string> = {
   other: "Outro",
 };
 
+const priorityLabels: Record<TicketPriority, string> = {
+  low: "Baixa",
+  medium: "Média",
+  high: "Alta",
+  critical: "Crítica",
+};
+
 const CreateTicket = () => {
   const { toast } = useToast();
-  const [files, setFiles] = React.useState<File[]>([]);
+  const [files, setFiles] = useState<File[]>([]);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const navigate = useNavigate();
+  const { clients, loading: clientsLoading, fetchClients } = useClients();
+
+  useEffect(() => {
+    fetchClients();
+  }, [fetchClients]);
 
   const form = useForm<TicketFormValues>({
     resolver: zodResolver(ticketFormSchema),
@@ -42,25 +61,48 @@ const CreateTicket = () => {
       title: "",
       description: "",
       category: "technical_issue",
+      priority: "medium",
+      clientId: "",
       email: "",
       name: "",
-      company: "",
     },
   });
 
   const onSubmit = async (data: TicketFormValues) => {
     try {
-      // Aqui precisaremos implementar a integração com o Supabase para salvar o ticket
-      console.log("Dados do formulário:", data);
-      console.log("Arquivos anexados:", files);
+      setIsSubmitting(true);
+      
+      // Create the ticket
+      const ticket = await createTicket({
+        title: data.title,
+        description: data.description,
+        status: "new",
+        priority: data.priority,
+        category: data.category,
+        userId: data.clientId,
+        companyId: "00000000-0000-0000-0000-000000000000", // This would be the current company ID in a real app
+        source: "web"
+      });
+      
+      // Upload any attachments
+      if (files.length > 0) {
+        toast({
+          title: "Enviando anexos",
+          description: "Aguarde enquanto enviamos seus arquivos...",
+        });
+        
+        await Promise.all(
+          files.map(file => uploadAttachment(file, ticket.id))
+        );
+      }
       
       toast({
         title: "Ticket criado com sucesso",
         description: "Você receberá atualizações sobre o seu chamado por e-mail.",
       });
       
-      form.reset();
-      setFiles([]);
+      // Redirect to ticket details
+      navigate(`/tickets/${ticket.id}`);
     } catch (error) {
       console.error("Erro ao criar ticket:", error);
       toast({
@@ -68,6 +110,20 @@ const CreateTicket = () => {
         description: "Ocorreu um erro ao enviar seu chamado. Por favor, tente novamente.",
         variant: "destructive",
       });
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  // Helper function to handle client selection and auto-fill
+  const handleClientChange = (clientId: string) => {
+    form.setValue("clientId", clientId);
+    
+    // Auto-fill email and name based on selected client
+    const selectedClient = clients.find(client => client.id === clientId);
+    if (selectedClient) {
+      form.setValue("name", selectedClient.nome);
+      form.setValue("email", selectedClient.email);
     }
   };
 
@@ -84,6 +140,44 @@ const CreateTicket = () => {
         <CardContent>
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+              <div className="grid grid-cols-1 gap-6">
+                <FormField
+                  control={form.control}
+                  name="clientId"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Cliente</FormLabel>
+                      <Select 
+                        onValueChange={handleClientChange} 
+                        value={field.value}
+                        disabled={clientsLoading}
+                      >
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Selecione um cliente" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          {clientsLoading ? (
+                            <div className="flex items-center justify-center p-2">
+                              <Loader2 className="h-4 w-4 animate-spin mr-2" />
+                              <span>Carregando clientes...</span>
+                            </div>
+                          ) : (
+                            clients.map((client) => (
+                              <SelectItem key={client.id} value={client.id}>
+                                {client.nome} ({client.email})
+                              </SelectItem>
+                            ))
+                          )}
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+              
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <FormField
                   control={form.control}
@@ -92,7 +186,7 @@ const CreateTicket = () => {
                     <FormItem>
                       <FormLabel>Nome</FormLabel>
                       <FormControl>
-                        <Input placeholder="Seu nome" {...field} />
+                        <Input placeholder="Nome do contato" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -106,7 +200,7 @@ const CreateTicket = () => {
                     <FormItem>
                       <FormLabel>E-mail</FormLabel>
                       <FormControl>
-                        <Input placeholder="seu@email.com" {...field} />
+                        <Input placeholder="E-mail do contato" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -115,20 +209,6 @@ const CreateTicket = () => {
               </div>
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <FormField
-                  control={form.control}
-                  name="company"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Empresa (opcional)</FormLabel>
-                      <FormControl>
-                        <Input placeholder="Nome da empresa" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                
                 <FormField
                   control={form.control}
                   name="category"
@@ -143,6 +223,31 @@ const CreateTicket = () => {
                         </FormControl>
                         <SelectContent>
                           {Object.entries(categoryLabels).map(([value, label]) => (
+                            <SelectItem key={value} value={value}>
+                              {label}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                
+                <FormField
+                  control={form.control}
+                  name="priority"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Prioridade</FormLabel>
+                      <Select onValueChange={field.onChange} defaultValue={field.value}>
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Selecione a prioridade" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          {Object.entries(priorityLabels).map(([value, label]) => (
                             <SelectItem key={value} value={value}>
                               {label}
                             </SelectItem>
@@ -199,8 +304,15 @@ const CreateTicket = () => {
               </div>
               
               <CardFooter className="px-0 pt-6">
-                <Button type="submit" className="w-full">
-                  Enviar Chamado
+                <Button type="submit" className="w-full" disabled={isSubmitting}>
+                  {isSubmitting ? (
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      Enviando...
+                    </>
+                  ) : (
+                    "Enviar Chamado"
+                  )}
                 </Button>
               </CardFooter>
             </form>

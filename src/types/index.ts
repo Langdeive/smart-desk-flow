@@ -1,3 +1,4 @@
+
 export type User = {
   id: string;
   email: string;
@@ -49,6 +50,16 @@ export type Ticket = {
   needsHumanReview: boolean;
 };
 
+export type TicketHistoryItem = {
+  id: string;
+  ticketId: string;
+  userId?: string;
+  tipoAcao: string;
+  valorAnterior?: string;
+  valorNovo?: string;
+  createdAt: Date;
+};
+
 export type Attachment = {
   id: string;
   fileName: string;
@@ -95,3 +106,14 @@ export type Client = {
 };
 
 export type ClientFormData = Omit<Client, 'id' | 'empresa_id' | 'created_at' | 'status'>;
+
+// Adicionando interface para histórico de tickets
+export interface HistoricoTicket {
+  id: string;
+  ticket_id: string;
+  user_id: string | null;
+  tipo_acao: string;
+  valor_anterior: string | null;
+  valor_novo: string | null;
+  created_at: string;
+}

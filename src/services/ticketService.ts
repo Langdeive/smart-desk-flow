@@ -1,4 +1,3 @@
-
 import { supabase } from "@/integrations/supabase/client";
 import { Ticket, Message, Attachment, TicketStatus, TicketPriority, TicketCategory } from "@/types";
 
@@ -149,6 +148,25 @@ export const updateTicketPriority = async (id: string, priority: TicketPriority)
   
   if (error) {
     console.error('Error updating ticket priority:', error);
+    throw error;
+  }
+  
+  return mapDbTicketToAppTicket(data[0]);
+};
+
+// Update ticket assigned agent
+export const updateTicketAgent = async (id: string, agentId: string | null): Promise<Ticket> => {
+  const { data, error } = await supabase
+    .from('tickets')
+    .update({ 
+      agent_id: agentId, 
+      updated_at: new Date().toISOString() 
+    })
+    .eq('id', id)
+    .select();
+  
+  if (error) {
+    console.error('Error updating ticket agent:', error);
     throw error;
   }
   
