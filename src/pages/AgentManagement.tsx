@@ -63,6 +63,7 @@ export default function AgentManagement() {
   });
 
   const onSubmit = async (data: z.infer<typeof agentSchema>) => {
+    // Now data is correctly typed and all fields are required
     await addAgent(data);
     form.reset();
   };
