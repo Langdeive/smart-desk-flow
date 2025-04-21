@@ -13,4 +13,5 @@ expect.extend({
            (value ? received.getAttribute(attribute) === value : true),
     message: () => `expected element to have attribute ${attribute}${value ? ` with value ${value}` : ''}`,
   }),
+  // You can add more custom matchers here if needed
 });
