@@ -164,6 +164,30 @@ export type Database = {
         }
         Relationships: []
       }
+      companies: {
+        Row: {
+          created_at: string | null
+          id: string
+          name: string
+          plan: string
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          name: string
+          plan?: string
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          name?: string
+          plan?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       documents: {
         Row: {
           content: string | null
@@ -398,6 +422,38 @@ export type Database = {
           },
         ]
       }
+      user_companies: {
+        Row: {
+          company_id: string | null
+          created_at: string | null
+          id: string
+          role: string
+          user_id: string | null
+        }
+        Insert: {
+          company_id?: string | null
+          created_at?: string | null
+          id?: string
+          role?: string
+          user_id?: string | null
+        }
+        Update: {
+          company_id?: string | null
+          created_at?: string | null
+          id?: string
+          role?: string
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_companies_company_id_fkey"
+            columns: ["company_id"]
+            isOneToOne: false
+            referencedRelation: "companies"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       usuarios: {
         Row: {
           criado_em: string | null
@@ -444,6 +500,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      belongs_to_company: {
+        Args: { company_id: string }
+        Returns: boolean
+      }
       binary_quantize: {
         Args: { "": string } | { "": unknown }
         Returns: unknown
@@ -463,6 +523,10 @@ export type Database = {
       halfvec_typmod_in: {
         Args: { "": unknown[] }
         Returns: number
+      }
+      has_role: {
+        Args: { required_role: string }
+        Returns: boolean
       }
       hnsw_bit_support: {
         Args: { "": unknown }
