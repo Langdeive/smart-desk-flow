@@ -1,3 +1,4 @@
+
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
@@ -6,8 +7,7 @@ import { Client, ClientFormData } from '@/types';
 
 export const useClients = (search?: string) => {
   const queryClient = useQueryClient();
-  const { user } = useAuth();
-  const companyId = user?.user_metadata?.company_id;
+  const { companyId } = useAuth();
 
   const { data: clients = [], isLoading } = useQuery({
     queryKey: ['clients', search, companyId],
@@ -49,7 +49,7 @@ export const useClients = (search?: string) => {
 
       if (error) throw error;
 
-      if (data.contacts.length > 0) {
+      if (data.contacts && data.contacts.length > 0) {
         const { error: contactsError } = await supabase
           .from('client_contacts')
           .insert(

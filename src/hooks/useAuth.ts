@@ -34,12 +34,16 @@ export const useAuth = () => {
     };
   }, []);
 
+  // Para fins de desenvolvimento, vamos definir um valor fixo para company_id
+  // Isso é temporário até que a autenticação completa seja implementada
+  const tempCompanyId = '123e4567-e89b-12d3-a456-426614174000';
+
   return { 
     user, 
     session, 
     loading,
     signOut: () => supabase.auth.signOut(),
-    companyId: user?.user_metadata?.company_id // Add this line to match the usage in useClients
+    // Usar um ID de empresa temporário para desenvolvimento
+    companyId: user?.user_metadata?.company_id || tempCompanyId
   };
 };
-
