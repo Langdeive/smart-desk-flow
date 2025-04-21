@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
@@ -6,6 +7,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AppLayout } from "./components/layout/AppLayout";
 import { PlanSelectProvider } from "./contexts/PlanSelectContext";
+import { ThemeProvider } from "./hooks/use-theme";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import Login from "./pages/Login";
@@ -26,32 +28,34 @@ const queryClient = new QueryClient();
 const App = () => {
   return (
     <QueryClientProvider client={queryClient}>
-      <BrowserRouter>
-        <PlanSelectProvider>
-          <TooltipProvider>
-            <Toaster />
-            <Sonner />
-            <Routes>
-              <Route element={<AppLayout />}>
-                <Route path="/" element={<Index />} />
-                <Route path="/dashboard" element={<Dashboard />} />
-                <Route path="/tickets" element={<TicketDashboard />} />
-                <Route path="/tickets/new" element={<CreateTicket />} />
-                <Route path="/tickets/:id" element={<TicketDetail />} />
-                <Route path="/knowledge" element={<KnowledgeBase />} />
-                <Route path="/settings" element={<Settings />} />
-                <Route path="/selecionar-plano" element={<PlanSelect />} />
-                <Route path="/configuracoes/agentes" element={<AgentManagement />} />
-                <Route path="/configuracoes/clientes" element={<ClientManagement />} />
-              </Route>
-              <Route path="/login" element={<Login />} />
-              <Route path="/register" element={<Register />} />
-              <Route path="/cadastro-empresa" element={<CompanyRegister />} />
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-          </TooltipProvider>
-        </PlanSelectProvider>
-      </BrowserRouter>
+      <ThemeProvider defaultTheme="light">
+        <BrowserRouter>
+          <PlanSelectProvider>
+            <TooltipProvider>
+              <Toaster />
+              <Sonner />
+              <Routes>
+                <Route element={<AppLayout />}>
+                  <Route path="/" element={<Index />} />
+                  <Route path="/dashboard" element={<Dashboard />} />
+                  <Route path="/tickets" element={<TicketDashboard />} />
+                  <Route path="/tickets/new" element={<CreateTicket />} />
+                  <Route path="/tickets/:id" element={<TicketDetail />} />
+                  <Route path="/knowledge" element={<KnowledgeBase />} />
+                  <Route path="/settings" element={<Settings />} />
+                  <Route path="/selecionar-plano" element={<PlanSelect />} />
+                  <Route path="/configuracoes/agentes" element={<AgentManagement />} />
+                  <Route path="/configuracoes/clientes" element={<ClientManagement />} />
+                </Route>
+                <Route path="/login" element={<Login />} />
+                <Route path="/register" element={<Register />} />
+                <Route path="/cadastro-empresa" element={<CompanyRegister />} />
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+            </TooltipProvider>
+          </PlanSelectProvider>
+        </BrowserRouter>
+      </ThemeProvider>
     </QueryClientProvider>
   );
 };
