@@ -1,5 +1,6 @@
 
-import React, { useState, useEffect } from 'react';
+import { useState } from 'react';
+import { useClients } from '@/hooks/useClients';
 import { 
   Table, 
   TableBody, 
@@ -10,237 +11,91 @@ import {
 } from '@/components/ui/table';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { 
-  Dialog, 
-  DialogContent, 
-  DialogHeader, 
-  DialogTitle, 
-  DialogTrigger 
-} from '@/components/ui/dialog';
-import { useForm } from 'react-hook-form';
-import { z } from 'zod';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { 
-  Form, 
-  FormControl, 
-  FormField, 
-  FormItem, 
-  FormLabel, 
-  FormMessage 
-} from '@/components/ui/form';
-import { useClients } from '@/hooks/useClients';
-import { User, Edit, Trash2 } from 'lucide-react';
-import { Client, ClientFormData } from '@/types';
-
-const clientSchema = z.object({
-  nome: z.string().min(2, 'Nome é obrigatório'),
-  email: z.string().email('E-mail inválido'),
-  telefone: z.string().optional(),
-  documento: z.string().optional(),
-  observacoes: z.string().optional()
-});
+import { Badge } from '@/components/ui/badge';
+import { Search, Plus, Edit2, Trash2 } from 'lucide-react';
+import { format } from 'date-fns';
+import { ClientDialog } from '@/components/clients/ClientDialog';
 
 export default function ClientManagement() {
-  const { clients, loading, fetchClients, addClient, updateClient, deleteClient } = useClients();
-  const [searchTerm, setSearchTerm] = useState('');
-  const [editingClient, setEditingClient] = useState<Client | null>(null);
-
-  useEffect(() => {
-    fetchClients();
-  }, []);
-
-  const form = useForm<z.infer<typeof clientSchema>>({
-    resolver: zodResolver(clientSchema),
-    defaultValues: {
-      nome: '',
-      email: '',
-      telefone: '',
-      documento: '',
-      observacoes: ''
-    }
-  });
-
-  const onSubmit = async (data: z.infer<typeof clientSchema>) => {
-    // Create a properly typed ClientFormData object
-    const clientData: ClientFormData = {
-      nome: data.nome,
-      email: data.email,
-      telefone: data.telefone,
-      documento: data.documento,
-      observacoes: data.observacoes
-    };
-
-    if (editingClient) {
-      await updateClient(editingClient.id, clientData);
-    } else {
-      await addClient(clientData);
-    }
-    form.reset();
-    setEditingClient(null);
-  };
-
-  const handleEdit = (client: Client) => {
-    setEditingClient(client);
-    form.reset({
-      nome: client.nome,
-      email: client.email,
-      telefone: client.telefone || '',
-      documento: client.documento || '',
-      observacoes: client.observacoes || ''
-    });
-  };
-
-  const handleDelete = (id: string) => {
-    deleteClient(id);
-  };
-
-  const filteredClients = clients.filter(client => 
-    client.nome.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    client.email.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const [search, setSearch] = useState('');
+  const [selectedClientId, setSelectedClientId] = useState<string | null>(null);
+  const { clients, isLoading } = useClients(search);
 
   return (
-    <div className="container mx-auto p-4">
-      <h1 className="text-2xl font-bold mb-4">Gerenciamento de Clientes</h1>
-      
-      <div className="flex justify-between mb-4">
-        <Input 
-          placeholder="Buscar por nome ou e-mail" 
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          className="max-w-md"
+    <div className="container mx-auto py-6">
+      <div className="flex justify-between items-center mb-6">
+        <h1 className="text-2xl font-bold">Clientes</h1>
+        <ClientDialog 
+          onClose={() => setSelectedClientId(null)} 
+          clientId={selectedClientId} 
         />
-        
-        <Dialog>
-          <DialogTrigger asChild>
-            <Button onClick={() => setEditingClient(null)}>Adicionar Cliente</Button>
-          </DialogTrigger>
-          <DialogContent>
-            <DialogHeader>
-              <DialogTitle>
-                {editingClient ? 'Editar Cliente' : 'Adicionar Novo Cliente'}
-              </DialogTitle>
-            </DialogHeader>
-            <Form {...form}>
-              <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-                <FormField
-                  control={form.control}
-                  name="nome"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Nome Completo</FormLabel>
-                      <FormControl>
-                        <Input placeholder="Nome do cliente" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                
-                <FormField
-                  control={form.control}
-                  name="email"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>E-mail</FormLabel>
-                      <FormControl>
-                        <Input type="email" placeholder="E-mail do cliente" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                
-                <FormField
-                  control={form.control}
-                  name="telefone"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Telefone (opcional)</FormLabel>
-                      <FormControl>
-                        <Input placeholder="Telefone do cliente" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                
-                <FormField
-                  control={form.control}
-                  name="documento"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>CPF/CNPJ (opcional)</FormLabel>
-                      <FormControl>
-                        <Input placeholder="Documento do cliente" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                
-                <FormField
-                  control={form.control}
-                  name="observacoes"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Observações (opcional)</FormLabel>
-                      <FormControl>
-                        <Input placeholder="Observações gerais" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                
-                <Button type="submit" className="w-full">
-                  {editingClient ? 'Atualizar Cliente' : 'Adicionar Cliente'}
-                </Button>
-              </form>
-            </Form>
-          </DialogContent>
-        </Dialog>
       </div>
 
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead>Nome</TableHead>
-            <TableHead>E-mail</TableHead>
-            <TableHead>Telefone</TableHead>
-            <TableHead>Status</TableHead>
-            <TableHead>Ações</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {filteredClients.map(client => (
-            <TableRow key={client.id}>
-              <TableCell>{client.nome}</TableCell>
-              <TableCell>{client.email}</TableCell>
-              <TableCell>{client.telefone || 'N/A'}</TableCell>
-              <TableCell>{client.status}</TableCell>
-              <TableCell>
-                <div className="flex gap-2">
-                  <Button 
-                    variant="outline" 
-                    size="sm" 
-                    onClick={() => handleEdit(client)}
-                  >
-                    <Edit className="mr-2 h-4 w-4" /> Editar
-                  </Button>
-                  <Button 
-                    variant="destructive" 
-                    size="sm" 
-                    onClick={() => handleDelete(client.id)}
-                  >
-                    <Trash2 className="mr-2 h-4 w-4" /> Excluir
-                  </Button>
-                </div>
-              </TableCell>
+      <div className="flex gap-2 mb-6">
+        <div className="relative flex-1">
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
+          <Input
+            placeholder="Buscar por nome ou ID externo"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="pl-9"
+          />
+        </div>
+        <Button onClick={() => setSelectedClientId(null)}>
+          <Plus className="h-4 w-4 mr-2" />
+          Novo Cliente
+        </Button>
+      </div>
+
+      <div className="border rounded-lg">
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>Nome</TableHead>
+              <TableHead>ID Externo</TableHead>
+              <TableHead>Status</TableHead>
+              <TableHead>Criado em</TableHead>
+              <TableHead className="text-right">Ações</TableHead>
             </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+          </TableHeader>
+          <TableBody>
+            {clients?.map((client) => (
+              <TableRow key={client.id}>
+                <TableCell>{client.name}</TableCell>
+                <TableCell>{client.external_id || '-'}</TableCell>
+                <TableCell>
+                  <Badge variant={client.is_active ? 'default' : 'secondary'}>
+                    {client.is_active ? 'Ativo' : 'Inativo'}
+                  </Badge>
+                </TableCell>
+                <TableCell>
+                  {format(new Date(client.created_at), 'dd/MM/yyyy')}
+                </TableCell>
+                <TableCell className="text-right">
+                  <div className="flex justify-end gap-2">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => setSelectedClientId(client.id)}
+                    >
+                      <Edit2 className="h-4 w-4 mr-2" />
+                      Editar
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="text-destructive"
+                    >
+                      <Trash2 className="h-4 w-4 mr-2" />
+                      Excluir
+                    </Button>
+                  </div>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </div>
     </div>
   );
 }

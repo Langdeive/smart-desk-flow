@@ -1,113 +1,123 @@
 
-import { useState } from 'react';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
-import { Client, ClientFormData } from '@/types';
 import { toast } from 'sonner';
+import { Client, ClientFormData } from '@/types';
 
-export const useClients = () => {
-  const [clients, setClients] = useState<Client[]>([]);
-  const [loading, setLoading] = useState(false);
+export const useClients = (search?: string) => {
+  const queryClient = useQueryClient();
 
-  const fetchClients = async () => {
-    setLoading(true);
-    try {
-      const { data, error } = await supabase
-        .from('clientes')
+  const { data: clients, isLoading } = useQuery({
+    queryKey: ['clients', search],
+    queryFn: async () => {
+      const query = supabase
+        .from('clients')
         .select('*')
-        .returns<Client[]>();
-      
-      if (error) throw error;
-      setClients(data || []);
-    } catch (error) {
-      toast.error('Erro ao carregar clientes', {
-        description: error instanceof Error ? error.message : 'Tente novamente'
-      });
-    } finally {
-      setLoading(false);
-    }
-  };
+        .order('name');
 
-  const addClient = async (clientData: ClientFormData) => {
-    try {
-      const { data, error } = await supabase
-        .from('clientes')
-        .insert({ ...clientData, empresa_id: '', status: 'ativo' })
+      if (search) {
+        query.or(`name.ilike.%${search}%,external_id.ilike.%${search}%`);
+      }
+
+      const { data, error } = await query;
+
+      if (error) throw error;
+      return data as Client[];
+    }
+  });
+
+  const createClient = useMutation({
+    mutationFn: async (data: ClientFormData) => {
+      const { data: client, error } = await supabase
+        .from('clients')
+        .insert({
+          name: data.name,
+          external_id: data.external_id,
+          notes: data.notes
+        })
         .select()
         .single();
 
       if (error) throw error;
-      
-      toast.success('Cliente adicionado com sucesso');
-      await fetchClients();
-      return data;
-    } catch (error) {
-      toast.error('Erro ao adicionar cliente', {
+
+      if (data.contacts.length > 0) {
+        const { error: contactsError } = await supabase
+          .from('client_contacts')
+          .insert(
+            data.contacts.map((contact, index) => ({
+              ...contact,
+              client_id: client.id,
+              is_primary: index === 0 || contact.is_primary
+            }))
+          );
+
+        if (contactsError) throw contactsError;
+      }
+
+      return client;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['clients'] });
+      toast.success('Cliente criado com sucesso');
+    },
+    onError: (error) => {
+      toast.error('Erro ao criar cliente', {
         description: error instanceof Error ? error.message : 'Tente novamente'
       });
     }
-  };
+  });
 
-  const updateClient = async (id: string, clientData: Partial<ClientFormData>) => {
-    try {
-      const { data, error } = await supabase
-        .from('clientes')
-        .update(clientData)
-        .eq('id', id)
-        .select()
-        .single();
+  const updateClient = useMutation({
+    mutationFn: async ({ id, ...data }: ClientFormData & { id: string }) => {
+      const { error } = await supabase
+        .from('clients')
+        .update({
+          name: data.name,
+          external_id: data.external_id,
+          notes: data.notes
+        })
+        .eq('id', id);
 
       if (error) throw error;
-      
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['clients'] });
       toast.success('Cliente atualizado com sucesso');
-      await fetchClients();
-      return data;
-    } catch (error) {
+    },
+    onError: (error) => {
       toast.error('Erro ao atualizar cliente', {
         description: error instanceof Error ? error.message : 'Tente novamente'
       });
     }
-  };
+  });
 
-  const deleteClient = async (id: string) => {
-    try {
-      // First, check if the client has active tickets
-      const { count, error: ticketError } = await supabase
-        .from('tickets')
-        .select('id', { count: 'exact' })
-        .eq('user_id', id)
-        .eq('status', 'new');
-
-      if (ticketError) throw ticketError;
-
-      if (count && count > 0) {
-        toast.error('Não é possível excluir cliente com tickets ativos');
-        return false;
-      }
-
+  const toggleClientActive = useMutation({
+    mutationFn: async ({ id, is_active }: { id: string; is_active: boolean }) => {
       const { error } = await supabase
-        .from('clientes')
-        .delete()
+        .from('clients')
+        .update({ is_active })
         .eq('id', id);
 
       if (error) throw error;
-      
-      toast.success('Cliente excluído com sucesso');
-      await fetchClients();
-      return true;
-    } catch (error) {
-      toast.error('Erro ao excluir cliente', {
+    },
+    onSuccess: (_, { is_active }) => {
+      queryClient.invalidateQueries({ queryKey: ['clients'] });
+      toast.success(
+        is_active ? 'Cliente ativado com sucesso' : 'Cliente desativado com sucesso'
+      );
+    },
+    onError: (error) => {
+      toast.error('Erro ao alterar status do cliente', {
         description: error instanceof Error ? error.message : 'Tente novamente'
       });
-      return false;
     }
-  };
+  });
 
-  return { 
-    clients, 
-    loading, 
-    fetchClients, 
-    addClient, 
-    updateClient, 
-    deleteClient 
+  return {
+    clients,
+    isLoading,
+    createClient,
+    updateClient,
+    toggleClientActive
   };
 };

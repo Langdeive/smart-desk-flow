@@ -57,6 +57,44 @@ export type Database = {
           },
         ]
       }
+      client_contacts: {
+        Row: {
+          client_id: string
+          created_at: string | null
+          email: string | null
+          id: string
+          is_primary: boolean | null
+          name: string | null
+          phone: string | null
+        }
+        Insert: {
+          client_id: string
+          created_at?: string | null
+          email?: string | null
+          id?: string
+          is_primary?: boolean | null
+          name?: string | null
+          phone?: string | null
+        }
+        Update: {
+          client_id?: string
+          created_at?: string | null
+          email?: string | null
+          id?: string
+          is_primary?: boolean | null
+          name?: string | null
+          phone?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "client_contacts_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "clients"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       clientes: {
         Row: {
           created_at: string | null
@@ -93,6 +131,36 @@ export type Database = {
           status?: string | null
           telefone?: string | null
           updated_at?: string | null
+        }
+        Relationships: []
+      }
+      clients: {
+        Row: {
+          company_id: string
+          created_at: string | null
+          external_id: string | null
+          id: string
+          is_active: boolean | null
+          name: string
+          notes: string | null
+        }
+        Insert: {
+          company_id: string
+          created_at?: string | null
+          external_id?: string | null
+          id?: string
+          is_active?: boolean | null
+          name: string
+          notes?: string | null
+        }
+        Update: {
+          company_id?: string
+          created_at?: string | null
+          external_id?: string | null
+          id?: string
+          is_active?: boolean | null
+          name?: string
+          notes?: string | null
         }
         Relationships: []
       }
@@ -274,6 +342,7 @@ export type Database = {
           ai_processed: boolean
           category: string
           company_id: string
+          contact_id: string | null
           created_at: string
           description: string
           id: string
@@ -290,6 +359,7 @@ export type Database = {
           ai_processed?: boolean
           category: string
           company_id: string
+          contact_id?: string | null
           created_at?: string
           description: string
           id?: string
@@ -306,6 +376,7 @@ export type Database = {
           ai_processed?: boolean
           category?: string
           company_id?: string
+          contact_id?: string | null
           created_at?: string
           description?: string
           id?: string
@@ -317,7 +388,15 @@ export type Database = {
           updated_at?: string
           user_id?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "tickets_contact_id_fkey"
+            columns: ["contact_id"]
+            isOneToOne: false
+            referencedRelation: "client_contacts"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       usuarios: {
         Row: {

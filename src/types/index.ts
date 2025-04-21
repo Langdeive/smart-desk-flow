@@ -94,6 +94,40 @@ export type KnowledgeArticle = {
 
 export type Client = {
   id: string;
+  company_id: string;
+  name: string;
+  external_id?: string | null;
+  notes?: string | null;
+  is_active: boolean;
+  created_at: Date;
+};
+
+export type ClientContact = {
+  id: string;
+  client_id: string;
+  name?: string | null;
+  email?: string | null;
+  phone?: string | null;
+  is_primary: boolean;
+  created_at: Date;
+};
+
+export type ContactInput = {
+  name?: string;
+  email?: string;
+  phone?: string;
+  is_primary?: boolean;
+};
+
+export type ClientFormData = {
+  name: string;
+  external_id?: string;
+  notes?: string;
+  contacts: ContactInput[];
+};
+
+export type Client = {
+  id: string;
   empresa_id: string;
   nome: string;
   email: string;
