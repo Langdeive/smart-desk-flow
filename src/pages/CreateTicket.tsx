@@ -16,6 +16,7 @@ import { TicketCategory, TicketPriority, Client } from "@/types";
 import { createTicket, uploadAttachment } from "@/services/ticketService";
 import { useClients } from "@/hooks/useClients";
 import { Loader2 } from "lucide-react";
+import { useClientContacts } from "@/hooks/useClientContacts";
 
 const ticketFormSchema = z.object({
   title: z.string().min(5, { message: "O título deve ter pelo menos 5 caracteres" }),
@@ -23,6 +24,7 @@ const ticketFormSchema = z.object({
   category: z.enum(["technical_issue", "feature_request", "billing", "general_inquiry", "other"]),
   priority: z.enum(["low", "medium", "high", "critical"]),
   clientId: z.string().min(1, { message: "Selecione um cliente" }),
+  contactId: z.string().optional(),
   name: z.string().min(2, { message: "Por favor, insira seu nome" }),
   email: z.string().email({ message: "Por favor, insira um e-mail válido" }),
 });
@@ -48,12 +50,10 @@ const CreateTicket = () => {
   const { toast } = useToast();
   const [files, setFiles] = useState<File[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [selectedClientId, setSelectedClientId] = useState<string | null>(null);
   const navigate = useNavigate();
-  const { clients, loading: clientsLoading, fetchClients } = useClients();
-
-  useEffect(() => {
-    fetchClients();
-  }, [fetchClients]);
+  const { clients, isLoading: clientsLoading } = useClients();
+  const { contacts, isLoading: contactsLoading } = useClientContacts(selectedClientId || undefined);
 
   const form = useForm<TicketFormValues>({
     resolver: zodResolver(ticketFormSchema),
@@ -63,6 +63,7 @@ const CreateTicket = () => {
       category: "technical_issue",
       priority: "medium",
       clientId: "",
+      contactId: "",
       email: "",
       name: "",
     },
@@ -81,7 +82,8 @@ const CreateTicket = () => {
         category: data.category,
         userId: data.clientId,
         companyId: "00000000-0000-0000-0000-000000000000", // This would be the current company ID in a real app
-        source: "web"
+        source: "web",
+        contactId: data.contactId
       });
       
       // Upload any attachments
@@ -117,13 +119,28 @@ const CreateTicket = () => {
 
   // Helper function to handle client selection and auto-fill
   const handleClientChange = (clientId: string) => {
+    setSelectedClientId(clientId);
     form.setValue("clientId", clientId);
+    form.setValue("contactId", ""); // Reset contact if client changes
     
-    // Auto-fill email and name based on selected client
-    const selectedClient = clients.find(client => client.id === clientId);
-    if (selectedClient) {
-      form.setValue("name", selectedClient.nome);
-      form.setValue("email", selectedClient.email);
+    // Clear previous contact data
+    form.setValue("name", "");
+    form.setValue("email", "");
+  };
+
+  // Helper function to handle contact selection
+  const handleContactChange = (contactId: string) => {
+    form.setValue("contactId", contactId);
+    
+    // Auto-fill contact details
+    const selectedContact = contacts?.find(contact => contact.id === contactId);
+    if (selectedContact) {
+      if (selectedContact.name) {
+        form.setValue("name", selectedContact.name);
+      }
+      if (selectedContact.email) {
+        form.setValue("email", selectedContact.email);
+      }
     }
   };
 
@@ -166,7 +183,7 @@ const CreateTicket = () => {
                           ) : (
                             clients.map((client) => (
                               <SelectItem key={client.id} value={client.id}>
-                                {client.nome} ({client.email})
+                                {client.name}
                               </SelectItem>
                             ))
                           )}
@@ -176,6 +193,52 @@ const CreateTicket = () => {
                     </FormItem>
                   )}
                 />
+
+                {selectedClientId && (
+                  <FormField
+                    control={form.control}
+                    name="contactId"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Contato</FormLabel>
+                        <Select 
+                          onValueChange={handleContactChange} 
+                          value={field.value}
+                          disabled={contactsLoading}
+                        >
+                          <FormControl>
+                            <SelectTrigger>
+                              <SelectValue placeholder="Selecione um contato" />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            {contactsLoading ? (
+                              <div className="flex items-center justify-center p-2">
+                                <Loader2 className="h-4 w-4 animate-spin mr-2" />
+                                <span>Carregando contatos...</span>
+                              </div>
+                            ) : contacts && contacts.length > 0 ? (
+                              contacts.map((contact) => (
+                                <SelectItem key={contact.id} value={contact.id}>
+                                  {contact.name || contact.email || contact.phone || "Sem nome"}
+                                  {contact.is_primary && " (Principal)"}
+                                </SelectItem>
+                              ))
+                            ) : (
+                              <div className="p-2 text-center text-muted-foreground">
+                                Nenhum contato encontrado
+                              </div>
+                            )}
+                          </SelectContent>
+                        </Select>
+                        <FormDescription>
+                          Selecione um contato ou preencha os dados manualmente abaixo
+                        </FormDescription>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                )}
               </div>
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

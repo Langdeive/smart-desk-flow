@@ -25,6 +25,8 @@ import { ContactList } from './ContactList';
 import { clientSchema, type ClientFormValues } from '@/lib/validations/client';
 import { useClients } from '@/hooks/useClients';
 import { ContactDialog } from './ContactDialog';
+import { useClientContacts } from '@/hooks/useClientContacts';
+import { Client } from '@/types';
 
 interface ClientDialogProps {
   clientId?: string | null;
@@ -33,7 +35,8 @@ interface ClientDialogProps {
 
 export function ClientDialog({ clientId, onClose }: ClientDialogProps) {
   const { clients, createClient, updateClient } = useClients();
-  const client = clients?.find(c => c.id === clientId);
+  const { contacts: existingContacts, isLoading: contactsLoading } = useClientContacts(clientId || undefined);
+  const client = clients?.find(c => c.id === clientId) as Client | undefined;
 
   const form = useForm<ClientFormValues>({
     resolver: zodResolver(clientSchema),
@@ -55,11 +58,34 @@ export function ClientDialog({ clientId, onClose }: ClientDialogProps) {
     }
   }, [client, form]);
 
+  useEffect(() => {
+    if (existingContacts && existingContacts.length > 0 && clientId) {
+      const mappedContacts = existingContacts.map(contact => ({
+        name: contact.name || undefined,
+        email: contact.email || undefined,
+        phone: contact.phone || undefined,
+        is_primary: contact.is_primary
+      }));
+      form.setValue('contacts', mappedContacts);
+    }
+  }, [existingContacts, clientId, form]);
+
   const onSubmit = async (data: ClientFormValues) => {
     if (clientId) {
-      await updateClient.mutateAsync({ id: clientId, ...data });
+      await updateClient.mutateAsync({ 
+        id: clientId, 
+        name: data.name, // Ensure name is provided
+        external_id: data.external_id,
+        notes: data.notes,
+        contacts: data.contacts
+      });
     } else {
-      await createClient.mutateAsync(data);
+      await createClient.mutateAsync({
+        name: data.name, // Ensure name is provided
+        external_id: data.external_id,
+        notes: data.notes,
+        contacts: data.contacts
+      });
     }
     onClose?.();
   };

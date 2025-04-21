@@ -7,7 +7,7 @@ import { ClientContact, ContactInput } from '@/types';
 export const useClientContacts = (clientId?: string) => {
   const queryClient = useQueryClient();
 
-  const { data: contacts, isLoading } = useQuery({
+  const { data: contacts = [], isLoading } = useQuery({
     queryKey: ['client-contacts', clientId],
     queryFn: async () => {
       if (!clientId) return [];

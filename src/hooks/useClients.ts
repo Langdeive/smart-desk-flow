@@ -3,11 +3,14 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { Client, ClientFormData } from '@/types';
+import { useAuth } from '@/hooks/useAuth'; // Assuming this hook exists for getting company_id
 
 export const useClients = (search?: string) => {
   const queryClient = useQueryClient();
+  const { user } = useAuth(); // Assuming this hook provides user data with company_id
+  const companyId = user?.companyId;
 
-  const { data: clients, isLoading } = useQuery({
+  const { data: clients = [], isLoading } = useQuery({
     queryKey: ['clients', search],
     queryFn: async () => {
       const query = supabase
@@ -28,12 +31,14 @@ export const useClients = (search?: string) => {
 
   const createClient = useMutation({
     mutationFn: async (data: ClientFormData) => {
+      // First create the client
       const { data: client, error } = await supabase
         .from('clients')
         .insert({
           name: data.name,
           external_id: data.external_id,
-          notes: data.notes
+          notes: data.notes,
+          company_id: companyId // Use the company_id from auth context
         })
         .select()
         .single();

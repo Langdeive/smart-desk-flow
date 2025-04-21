@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -26,14 +27,10 @@ const TicketDetailsPanel: React.FC<TicketDetailsPanelProps> = ({
   onPriorityChange,
   formatDate,
 }) => {
-  const { clients, loading: clientsLoading, fetchClients } = useClients();
+  const { clients, isLoading: clientsLoading } = useClients();
   const [clientData, setClientData] = useState<Client | null>(null);
   const [historyItems, setHistoryItems] = useState<TicketHistoryItem[]>([]);
   const [loadingHistory, setLoadingHistory] = useState(false);
-
-  useEffect(() => {
-    fetchClients();
-  }, [fetchClients]);
 
   useEffect(() => {
     if (clients.length > 0 && ticket.userId) {
@@ -157,11 +154,8 @@ const TicketDetailsPanel: React.FC<TicketDetailsPanelProps> = ({
                 </div>
               ) : clientData ? (
                 <>
-                  <p className="mt-1">{clientData.nome}</p>
-                  <p className="text-sm text-muted-foreground">{clientData.email}</p>
-                  {clientData.telefone && (
-                    <p className="text-sm text-muted-foreground">{clientData.telefone}</p>
-                  )}
+                  <p className="mt-1">{clientData.name}</p>
+                  {/* Show additional contact information if available */}
                 </>
               ) : (
                 <p className="mt-1 text-muted-foreground">Cliente não encontrado</p>

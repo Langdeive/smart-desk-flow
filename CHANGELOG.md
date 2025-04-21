@@ -1,6 +1,40 @@
 
 # CHANGELOG
 
+## [1.1.0] - 2025-04-21
+
+### Implementação de Gerenciamento de Clientes e Contatos
+
+1. **Modelo de Dados**
+   - Adicionado suporte para múltiplos contatos por cliente
+   - Implementada vinculação de tickets a contatos específicos
+   - Atualizado sistema de validação com zod schemas
+
+2. **Gerenciamento de Clientes**
+   - Nova interface de listagem de clientes com filtragem
+   - Formulário para criação/edição de clientes
+   - Funcionalidade para ativar/desativar clientes
+
+3. **Gerenciamento de Contatos**
+   - Interface para adicionar múltiplos contatos por cliente
+   - Suporte para designação de contato primário
+   - Validação de e-mail e telefone com regras personalizadas
+
+4. **Integração com Tickets**
+   - Atualização do fluxo de criação de tickets para selecionar cliente e contato
+   - Exibição de informações de cliente e contato nos detalhes do ticket
+   - Atualização da visualização de histórico de tickets
+
+5. **Melhorias Técnicas**
+   - Implementação de atualizações otimistas com TanStack Query
+   - Correções de tipagem TypeScript para maior segurança
+   - Controle de acesso baseado em empresa (RLS)
+
+### Planejamento Futuro
+- Importação CSV de clientes e contatos
+- Dashboard com métricas por cliente
+- Relatórios de SLA por cliente
+
 ## [1.0.0] - 2025-04-21
 
 ### Melhorias de Navegação e Usabilidade

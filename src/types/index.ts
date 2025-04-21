@@ -47,6 +47,7 @@ export type Ticket = {
   source: "web" | "email" | "whatsapp";
   aiProcessed: boolean;
   needsHumanReview: boolean;
+  contactId?: string;
 };
 
 export type TicketHistoryItem = {
@@ -99,7 +100,7 @@ export type Client = {
   external_id?: string | null;
   notes?: string | null;
   is_active: boolean;
-  created_at: Date;
+  created_at: string; // Changed from Date to string to match Supabase response
 };
 
 export type ClientContact = {
@@ -109,7 +110,7 @@ export type ClientContact = {
   email?: string | null;
   phone?: string | null;
   is_primary: boolean;
-  created_at: Date;
+  created_at: string; // Changed from Date to string to match Supabase response
 };
 
 export type ContactInput = {
@@ -125,17 +126,3 @@ export type ClientFormData = {
   notes?: string;
   contacts: ContactInput[];
 };
-
-export type Client = {
-  id: string;
-  empresa_id: string;
-  nome: string;
-  email: string;
-  telefone?: string;
-  documento?: string;
-  observacoes?: string;
-  status: 'ativo' | 'inativo';
-  created_at: Date;
-};
-
-export type ClientFormData = Omit<Client, 'id' | 'empresa_id' | 'created_at' | 'status'>;
