@@ -1,3 +1,4 @@
+
 import { Link, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { Home, Ticket, BookOpen, Settings, LayoutDashboard } from "lucide-react";
@@ -27,30 +28,22 @@ export function NavMenu() {
           <NavigationMenu>
             <NavigationMenuList>
               <NavigationMenuItem>
-                <Link to="/">
-                  <NavigationMenuLink 
-                    className={cn(
-                      navigationMenuTriggerStyle(),
-                      isActive("/") && "bg-accent text-accent-foreground"
-                    )}
-                  >
-                    <Home className="w-4 h-4 mr-2" />
-                    Início
-                  </NavigationMenuLink>
+                <Link to="/" className={cn(
+                  navigationMenuTriggerStyle(),
+                  isActive("/") && "bg-accent text-accent-foreground"
+                )}>
+                  <Home className="w-4 h-4 mr-2" />
+                  Início
                 </Link>
               </NavigationMenuItem>
               
               <NavigationMenuItem>
-                <Link to="/dashboard">
-                  <NavigationMenuLink 
-                    className={cn(
-                      navigationMenuTriggerStyle(),
-                      isActive("/dashboard") && "bg-accent text-accent-foreground"
-                    )}
-                  >
-                    <LayoutDashboard className="w-4 h-4 mr-2" />
-                    Dashboard
-                  </NavigationMenuLink>
+                <Link to="/dashboard" className={cn(
+                  navigationMenuTriggerStyle(),
+                  isActive("/dashboard") && "bg-accent text-accent-foreground"
+                )}>
+                  <LayoutDashboard className="w-4 h-4 mr-2" />
+                  Dashboard
                 </Link>
               </NavigationMenuItem>
               
@@ -68,33 +61,25 @@ export function NavMenu() {
                 <NavigationMenuContent>
                   <ul className="grid w-[200px] gap-2 p-2">
                     <li>
-                      <Link to="/tickets">
-                        <NavigationMenuLink 
-                          className={cn(
-                            "block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground",
-                            isActive("/tickets") && "bg-accent text-accent-foreground"
-                          )}
-                        >
-                          <div className="text-sm font-medium leading-none">Lista de Tickets</div>
-                          <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
-                            Ver todos os tickets
-                          </p>
-                        </NavigationMenuLink>
+                      <Link to="/tickets" className={cn(
+                        "block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground",
+                        isActive("/tickets") && "bg-accent text-accent-foreground"
+                      )}>
+                        <div className="text-sm font-medium leading-none">Lista de Tickets</div>
+                        <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
+                          Ver todos os tickets
+                        </p>
                       </Link>
                     </li>
                     <li>
-                      <Link to="/tickets/new">
-                        <NavigationMenuLink 
-                          className={cn(
-                            "block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground",
-                            isActive("/tickets/new") && "bg-accent text-accent-foreground"
-                          )}
-                        >
-                          <div className="text-sm font-medium leading-none">Novo Ticket</div>
-                          <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
-                            Criar uma nova solicitação
-                          </p>
-                        </NavigationMenuLink>
+                      <Link to="/tickets/new" className={cn(
+                        "block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground",
+                        isActive("/tickets/new") && "bg-accent text-accent-foreground"
+                      )}>
+                        <div className="text-sm font-medium leading-none">Novo Ticket</div>
+                        <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
+                          Criar uma nova solicitação
+                        </p>
                       </Link>
                     </li>
                   </ul>
@@ -102,30 +87,22 @@ export function NavMenu() {
               </NavigationMenuItem>
               
               <NavigationMenuItem>
-                <Link to="/knowledge">
-                  <NavigationMenuLink 
-                    className={cn(
-                      navigationMenuTriggerStyle(),
-                      isActive("/knowledge") && "bg-accent text-accent-foreground"
-                    )}
-                  >
-                    <BookOpen className="w-4 h-4 mr-2" />
-                    Base de Conhecimento
-                  </NavigationMenuLink>
+                <Link to="/knowledge" className={cn(
+                  navigationMenuTriggerStyle(),
+                  isActive("/knowledge") && "bg-accent text-accent-foreground"
+                )}>
+                  <BookOpen className="w-4 h-4 mr-2" />
+                  Base de Conhecimento
                 </Link>
               </NavigationMenuItem>
               
               <NavigationMenuItem>
-                <Link to="/settings">
-                  <NavigationMenuLink 
-                    className={cn(
-                      navigationMenuTriggerStyle(),
-                      isActive("/settings") && "bg-accent text-accent-foreground"
-                    )}
-                  >
-                    <Settings className="w-4 h-4 mr-2" />
-                    Configurações
-                  </NavigationMenuLink>
+                <Link to="/settings" className={cn(
+                  navigationMenuTriggerStyle(),
+                  isActive("/settings") && "bg-accent text-accent-foreground"
+                )}>
+                  <Settings className="w-4 h-4 mr-2" />
+                  Configurações
                 </Link>
               </NavigationMenuItem>
             </NavigationMenuList>
