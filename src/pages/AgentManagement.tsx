@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { 
   Table, 
@@ -14,7 +15,8 @@ import {
   DialogContent, 
   DialogHeader, 
   DialogTitle, 
-  DialogTrigger 
+  DialogTrigger,
+  DialogDescription
 } from '@/components/ui/dialog';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
@@ -49,10 +51,13 @@ export default function AgentManagement() {
   const { companyId } = useAuth();
   const { agents, loading, fetchAgents, addAgent } = useAgents(companyId);
   const [searchTerm, setSearchTerm] = useState('');
+  const [dialogOpen, setDialogOpen] = useState(false);
 
   useEffect(() => {
-    fetchAgents();
-  }, []);
+    if (companyId) {
+      fetchAgents();
+    }
+  }, [companyId]);
 
   const form = useForm<z.infer<typeof agentSchema>>({
     resolver: zodResolver(agentSchema),
@@ -70,12 +75,23 @@ export default function AgentManagement() {
       funcao: data.funcao
     });
     form.reset();
+    setDialogOpen(false);
   };
 
   const filteredAgents = agents.filter(agent => 
     agent.nome.toLowerCase().includes(searchTerm.toLowerCase()) ||
     agent.email.toLowerCase().includes(searchTerm.toLowerCase())
   );
+
+  // Function to get status display text
+  const getStatusDisplay = (status: string) => {
+    switch (status) {
+      case 'active': return 'Ativo';
+      case 'inactive': return 'Inativo';
+      case 'awaiting': return 'Aguardando Ativação';
+      default: return status;
+    }
+  };
 
   return (
     <div className="container mx-auto p-4">
@@ -89,13 +105,16 @@ export default function AgentManagement() {
           className="max-w-md"
         />
         
-        <Dialog>
+        <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
           <DialogTrigger asChild>
             <Button>Adicionar Agente</Button>
           </DialogTrigger>
           <DialogContent>
             <DialogHeader>
               <DialogTitle>Adicionar Novo Agente</DialogTitle>
+              <DialogDescription>
+                Preencha os dados para cadastrar um novo agente.
+              </DialogDescription>
             </DialogHeader>
             <Form {...form}>
               <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
@@ -161,32 +180,38 @@ export default function AgentManagement() {
         </Dialog>
       </div>
 
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead>Nome</TableHead>
-            <TableHead>E-mail</TableHead>
-            <TableHead>Função</TableHead>
-            <TableHead>Status</TableHead>
-            <TableHead>Ações</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {filteredAgents.map(agent => (
-            <TableRow key={agent.id}>
-              <TableCell>{agent.nome}</TableCell>
-              <TableCell>{agent.email}</TableCell>
-              <TableCell>{agent.funcao === 'admin' ? 'Administrador' : 'Agente'}</TableCell>
-              <TableCell>{agent.status}</TableCell>
-              <TableCell>
-                <Button variant="outline" size="sm">
-                  Editar
-                </Button>
-              </TableCell>
+      {loading ? (
+        <div className="text-center py-4">Carregando agentes...</div>
+      ) : agents.length === 0 ? (
+        <div className="text-center py-4">Nenhum agente cadastrado</div>
+      ) : (
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>Nome</TableHead>
+              <TableHead>E-mail</TableHead>
+              <TableHead>Função</TableHead>
+              <TableHead>Status</TableHead>
+              <TableHead>Ações</TableHead>
             </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+          </TableHeader>
+          <TableBody>
+            {filteredAgents.map(agent => (
+              <TableRow key={agent.id}>
+                <TableCell>{agent.nome}</TableCell>
+                <TableCell>{agent.email}</TableCell>
+                <TableCell>{agent.funcao === 'admin' ? 'Administrador' : 'Agente'}</TableCell>
+                <TableCell>{getStatusDisplay(agent.status)}</TableCell>
+                <TableCell>
+                  <Button variant="outline" size="sm">
+                    Editar
+                  </Button>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      )}
     </div>
   );
 }

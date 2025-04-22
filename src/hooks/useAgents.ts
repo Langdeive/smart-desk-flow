@@ -19,8 +19,9 @@ export const useAgents = (companyId: string | undefined) => {
     setLoading(true);
     try {
       const { data, error } = await supabase
-        .from('agentes' as any)
+        .from('agentes')
         .select('*')
+        .eq('empresa_id', companyId)
         .returns<Agent[]>();
       
       if (error) throw error;
@@ -29,6 +30,7 @@ export const useAgents = (companyId: string | undefined) => {
       toast.error('Erro ao carregar agentes', {
         description: error instanceof Error ? error.message : 'Tente novamente'
       });
+      console.error('Error fetching agents:', error);
     } finally {
       setLoading(false);
     }
@@ -40,8 +42,8 @@ export const useAgents = (companyId: string | undefined) => {
       return;
     }
     try {
-      const { data: userData, error } = await supabase.rpc(
-        'register_agent' as any,
+      const { data, error } = await supabase.rpc(
+        'register_agent',
         {
           nome: agentData.nome,
           email: agentData.email,
@@ -53,7 +55,7 @@ export const useAgents = (companyId: string | undefined) => {
       if (error) throw error;
       
       toast.success('Agente adicionado com sucesso', {
-        description: `Senha temporária gerada para ${agentData.email}`
+        description: `Uma senha temporária foi gerada para ${agentData.email}`
       });
       
       await fetchAgents();
@@ -61,9 +63,9 @@ export const useAgents = (companyId: string | undefined) => {
       toast.error('Erro ao adicionar agente', {
         description: error instanceof Error ? error.message : 'Tente novamente'
       });
+      console.error('Error adding agent:', error);
     }
   };
 
   return { agents, loading, fetchAgents, addAgent };
 };
-
