@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -11,7 +10,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { AlertCircle, CheckCircle, Lock, Mail } from "lucide-react";
-import { useAuth } from "@/hooks/useAuth";
+import { useAuth, SignInData } from "@/hooks/useAuth";
 
 const loginFormSchema = z.object({
   email: z.string().email({ message: "Por favor, insira um e-mail válido" }),
@@ -29,7 +28,6 @@ const Login = () => {
   const [currentEmail, setCurrentEmail] = useState("");
   const [verificationSuccess, setVerificationSuccess] = useState(false);
 
-  // Verifica se o usuário acabou de verificar o e-mail através do URL
   useEffect(() => {
     const params = new URLSearchParams(location.search);
     const verified = params.get("verified");
@@ -38,7 +36,6 @@ const Login = () => {
     }
   }, [location]);
 
-  // Redireciona para o dashboard se o usuário estiver autenticado e com e-mail verificado
   useEffect(() => {
     if (user && emailVerified) {
       navigate("/dashboard");
@@ -56,9 +53,14 @@ const Login = () => {
   const onSubmit = async (data: LoginFormValues) => {
     try {
       setCurrentEmail(data.email);
-      await signIn(data);
       
-      // Se o usuário existe mas o e-mail não foi verificado, mostra o diálogo
+      const loginData: SignInData = {
+        email: data.email,
+        password: data.password
+      };
+      
+      await signIn(loginData);
+      
       if (user && !emailVerified) {
         setIsVerificationDialogOpen(true);
       }
@@ -184,7 +186,6 @@ const Login = () => {
         </CardFooter>
       </Card>
       
-      {/* Diálogo para reenviar e-mail de verificação */}
       <Dialog open={isVerificationDialogOpen} onOpenChange={setIsVerificationDialogOpen}>
         <DialogContent>
           <DialogHeader>
