@@ -1,15 +1,17 @@
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { useToast } from "@/hooks/use-toast";
-import { Lock, Mail } from "lucide-react";
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { AlertCircle, CheckCircle, Lock, Mail } from "lucide-react";
+import { useAuth } from "@/hooks/useAuth";
 
 const loginFormSchema = z.object({
   email: z.string().email({ message: "Por favor, insira um e-mail válido" }),
@@ -19,8 +21,29 @@ const loginFormSchema = z.object({
 type LoginFormValues = z.infer<typeof loginFormSchema>;
 
 const Login = () => {
-  const { toast } = useToast();
   const navigate = useNavigate();
+  const location = useLocation();
+  const { signIn, error, user, emailVerified, resendVerificationEmail } = useAuth();
+  const [isVerificationDialogOpen, setIsVerificationDialogOpen] = useState(false);
+  const [isResendingEmail, setIsResendingEmail] = useState(false);
+  const [currentEmail, setCurrentEmail] = useState("");
+  const [verificationSuccess, setVerificationSuccess] = useState(false);
+
+  // Verifica se o usuário acabou de verificar o e-mail através do URL
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const verified = params.get("verified");
+    if (verified === "true") {
+      setVerificationSuccess(true);
+    }
+  }, [location]);
+
+  // Redireciona para o dashboard se o usuário estiver autenticado e com e-mail verificado
+  useEffect(() => {
+    if (user && emailVerified) {
+      navigate("/dashboard");
+    }
+  }, [user, emailVerified, navigate]);
 
   const form = useForm<LoginFormValues>({
     resolver: zodResolver(loginFormSchema),
@@ -32,25 +55,28 @@ const Login = () => {
 
   const onSubmit = async (data: LoginFormValues) => {
     try {
-      // Aqui precisaremos implementar a integração com o Supabase para autenticação
-      console.log("Dados de login:", data);
+      setCurrentEmail(data.email);
+      await signIn(data);
       
-      toast({
-        title: "Login realizado com sucesso",
-        description: "Você será redirecionado para o dashboard.",
-      });
-      
-      // Simulando redirecionamento após login bem-sucedido
-      setTimeout(() => {
-        navigate("/dashboard");
-      }, 1500);
+      // Se o usuário existe mas o e-mail não foi verificado, mostra o diálogo
+      if (user && !emailVerified) {
+        setIsVerificationDialogOpen(true);
+      }
     } catch (error) {
       console.error("Erro ao fazer login:", error);
-      toast({
-        title: "Erro ao fazer login",
-        description: "Credenciais inválidas. Por favor, tente novamente.",
-        variant: "destructive",
-      });
+    }
+  };
+
+  const handleResendVerification = async () => {
+    if (!currentEmail) return;
+    
+    setIsResendingEmail(true);
+    try {
+      await resendVerificationEmail(currentEmail);
+    } catch (error) {
+      console.error("Erro ao reenviar e-mail:", error);
+    } finally {
+      setIsResendingEmail(false);
     }
   };
 
@@ -63,6 +89,38 @@ const Login = () => {
             Entre na sua conta para acessar o sistema
           </CardDescription>
         </CardHeader>
+        
+        {verificationSuccess && (
+          <div className="px-6 mb-4">
+            <Alert className="bg-green-50 border-green-200">
+              <CheckCircle className="h-4 w-4 text-green-600" />
+              <AlertTitle className="text-green-800">E-mail verificado com sucesso!</AlertTitle>
+              <AlertDescription className="text-green-700">
+                Seu e-mail foi verificado. Agora você pode fazer login.
+              </AlertDescription>
+            </Alert>
+          </div>
+        )}
+        
+        {user && !emailVerified && (
+          <div className="px-6 mb-4">
+            <Alert variant="destructive">
+              <AlertCircle className="h-4 w-4" />
+              <AlertTitle>E-mail não verificado</AlertTitle>
+              <AlertDescription>
+                Você precisa verificar seu e-mail antes de acessar o sistema.
+                <Button 
+                  variant="link" 
+                  className="p-0 h-auto text-destructive-foreground underline ml-1"
+                  onClick={() => setIsVerificationDialogOpen(true)}
+                >
+                  Reenviar e-mail de verificação
+                </Button>
+              </AlertDescription>
+            </Alert>
+          </div>
+        )}
+        
         <CardContent>
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
@@ -125,6 +183,34 @@ const Login = () => {
           </div>
         </CardFooter>
       </Card>
+      
+      {/* Diálogo para reenviar e-mail de verificação */}
+      <Dialog open={isVerificationDialogOpen} onOpenChange={setIsVerificationDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Verificação de e-mail necessária</DialogTitle>
+            <DialogDescription>
+              Para acessar o sistema, é necessário verificar seu e-mail. 
+              Clique no link que enviamos para {currentEmail || "seu e-mail"}.
+              Não recebeu o e-mail? Podemos enviar novamente.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button
+              variant="outline"
+              onClick={() => setIsVerificationDialogOpen(false)}
+            >
+              Fechar
+            </Button>
+            <Button 
+              onClick={handleResendVerification}
+              disabled={isResendingEmail}
+            >
+              {isResendingEmail ? "Enviando..." : "Reenviar e-mail"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };

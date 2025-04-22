@@ -26,6 +26,7 @@ export const useAuth = () => {
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<AuthError | null>(null);
+  const [emailVerified, setEmailVerified] = useState<boolean>(false);
 
   useEffect(() => {
     // Set up auth state listener
@@ -34,11 +35,28 @@ export const useAuth = () => {
         if (event === 'SIGNED_IN') {
           setUser(session?.user ?? null);
           setSession(session);
-          toast.success('Login realizado com sucesso!');
+          const isEmailVerified = session?.user?.email_confirmed_at != null;
+          setEmailVerified(isEmailVerified);
+          
+          if (!isEmailVerified) {
+            toast.error('E-mail não verificado', {
+              description: 'Por favor, verifique seu e-mail antes de fazer login'
+            });
+            // Não vamos fazer signOut automático aqui para permitir que o usuário
+            // veja a notificação e tenha chance de solicitar reenvio
+          } else {
+            toast.success('Login realizado com sucesso!');
+          }
         } else if (event === 'SIGNED_OUT') {
           setUser(null);
           setSession(null);
+          setEmailVerified(false);
           toast.success('Logout realizado com sucesso!');
+        } else if (event === 'USER_UPDATED') {
+          setUser(session?.user ?? null);
+          setSession(session);
+          const isEmailVerified = session?.user?.email_confirmed_at != null;
+          setEmailVerified(isEmailVerified);
         }
         setLoading(false);
       }
@@ -49,6 +67,11 @@ export const useAuth = () => {
       const { data: { session } } = await supabase.auth.getSession();
       setSession(session);
       setUser(session?.user ?? null);
+      
+      if (session?.user) {
+        setEmailVerified(session.user.email_confirmed_at != null);
+      }
+      
       setLoading(false);
     };
 
@@ -70,13 +93,14 @@ export const useAuth = () => {
           data: {
             company_name,
             plan
-          }
+          },
+          emailRedirectTo: `${window.location.origin}/login?verified=true`
         }
       });
 
       if (error) throw error;
 
-      toast.success('Cadastro realizado com sucesso! Verifique seu e-mail.');
+      toast.success('Cadastro realizado com sucesso! Verifique seu e-mail para confirmar sua conta.');
     } catch (err) {
       const error = err as Error;
       setError({ message: error.message });
@@ -90,12 +114,23 @@ export const useAuth = () => {
   const signIn = async ({ email, password }: SignInData) => {
     try {
       setError(null);
-      const { error } = await supabase.auth.signInWithPassword({
+      const { data, error } = await supabase.auth.signInWithPassword({
         email,
         password
       });
 
       if (error) throw error;
+
+      // Verificar se o e-mail foi confirmado
+      if (data.user && !data.user.email_confirmed_at) {
+        setEmailVerified(false);
+        toast.error('E-mail não verificado', {
+          description: 'Por favor, verifique seu e-mail antes de fazer login'
+        });
+        // Não faremos logout automático, usuário poderá solicitar reenvio da confirmação
+      } else {
+        setEmailVerified(true);
+      }
     } catch (err) {
       const error = err as Error;
       setError({ message: error.message });
@@ -114,6 +149,30 @@ export const useAuth = () => {
       const error = err as Error;
       setError({ message: error.message });
       toast.error('Erro ao realizar logout', {
+        description: error.message
+      });
+      throw error;
+    }
+  };
+  
+  const resendVerificationEmail = async (email: string) => {
+    try {
+      setError(null);
+      const { error } = await supabase.auth.resend({
+        type: 'signup',
+        email,
+        options: {
+          emailRedirectTo: `${window.location.origin}/login?verified=true`
+        }
+      });
+
+      if (error) throw error;
+
+      toast.success('E-mail de verificação reenviado com sucesso!');
+    } catch (err) {
+      const error = err as Error;
+      setError({ message: error.message });
+      toast.error('Erro ao reenviar e-mail de verificação', {
         description: error.message
       });
       throw error;
@@ -165,12 +224,14 @@ export const useAuth = () => {
     session,
     loading,
     error,
+    emailVerified,
     signUp,
     signIn,
     signOut,
     resetPassword,
     updatePassword,
-    isAuthenticated: !!user,
+    resendVerificationEmail,
+    isAuthenticated: !!user && emailVerified,
     companyId: session?.user?.user_metadata?.company_id,
     role: session?.user?.user_metadata?.role
   };

@@ -7,18 +7,11 @@ import { NewTicketModal } from "@/components/ticket/NewTicketModal";
 import { MainNav } from "./MainNav";
 import { UserMenu } from "./UserMenu";
 import { ThemeToggle } from "./ThemeToggle";
+import { useAuth } from "@/hooks/useAuth";
 
 export function NavMenu() {
-  // Mock user state - this would be replaced with actual auth state
-  const [user, setUser] = useState<{ name: string; email: string } | null>(null);
+  const { user, isAuthenticated, loading, signOut } = useAuth();
   const [showNewTicketModal, setShowNewTicketModal] = useState(false);
-  
-  // Simulating user login for demonstration
-  useEffect(() => {
-    setTimeout(() => {
-      setUser({ name: "John Doe", email: "john@example.com" });
-    }, 1000);
-  }, []);
   
   const showOnlyAuth = location.pathname === '/';
   
@@ -29,10 +22,10 @@ export function NavMenu() {
           <h1 className="text-xl font-bold">HelpDesk IA</h1>
         </div>
         
-        {(!showOnlyAuth || user) && <MainNav />}
+        {(!showOnlyAuth || isAuthenticated) && <MainNav />}
         
         <div className="flex items-center gap-4">
-          {!user ? (
+          {!isAuthenticated ? (
             <>
               <Link 
                 to="/login"
@@ -59,7 +52,15 @@ export function NavMenu() {
               </Button>
               
               <ThemeToggle />
-              <UserMenu user={user} onSignOut={() => setUser(null)} />
+              {user && (
+                <UserMenu 
+                  user={{ 
+                    name: user.user_metadata?.company_name || user.email?.split('@')[0] || "Usuário", 
+                    email: user.email || "" 
+                  }} 
+                  onSignOut={signOut} 
+                />
+              )}
             </>
           )}
         </div>
