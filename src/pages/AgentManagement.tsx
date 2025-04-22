@@ -29,6 +29,13 @@ import {
 } from '@/components/ui/form';
 import { useAuth } from "@/hooks/useAuth";
 import { useAgents } from '@/hooks/useAgents';
+import { 
+  Select, 
+  SelectContent, 
+  SelectItem, 
+  SelectTrigger, 
+  SelectValue 
+} from '@/components/ui/select';
 
 const agentSchema = z.object({
   nome: z.string().min(2, 'Nome é obrigatório'),
