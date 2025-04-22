@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { 
   Table, 
@@ -28,14 +27,8 @@ import {
   FormLabel, 
   FormMessage 
 } from '@/components/ui/form';
+import { useAuth } from "@/hooks/useAuth";
 import { useAgents } from '@/hooks/useAgents';
-import { 
-  Select, 
-  SelectContent, 
-  SelectItem, 
-  SelectTrigger, 
-  SelectValue 
-} from '@/components/ui/select';
 
 const agentSchema = z.object({
   nome: z.string().min(2, 'Nome é obrigatório'),
@@ -46,7 +39,8 @@ const agentSchema = z.object({
 });
 
 export default function AgentManagement() {
-  const { agents, loading, fetchAgents, addAgent } = useAgents();
+  const { companyId } = useAuth();
+  const { agents, loading, fetchAgents, addAgent } = useAgents(companyId);
   const [searchTerm, setSearchTerm] = useState('');
 
   useEffect(() => {
@@ -63,7 +57,6 @@ export default function AgentManagement() {
   });
 
   const onSubmit = async (data: z.infer<typeof agentSchema>) => {
-    // The form validation ensures all fields are provided
     await addAgent({
       nome: data.nome,
       email: data.email,
@@ -179,7 +172,6 @@ export default function AgentManagement() {
               <TableCell>{agent.funcao === 'admin' ? 'Administrador' : 'Agente'}</TableCell>
               <TableCell>{agent.status}</TableCell>
               <TableCell>
-                {/* TODO: Add action buttons for edit, deactivate, etc */}
                 <Button variant="outline" size="sm">
                   Editar
                 </Button>

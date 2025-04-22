@@ -9,6 +9,36 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      agentes: {
+        Row: {
+          created_at: string
+          email: string
+          empresa_id: string
+          funcao: string
+          id: string
+          nome: string
+          status: string
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          empresa_id: string
+          funcao: string
+          id?: string
+          nome: string
+          status?: string
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          empresa_id?: string
+          funcao?: string
+          id?: string
+          nome?: string
+          status?: string
+        }
+        Relationships: []
+      }
       attachments: {
         Row: {
           created_at: string
@@ -572,6 +602,15 @@ export type Database = {
           metadata: Json
           similarity: number
         }[]
+      }
+      register_agent: {
+        Args: {
+          nome: string
+          email: string
+          empresa_id: string
+          funcao?: string
+        }
+        Returns: Json
       }
       sparsevec_out: {
         Args: { "": unknown }

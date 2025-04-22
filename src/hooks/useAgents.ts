@@ -11,15 +11,13 @@ export type Agent = {
   status: 'active' | 'inactive' | 'awaiting';
 };
 
-export const useAgents = () => {
+export const useAgents = (companyId: string | undefined) => {
   const [agents, setAgents] = useState<Agent[]>([]);
   const [loading, setLoading] = useState(false);
 
   const fetchAgents = async () => {
     setLoading(true);
     try {
-      // Since we can't directly query 'agentes' due to type issues,
-      // we'll use a raw query instead
       const { data, error } = await supabase
         .from('agentes' as any)
         .select('*')
@@ -37,14 +35,17 @@ export const useAgents = () => {
   };
 
   const addAgent = async (agentData: Omit<Agent, 'id' | 'status'>) => {
+    if (!companyId) {
+      toast.error('ID da empresa não encontrado, entre novamente no sistema.');
+      return;
+    }
     try {
-      // Use rpc with a string literal to bypass TypeScript issues
       const { data: userData, error } = await supabase.rpc(
         'register_agent' as any,
         {
           nome: agentData.nome,
           email: agentData.email,
-          empresa_id: '', // TODO: Get from current user's company
+          empresa_id: companyId,
           funcao: agentData.funcao
         }
       );
@@ -65,3 +66,4 @@ export const useAgents = () => {
 
   return { agents, loading, fetchAgents, addAgent };
 };
+
