@@ -38,6 +38,7 @@ import {
   SelectTrigger, 
   SelectValue 
 } from '@/components/ui/select';
+import { AlertCircle, CheckCircle, Clock } from 'lucide-react';
 
 const agentSchema = z.object({
   nome: z.string().min(2, 'Nome é obrigatório'),
@@ -49,7 +50,7 @@ const agentSchema = z.object({
 
 export default function AgentManagement() {
   const { companyId } = useAuth();
-  const { agents, loading, fetchAgents, addAgent } = useAgents(companyId);
+  const { agents, loading, isAdding, fetchAgents, addAgent } = useAgents(companyId);
   const [searchTerm, setSearchTerm] = useState('');
   const [dialogOpen, setDialogOpen] = useState(false);
 
@@ -69,13 +70,16 @@ export default function AgentManagement() {
   });
 
   const onSubmit = async (data: z.infer<typeof agentSchema>) => {
-    await addAgent({
+    const success = await addAgent({
       nome: data.nome,
       email: data.email,
       funcao: data.funcao
     });
-    form.reset();
-    setDialogOpen(false);
+    
+    if (success) {
+      form.reset();
+      setDialogOpen(false);
+    }
   };
 
   const filteredAgents = agents.filter(agent => 
@@ -83,13 +87,17 @@ export default function AgentManagement() {
     agent.email.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  // Function to get status display text
+  // Function to get status display text and icon
   const getStatusDisplay = (status: string) => {
     switch (status) {
-      case 'active': return 'Ativo';
-      case 'inactive': return 'Inativo';
-      case 'awaiting': return 'Aguardando Ativação';
-      default: return status;
+      case 'active': 
+        return { text: 'Ativo', icon: <CheckCircle className="h-4 w-4 text-green-500" /> };
+      case 'inactive': 
+        return { text: 'Inativo', icon: <AlertCircle className="h-4 w-4 text-red-500" /> };
+      case 'awaiting': 
+        return { text: 'Aguardando Ativação', icon: <Clock className="h-4 w-4 text-amber-500" /> };
+      default: 
+        return { text: status, icon: null };
     }
   };
 
@@ -171,8 +179,8 @@ export default function AgentManagement() {
                   )}
                 />
                 
-                <Button type="submit" className="w-full">
-                  Adicionar Agente
+                <Button type="submit" className="w-full" disabled={isAdding}>
+                  {isAdding ? 'Adicionando...' : 'Adicionar Agente'}
                 </Button>
               </form>
             </Form>
@@ -196,19 +204,27 @@ export default function AgentManagement() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {filteredAgents.map(agent => (
-              <TableRow key={agent.id}>
-                <TableCell>{agent.nome}</TableCell>
-                <TableCell>{agent.email}</TableCell>
-                <TableCell>{agent.funcao === 'admin' ? 'Administrador' : 'Agente'}</TableCell>
-                <TableCell>{getStatusDisplay(agent.status)}</TableCell>
-                <TableCell>
-                  <Button variant="outline" size="sm">
-                    Editar
-                  </Button>
-                </TableCell>
-              </TableRow>
-            ))}
+            {filteredAgents.map(agent => {
+              const status = getStatusDisplay(agent.status);
+              return (
+                <TableRow key={agent.id}>
+                  <TableCell>{agent.nome}</TableCell>
+                  <TableCell>{agent.email}</TableCell>
+                  <TableCell>{agent.funcao === 'admin' ? 'Administrador' : 'Agente'}</TableCell>
+                  <TableCell>
+                    <div className="flex items-center gap-2">
+                      {status.icon}
+                      {status.text}
+                    </div>
+                  </TableCell>
+                  <TableCell>
+                    <Button variant="outline" size="sm">
+                      Editar
+                    </Button>
+                  </TableCell>
+                </TableRow>
+              );
+            })}
           </TableBody>
         </Table>
       )}
