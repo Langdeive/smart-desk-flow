@@ -1,6 +1,6 @@
 
-import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { useState } from "react";
+import { Link, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 import { NewTicketModal } from "@/components/ticket/NewTicketModal";
@@ -12,18 +12,18 @@ import { useAuth } from "@/hooks/useAuth";
 export function NavMenu() {
   const { user, isAuthenticated, loading, signOut } = useAuth();
   const [showNewTicketModal, setShowNewTicketModal] = useState(false);
-  
+  const location = useLocation();
+
   const showOnlyAuth = location.pathname === '/';
-  
+
   return (
     <div className="border-b mb-4">
       <div className="container flex items-center justify-between py-4">
         <div className="flex items-center gap-2">
           <h1 className="text-xl font-bold">HelpDesk IA</h1>
         </div>
-        
-        {(!showOnlyAuth || isAuthenticated) && <MainNav />}
-        
+        {/* Exibe MainNav apenas se não autenticado e não está na tela de dashboard */}
+        {!isAuthenticated && (!showOnlyAuth) && <MainNav />}
         <div className="flex items-center gap-4">
           {!isAuthenticated ? (
             <>
@@ -50,7 +50,6 @@ export function NavMenu() {
                 <Plus className="w-4 h-4 mr-2" />
                 Novo Ticket
               </Button>
-              
               <ThemeToggle />
               {user && (
                 <UserMenu 
@@ -65,7 +64,6 @@ export function NavMenu() {
           )}
         </div>
       </div>
-      
       {showNewTicketModal && (
         <NewTicketModal open={showNewTicketModal} onClose={() => setShowNewTicketModal(false)} />
       )}

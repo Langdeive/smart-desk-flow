@@ -25,12 +25,15 @@ export default function ClientManagement() {
     <div className="container mx-auto py-6">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-bold">Clientes</h1>
+        <Button onClick={() => setSelectedClientId(null)}>
+          <Plus className="h-4 w-4 mr-2" />
+          Novo Cliente
+        </Button>
         <ClientDialog 
           onClose={() => setSelectedClientId(null)} 
           clientId={selectedClientId} 
         />
       </div>
-
       <div className="flex gap-2 mb-6">
         <div className="relative flex-1">
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
@@ -41,12 +44,8 @@ export default function ClientManagement() {
             className="pl-9"
           />
         </div>
-        <Button onClick={() => setSelectedClientId(null)}>
-          <Plus className="h-4 w-4 mr-2" />
-          Novo Cliente
-        </Button>
+        {/* Botão duplicado removido daqui */}
       </div>
-
       <div className="border rounded-lg">
         <Table>
           <TableHeader>
