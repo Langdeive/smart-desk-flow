@@ -1,19 +1,10 @@
 
 import React, { useState, useEffect } from 'react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { 
-  Dialog, 
-  DialogContent, 
-  DialogHeader, 
-  DialogTitle, 
-  DialogTrigger,
-  DialogDescription
-} from '@/components/ui/dialog';
 import { useAuth } from "@/hooks/useAuth";
-import { useAgents, Agent } from '@/hooks/useAgents';
-import AgentForm from '@/components/agents/AgentForm';
+import { useAgents } from '@/hooks/useAgents';
 import AgentList from '@/components/agents/AgentList';
+import AgentSearch from '@/components/agents/AgentSearch';
+import AddAgentDialog from '@/components/agents/AddAgentDialog';
 
 export default function AgentManagement() {
   const { companyId } = useAuth();
@@ -45,31 +36,17 @@ export default function AgentManagement() {
       <h1 className="text-2xl font-bold mb-4">Gerenciamento de Agentes</h1>
       
       <div className="flex flex-col md:flex-row justify-between mb-4 gap-4">
-        <Input 
-          placeholder="Buscar por nome ou e-mail" 
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          className="max-w-md"
+        <AgentSearch 
+          searchTerm={searchTerm} 
+          onSearchChange={setSearchTerm} 
         />
         
-        <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-          <DialogTrigger asChild>
-            <Button>Adicionar Agente</Button>
-          </DialogTrigger>
-          <DialogContent>
-            <DialogHeader>
-              <DialogTitle>Adicionar Novo Agente</DialogTitle>
-              <DialogDescription>
-                Preencha os dados para cadastrar um novo agente.
-              </DialogDescription>
-            </DialogHeader>
-            <AgentForm 
-              onSubmit={handleAddAgent} 
-              isAdding={isAdding}
-              onCancel={() => setDialogOpen(false)}
-            />
-          </DialogContent>
-        </Dialog>
+        <AddAgentDialog 
+          isOpen={dialogOpen}
+          onOpenChange={setDialogOpen}
+          onAddAgent={handleAddAgent}
+          isAdding={isAdding}
+        />
       </div>
 
       <AgentList 
