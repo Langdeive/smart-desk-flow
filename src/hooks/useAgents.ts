@@ -1,5 +1,5 @@
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 
@@ -24,13 +24,15 @@ export const useAgents = (companyId: string | undefined) => {
     
     setLoading(true);
     try {
+      console.log('Fetching agents for company ID:', companyId);
       const { data, error } = await supabase
         .from('agentes')
         .select('*')
-        .eq('empresa_id', companyId)
-        .returns<Agent[]>();
+        .eq('empresa_id', companyId);
       
       if (error) throw error;
+      
+      console.log('Agents fetched:', data);
       setAgents(data || []);
     } catch (error) {
       toast.error('Erro ao carregar agentes', {
@@ -45,11 +47,28 @@ export const useAgents = (companyId: string | undefined) => {
   const addAgent = async (agentData: Omit<Agent, 'id' | 'status'>) => {
     if (!companyId) {
       toast.error('ID da empresa não encontrado, entre novamente no sistema.');
-      return;
+      return false;
     }
     
     setIsAdding(true);
     try {
+      // First check if the agent already exists
+      const { data: existingAgent, error: checkError } = await supabase
+        .from('agentes')
+        .select('email')
+        .eq('email', agentData.email)
+        .single();
+      
+      if (existingAgent) {
+        toast.error(`O email ${agentData.email} já está cadastrado no sistema.`);
+        return false;
+      }
+      
+      if (checkError && checkError.code !== 'PGRST116') {
+        // PGRST116 means no rows returned, which is what we want
+        throw checkError;
+      }
+
       const { data, error } = await supabase.rpc(
         'register_agent',
         {
@@ -85,6 +104,13 @@ export const useAgents = (companyId: string | undefined) => {
       setIsAdding(false);
     }
   };
+
+  // Automatically fetch agents when companyId changes or component mounts
+  useEffect(() => {
+    if (companyId) {
+      fetchAgents();
+    }
+  }, [companyId]);
 
   return { agents, loading, isAdding, fetchAgents, addAgent };
 };

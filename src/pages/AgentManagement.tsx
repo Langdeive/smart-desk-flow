@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { 
   Table, 
   TableBody, 
@@ -54,12 +54,6 @@ export default function AgentManagement() {
   const [searchTerm, setSearchTerm] = useState('');
   const [dialogOpen, setDialogOpen] = useState(false);
 
-  useEffect(() => {
-    if (companyId) {
-      fetchAgents();
-    }
-  }, [companyId]);
-
   const form = useForm<z.infer<typeof agentSchema>>({
     resolver: zodResolver(agentSchema),
     defaultValues: {
@@ -70,6 +64,9 @@ export default function AgentManagement() {
   });
 
   const onSubmit = async (data: z.infer<typeof agentSchema>) => {
+    console.log("Form submitted with data:", data);
+    console.log("Company ID:", companyId);
+    
     const success = await addAgent({
       nome: data.nome,
       email: data.email,
@@ -100,6 +97,9 @@ export default function AgentManagement() {
         return { text: status, icon: null };
     }
   };
+
+  console.log("Current agents:", agents);
+  console.log("Loading state:", loading);
 
   return (
     <div className="container mx-auto p-4">
