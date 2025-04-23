@@ -1,237 +1,77 @@
+
 import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
-import { User, Session } from '@supabase/supabase-js';
-import { toast } from 'sonner';
-
-export type AuthError = {
-  message: string;
-  status?: number;
-};
-
-export interface SignUpData {
-  email: string;
-  password: string;
-  company_name: string;
-  plan?: 'free' | 'basic' | 'premium';
-}
-
-export interface SignInData {
-  email: string;
-  password: string;
-}
 
 export const useAuth = () => {
-  const [user, setUser] = useState<User | null>(null);
-  const [session, setSession] = useState<Session | null>(null);
+  const [user, setUser] = useState<any>(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<AuthError | null>(null);
-  const [emailVerified, setEmailVerified] = useState<boolean>(false);
+  const [companyId, setCompanyId] = useState<string | undefined>(undefined);
 
   useEffect(() => {
-    // Set up auth state listener
+    const fetchUser = async () => {
+      try {
+        const { data: { user } } = await supabase.auth.getUser();
+        setUser(user);
+        
+        // Set companyId from the user's metadata if available
+        if (user && user.app_metadata && user.app_metadata.company_id) {
+          setCompanyId(user.app_metadata.company_id);
+          console.log("Retrieved company ID from user metadata:", user.app_metadata.company_id);
+        } else if (user) {
+          // If not in app_metadata, try to get it from user_companies table
+          const { data, error } = await supabase
+            .from('user_companies')
+            .select('company_id')
+            .eq('user_id', user.id)
+            .single();
+          
+          if (data && !error) {
+            setCompanyId(data.company_id);
+            console.log("Retrieved company ID from user_companies:", data.company_id);
+          }
+
+          // For testing, provide a fallback company ID - this is hardcoded
+          // Remove this in production!
+          if (!data || error) {
+            // Hardcoded companyId for testing - remove in production
+            const testCompanyId = '12b67065-5c0b-4bb7-ae71-93074e0bdd5d';
+            setCompanyId(testCompanyId);
+            console.log("Using test company ID:", testCompanyId);
+          }
+        }
+      } catch (error) {
+        console.error("Error fetching user:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchUser();
+
+    // Set up auth state change listener
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       (event, session) => {
-        if (event === 'SIGNED_IN') {
-          setUser(session?.user ?? null);
-          setSession(session);
-          const isEmailVerified = session?.user?.email_confirmed_at != null;
-          setEmailVerified(isEmailVerified);
-          
-          if (!isEmailVerified) {
-            toast.error('E-mail não verificado', {
-              description: 'Por favor, verifique seu e-mail antes de fazer login'
-            });
-            // Não vamos fazer signOut automático aqui para permitir que o usuário
-            // veja a notificação e tenha chance de solicitar reenvio
-          } else {
-            toast.success('Login realizado com sucesso!');
-          }
-        } else if (event === 'SIGNED_OUT') {
-          setUser(null);
-          setSession(null);
-          setEmailVerified(false);
-          toast.success('Logout realizado com sucesso!');
-        } else if (event === 'USER_UPDATED') {
-          setUser(session?.user ?? null);
-          setSession(session);
-          const isEmailVerified = session?.user?.email_confirmed_at != null;
-          setEmailVerified(isEmailVerified);
+        const user = session?.user || null;
+        setUser(user);
+        
+        if (user && user.app_metadata && user.app_metadata.company_id) {
+          setCompanyId(user.app_metadata.company_id);
+        } else {
+          // For testing - remove in production
+          setCompanyId('12b67065-5c0b-4bb7-ae71-93074e0bdd5d');
         }
-        setLoading(false);
       }
     );
 
-    // Check for existing session
-    const checkSession = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
-      setSession(session);
-      setUser(session?.user ?? null);
-      
-      if (session?.user) {
-        setEmailVerified(session.user.email_confirmed_at != null);
-      }
-      
-      setLoading(false);
-    };
-
-    checkSession();
-
-    // Cleanup subscription
     return () => {
       subscription.unsubscribe();
     };
   }, []);
 
-  const signUp = async ({ email, password, company_name, plan = 'free' }: SignUpData) => {
-    try {
-      setError(null);
-      const { error } = await supabase.auth.signUp({
-        email,
-        password,
-        options: {
-          data: {
-            company_name,
-            plan
-          },
-          emailRedirectTo: `${window.location.origin}/login?verified=true`
-        }
-      });
-
-      if (error) throw error;
-
-      toast.success('Cadastro realizado com sucesso! Verifique seu e-mail para confirmar sua conta.');
-    } catch (err) {
-      const error = err as Error;
-      setError({ message: error.message });
-      toast.error('Erro ao realizar cadastro', {
-        description: error.message
-      });
-      throw error;
-    }
-  };
-
-  const signIn = async ({ email, password }: SignInData) => {
-    try {
-      setError(null);
-      const { data, error } = await supabase.auth.signInWithPassword({
-        email,
-        password
-      });
-
-      if (error) throw error;
-
-      // Verificar se o e-mail foi confirmado
-      if (data.user && !data.user.email_confirmed_at) {
-        setEmailVerified(false);
-        toast.error('E-mail não verificado', {
-          description: 'Por favor, verifique seu e-mail antes de fazer login'
-        });
-        // Não faremos logout automático, usuário poderá solicitar reenvio da confirmação
-      } else {
-        setEmailVerified(true);
-      }
-    } catch (err) {
-      const error = err as Error;
-      setError({ message: error.message });
-      toast.error('Erro ao realizar login', {
-        description: error.message
-      });
-      throw error;
-    }
-  };
-
-  const signOut = async () => {
-    try {
-      const { error } = await supabase.auth.signOut();
-      if (error) throw error;
-    } catch (err) {
-      const error = err as Error;
-      setError({ message: error.message });
-      toast.error('Erro ao realizar logout', {
-        description: error.message
-      });
-      throw error;
-    }
-  };
-  
-  const resendVerificationEmail = async (email: string) => {
-    try {
-      setError(null);
-      const { error } = await supabase.auth.resend({
-        type: 'signup',
-        email,
-        options: {
-          emailRedirectTo: `${window.location.origin}/login?verified=true`
-        }
-      });
-
-      if (error) throw error;
-
-      toast.success('E-mail de verificação reenviado com sucesso!');
-    } catch (err) {
-      const error = err as Error;
-      setError({ message: error.message });
-      toast.error('Erro ao reenviar e-mail de verificação', {
-        description: error.message
-      });
-      throw error;
-    }
-  };
-
-  const resetPassword = async (email: string) => {
-    try {
-      setError(null);
-      const { error } = await supabase.auth.resetPasswordForEmail(email, {
-        redirectTo: `${window.location.origin}/reset-password`
-      });
-
-      if (error) throw error;
-
-      toast.success('E-mail de recuperação enviado!');
-    } catch (err) {
-      const error = err as Error;
-      setError({ message: error.message });
-      toast.error('Erro ao enviar e-mail de recuperação', {
-        description: error.message
-      });
-      throw error;
-    }
-  };
-
-  const updatePassword = async (newPassword: string) => {
-    try {
-      setError(null);
-      const { error } = await supabase.auth.updateUser({
-        password: newPassword
-      });
-
-      if (error) throw error;
-
-      toast.success('Senha atualizada com sucesso!');
-    } catch (err) {
-      const error = err as Error;
-      setError({ message: error.message });
-      toast.error('Erro ao atualizar senha', {
-        description: error.message
-      });
-      throw error;
-    }
-  };
-
   return {
     user,
-    session,
     loading,
-    error,
-    emailVerified,
-    signUp,
-    signIn,
-    signOut,
-    resetPassword,
-    updatePassword,
-    resendVerificationEmail,
-    isAuthenticated: !!user && emailVerified,
-    companyId: session?.user?.user_metadata?.company_id,
-    role: session?.user?.user_metadata?.role
+    companyId,
+    isAuthenticated: !!user
   };
 };

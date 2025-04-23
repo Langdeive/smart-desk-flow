@@ -33,15 +33,20 @@ export const useAgents = (companyId: string | undefined) => {
       if (error) throw error;
       
       console.log('Agents fetched:', data);
+      
       // Transform the data to match our Agent type
       const typedAgents: Agent[] = data?.map(agent => ({
         id: agent.id,
         nome: agent.nome,
         email: agent.email,
-        funcao: agent.funcao === 'admin' ? 'admin' : 'agent', // Cast to our union type
-        status: agent.status === 'active' || agent.status === 'inactive' || agent.status === 'awaiting' 
-          ? agent.status as 'active' | 'inactive' | 'awaiting'
-          : 'awaiting' // Default to awaiting if status is not valid
+        // Make sure to explicitly cast to our union types
+        funcao: (agent.funcao === 'admin' ? 'admin' : 'agent') as 'admin' | 'agent',
+        status: (
+          agent.status === 'active' || 
+          agent.status === 'inactive' || 
+          agent.status === 'awaiting'
+        ) ? agent.status as 'active' | 'inactive' | 'awaiting'
+          : 'awaiting'
       })) || [];
       
       setAgents(typedAgents);
@@ -63,21 +68,17 @@ export const useAgents = (companyId: string | undefined) => {
     
     setIsAdding(true);
     try {
-      // First check if the agent already exists
-      const { data: existingAgent, error: checkError } = await supabase
+      // First check if the agent already exists directly in the agentes table
+      const { data: existingAgents, error: checkError } = await supabase
         .from('agentes')
-        .select('email')
-        .eq('email', agentData.email)
-        .single();
+        .select('id')
+        .eq('email', agentData.email);
       
-      if (existingAgent) {
+      if (checkError) throw checkError;
+      
+      if (existingAgents && existingAgents.length > 0) {
         toast.error(`O email ${agentData.email} já está cadastrado no sistema.`);
         return false;
-      }
-      
-      if (checkError && checkError.code !== 'PGRST116') {
-        // PGRST116 means no rows returned, which is what we want
-        throw checkError;
       }
 
       // If we get here, the email doesn't exist, so add the agent

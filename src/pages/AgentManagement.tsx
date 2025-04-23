@@ -39,6 +39,7 @@ import {
   SelectValue 
 } from '@/components/ui/select';
 import { AlertCircle, CheckCircle, Clock } from 'lucide-react';
+import { toast } from 'sonner';
 
 const agentSchema = z.object({
   nome: z.string().min(2, 'Nome é obrigatório'),
@@ -57,7 +58,8 @@ export default function AgentManagement() {
   useEffect(() => {
     console.log("Current company ID:", companyId);
     console.log("Current agents:", agents);
-  }, [companyId, agents]);
+    console.log("Loading state:", loading);
+  }, [companyId, agents, loading]);
 
   const form = useForm<z.infer<typeof agentSchema>>({
     resolver: zodResolver(agentSchema),
