@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   Table, 
   TableBody, 
@@ -53,6 +53,11 @@ export default function AgentManagement() {
   const { agents, loading, isAdding, fetchAgents, addAgent } = useAgents(companyId);
   const [searchTerm, setSearchTerm] = useState('');
   const [dialogOpen, setDialogOpen] = useState(false);
+
+  useEffect(() => {
+    console.log("Current company ID:", companyId);
+    console.log("Current agents:", agents);
+  }, [companyId, agents]);
 
   const form = useForm<z.infer<typeof agentSchema>>({
     resolver: zodResolver(agentSchema),

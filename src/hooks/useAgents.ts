@@ -80,26 +80,31 @@ export const useAgents = (companyId: string | undefined) => {
         throw checkError;
       }
 
-      const { data, error } = await supabase.rpc(
-        'register_agent',
-        {
+      // If we get here, the email doesn't exist, so add the agent
+      console.log('Adding agent with data:', {
+        nome: agentData.nome,
+        email: agentData.email,
+        empresa_id: companyId,
+        funcao: agentData.funcao
+      });
+
+      const { data, error } = await supabase
+        .from('agentes')
+        .insert({
           nome: agentData.nome,
           email: agentData.email,
           empresa_id: companyId,
-          funcao: agentData.funcao
-        }
-      );
+          funcao: agentData.funcao,
+          status: 'awaiting'
+        })
+        .select();
 
       if (error) {
-        if (error.code === '23505') {
-          throw new Error(`O email ${agentData.email} já está cadastrado no sistema.`);
-        } else {
-          throw error;
-        }
+        throw error;
       }
       
       toast.success('Agente adicionado com sucesso', {
-        description: `Uma senha temporária foi gerada para ${agentData.email}`
+        description: `Um email foi enviado para ${agentData.email}`
       });
       
       // Refresh the agents list
