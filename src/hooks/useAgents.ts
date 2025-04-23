@@ -33,7 +33,18 @@ export const useAgents = (companyId: string | undefined) => {
       if (error) throw error;
       
       console.log('Agents fetched:', data);
-      setAgents(data || []);
+      // Transform the data to match our Agent type
+      const typedAgents: Agent[] = data?.map(agent => ({
+        id: agent.id,
+        nome: agent.nome,
+        email: agent.email,
+        funcao: agent.funcao === 'admin' ? 'admin' : 'agent', // Cast to our union type
+        status: agent.status === 'active' || agent.status === 'inactive' || agent.status === 'awaiting' 
+          ? agent.status as 'active' | 'inactive' | 'awaiting'
+          : 'awaiting' // Default to awaiting if status is not valid
+      })) || [];
+      
+      setAgents(typedAgents);
     } catch (error) {
       toast.error('Erro ao carregar agentes', {
         description: error instanceof Error ? error.message : 'Tente novamente'
