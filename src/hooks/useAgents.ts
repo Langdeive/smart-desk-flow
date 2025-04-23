@@ -18,13 +18,15 @@ export const useAgents = (companyId: string | undefined) => {
 
   const fetchAgents = async () => {
     if (!companyId) {
-      console.error('Company ID is undefined, cannot fetch agents');
+      console.log('Company ID is undefined, cannot fetch agents');
       return;
     }
     
     setLoading(true);
     try {
       console.log('Fetching agents for company ID:', companyId);
+      
+      // Using the more basic query pattern to avoid RLS issues
       const { data, error } = await supabase
         .from('agentes')
         .select('*')
@@ -32,29 +34,31 @@ export const useAgents = (companyId: string | undefined) => {
       
       if (error) throw error;
       
-      console.log('Agents fetched:', data);
+      console.log('Raw agents data:', data);
       
-      // Transform the data to match our Agent type
-      const typedAgents: Agent[] = data?.map(agent => ({
-        id: agent.id,
-        nome: agent.nome,
-        email: agent.email,
-        // Make sure to explicitly cast to our union types
-        funcao: (agent.funcao === 'admin' ? 'admin' : 'agent') as 'admin' | 'agent',
-        status: (
-          agent.status === 'active' || 
-          agent.status === 'inactive' || 
-          agent.status === 'awaiting'
-        ) ? agent.status as 'active' | 'inactive' | 'awaiting'
-          : 'awaiting'
-      })) || [];
-      
-      setAgents(typedAgents);
+      if (Array.isArray(data)) {
+        const formattedAgents: Agent[] = data.map(agent => ({
+          id: agent.id,
+          nome: agent.nome || '',
+          email: agent.email || '',
+          funcao: (agent.funcao === 'admin' ? 'admin' : 'agent') as 'admin' | 'agent',
+          status: (agent.status === 'active' || agent.status === 'inactive' || agent.status === 'awaiting') 
+            ? agent.status as 'active' | 'inactive' | 'awaiting'
+            : 'awaiting'
+        }));
+        
+        setAgents(formattedAgents);
+        console.log('Formatted agents:', formattedAgents);
+      } else {
+        console.error('Unexpected data format for agents:', data);
+        setAgents([]);
+      }
     } catch (error) {
+      console.error('Error fetching agents:', error);
       toast.error('Erro ao carregar agentes', {
         description: error instanceof Error ? error.message : 'Tente novamente'
       });
-      console.error('Error fetching agents:', error);
+      setAgents([]);
     } finally {
       setLoading(false);
     }
@@ -68,42 +72,49 @@ export const useAgents = (companyId: string | undefined) => {
     
     setIsAdding(true);
     try {
-      // First check if the agent already exists directly in the agentes table
+      console.log('Trying to add agent with data:', {
+        nome: agentData.nome,
+        email: agentData.email,
+        empresa_id: companyId,
+        funcao: agentData.funcao,
+        status: 'awaiting'
+      });
+
+      // Check if email already exists
       const { data: existingAgents, error: checkError } = await supabase
         .from('agentes')
         .select('id')
         .eq('email', agentData.email);
       
-      if (checkError) throw checkError;
+      if (checkError) {
+        console.error('Error checking existing agents:', checkError);
+        throw checkError;
+      }
       
       if (existingAgents && existingAgents.length > 0) {
+        console.log('Agent with this email already exists:', existingAgents);
         toast.error(`O email ${agentData.email} já está cadastrado no sistema.`);
         return false;
       }
 
-      // If we get here, the email doesn't exist, so add the agent
-      console.log('Adding agent with data:', {
-        nome: agentData.nome,
-        email: agentData.email,
-        empresa_id: companyId,
-        funcao: agentData.funcao
-      });
-
+      // Direct insert using simplified approach
       const { data, error } = await supabase
         .from('agentes')
-        .insert({
+        .insert([{
           nome: agentData.nome,
           email: agentData.email,
           empresa_id: companyId,
           funcao: agentData.funcao,
           status: 'awaiting'
-        })
+        }])
         .select();
 
       if (error) {
+        console.error('Error inserting agent:', error);
         throw error;
       }
       
+      console.log('Agent added successfully:', data);
       toast.success('Agente adicionado com sucesso', {
         description: `Um email foi enviado para ${agentData.email}`
       });
@@ -112,10 +123,10 @@ export const useAgents = (companyId: string | undefined) => {
       await fetchAgents();
       return true;
     } catch (error) {
+      console.error('Error adding agent:', error);
       toast.error('Erro ao adicionar agente', {
         description: error instanceof Error ? error.message : 'Tente novamente'
       });
-      console.error('Error adding agent:', error);
       return false;
     } finally {
       setIsAdding(false);
