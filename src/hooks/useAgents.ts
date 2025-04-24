@@ -79,10 +79,12 @@ export const useAgents = (companyId: string | undefined) => {
     
     try {
       // First check if email already exists
-      const { data: existingUsers } = await supabase
+      const { data: existingUsers, error: checkError } = await supabase
         .from('user_companies')
         .select('id')
         .eq('user_id', (await supabase.from('users').select('id').eq('email', agentData.email).single()).data?.id);
+      
+      if (checkError) throw checkError;
       
       if (existingUsers && existingUsers.length > 0) {
         throw new Error(`O email ${agentData.email} já está cadastrado no sistema.`);
@@ -105,9 +107,7 @@ export const useAgents = (companyId: string | undefined) => {
       return true;
     } catch (error) {
       console.error('Error adding agent:', error);
-      toast({
-        variant: 'destructive',
-        title: 'Erro ao convidar agente',
+      toast.error('Erro ao convidar agente', {
         description: error instanceof Error ? error.message : 'Tente novamente'
       });
       return false;
