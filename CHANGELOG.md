@@ -1,4 +1,3 @@
-
 # CHANGELOG
 
 ## [1.1.0] - 2025-04-21
@@ -73,3 +72,11 @@
 6. **Condições de Exibição**
    - Implementada lógica para mostrar apenas Login/Cadastro quando usuário não está autenticado
    - Exibição condicional dos elementos de navegação baseada no estado de autenticação
+
+### Bug Fixes
+- Corrigido fluxo de listagem e convite de agentes
+  - Ajustada query para buscar dados corretos da tabela user_companies
+  - Implementado tratamento adequado de erros com feedback visual
+  - Adicionado estado de carregamento na listagem
+  - Modal permanece aberto em caso de erro no convite
+  - Atualização automática da lista após convite bem-sucedido

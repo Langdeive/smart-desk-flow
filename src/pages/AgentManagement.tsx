@@ -5,10 +5,13 @@ import { useAgents, Agent } from '@/hooks/useAgents';
 import AgentList from '@/components/agents/AgentList';
 import AgentSearch from '@/components/agents/AgentSearch';
 import AddAgentDialog from '@/components/agents/AddAgentDialog';
+import { Loader2 } from 'lucide-react';
+import { Alert, AlertDescription } from "@/components/ui/alert";
 
 export default function AgentManagement() {
-  const { companyId } = useAuth();
-  const { agents, loading, isAdding, fetchAgents, addAgent } = useAgents(companyId);
+  const { user } = useAuth();
+  const companyId = user?.app_metadata?.company_id;
+  const { agents, loading, error, isAdding, fetchAgents, addAgent } = useAgents(companyId);
   const [searchTerm, setSearchTerm] = useState('');
   const [dialogOpen, setDialogOpen] = useState(false);
 
@@ -23,6 +26,7 @@ export default function AgentManagement() {
     if (success) {
       setDialogOpen(false);
     }
+    // If not successful, the modal stays open and error is shown via toast
     return success;
   };
 
@@ -30,6 +34,22 @@ export default function AgentManagement() {
     agent.nome.toLowerCase().includes(searchTerm.toLowerCase()) ||
     agent.email.toLowerCase().includes(searchTerm.toLowerCase())
   );
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-[200px]">
+        <Loader2 className="h-8 w-8 animate-spin" />
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <Alert variant="destructive" className="mb-4">
+        <AlertDescription>{error}</AlertDescription>
+      </Alert>
+    );
+  }
 
   return (
     <div className="container mx-auto p-4">
@@ -52,7 +72,6 @@ export default function AgentManagement() {
       <AgentList 
         agents={filteredAgents} 
         loading={loading} 
-        onEdit={(agent) => console.log('Edit agent:', agent)}
       />
     </div>
   );
