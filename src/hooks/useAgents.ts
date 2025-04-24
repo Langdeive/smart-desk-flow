@@ -49,9 +49,9 @@ export const useAgents = (companyId: string | undefined) => {
         
         for (const userCompany of data) {
           if (userCompany.user_id) {
-            // Fetch user details from auth.users (via RPC or a view since we can't directly query auth schema)
-            const { data: userData, error: userError } = await supabase.rpc('get_user_info', {
-              user_id: userCompany.user_id
+            // Call the edge function instead of RPC
+            const { data: userData, error: userError } = await supabase.functions.invoke('get_user_info', {
+              body: { user_id: userCompany.user_id }
             });
             
             if (userError) {
@@ -60,10 +60,13 @@ export const useAgents = (companyId: string | undefined) => {
             }
             
             if (userData) {
+              // Properly type the response
+              const typedUserData = userData as { id: string; name: string; email: string };
+              
               formattedAgents.push({
                 id: userCompany.id || '',
-                nome: userData.name || 'Unknown User',
-                email: userData.email || '',
+                nome: typedUserData.name || 'Unknown User',
+                email: typedUserData.email || '',
                 funcao: userCompany.role === 'admin' ? 'admin' : 'agent',
                 status: 'active' // Default status since we don't have invitation_sent column
               });
@@ -95,12 +98,14 @@ export const useAgents = (companyId: string | undefined) => {
     setError(null);
     
     try {
-      // Call the RPC function to invite the agent
-      const { data, error } = await supabase.rpc('invite_agent', {
-        email: agentData.email,
-        name: agentData.nome,
-        role: agentData.funcao,
-        companyId: companyId
+      // Call the edge function instead of RPC
+      const { data, error } = await supabase.functions.invoke('invite_agent', {
+        body: {
+          email: agentData.email,
+          name: agentData.nome,
+          role: agentData.funcao,
+          companyId: companyId
+        }
       });
 
       if (error) throw error;

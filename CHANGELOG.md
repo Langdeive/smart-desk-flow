@@ -1,6 +1,17 @@
 
 # CHANGELOG
 
+## [1.1.2] - 2025-04-24
+
+### Bug Fixes
+
+1. **Agent Management**
+   - Fixed TypeScript errors in the useAgents hook
+   - Changed RPC function calls to Edge Function calls for better type safety
+   - Added proper type annotations for user data
+   - Implemented Edge Functions for user info retrieval and agent invitation
+   - Improved error handling and logging
+
 ## [1.1.1] - 2025-04-24
 
 ### Bug Fixes
