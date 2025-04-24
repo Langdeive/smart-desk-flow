@@ -1,4 +1,15 @@
+
 # CHANGELOG
+
+## [1.1.1] - 2025-04-24
+
+### Bug Fixes
+
+1. **Agent Management**
+   - Fixed agent list not displaying properly
+   - Fixed invite agent functionality
+   - Improved error handling with meaningful toast messages
+   - Updated authentication flow to use correct company_id from app_metadata
 
 ## [1.1.0] - 2025-04-21
 

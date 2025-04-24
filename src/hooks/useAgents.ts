@@ -47,7 +47,7 @@ export const useAgents = (companyId: string | undefined) => {
       
       if (Array.isArray(data)) {
         const formattedAgents: Agent[] = data.map(agent => ({
-          id: agent.id,
+          id: agent.id || '',
           nome: agent.users?.name || '',
           email: agent.users?.email || '',
           funcao: agent.role === 'admin' ? 'admin' : 'agent',
@@ -78,21 +78,15 @@ export const useAgents = (companyId: string | undefined) => {
     setError(null);
     
     try {
-      // First check if email already exists
-      const { data: existingUsers, error: checkError } = await supabase
-        .from('user_companies')
-        .select('id')
-        .eq('user_id', (await supabase.from('users').select('id').eq('email', agentData.email).single()).data?.id);
-      
-      if (checkError) throw checkError;
-      
-      if (existingUsers && existingUsers.length > 0) {
-        throw new Error(`O email ${agentData.email} já está cadastrado no sistema.`);
-      }
-
+      // We can't directly query the auth.users table, so we'll use the RPC function directly
       // Call the RPC function to invite the agent
-      const { data, error } = await supabase.rpc('invite_agent', {
-        email: agentData.email
+      const { data, error } = await supabase.functions.invoke('invite_agent', {
+        body: {
+          email: agentData.email,
+          name: agentData.nome,
+          role: agentData.funcao,
+          companyId: companyId
+        }
       });
 
       if (error) throw error;

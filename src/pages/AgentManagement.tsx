@@ -1,11 +1,11 @@
 
 import React, { useState, useEffect } from 'react';
 import { useAuth } from "@/hooks/useAuth";
-import { useAgents, Agent } from '@/hooks/useAgents';
+import { useAgents } from '@/hooks/useAgents';
 import AgentList from '@/components/agents/AgentList';
 import AgentSearch from '@/components/agents/AgentSearch';
 import AddAgentDialog from '@/components/agents/AddAgentDialog';
-import { Loader2 } from 'lucide-react';
+import { Loader2, AlertCircle } from 'lucide-react';
 import { Alert, AlertDescription } from "@/components/ui/alert";
 
 export default function AgentManagement() {
@@ -21,7 +21,11 @@ export default function AgentManagement() {
     console.log("Loading state:", loading);
   }, [companyId, agents, loading]);
 
-  const handleAddAgent = async (data: Omit<Agent, 'id' | 'status'>) => {
+  const handleAddAgent = async (data: {
+    nome: string;
+    email: string;
+    funcao: 'admin' | 'agent';
+  }) => {
     const success = await addAgent(data);
     if (success) {
       setDialogOpen(false);
@@ -46,6 +50,7 @@ export default function AgentManagement() {
   if (error) {
     return (
       <Alert variant="destructive" className="mb-4">
+        <AlertCircle className="h-4 w-4" />
         <AlertDescription>{error}</AlertDescription>
       </Alert>
     );
