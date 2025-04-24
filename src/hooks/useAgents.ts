@@ -28,15 +28,16 @@ export const useAgents = (companyId: string | undefined) => {
     try {
       console.log('Fetching agents for company ID:', companyId);
       
+      // Fixed query syntax to properly join with users table
       const { data, error } = await supabase
         .from('user_companies')
         .select(`
           id,
           role,
           invitation_sent,
-          users:user_id (
+          users (
             email,
-            raw_user_meta_data->>'name' as name
+            raw_user_meta_data->name
           )
         `)
         .eq('company_id', companyId);
@@ -48,8 +49,8 @@ export const useAgents = (companyId: string | undefined) => {
       if (Array.isArray(data)) {
         const formattedAgents: Agent[] = data.map(agent => ({
           id: agent.id || '',
-          nome: agent.users?.name || '',
-          email: agent.users?.email || '',
+          nome: agent.users?.[0]?.name || '',
+          email: agent.users?.[0]?.email || '',
           funcao: agent.role === 'admin' ? 'admin' : 'agent',
           status: agent.invitation_sent ? 'awaiting' : 'active'
         }));
@@ -78,7 +79,6 @@ export const useAgents = (companyId: string | undefined) => {
     setError(null);
     
     try {
-      // We can't directly query the auth.users table, so we'll use the RPC function directly
       // Call the RPC function to invite the agent
       const { data, error } = await supabase.functions.invoke('invite_agent', {
         body: {
