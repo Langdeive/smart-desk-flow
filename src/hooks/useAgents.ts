@@ -20,6 +20,9 @@ export const useAgents = (companyId: string | undefined) => {
   const fetchAgents = async () => {
     if (!companyId) {
       console.log('Company ID is undefined, cannot fetch agents');
+      toast.error('ID da empresa não encontrado', {
+        description: 'Não foi possível carregar os agentes'
+      });
       return;
     }
     
@@ -90,7 +93,10 @@ export const useAgents = (companyId: string | undefined) => {
 
   const addAgent = async (agentData: Omit<Agent, 'id' | 'status'>) => {
     if (!companyId) {
-      toast.error('ID da empresa não encontrado');
+      console.error('Company ID is undefined, cannot add agent');
+      toast.error('ID da empresa não encontrado', {
+        description: 'Verifique se você está conectado à sua conta'
+      });
       return false;
     }
     
@@ -98,6 +104,8 @@ export const useAgents = (companyId: string | undefined) => {
     setError(null);
     
     try {
+      console.log('Adding agent with company ID:', companyId);
+      
       // Call the edge function instead of RPC
       const { data, error } = await supabase.functions.invoke('invite_agent', {
         body: {

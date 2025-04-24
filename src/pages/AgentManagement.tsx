@@ -9,8 +9,7 @@ import { Loader2, AlertCircle } from 'lucide-react';
 import { Alert, AlertDescription } from "@/components/ui/alert";
 
 export default function AgentManagement() {
-  const { user } = useAuth();
-  const companyId = user?.app_metadata?.company_id;
+  const { user, companyId } = useAuth();
   const { agents, loading, error, isAdding, fetchAgents, addAgent } = useAgents(companyId);
   const [searchTerm, setSearchTerm] = useState('');
   const [dialogOpen, setDialogOpen] = useState(false);

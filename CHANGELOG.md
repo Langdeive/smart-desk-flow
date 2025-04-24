@@ -1,6 +1,16 @@
 
 # CHANGELOG
 
+## [1.1.3] - 2025-04-24
+
+### Bug Fixes
+
+1. **Agent Management**
+   - Fixed issue with company ID not being properly passed to the agent invitation function
+   - Improved error handling with more descriptive toast messages 
+   - Better logging for troubleshooting agent management issues
+   - Added clear error messages when company ID is missing
+
 ## [1.1.2] - 2025-04-24
 
 ### Bug Fixes
@@ -102,3 +112,4 @@
   - Adicionado estado de carregamento na listagem
   - Modal permanece aberto em caso de erro no convite
   - Atualização automática da lista após convite bem-sucedido
+
