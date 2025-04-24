@@ -28,17 +28,13 @@ export const useAgents = (companyId: string | undefined) => {
     try {
       console.log('Fetching agents for company ID:', companyId);
       
-      // Fixed query syntax to properly join with users table
+      // Updated query that doesn't reference non-existent columns
       const { data, error } = await supabase
         .from('user_companies')
         .select(`
           id,
           role,
-          invitation_sent,
-          users (
-            email,
-            raw_user_meta_data->name
-          )
+          user_id
         `)
         .eq('company_id', companyId);
       
@@ -47,13 +43,33 @@ export const useAgents = (companyId: string | undefined) => {
       console.log('Raw agents data:', data);
       
       if (Array.isArray(data)) {
-        const formattedAgents: Agent[] = data.map(agent => ({
-          id: agent.id || '',
-          nome: agent.users?.[0]?.name || '',
-          email: agent.users?.[0]?.email || '',
-          funcao: agent.role === 'admin' ? 'admin' : 'agent',
-          status: agent.invitation_sent ? 'awaiting' : 'active'
-        }));
+        // Since we don't have the users' name and email directly from the first query,
+        // we'll need to fetch user data separately for each user_id
+        const formattedAgents: Agent[] = [];
+        
+        for (const userCompany of data) {
+          if (userCompany.user_id) {
+            // Fetch user details from auth.users (via RPC or a view since we can't directly query auth schema)
+            const { data: userData, error: userError } = await supabase.rpc('get_user_info', {
+              user_id: userCompany.user_id
+            });
+            
+            if (userError) {
+              console.error('Error fetching user info:', userError);
+              continue;
+            }
+            
+            if (userData) {
+              formattedAgents.push({
+                id: userCompany.id || '',
+                nome: userData.name || 'Unknown User',
+                email: userData.email || '',
+                funcao: userCompany.role === 'admin' ? 'admin' : 'agent',
+                status: 'active' // Default status since we don't have invitation_sent column
+              });
+            }
+          }
+        }
         
         setAgents(formattedAgents);
         console.log('Formatted agents:', formattedAgents);
@@ -80,13 +96,11 @@ export const useAgents = (companyId: string | undefined) => {
     
     try {
       // Call the RPC function to invite the agent
-      const { data, error } = await supabase.functions.invoke('invite_agent', {
-        body: {
-          email: agentData.email,
-          name: agentData.nome,
-          role: agentData.funcao,
-          companyId: companyId
-        }
+      const { data, error } = await supabase.rpc('invite_agent', {
+        email: agentData.email,
+        name: agentData.nome,
+        role: agentData.funcao,
+        companyId: companyId
       });
 
       if (error) throw error;
