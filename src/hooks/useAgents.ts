@@ -131,9 +131,18 @@ export const useAgents = (companyId: string | undefined) => {
       return true;
     } catch (error) {
       console.error('Error adding agent:', error);
-      toast.error('Erro ao convidar agente', {
-        description: error instanceof Error ? error.message : 'Tente novamente'
-      });
+      
+      // Special handling for company not found error
+      if (error.message && error.message.includes('violates foreign key constraint')) {
+        toast.error('Erro ao convidar agente', {
+          description: 'A empresa informada não existe no sistema. Contate o suporte.'
+        });
+      } else {
+        toast.error('Erro ao convidar agente', {
+          description: error instanceof Error ? error.message : 'Tente novamente'
+        });
+      }
+      
       return false;
     } finally {
       setIsAdding(false);

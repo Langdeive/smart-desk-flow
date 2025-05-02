@@ -7,6 +7,7 @@
 
 1. **Agent Management**
    - Fixed the invite_agent edge function to use service role to bypass RLS
+   - Added company existence check to prevent foreign key constraint errors
    - Resolved "User not allowed" errors during agent invitation
    - Enhanced error handling and response format
    - Improved success response with more detailed data

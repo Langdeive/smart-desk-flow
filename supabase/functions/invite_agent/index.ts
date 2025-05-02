@@ -43,6 +43,23 @@ serve(async (req) => {
 
     console.log(`Inviting agent: ${name} (${email}) with role ${role} to company ${companyId}`);
 
+    // First, verify that the company exists
+    const { data: companyData, error: companyError } = await supabaseAdmin
+      .from('companies')
+      .select('id')
+      .eq('id', companyId)
+      .single();
+    
+    if (companyError || !companyData) {
+      return new Response(
+        JSON.stringify({ 
+          error: `Company with ID ${companyId} does not exist. Please verify the company ID or create the company first.`,
+          details: companyError?.message || 'No company found'
+        }),
+        { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 404 }
+      );
+    }
+
     // Create a new user in auth system using the admin client
     const { data: userData, error: userError } = await supabaseAdmin.auth.admin.inviteUserByEmail(email, {
       data: {
