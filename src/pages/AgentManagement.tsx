@@ -5,20 +5,32 @@ import { useAgents } from '@/hooks/useAgents';
 import AgentList from '@/components/agents/AgentList';
 import AgentSearch from '@/components/agents/AgentSearch';
 import AddAgentDialog from '@/components/agents/AddAgentDialog';
-import { Loader2, AlertCircle } from 'lucide-react';
-import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Loader2, AlertCircle, Building } from 'lucide-react';
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Button } from "@/components/ui/button";
+import { useNavigate } from 'react-router-dom';
 
 export default function AgentManagement() {
-  const { user, companyId } = useAuth();
+  const navigate = useNavigate();
+  const { user, companyId, role, refreshSession } = useAuth();
   const { agents, loading, error, isAdding, fetchAgents, addAgent } = useAgents(companyId);
   const [searchTerm, setSearchTerm] = useState('');
   const [dialogOpen, setDialogOpen] = useState(false);
 
   useEffect(() => {
+    // Refresh the session to ensure we have the latest metadata
+    const checkCompanyId = async () => {
+      await refreshSession();
+    };
+    checkCompanyId();
+  }, [refreshSession]);
+
+  useEffect(() => {
     console.log("Current company ID:", companyId);
+    console.log("Current user role:", role);
     console.log("Current agents:", agents);
     console.log("Loading state:", loading);
-  }, [companyId, agents, loading]);
+  }, [companyId, role, agents, loading]);
 
   const handleAddAgent = async (data: {
     nome: string;
@@ -38,6 +50,31 @@ export default function AgentManagement() {
     agent.email.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
+  // Show company creation alert if no company ID
+  if (!companyId) {
+    return (
+      <div className="container mx-auto p-4">
+        <Alert variant="destructive" className="mb-4">
+          <AlertCircle className="h-4 w-4" />
+          <AlertTitle>Empresa não encontrada</AlertTitle>
+          <AlertDescription>
+            É necessário criar uma empresa antes de gerenciar agentes.
+          </AlertDescription>
+        </Alert>
+        <div className="flex justify-center mt-6">
+          <Button 
+            onClick={() => navigate("/cadastro-empresa")}
+            className="flex items-center gap-2"
+          >
+            <Building className="h-4 w-4" />
+            Criar Empresa
+          </Button>
+        </div>
+      </div>
+    );
+  }
+
+  // Show loading spinner
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-[200px]">
@@ -46,6 +83,7 @@ export default function AgentManagement() {
     );
   }
 
+  // Show error if any
   if (error) {
     return (
       <Alert variant="destructive" className="mb-4">
@@ -54,6 +92,9 @@ export default function AgentManagement() {
       </Alert>
     );
   }
+
+  // Check if user has the right permissions (owner or admin)
+  const canManageAgents = role === 'owner' || role === 'admin';
 
   return (
     <div className="container mx-auto p-4">
@@ -65,12 +106,14 @@ export default function AgentManagement() {
           onSearchChange={setSearchTerm} 
         />
         
-        <AddAgentDialog 
-          isOpen={dialogOpen}
-          onOpenChange={setDialogOpen}
-          onAddAgent={handleAddAgent}
-          isAdding={isAdding}
-        />
+        {canManageAgents && (
+          <AddAgentDialog 
+            isOpen={dialogOpen}
+            onOpenChange={setDialogOpen}
+            onAddAgent={handleAddAgent}
+            isAdding={isAdding}
+          />
+        )}
       </div>
 
       <AgentList 

@@ -19,9 +19,9 @@ export const useAgents = (companyId: string | undefined) => {
 
   const fetchAgents = async () => {
     if (!companyId) {
-      console.log('Company ID is undefined, cannot fetch agents');
+      setError('ID da empresa não encontrado. Verifique se você está conectado à sua conta.');
       toast.error('ID da empresa não encontrado', {
-        description: 'Não foi possível carregar os agentes'
+        description: 'Verifique se você está conectado à sua conta'
       });
       return;
     }
@@ -93,9 +93,10 @@ export const useAgents = (companyId: string | undefined) => {
 
   const addAgent = async (agentData: Omit<Agent, 'id' | 'status'>) => {
     if (!companyId) {
-      console.error('Company ID is undefined, cannot add agent');
+      const errorMsg = 'ID da empresa não encontrado. Crie sua empresa primeiro.';
+      setError(errorMsg);
       toast.error('ID da empresa não encontrado', {
-        description: 'Verifique se você está conectado à sua conta'
+        description: 'Crie sua empresa primeiro ou faça login novamente.'
       });
       return false;
     }
@@ -129,7 +130,7 @@ export const useAgents = (companyId: string | undefined) => {
       });
       
       return true;
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error adding agent:', error);
       
       // Special handling for company not found error
@@ -152,6 +153,10 @@ export const useAgents = (companyId: string | undefined) => {
   useEffect(() => {
     if (companyId) {
       fetchAgents();
+    } else {
+      // Clear agents list if there's no company ID
+      setAgents([]);
+      setError('ID da empresa não encontrado');
     }
   }, [companyId]);
 

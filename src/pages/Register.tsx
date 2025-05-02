@@ -1,5 +1,5 @@
 
-import React from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -8,8 +8,9 @@ import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { useToast } from "@/hooks/use-toast";
+import { toast } from 'sonner';
 import { Building, Lock, Mail, User } from "lucide-react";
+import { supabase } from '@/integrations/supabase/client';
 
 const registerFormSchema = z.object({
   name: z.string().min(2, { message: "O nome deve ter pelo menos 2 caracteres" }),
@@ -25,8 +26,8 @@ const registerFormSchema = z.object({
 type RegisterFormValues = z.infer<typeof registerFormSchema>;
 
 const Register = () => {
-  const { toast } = useToast();
   const navigate = useNavigate();
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const form = useForm<RegisterFormValues>({
     resolver: zodResolver(registerFormSchema),
@@ -41,25 +42,37 @@ const Register = () => {
 
   const onSubmit = async (data: RegisterFormValues) => {
     try {
-      // Aqui precisaremos implementar a integração com o Supabase para registro
-      console.log("Dados de registro:", data);
-      
-      toast({
-        title: "Registro realizado com sucesso",
-        description: "Você será redirecionado para o login.",
+      setIsSubmitting(true);
+      // Register user with Supabase and include company name in metadata
+      const { error } = await supabase.auth.signUp({
+        email: data.email,
+        password: data.password,
+        options: {
+          data: {
+            name: data.name,
+            company_name: data.company,  // This will trigger create_company_on_signup
+            plan: 'free'                 // Default plan
+          }
+        }
       });
       
-      // Simulando redirecionamento após registro bem-sucedido
+      if (error) throw error;
+      
+      toast.success("Registro realizado com sucesso", {
+        description: "Verifique seu e-mail para confirmar o cadastro.",
+      });
+      
+      // Redirect to login page
       setTimeout(() => {
         navigate("/login");
       }, 1500);
-    } catch (error) {
+    } catch (error: any) {
       console.error("Erro ao fazer registro:", error);
-      toast({
-        title: "Erro ao criar conta",
-        description: "Ocorreu um erro ao criar sua conta. Por favor, tente novamente.",
-        variant: "destructive",
+      toast.error("Erro ao criar conta", {
+        description: error.message || "Ocorreu um erro ao criar sua conta. Por favor, tente novamente.",
       });
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -173,8 +186,8 @@ const Register = () => {
                 )}
               />
               
-              <Button type="submit" className="w-full">
-                Criar Conta
+              <Button type="submit" className="w-full" disabled={isSubmitting}>
+                {isSubmitting ? "Processando..." : "Criar Conta"}
               </Button>
             </form>
           </Form>

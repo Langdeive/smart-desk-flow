@@ -1,6 +1,17 @@
 
 # CHANGELOG
 
+## [1.1.5] - 2025-05-02
+
+### Improvements
+
+1. **User Registration & Company Creation Flow**
+   - Added automatic company creation during registration by including company_name in user metadata
+   - Enhanced useAuth hook to expose companyId and role from app_metadata
+   - Added session refresh functionality to ensure latest metadata is available
+   - Improved AgentManagement page with proper company ID validation and role-based permissions
+   - Added user-friendly error messages when company information is missing
+
 ## [1.1.4] - 2025-05-02
 
 ### Bug Fixes

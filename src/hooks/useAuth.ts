@@ -17,44 +17,78 @@ export const useAuth = () => {
   const [role, setRole] = useState<string | undefined>(undefined);
   const [error, setError] = useState<string | null>(null);
 
+  // Function to refresh session and reload user metadata
+  const refreshSession = async () => {
+    try {
+      const { data, error } = await supabase.auth.refreshSession();
+      if (error) throw error;
+      
+      // Update user state with refreshed session data
+      if (data.user) {
+        setUser(data.user);
+        
+        // Update email verification status
+        setEmailVerified(!!data.user.email_confirmed_at);
+        
+        // Get company ID from app_metadata
+        if (data.user.app_metadata && data.user.app_metadata.company_id) {
+          setCompanyId(data.user.app_metadata.company_id);
+          console.log("Retrieved company ID from app_metadata:", data.user.app_metadata.company_id);
+        }
+        
+        // Get role from app_metadata
+        if (data.user.app_metadata && data.user.app_metadata.role) {
+          setRole(data.user.app_metadata.role);
+          console.log("Retrieved role from app_metadata:", data.user.app_metadata.role);
+        }
+      }
+      
+      return data;
+    } catch (error) {
+      console.error("Error refreshing session:", error);
+      return null;
+    }
+  };
+
   useEffect(() => {
     const fetchUser = async () => {
       try {
         const { data: { user } } = await supabase.auth.getUser();
         setUser(user);
         
-        // Check if email is verified (using app_metadata or other logic)
+        // Check if email is verified
         const isEmailVerified = user?.email_confirmed_at || false;
         setEmailVerified(!!isEmailVerified);
 
-        // Get user role if available
-        const userRole = user?.app_metadata?.role || 'client';
-        setRole(userRole);
-        
-        // Set companyId from the user's metadata if available
-        if (user && user.app_metadata && user.app_metadata.company_id) {
-          setCompanyId(user.app_metadata.company_id);
-          console.log("Retrieved company ID from user metadata:", user.app_metadata.company_id);
-        } else if (user) {
-          // If not in app_metadata, try to get it from user_companies table
-          const { data, error } = await supabase
-            .from('user_companies')
-            .select('company_id')
-            .eq('user_id', user.id)
-            .single();
-          
-          if (data && !error) {
-            setCompanyId(data.company_id);
-            console.log("Retrieved company ID from user_companies:", data.company_id);
+        // Get user role and company ID from app_metadata
+        if (user && user.app_metadata) {
+          if (user.app_metadata.role) {
+            setRole(user.app_metadata.role);
           }
-
-          // For testing, provide a fallback company ID - this is hardcoded
-          // Remove this in production!
-          if (!data || error) {
-            // Hardcoded companyId for testing - remove in production
-            const testCompanyId = '12b67065-5c0b-4bb7-ae71-93074e0bdd5d';
-            setCompanyId(testCompanyId);
-            console.log("Using test company ID:", testCompanyId);
+          
+          if (user.app_metadata.company_id) {
+            setCompanyId(user.app_metadata.company_id);
+            console.log("Retrieved company ID from app_metadata:", user.app_metadata.company_id);
+          } else {
+            // If not in app_metadata, try refreshing the session
+            await refreshSession();
+          }
+        } else if (user) {
+          // If no app_metadata, try refreshing the session
+          await refreshSession();
+          
+          // If still no company ID, try to get it from user_companies table
+          if (!companyId) {
+            const { data, error } = await supabase
+              .from('user_companies')
+              .select('company_id')
+              .eq('user_id', user.id)
+              .single();
+            
+            if (data && !error) {
+              setCompanyId(data.company_id);
+              console.log("Retrieved company ID from user_companies:", data.company_id);
+            }
           }
         }
       } catch (error) {
@@ -76,14 +110,10 @@ export const useAuth = () => {
         // Update email verification status
         setEmailVerified(!!user?.email_confirmed_at);
         
-        // Update role
-        setRole(user?.app_metadata?.role || 'client');
-        
-        if (user && user.app_metadata && user.app_metadata.company_id) {
+        // Update role and company ID from app_metadata
+        if (user && user.app_metadata) {
+          setRole(user.app_metadata.role || 'client');
           setCompanyId(user.app_metadata.company_id);
-        } else {
-          // For testing - remove in production
-          setCompanyId('12b67065-5c0b-4bb7-ae71-93074e0bdd5d');
         }
       }
     );
@@ -103,6 +133,10 @@ export const useAuth = () => {
       });
 
       if (error) throw error;
+      
+      // After sign in, refresh the session to get latest metadata
+      await refreshSession();
+      
       return data;
     } catch (error: any) {
       console.error("Error signing in:", error);
@@ -162,6 +196,7 @@ export const useAuth = () => {
     error,
     signIn,
     signOut,
+    refreshSession,
     resendVerificationEmail,
   };
 };
