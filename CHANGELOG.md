@@ -1,6 +1,16 @@
 
 # CHANGELOG
 
+## [1.1.4] - 2025-05-02
+
+### Bug Fixes
+
+1. **Agent Management**
+   - Fixed the invite_agent edge function to use service role to bypass RLS
+   - Resolved "User not allowed" errors during agent invitation
+   - Enhanced error handling and response format
+   - Improved success response with more detailed data
+
 ## [1.1.3] - 2025-04-24
 
 ### Bug Fixes

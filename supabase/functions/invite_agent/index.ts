@@ -16,6 +16,11 @@ serve(async (req) => {
   try {
     const url = Deno.env.get('SUPABASE_URL') as string;
     const serviceRoleKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') as string;
+    
+    // Create an admin client with the service role key to bypass RLS
+    const supabaseAdmin = createClient(url, serviceRoleKey);
+    
+    // Create a regular client to get JWT claims
     const authHeader = req.headers.get('Authorization')!;
     const supabase = createClient(
       url,
@@ -26,8 +31,9 @@ serve(async (req) => {
         } 
       }
     );
-
+    
     const { email, name, role, companyId } = await req.json();
+    
     if (!email || !name || !role || !companyId) {
       return new Response(
         JSON.stringify({ error: 'Missing required fields' }),
@@ -37,8 +43,8 @@ serve(async (req) => {
 
     console.log(`Inviting agent: ${name} (${email}) with role ${role} to company ${companyId}`);
 
-    // Create a new user in auth system
-    const { data: userData, error: userError } = await supabase.auth.admin.inviteUserByEmail(email, {
+    // Create a new user in auth system using the admin client
+    const { data: userData, error: userError } = await supabaseAdmin.auth.admin.inviteUserByEmail(email, {
       data: {
         name: name,
         company_id: companyId,
@@ -57,21 +63,28 @@ serve(async (req) => {
       throw new Error('User ID not returned from invitation');
     }
 
-    // Add the user to the user_companies table
-    const { error: relationError } = await supabase
+    // Add the user to the user_companies table using the admin client to bypass RLS
+    const { data: relationData, error: relationError } = await supabaseAdmin
       .from('user_companies')
       .insert({
         user_id: userId,
         company_id: companyId,
         role: role
-      });
+      })
+      .select()
+      .single();
     
     if (relationError) {
       throw relationError;
     }
 
     return new Response(
-      JSON.stringify({ success: true }),
+      JSON.stringify({ 
+        success: true, 
+        id: relationData.id, 
+        email: email, 
+        role: relationData.role 
+      }),
       { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 200 }
     );
   } catch (error) {

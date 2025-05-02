@@ -106,7 +106,7 @@ export const useAgents = (companyId: string | undefined) => {
     try {
       console.log('Adding agent with company ID:', companyId);
       
-      // Call the edge function instead of RPC
+      // Call the edge function
       const { data, error } = await supabase.functions.invoke('invite_agent', {
         body: {
           email: agentData.email,
@@ -117,6 +117,9 @@ export const useAgents = (companyId: string | undefined) => {
       });
 
       if (error) throw error;
+
+      // Log the response to help with debugging
+      console.log('Invite agent response:', data);
 
       // If successful, refresh the agents list
       await fetchAgents();
