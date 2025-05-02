@@ -43,20 +43,51 @@ serve(async (req) => {
 
     console.log(`Inviting agent: ${name} (${email}) with role ${role} to company ${companyId}`);
 
-    // First, verify that the company exists
-    const { data: companyData, error: companyError } = await supabaseAdmin
+    // First, check if the company exists
+    let { data: companyData, error: companyError } = await supabaseAdmin
       .from('companies')
       .select('id')
       .eq('id', companyId)
-      .single();
+      .maybeSingle(); // Using maybeSingle instead of single to avoid 406 errors
     
-    if (companyError || !companyData) {
+    // If company doesn't exist, create it
+    if (!companyData && (!companyError || companyError.code === 'PGRST116')) {
+      console.log(`Company ${companyId} not found. Attempting to create it.`);
+      
+      // Extract user information to use as company name
+      const { data: userData } = await supabase.auth.getUser();
+      const userName = userData?.user?.user_metadata?.full_name || 'New Company';
+      
+      const { data: newCompany, error: createError } = await supabaseAdmin
+        .from('companies')
+        .insert({
+          id: companyId, // Use the provided ID
+          name: `${userName}'s Company`,
+          plan: 'free'
+        })
+        .select()
+        .single();
+      
+      if (createError) {
+        console.error('Error creating company:', createError);
+        return new Response(
+          JSON.stringify({ 
+            error: `Failed to create company with ID ${companyId}.`,
+            details: createError.message 
+          }),
+          { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 500 }
+        );
+      }
+      
+      companyData = newCompany;
+      console.log(`Created new company: ${JSON.stringify(companyData)}`);
+    } else if (companyError && companyError.code !== 'PGRST116') {
       return new Response(
         JSON.stringify({ 
-          error: `Company with ID ${companyId} does not exist. Please verify the company ID or create the company first.`,
-          details: companyError?.message || 'No company found'
+          error: `Error checking company with ID ${companyId}.`,
+          details: companyError.message
         }),
-        { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 404 }
+        { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 500 }
       );
     }
 

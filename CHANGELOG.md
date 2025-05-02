@@ -8,6 +8,7 @@
 1. **Agent Management**
    - Fixed the invite_agent edge function to use service role to bypass RLS
    - Added company existence check to prevent foreign key constraint errors
+   - Added auto-creation of company if it doesn't exist yet
    - Resolved "User not allowed" errors during agent invitation
    - Enhanced error handling and response format
    - Improved success response with more detailed data
@@ -123,4 +124,3 @@
   - Adicionado estado de carregamento na listagem
   - Modal permanece aberto em caso de erro no convite
   - Atualização automática da lista após convite bem-sucedido
-
