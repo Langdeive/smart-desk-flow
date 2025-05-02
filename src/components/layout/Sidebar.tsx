@@ -21,6 +21,7 @@ import {
   Menu,
   X,
 } from "lucide-react";
+import Logo from "@/components/ui/logo";
 
 interface SidebarProps {
   className?: string;
@@ -71,17 +72,17 @@ export function Sidebar({ className }: SidebarProps) {
         className="fixed top-4 left-4 z-50 lg:hidden"
         onClick={() => setIsOpen(!isOpen)}
       >
-        {isOpen ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
+        {isOpen ? <X className="h-5 w-5 text-neutral-700" /> : <Menu className="h-5 w-5 text-neutral-700" />}
       </Button>
       
       <div className={cn(
-        "fixed inset-y-0 left-0 z-40 flex flex-col w-64 bg-background border-r transition-transform duration-300 ease-in-out",
+        "fixed inset-y-0 left-0 z-40 flex flex-col w-64 bg-white dark:bg-neutral-900 border-r transition-transform duration-default ease-in-out shadow-sm",
         isOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0",
         className
       )}>
         <div className="p-4 border-b">
           <Link to="/" className="flex items-center gap-2">
-            <span className="text-xl font-bold">HelpDesk IA</span>
+            <Logo />
           </Link>
         </div>
         
@@ -89,13 +90,13 @@ export function Sidebar({ className }: SidebarProps) {
           <Link
             to="/"
             className={cn(
-              "flex items-center mx-3 px-3 py-2 rounded-md text-sm transition-colors",
+              "flex items-center mx-3 px-3 py-2 rounded-lg text-sm transition-colors duration-default",
               isActive("/") 
-                ? "bg-primary text-primary-foreground" 
-                : "hover:bg-muted"
+                ? "bg-primary-a text-white" 
+                : "text-neutral-700 hover:bg-neutral-100"
             )}
           >
-            <Home className="mr-2 h-4 w-4" />
+            <Home className="mr-2 h-5 w-5" />
             <span>Início</span>
           </Link>
           
@@ -104,8 +105,8 @@ export function Sidebar({ className }: SidebarProps) {
               <AccordionItem key={index} value={`item-${index}`} className="border-b-0">
                 <AccordionTrigger 
                   className={cn(
-                    "px-3 py-2 text-sm hover:bg-muted rounded-md mx-3",
-                    isGroupActive(group.items.map(item => item.href)) && "font-medium"
+                    "px-3 py-2 text-sm hover:bg-neutral-100 rounded-lg mx-3 text-neutral-700",
+                    isGroupActive(group.items.map(item => item.href)) && "font-medium text-neutral-900"
                   )}
                 >
                   {group.title}
@@ -117,13 +118,13 @@ export function Sidebar({ className }: SidebarProps) {
                         key={i}
                         to={item.href}
                         className={cn(
-                          "flex items-center rounded-md px-3 py-2 text-sm transition-colors",
+                          "flex items-center rounded-lg px-3 py-2 text-sm transition-colors duration-default",
                           isActive(item.href) 
-                            ? "bg-accent text-accent-foreground font-medium" 
-                            : "hover:bg-muted"
+                            ? "bg-primary-a-50 text-primary-a font-medium" 
+                            : "text-neutral-700 hover:bg-neutral-100"
                         )}
                       >
-                        <item.icon className="mr-2 h-4 w-4" />
+                        <item.icon className="mr-2 h-5 w-5" />
                         <span>{item.label}</span>
                         {isActive(item.href) && (
                           <ChevronRight className="ml-auto h-4 w-4" />

@@ -54,8 +54,8 @@ export default function AgentManagement() {
   if (!companyId) {
     return (
       <div className="container mx-auto p-4">
-        <Alert variant="destructive" className="mb-4">
-          <AlertCircle className="h-4 w-4" />
+        <Alert variant="destructive" className="mb-4 shadow-card">
+          <AlertCircle className="h-5 w-5" />
           <AlertTitle>Empresa não encontrada</AlertTitle>
           <AlertDescription>
             É necessário criar uma empresa antes de gerenciar agentes.
@@ -64,9 +64,9 @@ export default function AgentManagement() {
         <div className="flex justify-center mt-6">
           <Button 
             onClick={() => navigate("/cadastro-empresa")}
-            className="flex items-center gap-2"
+            className="flex items-center gap-2 bg-primary-b hover:bg-primary-b-600"
           >
-            <Building className="h-4 w-4" />
+            <Building className="h-5 w-5" />
             Criar Empresa
           </Button>
         </div>
@@ -78,7 +78,7 @@ export default function AgentManagement() {
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-[200px]">
-        <Loader2 className="h-8 w-8 animate-spin" />
+        <Loader2 className="h-8 w-8 animate-spin text-primary-a" />
       </div>
     );
   }
@@ -86,8 +86,8 @@ export default function AgentManagement() {
   // Show error if any
   if (error) {
     return (
-      <Alert variant="destructive" className="mb-4">
-        <AlertCircle className="h-4 w-4" />
+      <Alert variant="destructive" className="mb-4 shadow-card">
+        <AlertCircle className="h-5 w-5" />
         <AlertDescription>{error}</AlertDescription>
       </Alert>
     );
@@ -98,9 +98,9 @@ export default function AgentManagement() {
 
   return (
     <div className="container mx-auto p-4">
-      <h1 className="text-2xl font-bold mb-4">Gerenciamento de Agentes</h1>
+      <h1 className="text-h1 font-manrope font-semibold tracking-heading mb-6 text-neutral-900">Gerenciamento de Agentes</h1>
       
-      <div className="flex flex-col md:flex-row justify-between mb-4 gap-4">
+      <div className="flex flex-col md:flex-row justify-between mb-6 gap-4">
         <AgentSearch 
           searchTerm={searchTerm} 
           onSearchChange={setSearchTerm} 
