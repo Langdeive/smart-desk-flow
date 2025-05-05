@@ -11,27 +11,27 @@ export type Database = {
     Tables: {
       agentes: {
         Row: {
+          company_id: string
           created_at: string
           email: string
-          empresa_id: string
           funcao: string
           id: string
           nome: string
           status: string
         }
         Insert: {
+          company_id: string
           created_at?: string
           email: string
-          empresa_id: string
           funcao: string
           id?: string
           nome: string
           status?: string
         }
         Update: {
+          company_id?: string
           created_at?: string
           email?: string
-          empresa_id?: string
           funcao?: string
           id?: string
           nome?: string
@@ -120,6 +120,13 @@ export type Database = {
             foreignKeyName: "client_contacts_client_id_fkey"
             columns: ["client_id"]
             isOneToOne: false
+            referencedRelation: "clientes_view"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "client_contacts_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
             referencedRelation: "clients"
             referencedColumns: ["id"]
           },
@@ -127,10 +134,10 @@ export type Database = {
       }
       clientes: {
         Row: {
+          company_id: string
           created_at: string | null
           documento: string | null
           email: string
-          empresa_id: string
           id: string
           nome: string
           observacoes: string | null
@@ -139,10 +146,10 @@ export type Database = {
           updated_at: string | null
         }
         Insert: {
+          company_id: string
           created_at?: string | null
           documento?: string | null
           email: string
-          empresa_id: string
           id?: string
           nome: string
           observacoes?: string | null
@@ -151,10 +158,10 @@ export type Database = {
           updated_at?: string | null
         }
         Update: {
+          company_id?: string
           created_at?: string | null
           documento?: string | null
           email?: string
-          empresa_id?: string
           id?: string
           nome?: string
           observacoes?: string | null
@@ -527,7 +534,62 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      agents_view: {
+        Row: {
+          company_id: string | null
+          created_at: string | null
+          email: string | null
+          funcao: string | null
+          id: string | null
+          nome: string | null
+          status: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_companies_company_id_fkey"
+            columns: ["company_id"]
+            isOneToOne: false
+            referencedRelation: "companies"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      clientes_view: {
+        Row: {
+          company_id: string | null
+          created_at: string | null
+          documento: string | null
+          id: string | null
+          is_active: boolean | null
+          nome: string | null
+          observacoes: string | null
+          status: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          company_id?: string | null
+          created_at?: string | null
+          documento?: string | null
+          id?: string | null
+          is_active?: boolean | null
+          nome?: string | null
+          observacoes?: string | null
+          status?: never
+          updated_at?: string | null
+        }
+        Update: {
+          company_id?: string | null
+          created_at?: string | null
+          documento?: string | null
+          id?: string | null
+          is_active?: boolean | null
+          nome?: string | null
+          observacoes?: string | null
+          status?: never
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
       belongs_to_company: {
@@ -537,6 +599,10 @@ export type Database = {
       binary_quantize: {
         Args: { "": string } | { "": unknown }
         Returns: unknown
+      }
+      fix_inconsistent_user_companies: {
+        Args: Record<PropertyKey, never>
+        Returns: undefined
       }
       halfvec_avg: {
         Args: { "": number[] }
