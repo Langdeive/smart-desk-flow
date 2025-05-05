@@ -12,25 +12,18 @@ import { useNavigate } from 'react-router-dom';
 
 export default function AgentManagement() {
   const navigate = useNavigate();
-  const { user, companyId, role, refreshSession } = useAuth();
+  const { user, companyId, role } = useAuth();
   const { agents, loading, error, isAdding, fetchAgents, addAgent } = useAgents(companyId);
   const [searchTerm, setSearchTerm] = useState('');
   const [dialogOpen, setDialogOpen] = useState(false);
 
+  // Carregamos os dados apenas uma vez ao montar o componente
   useEffect(() => {
-    // Refresh the session to ensure we have the latest metadata
-    const checkCompanyId = async () => {
-      await refreshSession();
-    };
-    checkCompanyId();
-  }, [refreshSession]);
-
-  useEffect(() => {
-    console.log("Current company ID:", companyId);
-    console.log("Current user role:", role);
-    console.log("Current agents:", agents);
-    console.log("Loading state:", loading);
-  }, [companyId, role, agents, loading]);
+    // Log para debug apenas
+    console.log("Agent Management - Current user:", user?.id);
+    console.log("Agent Management - Current company ID:", companyId);
+    console.log("Agent Management - Current user role:", role);
+  }, [user, companyId, role]);
 
   const handleAddAgent = async (data: {
     nome: string;

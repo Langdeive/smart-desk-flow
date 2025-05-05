@@ -16,110 +16,117 @@ export const useAuth = () => {
   const [emailVerified, setEmailVerified] = useState(false);
   const [role, setRole] = useState<string | undefined>(undefined);
   const [error, setError] = useState<string | null>(null);
+  const [refreshInProgress, setRefreshInProgress] = useState(false);
 
-  // Function to refresh session and reload user metadata
+  // Função para atualizar o estado com os dados do usuário
+  const updateUserState = (userData: any, sessionData: any = null) => {
+    if (!userData) {
+      setUser(null);
+      setCompanyId(undefined);
+      setEmailVerified(false);
+      setRole(undefined);
+      return;
+    }
+
+    setUser(userData);
+    setEmailVerified(!!userData.email_confirmed_at);
+    
+    // Preferir app_metadata para companyId e role, pois são mais confiáveis
+    if (userData.app_metadata) {
+      if (userData.app_metadata.company_id) {
+        setCompanyId(userData.app_metadata.company_id);
+        console.log("Retrieved company ID from app_metadata:", userData.app_metadata.company_id);
+      }
+      
+      if (userData.app_metadata.role) {
+        setRole(userData.app_metadata.role);
+        console.log("Retrieved role from app_metadata:", userData.app_metadata.role);
+      }
+    }
+  };
+
+  // Function to refresh session and reload user metadata with debounce
   const refreshSession = async () => {
+    if (refreshInProgress) {
+      console.log('Refresh already in progress, skipping...');
+      return null;
+    }
+    
     try {
+      setRefreshInProgress(true);
+      console.log('Refreshing session...');
+      
       const { data, error } = await supabase.auth.refreshSession();
       if (error) throw error;
       
       // Update user state with refreshed session data
       if (data.user) {
-        setUser(data.user);
-        
-        // Update email verification status
-        setEmailVerified(!!data.user.email_confirmed_at);
-        
-        // Get company ID from app_metadata
-        if (data.user.app_metadata && data.user.app_metadata.company_id) {
-          setCompanyId(data.user.app_metadata.company_id);
-          console.log("Retrieved company ID from app_metadata:", data.user.app_metadata.company_id);
-        }
-        
-        // Get role from app_metadata
-        if (data.user.app_metadata && data.user.app_metadata.role) {
-          setRole(data.user.app_metadata.role);
-          console.log("Retrieved role from app_metadata:", data.user.app_metadata.role);
-        }
+        updateUserState(data.user, data.session);
       }
       
       return data;
     } catch (error) {
       console.error("Error refreshing session:", error);
       return null;
+    } finally {
+      // Permitir nova tentativa após um intervalo
+      setTimeout(() => {
+        setRefreshInProgress(false);
+      }, 5000); // Espera 5 segundos antes de permitir novos refreshes
     }
   };
 
   useEffect(() => {
+    let isMounted = true;
+    let authListener: any = null;
+    
     const fetchUser = async () => {
       try {
-        const { data: { user } } = await supabase.auth.getUser();
-        setUser(user);
+        // Primeiro, obter a sessão existente
+        const { data: sessionData } = await supabase.auth.getSession();
+        const session = sessionData?.session;
         
-        // Check if email is verified
-        const isEmailVerified = user?.email_confirmed_at || false;
-        setEmailVerified(!!isEmailVerified);
-
-        // Get user role and company ID from app_metadata
-        if (user && user.app_metadata) {
-          if (user.app_metadata.role) {
-            setRole(user.app_metadata.role);
-          }
-          
-          if (user.app_metadata.company_id) {
-            setCompanyId(user.app_metadata.company_id);
-            console.log("Retrieved company ID from app_metadata:", user.app_metadata.company_id);
-          } else {
-            // If not in app_metadata, try refreshing the session
-            await refreshSession();
-          }
-        } else if (user) {
-          // If no app_metadata, try refreshing the session
-          await refreshSession();
-          
-          // If still no company ID, try to get it from user_companies table
-          if (!companyId) {
-            const { data, error } = await supabase
-              .from('user_companies')
-              .select('company_id')
-              .eq('user_id', user.id)
-              .single();
-            
-            if (data && !error) {
-              setCompanyId(data.company_id);
-              console.log("Retrieved company ID from user_companies:", data.company_id);
-            }
-          }
+        if (session?.user && isMounted) {
+          updateUserState(session.user, session);
         }
       } catch (error) {
-        console.error("Error fetching user:", error);
+        console.error("Error fetching initial session:", error);
         setError(error instanceof Error ? error.message : 'Unknown error occurred');
       } finally {
-        setLoading(false);
+        if (isMounted) setLoading(false);
       }
     };
 
+    // Configurar listener para mudança de estado de autenticação
+    const setupAuthListener = () => {
+      // Remover listener existente se houver
+      if (authListener?.subscription) {
+        authListener.subscription.unsubscribe();
+      }
+      
+      const { data } = supabase.auth.onAuthStateChange((event, session) => {
+        console.log('Auth state changed:', event);
+        
+        if (isMounted) {
+          const user = session?.user || null;
+          updateUserState(user, session);
+        }
+        
+        // Não fazemos chamadas adicionais ao Supabase aqui para evitar recursão
+      });
+      
+      authListener = data;
+    };
+    
+    // Executar em ordem: configurar listener primeiro, depois buscar usuário
+    setupAuthListener();
     fetchUser();
 
-    // Set up auth state change listener
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      (event, session) => {
-        const user = session?.user || null;
-        setUser(user);
-        
-        // Update email verification status
-        setEmailVerified(!!user?.email_confirmed_at);
-        
-        // Update role and company ID from app_metadata
-        if (user && user.app_metadata) {
-          setRole(user.app_metadata.role || 'client');
-          setCompanyId(user.app_metadata.company_id);
-        }
-      }
-    );
-
     return () => {
-      subscription.unsubscribe();
+      isMounted = false;
+      if (authListener?.subscription) {
+        authListener.subscription.unsubscribe();
+      }
     };
   }, []);
 
@@ -134,8 +141,7 @@ export const useAuth = () => {
 
       if (error) throw error;
       
-      // After sign in, refresh the session to get latest metadata
-      await refreshSession();
+      // Não precisamos chamar refreshSession aqui, pois onAuthStateChange já atualiza o estado
       
       return data;
     } catch (error: any) {
