@@ -6,10 +6,8 @@ import {
   DialogContent, 
   DialogHeader, 
   DialogTitle, 
-  DialogTrigger,
   DialogDescription
 } from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
 import AgentForm from './AgentForm';
 
 interface AddAgentDialogProps {
@@ -22,9 +20,6 @@ interface AddAgentDialogProps {
 export default function AddAgentDialog({ isOpen, onOpenChange, onAddAgent, isAdding }: AddAgentDialogProps) {
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
-      <DialogTrigger asChild>
-        <Button>Adicionar Agente</Button>
-      </DialogTrigger>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Adicionar Novo Agente</DialogTitle>

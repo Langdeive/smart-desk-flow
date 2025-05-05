@@ -5,7 +5,7 @@ import { useAgents } from '@/hooks/useAgents';
 import AgentList from '@/components/agents/AgentList';
 import AgentSearch from '@/components/agents/AgentSearch';
 import AddAgentDialog from '@/components/agents/AddAgentDialog';
-import { Loader2, AlertCircle, Building } from 'lucide-react';
+import { Loader2, AlertCircle, Building, UserPlus } from 'lucide-react';
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from 'react-router-dom';
@@ -98,6 +98,16 @@ export default function AgentManagement() {
           searchTerm={searchTerm} 
           onSearchChange={setSearchTerm} 
         />
+        
+        {canManageAgents && (
+          <Button 
+            onClick={() => setDialogOpen(true)}
+            className="flex items-center gap-2"
+          >
+            <UserPlus className="h-5 w-5" />
+            Adicionar Agente
+          </Button>
+        )}
         
         {canManageAgents && (
           <AddAgentDialog 
