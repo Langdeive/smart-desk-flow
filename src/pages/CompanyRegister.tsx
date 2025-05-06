@@ -164,7 +164,7 @@ export default function CompanyRegister() {
 
       <Card className="mb-8">
         <CardHeader>
-          <CardTitle className="text-xl">Plano selecionado: {selectedPlan.name}</CardTitle>
+          <CardTitle className="text-xl">Plano selecionado: {selectedPlan.nome}</CardTitle>
           <CardDescription>
             {selectedPlan.monthlyPrice === 0 
               ? "Plano gratuito" 
