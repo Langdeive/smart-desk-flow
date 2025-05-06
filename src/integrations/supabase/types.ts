@@ -223,7 +223,15 @@ export type Database = {
           plan?: string
           updated_at?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "companies_plan_fkey"
+            columns: ["plan"]
+            isOneToOne: false
+            referencedRelation: "planos"
+            referencedColumns: ["nome"]
+          },
+        ]
       }
       documents: {
         Row: {

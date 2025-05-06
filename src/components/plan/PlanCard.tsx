@@ -7,7 +7,7 @@ import { cn } from "@/lib/utils";
 
 export type PlanProps = {
   id: string;
-  name: string;
+  nome: string; // Changed from 'name' to 'nome' to match database field
   description: string;
   price: number;
   monthlyPrice: number;
@@ -26,7 +26,7 @@ interface PlanCardProps {
 
 export function PlanCard({ plan, onSelect }: PlanCardProps) {
   const {
-    name,
+    nome, // Changed from 'name' to 'nome'
     description,
     monthlyPrice,
     features,
@@ -47,7 +47,7 @@ export function PlanCard({ plan, onSelect }: PlanCardProps) {
             Mais Popular
           </div>
         )}
-        <CardTitle>{name}</CardTitle>
+        <CardTitle>{nome}</CardTitle>
         <CardDescription className={isFeatured ? "text-primary-foreground/90" : ""}>
           {description}
         </CardDescription>

@@ -61,12 +61,12 @@ export default function CompanyRegister() {
 
   const onSubmit = async (data: CompanyFormValues) => {
     try {
-      // 1. Primeiro criar a empresa na tabela public.companies (tabela correta)
+      // 1. Primeiro criar a empresa na tabela public.companies usando o nome do plano (não o ID)
       const { data: companyData, error: companyError } = await supabase
         .from('companies')
         .insert({
           name: data.companyName,
-          plan: selectedPlan?.id || 'free'
+          plan: selectedPlan?.nome || 'free' // Usando o nome do plano, não o ID
         })
         .select('id')
         .single();

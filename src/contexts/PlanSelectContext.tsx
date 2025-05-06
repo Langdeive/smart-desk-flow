@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 
 type Plan = {
   id: string;
-  name: string;
+  nome: string; // Changed from 'name' to 'nome' to match database field
   description: string;
   price: number;
   monthlyPrice: number;

@@ -12,7 +12,7 @@ export function PlanList() {
     queryKey: ['plans'],
     queryFn: async () => {
       const { data, error } = await supabase
-        .from('planos')  // Corrigido: 'plans' para 'planos'
+        .from('planos')
         .select('*')
         .order('nome', { ascending: true });
 
@@ -21,7 +21,7 @@ export function PlanList() {
       // Mapeando os campos do banco de dados para os campos esperados pelo componente
       return data.map(plan => ({
         id: plan.id,
-        name: plan.nome,
+        nome: plan.nome,  // Mantém o nome do campo do banco de dados
         description: plan.descricao || '',
         price: 0, // Definindo um valor padrão para os campos que não existem no banco de dados
         monthlyPrice: 0, // Você precisa adicionar estes campos no banco ou modificar o componente para não usá-los
