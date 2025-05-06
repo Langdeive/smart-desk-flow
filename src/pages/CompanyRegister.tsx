@@ -82,7 +82,7 @@ export default function CompanyRegister() {
       console.log("Empresa criada com sucesso:", companyData);
 
       // 2. Registrar o usuário administrador com o company_id correto nos metadados
-      const { data: userData, error: signUpError } = await supabase.auth.signUp({
+      const { error: signUpError } = await supabase.auth.signUp({
         email: data.adminEmail,
         password: data.password,
         options: {
@@ -97,43 +97,6 @@ export default function CompanyRegister() {
 
       if (signUpError) {
         throw new Error(signUpError.message);
-      }
-
-      // 3. Verificar se o vínculo foi criado pela trigger, se não, criar manualmente
-      if (userData?.user) {
-        try {
-          // Verificar se o vínculo usuário-empresa existe
-          const { data: userCompanyLink, error: linkCheckError } = await supabase
-            .from('user_companies')
-            .select('id')
-            .eq('user_id', userData.user.id)
-            .eq('company_id', companyData.id)
-            .single();
-
-          if (linkCheckError || !userCompanyLink) {
-            console.log("Vínculo não encontrado, criando manualmente...");
-            
-            // Criar vínculo manualmente
-            const { error: createLinkError } = await supabase
-              .from('user_companies')
-              .insert({
-                user_id: userData.user.id,
-                company_id: companyData.id,
-                role: 'owner'
-              });
-
-            if (createLinkError) {
-              console.warn("Erro ao criar vínculo usuário-empresa:", createLinkError.message);
-            } else {
-              console.log("Vínculo usuário-empresa criado com sucesso");
-            }
-          } else {
-            console.log("Vínculo usuário-empresa já existe:", userCompanyLink);
-          }
-        } catch (verificationError) {
-          console.warn("Erro ao verificar vínculo usuário-empresa:", verificationError);
-          // Continuar mesmo com erro na verificação
-        }
       }
 
       toast.success("Empresa cadastrada com sucesso!", {
