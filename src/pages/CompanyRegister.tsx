@@ -61,31 +61,34 @@ export default function CompanyRegister() {
 
   const onSubmit = async (data: CompanyFormValues) => {
     try {
-      // Como a tabela "empresas" ainda não existe no banco de dados,
-      // vamos usar a tabela "usuarios" para armazenar temporariamente os dados da empresa
-      // até que o banco de dados seja atualizado
-      const { data: usuario, error: usuarioError } = await supabase
-        .from('usuarios')
+      // 1. Primeiro criar a empresa na tabela public.companies (tabela correta)
+      const { data: companyData, error: companyError } = await supabase
+        .from('companies')
         .insert({
-          nome: data.companyName,
-          whatsapp_id: data.companyEmail, // Usando whatsapp_id para armazenar o email
-          plano_id: selectedPlan?.id
+          name: data.companyName,
+          plan: selectedPlan?.id || 'free'
         })
         .select('id')
         .single();
 
-      if (usuarioError) {
-        throw new Error(usuarioError.message);
+      if (companyError) {
+        throw new Error(companyError.message);
       }
 
-      // 2. Registrar o usuário administrador
-      const { error: signUpError } = await supabase.auth.signUp({
+      if (!companyData?.id) {
+        throw new Error('Falha ao criar empresa: ID não retornado');
+      }
+
+      console.log("Empresa criada com sucesso:", companyData);
+
+      // 2. Registrar o usuário administrador com o company_id correto nos metadados
+      const { data: userData, error: signUpError } = await supabase.auth.signUp({
         email: data.adminEmail,
         password: data.password,
         options: {
           data: {
             full_name: data.adminName,
-            company_id: usuario.id, // ID temporário
+            company_id: companyData.id, // ID da empresa criada no passo anterior
             role: 'admin'
           },
           emailRedirectTo: window.location.origin + '/dashboard'
@@ -94,6 +97,43 @@ export default function CompanyRegister() {
 
       if (signUpError) {
         throw new Error(signUpError.message);
+      }
+
+      // 3. Verificar se o vínculo foi criado pela trigger, se não, criar manualmente
+      if (userData?.user) {
+        try {
+          // Verificar se o vínculo usuário-empresa existe
+          const { data: userCompanyLink, error: linkCheckError } = await supabase
+            .from('user_companies')
+            .select('id')
+            .eq('user_id', userData.user.id)
+            .eq('company_id', companyData.id)
+            .single();
+
+          if (linkCheckError || !userCompanyLink) {
+            console.log("Vínculo não encontrado, criando manualmente...");
+            
+            // Criar vínculo manualmente
+            const { error: createLinkError } = await supabase
+              .from('user_companies')
+              .insert({
+                user_id: userData.user.id,
+                company_id: companyData.id,
+                role: 'owner'
+              });
+
+            if (createLinkError) {
+              console.warn("Erro ao criar vínculo usuário-empresa:", createLinkError.message);
+            } else {
+              console.log("Vínculo usuário-empresa criado com sucesso");
+            }
+          } else {
+            console.log("Vínculo usuário-empresa já existe:", userCompanyLink);
+          }
+        } catch (verificationError) {
+          console.warn("Erro ao verificar vínculo usuário-empresa:", verificationError);
+          // Continuar mesmo com erro na verificação
+        }
       }
 
       toast.success("Empresa cadastrada com sucesso!", {
