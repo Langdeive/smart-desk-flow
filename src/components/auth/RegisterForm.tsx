@@ -31,14 +31,32 @@ export const RegisterForm = () => {
     try {
       setIsSubmitting(true);
       
-      // Cadastrar usuário via Auth API com company_name nos metadados
+      // 1. Primeiro criar a empresa na tabela public.companies
+      const { data: companyData, error: companyError } = await supabase
+        .from('companies')
+        .insert({
+          name: data.company,
+          plan: 'free'  // Plano default
+        })
+        .select('id')
+        .single();
+      
+      if (companyError) throw companyError;
+      
+      if (!companyData?.id) {
+        throw new Error('Falha ao criar empresa: ID não retornado');
+      }
+      
+      console.log("Empresa criada com sucesso:", companyData);
+      
+      // 2. Cadastrar usuário via Auth API com company_id nos metadados
       const { error } = await supabase.auth.signUp({
         email: data.email,
         password: data.password,
         options: {
           data: {
             name: data.name,
-            company_name: data.company,  // Nome correto para trigger create_company_on_signup
+            company_id: companyData.id,  // Agora usando o ID real da empresa criada
             plan: 'free'                 // Default plan
           }
         }
@@ -47,28 +65,47 @@ export const RegisterForm = () => {
       if (error) throw error;
       
       // Verificar setup da empresa usando consulta direta à tabela
-      // Isto é mais seguro do que chamar a função RPC que pode não estar disponível imediatamente
       try {
         const { data: userData } = await supabase.auth.getUser();
         
         if (userData?.user) {
           console.log("Usuário criado com sucesso:", userData.user);
           
-          // Verificar se a empresa foi criada - log apenas para debug
+          // Verificar se a empresa foi criada 
           const { data: companies } = await supabase
             .from('companies')
             .select('id, name')
-            .limit(5);
+            .eq('id', companyData.id)
+            .single();
           
-          console.log("Empresas existentes:", companies);
+          console.log("Empresa verificada:", companies);
           
-          // Verificar vínculo do usuário com empresa - log apenas para debug
+          // Verificar vínculo do usuário com empresa
           const { data: userCompanies } = await supabase
             .from('user_companies')
             .select('user_id, company_id, role')
-            .limit(5);
+            .eq('company_id', companyData.id)
+            .eq('user_id', userData.user.id)
+            .single();
           
-          console.log("Vínculos usuário-empresa existentes:", userCompanies);
+          console.log("Vínculo usuário-empresa verificado:", userCompanies);
+          
+          // Se o vínculo não foi criado automaticamente pela trigger, criá-lo manualmente
+          if (!userCompanies) {
+            const { error: linkError } = await supabase
+              .from('user_companies')
+              .insert({
+                user_id: userData.user.id,
+                company_id: companyData.id,
+                role: 'owner'
+              });
+              
+            if (linkError) {
+              console.warn("Erro ao criar vínculo usuário-empresa manualmente:", linkError);
+            } else {
+              console.log("Vínculo usuário-empresa criado manualmente com sucesso");
+            }
+          }
         }
       } catch (validationError) {
         console.warn("Verificação do setup da empresa falhou:", validationError);
