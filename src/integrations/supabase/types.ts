@@ -690,6 +690,16 @@ export type Database = {
         Args: { "": unknown[] }
         Returns: number
       }
+      validate_company_setup: {
+        Args: { user_email: string }
+        Returns: {
+          user_exists: boolean
+          company_exists: boolean
+          user_company_link_exists: boolean
+          company_id: string
+          user_id: string
+        }[]
+      }
       vector_avg: {
         Args: { "": number[] }
         Returns: string

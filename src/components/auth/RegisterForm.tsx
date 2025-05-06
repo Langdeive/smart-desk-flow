@@ -46,16 +46,33 @@ export const RegisterForm = () => {
       
       if (error) throw error;
       
-      // Validar a criação da empresa usando a função SQL que criamos
-      const { data: validationResult, error: validationError } = await supabase
-        .rpc('validate_company_setup', { user_email: data.email });
-      
-      if (validationError) {
-        console.warn("Validação da empresa falhou:", validationError);
-        // Prosseguir mesmo com erro de validação, pois isso pode ser apenas
-        // devido ao atraso na propagação das alterações no banco de dados
-      } else if (validationResult) {
-        console.log("Validação da empresa:", validationResult);
+      // Verificar setup da empresa usando consulta direta à tabela
+      // Isto é mais seguro do que chamar a função RPC que pode não estar disponível imediatamente
+      try {
+        const { data: userData } = await supabase.auth.getUser();
+        
+        if (userData?.user) {
+          console.log("Usuário criado com sucesso:", userData.user);
+          
+          // Verificar se a empresa foi criada - log apenas para debug
+          const { data: companies } = await supabase
+            .from('companies')
+            .select('id, name')
+            .limit(5);
+          
+          console.log("Empresas existentes:", companies);
+          
+          // Verificar vínculo do usuário com empresa - log apenas para debug
+          const { data: userCompanies } = await supabase
+            .from('user_companies')
+            .select('user_id, company_id, role')
+            .limit(5);
+          
+          console.log("Vínculos usuário-empresa existentes:", userCompanies);
+        }
+      } catch (validationError) {
+        console.warn("Verificação do setup da empresa falhou:", validationError);
+        // Prosseguir mesmo com erro, pois pode ser apenas devido a permissões ou atraso na propagação
       }
       
       toast.success("Registro realizado com sucesso", {
