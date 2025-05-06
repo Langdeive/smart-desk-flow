@@ -45,6 +45,7 @@ const Register = () => {
       setIsSubmitting(true);
       
       // Cadastrar usuário diretamente via Auth API com company_name nos metadados
+      // Este é o único passo necessário, a trigger BEFORE INSERT fará o resto
       const { error } = await supabase.auth.signUp({
         email: data.email,
         password: data.password,
