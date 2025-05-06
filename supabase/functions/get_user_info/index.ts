@@ -59,7 +59,6 @@ serve(async (req) => {
     }
 
     // Obter dados do usuário solicitado
-    // Não precisamos verificar permissão pois vamos permitir acesso a qualquer usuário autenticado
     const { data: requestedUser, error: userError } = await supabase.auth.admin.getUserById(user_id);
 
     if (userError) {
@@ -83,7 +82,7 @@ serve(async (req) => {
       .eq('user_id', user_id)
       .single();
 
-    // Retornar informações formatadas
+    // Retornar informações formatadas - Não falha se não encontrar vínculo com empresa
     return new Response(
       JSON.stringify({
         id: requestedUser.user.id,

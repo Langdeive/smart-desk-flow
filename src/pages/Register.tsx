@@ -43,14 +43,15 @@ const Register = () => {
   const onSubmit = async (data: RegisterFormValues) => {
     try {
       setIsSubmitting(true);
-      // Register user with Supabase and include company name in metadata
+      
+      // Chamamos diretamente signUp sem criar entrada em usuarios
       const { error } = await supabase.auth.signUp({
         email: data.email,
         password: data.password,
         options: {
           data: {
             name: data.name,
-            company_name: data.company,  // This will trigger create_company_on_signup
+            company_name: data.company,  // Este campo será usado pela trigger create_company_on_signup
             plan: 'free'                 // Default plan
           }
         }
