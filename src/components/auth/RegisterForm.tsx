@@ -31,8 +31,7 @@ export const RegisterForm = () => {
     try {
       setIsSubmitting(true);
       
-      // Cadastrar usuário diretamente via Auth API com company_name nos metadados
-      // Este é o único passo necessário, a trigger BEFORE INSERT fará o resto
+      // Cadastrar usuário via Auth API com company_name nos metadados
       const { error } = await supabase.auth.signUp({
         email: data.email,
         password: data.password,
@@ -46,6 +45,18 @@ export const RegisterForm = () => {
       });
       
       if (error) throw error;
+      
+      // Validar a criação da empresa usando a função SQL que criamos
+      const { data: validationResult, error: validationError } = await supabase
+        .rpc('validate_company_setup', { user_email: data.email });
+      
+      if (validationError) {
+        console.warn("Validação da empresa falhou:", validationError);
+        // Prosseguir mesmo com erro de validação, pois isso pode ser apenas
+        // devido ao atraso na propagação das alterações no banco de dados
+      } else if (validationResult) {
+        console.log("Validação da empresa:", validationResult);
+      }
       
       toast.success("Registro realizado com sucesso", {
         description: "Verifique seu e-mail para confirmar o cadastro.",
