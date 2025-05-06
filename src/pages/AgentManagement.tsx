@@ -108,16 +108,16 @@ export default function AgentManagement() {
             Adicionar Agente
           </Button>
         )}
-        
-        {canManageAgents && (
-          <AddAgentDialog 
-            isOpen={dialogOpen}
-            onOpenChange={setDialogOpen}
-            onAddAgent={handleAddAgent}
-            isAdding={isAdding}
-          />
-        )}
       </div>
+
+      {canManageAgents && (
+        <AddAgentDialog 
+          isOpen={dialogOpen}
+          onOpenChange={setDialogOpen}
+          onAddAgent={handleAddAgent}
+          isAdding={isAdding}
+        />
+      )}
 
       <AgentList 
         agents={filteredAgents} 

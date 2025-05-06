@@ -44,14 +44,14 @@ const Register = () => {
     try {
       setIsSubmitting(true);
       
-      // Chamamos diretamente signUp sem criar entrada em usuarios
+      // Cadastrar usuário diretamente via Auth API com company_name nos metadados
       const { error } = await supabase.auth.signUp({
         email: data.email,
         password: data.password,
         options: {
           data: {
             name: data.name,
-            company_name: data.company,  // Este campo será usado pela trigger create_company_on_signup
+            company_name: data.company,  // Nome correto para trigger create_company_on_signup
             plan: 'free'                 // Default plan
           }
         }
