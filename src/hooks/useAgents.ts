@@ -30,14 +30,19 @@ export const useAgents = (companyId: string | undefined) => {
     try {
       console.log('Fetching agents for company ID:', companyId);
       
-      // Query atualizada usando a tabela user_companies
+      // Get all members of the company directly from user_companies
+      // The RLS policy now allows owners to see all users
       const { data, error } = await supabase
         .from('user_companies')
         .select(`
           id,
-          role,
           user_id,
-          company_id
+          role,
+          company_id,
+          user:user_id (
+            email,
+            user_metadata
+          )
         `)
         .eq('company_id', companyId);
       
@@ -46,37 +51,16 @@ export const useAgents = (companyId: string | undefined) => {
       console.log('Raw agents data:', data);
       
       if (Array.isArray(data)) {
-        // Since we don't have the users' name and email directly from the first query,
-        // we'll need to fetch user data separately for each user_id
-        const formattedAgents: Agent[] = [];
-        
-        for (const userCompany of data) {
-          if (userCompany.user_id) {
-            try {
-              // Call the edge function with proper authentication
-              const { data: userData, error: userError } = await supabase.functions.invoke('get_user_info', {
-                body: { user_id: userCompany.user_id }
-              });
-              
-              if (userError) {
-                console.error('Error fetching user info:', userError);
-                continue;
-              }
-              
-              if (userData) {
-                formattedAgents.push({
-                  id: userCompany.id || '',
-                  nome: userData.name || 'Unknown User',
-                  email: userData.email || '',
-                  funcao: userCompany.role === 'admin' ? 'admin' : 'agent',
-                  status: 'active' // Default status since we don't have invitation_sent column
-                });
-              }
-            } catch (err) {
-              console.error('Failed to fetch user info:', err);
-            }
-          }
-        }
+        // Format the data to match the Agent type
+        const formattedAgents: Agent[] = data.map(userCompany => ({
+          id: userCompany.id,
+          nome: userCompany.user?.user_metadata?.name || 
+                userCompany.user?.user_metadata?.full_name || 
+                'Unknown User',
+          email: userCompany.user?.email || '',
+          funcao: userCompany.role === 'admin' ? 'admin' : 'agent',
+          status: 'active' // We can determine this based on other factors if needed
+        }));
         
         setAgents(formattedAgents);
         console.log('Formatted agents:', formattedAgents);
