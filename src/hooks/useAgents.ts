@@ -1,4 +1,3 @@
-
 import { useState, useEffect, useCallback } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
@@ -30,33 +29,10 @@ export const useAgents = (companyId: string | undefined) => {
     try {
       console.log('Fetching agents for company ID:', companyId);
       
-      // Define the return type more explicitly
-      type UserCompanyWithUser = {
-        id: string;
-        user_id: string;
-        role: string;
-        company_id: string;
-        user: {
-          email: string;
-          user_metadata: {
-            name?: string;
-            full_name?: string;
-          };
-        } | null;
-      };
-
+      // Use agents_view which already has the correct join with auth.users
       const { data, error } = await supabase
-        .from('user_companies')
-        .select(`
-          id,
-          user_id,
-          role,
-          company_id,
-          user:user_id (
-            email,
-            user_metadata
-          )
-        `)
+        .from('agents_view')
+        .select('*')
         .eq('company_id', companyId);
       
       if (error) throw error;
@@ -64,15 +40,13 @@ export const useAgents = (companyId: string | undefined) => {
       console.log('Raw agents data:', data);
       
       if (Array.isArray(data)) {
-        // Format the data to match the Agent type, with proper type casting
-        const formattedAgents: Agent[] = data.map((userCompany: any) => ({
-          id: userCompany.id,
-          nome: userCompany.user?.user_metadata?.name || 
-                userCompany.user?.user_metadata?.full_name || 
-                'Unknown User',
-          email: userCompany.user?.email || '',
-          funcao: userCompany.role === 'admin' ? 'admin' : 'agent',
-          status: 'active' // We can determine this based on other factors if needed
+        // Format the data to match the Agent type
+        const formattedAgents: Agent[] = data.map(agent => ({
+          id: agent.id,
+          nome: agent.nome || 'Unknown User',
+          email: agent.email || '',
+          funcao: agent.funcao === 'admin' ? 'admin' : 'agent',
+          status: agent.status || 'active' // Use status from view or default to active
         }));
         
         setAgents(formattedAgents);
