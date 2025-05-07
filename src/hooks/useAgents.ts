@@ -30,8 +30,21 @@ export const useAgents = (companyId: string | undefined) => {
     try {
       console.log('Fetching agents for company ID:', companyId);
       
-      // Get all members of the company directly from user_companies
-      // The RLS policy now allows owners to see all users
+      // Define the return type more explicitly
+      type UserCompanyWithUser = {
+        id: string;
+        user_id: string;
+        role: string;
+        company_id: string;
+        user: {
+          email: string;
+          user_metadata: {
+            name?: string;
+            full_name?: string;
+          };
+        } | null;
+      };
+
       const { data, error } = await supabase
         .from('user_companies')
         .select(`
@@ -51,8 +64,8 @@ export const useAgents = (companyId: string | undefined) => {
       console.log('Raw agents data:', data);
       
       if (Array.isArray(data)) {
-        // Format the data to match the Agent type
-        const formattedAgents: Agent[] = data.map(userCompany => ({
+        // Format the data to match the Agent type, with proper type casting
+        const formattedAgents: Agent[] = data.map((userCompany: any) => ({
           id: userCompany.id,
           nome: userCompany.user?.user_metadata?.name || 
                 userCompany.user?.user_metadata?.full_name || 
