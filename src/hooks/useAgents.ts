@@ -1,3 +1,4 @@
+
 import { useState, useEffect, useCallback } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
@@ -46,7 +47,8 @@ export const useAgents = (companyId: string | undefined) => {
           nome: agent.nome || 'Unknown User',
           email: agent.email || '',
           funcao: agent.funcao === 'admin' ? 'admin' : 'agent',
-          status: agent.status || 'active' // Use status from view or default to active
+          // Ensure status is one of the allowed values
+          status: validateAgentStatus(agent.status)
         }));
         
         setAgents(formattedAgents);
@@ -62,6 +64,15 @@ export const useAgents = (companyId: string | undefined) => {
       setLoading(false);
     }
   }, [companyId]);
+
+  // Helper function to validate status is one of the allowed values
+  const validateAgentStatus = (status: string | null | undefined): Agent['status'] => {
+    if (status === 'active' || status === 'inactive' || status === 'awaiting') {
+      return status;
+    }
+    // Default to 'awaiting' if status is not one of the allowed values
+    return 'awaiting';
+  };
 
   const addAgent = async (agentData: Omit<Agent, 'id' | 'status'>) => {
     if (!companyId) {
