@@ -7,7 +7,6 @@ import {
   DialogContent, 
   DialogHeader, 
   DialogTitle,
-  DialogTrigger
 } from '@/components/ui/dialog';
 import {
   Form,
@@ -20,7 +19,6 @@ import {
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
-import { Plus } from 'lucide-react';
 import { ContactList } from './ContactList';
 import { clientSchema, type ClientFormValues } from '@/lib/validations/client';
 import { useClients } from '@/hooks/useClients';
@@ -31,9 +29,11 @@ import { Client } from '@/types';
 interface ClientDialogProps {
   clientId?: string | null;
   onClose?: () => void;
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
 }
 
-export function ClientDialog({ clientId, onClose }: ClientDialogProps) {
+export function ClientDialog({ clientId, onClose, open, onOpenChange }: ClientDialogProps) {
   const { clients, createClient, updateClient } = useClients();
   const { contacts: existingContacts, isLoading: contactsLoading } = useClientContacts(clientId || undefined);
   const client = clients?.find(c => c.id === clientId) as Client | undefined;
@@ -55,8 +55,16 @@ export function ClientDialog({ clientId, onClose }: ClientDialogProps) {
         external_id: client.external_id || '',
         notes: client.notes || ''
       });
+    } else {
+      // Reset form when opening for a new client
+      form.reset({
+        name: '',
+        external_id: '',
+        notes: '',
+        contacts: []
+      });
     }
-  }, [client, form]);
+  }, [client, form, open]);
 
   useEffect(() => {
     if (existingContacts && existingContacts.length > 0 && clientId) {
@@ -67,6 +75,8 @@ export function ClientDialog({ clientId, onClose }: ClientDialogProps) {
         is_primary: contact.is_primary
       }));
       form.setValue('contacts', mappedContacts);
+    } else {
+      form.setValue('contacts', []);
     }
   }, [existingContacts, clientId, form]);
 
@@ -74,14 +84,14 @@ export function ClientDialog({ clientId, onClose }: ClientDialogProps) {
     if (clientId) {
       await updateClient.mutateAsync({ 
         id: clientId, 
-        name: data.name, // Ensure name is provided
+        name: data.name,
         external_id: data.external_id,
         notes: data.notes,
         contacts: data.contacts
       });
     } else {
       await createClient.mutateAsync({
-        name: data.name, // Ensure name is provided
+        name: data.name,
         external_id: data.external_id,
         notes: data.notes,
         contacts: data.contacts
@@ -91,13 +101,7 @@ export function ClientDialog({ clientId, onClose }: ClientDialogProps) {
   };
 
   return (
-    <Dialog>
-      <DialogTrigger asChild>
-        <Button>
-          <Plus className="h-4 w-4 mr-2" />
-          {clientId ? 'Editar Cliente' : 'Novo Cliente'}
-        </Button>
-      </DialogTrigger>
+    <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-2xl">
         <DialogHeader>
           <DialogTitle>
@@ -174,7 +178,13 @@ export function ClientDialog({ clientId, onClose }: ClientDialogProps) {
             </div>
 
             <div className="flex justify-end gap-2">
-              <Button type="submit" disabled={createClient.isPending || updateClient.isPending}>
+              <Button type="button" variant="outline" onClick={onClose}>
+                Cancelar
+              </Button>
+              <Button 
+                type="submit" 
+                disabled={createClient.isPending || updateClient.isPending}
+              >
                 {clientId ? 'Atualizar' : 'Criar'}
               </Button>
             </div>

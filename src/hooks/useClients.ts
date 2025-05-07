@@ -122,11 +122,42 @@ export const useClients = (search?: string) => {
     }
   });
 
+  // Add the deleteClient mutation
+  const deleteClient = useMutation({
+    mutationFn: async (id: string) => {
+      // First delete all contacts associated with this client
+      const { error: contactsError } = await supabase
+        .from('client_contacts')
+        .delete()
+        .eq('client_id', id);
+      
+      if (contactsError) throw contactsError;
+
+      // Then delete the client
+      const { error } = await supabase
+        .from('clients')
+        .delete()
+        .eq('id', id);
+
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['clients'] });
+      toast.success('Cliente excluído com sucesso');
+    },
+    onError: (error) => {
+      toast.error('Erro ao excluir cliente', {
+        description: error instanceof Error ? error.message : 'Tente novamente'
+      });
+    }
+  });
+
   return {
     clients,
     isLoading,
     createClient,
     updateClient,
-    toggleClientActive
+    toggleClientActive,
+    deleteClient
   };
 };

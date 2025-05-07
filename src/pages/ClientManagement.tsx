@@ -15,22 +15,36 @@ import { Badge } from '@/components/ui/badge';
 import { Search, Plus, Edit2, Trash2 } from 'lucide-react';
 import { format } from 'date-fns';
 import { ClientDialog } from '@/components/clients/ClientDialog';
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 
 export default function ClientManagement() {
   const [search, setSearch] = useState('');
   const [selectedClientId, setSelectedClientId] = useState<string | null>(null);
-  const { clients, isLoading } = useClients(search);
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const { clients, isLoading, deleteClient } = useClients(search);
+
+  const handleDelete = (id: string) => {
+    deleteClient.mutate(id);
+  };
 
   return (
     <div className="container mx-auto py-6">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-bold">Clientes</h1>
-        <Button onClick={() => setSelectedClientId(null)}>
+        <Button onClick={() => {
+          setSelectedClientId(null);
+          setDialogOpen(true);
+        }}>
           <Plus className="h-4 w-4 mr-2" />
           Novo Cliente
         </Button>
         <ClientDialog 
-          onClose={() => setSelectedClientId(null)} 
+          open={dialogOpen}
+          onOpenChange={setDialogOpen}
+          onClose={() => {
+            setSelectedClientId(null);
+            setDialogOpen(false);
+          }} 
           clientId={selectedClientId} 
         />
       </div>
@@ -44,7 +58,6 @@ export default function ClientManagement() {
             className="pl-9"
           />
         </div>
-        {/* Botão duplicado removido daqui */}
       </div>
       <div className="border rounded-lg">
         <Table>
@@ -58,40 +71,80 @@ export default function ClientManagement() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {clients?.map((client) => (
-              <TableRow key={client.id}>
-                <TableCell>{client.name}</TableCell>
-                <TableCell>{client.external_id || '-'}</TableCell>
-                <TableCell>
-                  <Badge variant={client.is_active ? 'default' : 'secondary'}>
-                    {client.is_active ? 'Ativo' : 'Inativo'}
-                  </Badge>
-                </TableCell>
-                <TableCell>
-                  {format(new Date(client.created_at), 'dd/MM/yyyy')}
-                </TableCell>
-                <TableCell className="text-right">
-                  <div className="flex justify-end gap-2">
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => setSelectedClientId(client.id)}
-                    >
-                      <Edit2 className="h-4 w-4 mr-2" />
-                      Editar
-                    </Button>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      className="text-destructive"
-                    >
-                      <Trash2 className="h-4 w-4 mr-2" />
-                      Excluir
-                    </Button>
-                  </div>
+            {isLoading ? (
+              <TableRow>
+                <TableCell colSpan={5} className="text-center py-4">
+                  Carregando clientes...
                 </TableCell>
               </TableRow>
-            ))}
+            ) : clients.length === 0 ? (
+              <TableRow>
+                <TableCell colSpan={5} className="text-center py-4">
+                  Nenhum cliente encontrado.
+                </TableCell>
+              </TableRow>
+            ) : (
+              clients.map((client) => (
+                <TableRow key={client.id}>
+                  <TableCell>{client.name}</TableCell>
+                  <TableCell>{client.external_id || '-'}</TableCell>
+                  <TableCell>
+                    <Badge variant={client.is_active ? 'default' : 'secondary'}>
+                      {client.is_active ? 'Ativo' : 'Inativo'}
+                    </Badge>
+                  </TableCell>
+                  <TableCell>
+                    {format(new Date(client.created_at), 'dd/MM/yyyy')}
+                  </TableCell>
+                  <TableCell className="text-right">
+                    <div className="flex justify-end gap-2">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => {
+                          setSelectedClientId(client.id);
+                          setDialogOpen(true);
+                        }}
+                      >
+                        <Edit2 className="h-4 w-4 mr-2" />
+                        Editar
+                      </Button>
+                      
+                      <AlertDialog>
+                        <AlertDialogTrigger asChild>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            className="text-destructive"
+                          >
+                            <Trash2 className="h-4 w-4 mr-2" />
+                            Excluir
+                          </Button>
+                        </AlertDialogTrigger>
+                        <AlertDialogContent>
+                          <AlertDialogHeader>
+                            <AlertDialogTitle>Excluir cliente</AlertDialogTitle>
+                            <AlertDialogDescription>
+                              Tem certeza que deseja excluir o cliente {client.name}? 
+                              Esta ação não poderá ser desfeita e todos os contatos associados também serão excluídos.
+                            </AlertDialogDescription>
+                          </AlertDialogHeader>
+                          <AlertDialogFooter>
+                            <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                            <AlertDialogAction 
+                              onClick={() => handleDelete(client.id)}
+                              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                            >
+                              Excluir
+                            </AlertDialogAction>
+                          </AlertDialogFooter>
+                        </AlertDialogContent>
+                      </AlertDialog>
+                    </div>
+                  </TableCell>
+                </TableRow>
+              ))
+            )}
           </TableBody>
         </Table>
       </div>
