@@ -31,7 +31,7 @@ export default function Index() {
             </div>
           </div>
           <div className="hidden lg:block">
-            <img alt="SolveFlow Dashboard" src="/lovable-uploads/75403112-3d4c-4f12-8ca3-18658afab044.png" className="rounded-lg shadow-xl object-contain" />
+            <img alt="SolveFlow Dashboard" src="/lovable-uploads/75403112-3d4c-4f12-8ca3-18658afab044.png" className="rounded-lg shadow-xl hero-dashboard-image" />
           </div>
         </div>
       </section>
@@ -157,6 +157,14 @@ export default function Index() {
             <FeatureCard icon={<CheckCircle className="h-6 w-6" />} title="Base Viva" description="Helena transforma cada resolução em artigo pesquisável." />
             
             <FeatureCard icon={<BarChart className="h-6 w-6" />} title="Relatórios Smart" description="Tempo médio, gargalos e tendências em um clique." />
+          </div>
+          
+          <div className="mt-12">
+            <img 
+              src="/lovable-uploads/f8c16f45-5bec-4d68-b002-42962d124d55.png" 
+              alt="Equipe de IA - Laura, Ricardo e Helena" 
+              className="ai-agents-image mx-auto"
+            />
           </div>
         </div>
       </section>
@@ -361,7 +369,7 @@ export default function Index() {
       </section>
 
       {/* Footer */}
-      <footer className="py-12 bg-white">
+      <section className="py-12 bg-white">
         <div className="container mx-auto px-4">
           <div className="flex flex-col md:flex-row justify-between items-center">
             <div className="mb-6 md:mb-0">
@@ -398,7 +406,7 @@ export default function Index() {
             </div>
           </div>
         </div>
-      </footer>
+      </section>
     </div>;
 }
 function FeatureCard({
