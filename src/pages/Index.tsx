@@ -2,85 +2,453 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { ArrowRight, Check } from 'lucide-react';
+import { ArrowRight, Check, Clock, CheckCircle, BarChart, MessageCircle } from 'lucide-react';
+import { Card, CardContent } from '@/components/ui/card';
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 
 export default function Index() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-primary-a-50 via-background to-primary/5">
-      <div className="container mx-auto py-20 px-4">
-        <div className="max-w-4xl mx-auto text-center">
-          <div className="mb-12">
-            <h1 className="text-5xl font-extrabold tracking-tight lg:text-6xl mb-6 gradient-text">
-              HelpDesk IA
-            </h1>
-            <p className="text-2xl text-muted-foreground mb-10">
-              Atendimento inteligente para sua empresa
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button asChild size="lg" className="bg-gradient-to-r from-primary-a to-primary shadow-md hover:shadow-lg transition-all">
-                <Link to="/selecionar-plano" className="px-6 py-3">
-                  Começar agora <ArrowRight className="ml-2 h-4 w-4" />
+    <div className="min-h-screen bg-gradient-to-br from-primary-a via-background to-primary-b/10">
+      {/* Hero Section */}
+      <section className="container mx-auto py-24 px-4">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+          <div className="space-y-8">
+            <div>
+              <h1 className="text-4xl md:text-5xl font-extrabold font-manrope tracking-tight mb-4">
+                Fluxo inteligente que resolve seus tickets em minutos.
+              </h1>
+              <p className="text-xl text-muted-foreground">
+                Centralize atendimentos, deixe a IA classificar chamados e transforme cada solução em conhecimento sem frear sua equipe.
+              </p>
+            </div>
+            <div className="flex flex-col sm:flex-row gap-4">
+              <Button asChild size="lg" className="bg-gradient-to-r from-primary-b to-primary-b-600 shadow-md hover:shadow-lg transition-all">
+                <Link to="/register" className="px-6 py-3">
+                  Teste grátis por 14 dias <ArrowRight className="ml-2 h-4 w-4" />
                 </Link>
               </Button>
-              <Button asChild variant="outline" size="lg" className="shadow-sm hover:shadow transition-all">
-                <Link to="/login" className="px-6 py-3">Acessar minha conta</Link>
+              <Button asChild variant="outline" size="lg" className="border-primary-a text-primary-a hover:bg-primary-a-50 shadow-sm hover:shadow transition-all">
+                <Link to="/selecionar-plano" className="px-6 py-3">Ver planos</Link>
               </Button>
             </div>
           </div>
-
-          <div className="mt-24 grid grid-cols-1 md:grid-cols-3 gap-12">
-            <FeatureCard
-              icon={<Check className="h-5 w-5" />}
-              title="Atendimento ágil"
-              description="Responda automaticamente perguntas comuns e agilize o atendimento com IA."
-            />
-
-            <FeatureCard
-              icon={<Check className="h-5 w-5" />}
-              title="Automação inteligente"
-              description="Categorize tickets automaticamente e direcione para os agentes certos."
-            />
-
-            <FeatureCard
-              icon={<Check className="h-5 w-5" />}
-              title="Análises avançadas" 
-              description="Insights e relatórios detalhados sobre o desempenho do seu atendimento."
+          <div className="hidden lg:block">
+            <img 
+              src="/lovable-uploads/dashboard-mockup.png" 
+              alt="SolveFlow Dashboard" 
+              className="rounded-lg shadow-xl"
             />
           </div>
+        </div>
+      </section>
 
-          <div className="mt-36 p-8 bg-card rounded-2xl shadow-lg border border-border/50 backdrop-blur-sm">
-            <h2 className="text-3xl font-bold mb-4">Pronto para começar?</h2>
+      {/* Prova Social */}
+      <section className="bg-white py-12">
+        <div className="container mx-auto px-4">
+          <div className="flex flex-col items-center text-center">
+            <div className="flex items-center gap-2 mb-4">
+              <span className="bg-primary-b/10 text-primary-b px-4 py-1 rounded-full font-medium text-sm">
+                +3 000 tickets resolvidos
+              </span>
+            </div>
             <p className="text-xl text-muted-foreground mb-8">
-              Escolha o plano ideal para sua empresa e revolucione seu atendimento.
+              Equipes de TI no Brasil já confiam na SolveFlow.
             </p>
-            <Button asChild size="lg" className="bg-gradient-to-r from-primary-a to-primary shadow-md hover:shadow-lg transition-all px-6 py-3">
-              <Link to="/selecionar-plano">Ver planos disponíveis</Link>
+            <div className="flex flex-wrap justify-center gap-8 opacity-70">
+              <img src="/lovable-uploads/logo-placeholder-1.png" alt="Cliente" className="h-8" />
+              <img src="/lovable-uploads/logo-placeholder-2.png" alt="Cliente" className="h-8" />
+              <img src="/lovable-uploads/logo-placeholder-3.png" alt="Cliente" className="h-8" />
+              <img src="/lovable-uploads/logo-placeholder-4.png" alt="Cliente" className="h-8" />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Problema → Solução */}
+      <section className="py-24 bg-neutral-100">
+        <div className="container mx-auto px-4">
+          <h2 className="text-3xl font-bold font-manrope text-center mb-16">Transforme problemas em soluções</h2>
+          
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
+            <Card className="border-error/30 shadow-md">
+              <CardContent className="pt-6">
+                <div className="mb-4 p-2 bg-error/10 rounded-full w-10 h-10 flex items-center justify-center">
+                  <span className="text-error text-lg font-bold">✕</span>
+                </div>
+                <h3 className="text-xl font-semibold mb-2">Tickets chegam incompletos.</h3>
+                <p className="text-muted-foreground">
+                  Tempo perdido pedindo informações básicas que faltaram.
+                </p>
+              </CardContent>
+            </Card>
+            
+            <Card className="border-error/30 shadow-md">
+              <CardContent className="pt-6">
+                <div className="mb-4 p-2 bg-error/10 rounded-full w-10 h-10 flex items-center justify-center">
+                  <span className="text-error text-lg font-bold">✕</span>
+                </div>
+                <h3 className="text-xl font-semibold mb-2">Históricos espalhados em e-mails.</h3>
+                <p className="text-muted-foreground">
+                  Informações importantes se perdem em threads intermináveis.
+                </p>
+              </CardContent>
+            </Card>
+            
+            <Card className="border-error/30 shadow-md">
+              <CardContent className="pt-6">
+                <div className="mb-4 p-2 bg-error/10 rounded-full w-10 h-10 flex items-center justify-center">
+                  <span className="text-error text-lg font-bold">✕</span>
+                </div>
+                <h3 className="text-xl font-semibold mb-2">Primeira resposta demora horas.</h3>
+                <p className="text-muted-foreground">
+                  Clientes insatisfeitos com o tempo de espera para o primeiro contato.
+                </p>
+              </CardContent>
+            </Card>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <Card className="border-success shadow-md">
+              <CardContent className="pt-6">
+                <div className="mb-4 p-2 bg-success/10 rounded-full w-10 h-10 flex items-center justify-center">
+                  <CheckCircle className="h-5 w-5 text-success" />
+                </div>
+                <h3 className="text-xl font-semibold mb-2">Triagem automática coleta detalhes.</h3>
+                <p className="text-muted-foreground">
+                  IA identifica informações faltantes e solicita automaticamente.
+                </p>
+              </CardContent>
+            </Card>
+            
+            <Card className="border-success shadow-md">
+              <CardContent className="pt-6">
+                <div className="mb-4 p-2 bg-success/10 rounded-full w-10 h-10 flex items-center justify-center">
+                  <CheckCircle className="h-5 w-5 text-success" />
+                </div>
+                <h3 className="text-xl font-semibold mb-2">Tudo num só painel.</h3>
+                <p className="text-muted-foreground">
+                  Histórico completo e contexto centralizado para resoluções mais rápidas.
+                </p>
+              </CardContent>
+            </Card>
+            
+            <Card className="border-success shadow-md">
+              <CardContent className="pt-6">
+                <div className="mb-4 p-2 bg-success/10 rounded-full w-10 h-10 flex items-center justify-center">
+                  <CheckCircle className="h-5 w-5 text-success" />
+                </div>
+                <h3 className="text-xl font-semibold mb-2">Respostas geradas em segundos.</h3>
+                <p className="text-muted-foreground">
+                  IA sugere respostas baseadas no histórico e no conhecimento acumulado.
+                </p>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      </section>
+
+      {/* Funcionalidades-estrela */}
+      <section className="py-24">
+        <div className="container mx-auto px-4">
+          <h2 className="text-3xl font-bold font-manrope text-center mb-4">Funcionalidades-estrela</h2>
+          <p className="text-xl text-muted-foreground text-center max-w-2xl mx-auto mb-16">
+            Ferramentas poderosas que transformam seu atendimento
+          </p>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            <FeatureCard
+              icon={<MessageCircle className="h-6 w-6" />}
+              title="IA de Triagem"
+              description="Prioriza chamados assim que chegam, identificando urgências automaticamente."
+            />
+            
+            <FeatureCard
+              icon={<Check className="h-6 w-6" />}
+              title="Auto-respostas"
+              description="Sugestões prontas, aprovadas com 1 clique, acelerando seu atendimento."
+            />
+            
+            <FeatureCard
+              icon={<CheckCircle className="h-6 w-6" />}
+              title="Base Viva"
+              description="Cada solução vira artigo; o conhecimento nunca se perde em sua empresa."
+            />
+            
+            <FeatureCard
+              icon={<BarChart className="h-6 w-6" />}
+              title="Relatórios smart"
+              description="Veja tempo médio e gargalos em poucos cliques para melhorar continuamente."
+            />
+          </div>
+        </div>
+      </section>
+
+      {/* Como Funciona */}
+      <section className="py-24 bg-neutral-100">
+        <div className="container mx-auto px-4">
+          <h2 className="text-3xl font-bold font-manrope text-center mb-16">Como Funciona</h2>
+          
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div className="flex flex-col items-center text-center">
+              <div className="mb-6 p-4 bg-gradient-to-br from-primary-a to-primary-b/30 rounded-full w-16 h-16 flex items-center justify-center">
+                <span className="text-white text-2xl font-bold">1</span>
+              </div>
+              <h3 className="text-xl font-semibold mb-2">Conecte seu e-mail ou WhatsApp</h3>
+              <p className="text-muted-foreground">
+                Integre facilmente os canais onde seus clientes já estão.
+              </p>
+            </div>
+            
+            <div className="flex flex-col items-center text-center">
+              <div className="mb-6 p-4 bg-gradient-to-br from-primary-a to-primary-b/30 rounded-full w-16 h-16 flex items-center justify-center">
+                <span className="text-white text-2xl font-bold">2</span>
+              </div>
+              <h3 className="text-xl font-semibold mb-2">A IA organiza e classifica</h3>
+              <p className="text-muted-foreground">
+                Categorização automática e sugestões de respostas prontas para usar.
+              </p>
+            </div>
+            
+            <div className="flex flex-col items-center text-center">
+              <div className="mb-6 p-4 bg-gradient-to-br from-primary-a to-primary-b/30 rounded-full w-16 h-16 flex items-center justify-center">
+                <span className="text-white text-2xl font-bold">3</span>
+              </div>
+              <h3 className="text-xl font-semibold mb-2">Seu time aprova e resolve</h3>
+              <p className="text-muted-foreground">
+                Mantenha o controle humano enquanto a IA aumenta a produtividade.
+              </p>
+            </div>
+          </div>
+          
+          <div className="text-center mt-16">
+            <p className="text-2xl font-semibold font-manrope">Menos caos, mais fluxo.</p>
+          </div>
+        </div>
+      </section>
+
+      {/* Depoimentos */}
+      <section className="py-24">
+        <div className="container mx-auto px-4">
+          <h2 className="text-3xl font-bold font-manrope text-center mb-16">O que nossos clientes dizem</h2>
+          
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <Card className="shadow-md">
+              <CardContent className="pt-6">
+                <div className="flex flex-col items-center mb-6">
+                  <div className="w-16 h-16 rounded-full bg-neutral-200 mb-4"></div>
+                  <h3 className="font-semibold">Ana, GoTech</h3>
+                </div>
+                <p className="text-muted-foreground text-center">
+                  "Reduzimos 30% do esforço de suporte em dois meses. A IA realmente entende nosso contexto técnico."
+                </p>
+              </CardContent>
+            </Card>
+            
+            <Card className="shadow-md">
+              <CardContent className="pt-6">
+                <div className="flex flex-col items-center mb-6">
+                  <div className="w-16 h-16 rounded-full bg-neutral-200 mb-4"></div>
+                  <h3 className="font-semibold">Renato, DevCloud</h3>
+                </div>
+                <p className="text-muted-foreground text-center">
+                  "Hoje a triagem é automática; focamos nas soluções em vez de categorizar manualmente cada ticket."
+                </p>
+              </CardContent>
+            </Card>
+            
+            <Card className="shadow-md">
+              <CardContent className="pt-6">
+                <div className="flex flex-col items-center mb-6">
+                  <div className="w-16 h-16 rounded-full bg-neutral-200 mb-4"></div>
+                  <h3 className="font-semibold">Marina, ByteWorks</h3>
+                </div>
+                <p className="text-muted-foreground text-center">
+                  "Os clientes notaram a diferença no primeiro dia. Respostas mais rápidas e sempre contextualizadas."
+                </p>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      </section>
+
+      {/* Planos & Preços */}
+      <section className="py-24 bg-neutral-100">
+        <div className="container mx-auto px-4">
+          <h2 className="text-3xl font-bold font-manrope text-center mb-4">Planos que crescem com sua empresa</h2>
+          <p className="text-xl text-muted-foreground text-center max-w-2xl mx-auto mb-8">
+            Comece gratuitamente e atualize conforme necessário
+          </p>
+          
+          <div className="flex justify-center mb-4">
+            <span className="bg-primary-b/10 text-primary-b px-4 py-1 rounded-full font-medium text-sm">
+              Trial gratuito por 14 dias
+            </span>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-4xl mx-auto">
+            <div></div>
+            <Card className="shadow-md">
+              <CardContent className="pt-6">
+                <h3 className="text-xl font-semibold text-center mb-2">Basic</h3>
+                <div className="text-3xl font-bold text-center mb-4">R$ 197<span className="text-base font-normal text-muted-foreground">/mês</span></div>
+                <ul className="space-y-2 mb-6">
+                  <PlanFeature>Até 100 tickets/mês</PlanFeature>
+                  <PlanFeature>2 agentes</PlanFeature>
+                  <PlanFeature>Triagem automática</PlanFeature>
+                  <PlanFeature>Integração com e-mail</PlanFeature>
+                  <PlanFeature>Suporte por e-mail</PlanFeature>
+                </ul>
+                <Button asChild className="w-full bg-gradient-to-r from-primary-b to-primary-b-600">
+                  <Link to="/selecionar-plano">Escolher plano</Link>
+                </Button>
+              </CardContent>
+            </Card>
+            <Card className="shadow-md border-primary-b">
+              <CardContent className="pt-6">
+                <h3 className="text-xl font-semibold text-center mb-2">Pro</h3>
+                <div className="text-3xl font-bold text-center mb-4">R$ 497<span className="text-base font-normal text-muted-foreground">/mês</span></div>
+                <ul className="space-y-2 mb-6">
+                  <PlanFeature>Até 1000 tickets/mês</PlanFeature>
+                  <PlanFeature>Agentes ilimitados</PlanFeature>
+                  <PlanFeature>Triagem + sugestões IA</PlanFeature>
+                  <PlanFeature>Integração email + WhatsApp</PlanFeature>
+                  <PlanFeature>Suporte prioritário</PlanFeature>
+                  <PlanFeature>Relatórios avançados</PlanFeature>
+                </ul>
+                <Button asChild className="w-full bg-gradient-to-r from-primary-b to-primary-b-600">
+                  <Link to="/selecionar-plano">Escolher plano</Link>
+                </Button>
+              </CardContent>
+            </Card>
+          </div>
+          
+          <p className="text-center text-sm text-muted-foreground mt-6">
+            Sem cartão de crédito, cancele quando quiser.
+          </p>
+        </div>
+      </section>
+
+      {/* FAQ */}
+      <section className="py-24">
+        <div className="container mx-auto px-4 max-w-3xl">
+          <h2 className="text-3xl font-bold font-manrope text-center mb-16">Perguntas frequentes</h2>
+          
+          <Accordion type="single" collapsible className="space-y-4">
+            <FaqItem question="A IA fala português?">
+              Sim! Nossa IA é treinada para entender perfeitamente o português e todas as nuances técnicas comuns em ambientes de TI.
+            </FaqItem>
+            
+            <FaqItem question="Posso integrar ao meu CRM?">
+              Oferecemos integrações com os principais CRMs do mercado. Para casos específicos, nossa API está disponível nos planos Pro.
+            </FaqItem>
+            
+            <FaqItem question="Quanto tempo leva para implementar?">
+              Menos de 1 dia. A configuração básica leva cerca de 15 minutos e a integração com seus canais existentes pode ser feita no mesmo dia.
+            </FaqItem>
+            
+            <FaqItem question="Como a IA aprende nossa base de conhecimento?">
+              A IA analisa seus tickets resolvidos e documentação existente. A cada ticket resolvido, o sistema fica mais inteligente e específico para seu contexto.
+            </FaqItem>
+            
+            <FaqItem question="É seguro compartilhar dados de clientes?">
+              Absolutamente. Seguimos todas as normas da LGPD, usamos criptografia de ponta a ponta e não utilizamos dados de clientes para treinar modelos gerais.
+            </FaqItem>
+          </Accordion>
+        </div>
+      </section>
+
+      {/* CTA Final */}
+      <section className="py-16 bg-neutral-100">
+        <div className="container mx-auto px-4">
+          <div className="p-8 bg-card rounded-2xl shadow-lg border border-border/50 backdrop-blur-sm max-w-3xl mx-auto text-center">
+            <h2 className="text-3xl font-bold mb-4">Pronto para transformar seu atendimento?</h2>
+            <p className="text-xl text-muted-foreground mb-8">
+              Experimente gratuitamente por 14 dias e veja a diferença que a IA pode fazer para sua equipe.
+            </p>
+            <Button asChild size="lg" className="bg-gradient-to-r from-primary-b to-primary-b-600 shadow-md hover:shadow-lg transition-all px-8 py-3">
+              <Link to="/register">Começar agora</Link>
             </Button>
           </div>
         </div>
-      </div>
+      </section>
+
+      {/* Footer */}
+      <footer className="py-12 bg-white">
+        <div className="container mx-auto px-4">
+          <div className="flex flex-col md:flex-row justify-between items-center">
+            <div className="mb-6 md:mb-0">
+              <div className="text-xl font-manrope font-semibold tracking-heading bg-gradient-to-r from-primary-a to-primary-b bg-clip-text text-transparent">
+                SolveFlow
+              </div>
+              <p className="text-sm text-muted-foreground mt-2">
+                Criado pela Orbitus • © 2025
+              </p>
+            </div>
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-8 text-sm">
+              <div>
+                <h4 className="font-semibold mb-2">Produto</h4>
+                <ul className="space-y-2">
+                  <li><Link to="/selecionar-plano" className="text-muted-foreground hover:text-foreground">Planos</Link></li>
+                  <li><a href="#" className="text-muted-foreground hover:text-foreground">Funcionalidades</a></li>
+                  <li><a href="#" className="text-muted-foreground hover:text-foreground">Integrações</a></li>
+                </ul>
+              </div>
+              <div>
+                <h4 className="font-semibold mb-2">Empresa</h4>
+                <ul className="space-y-2">
+                  <li><a href="#" className="text-muted-foreground hover:text-foreground">Sobre nós</a></li>
+                  <li><a href="#" className="text-muted-foreground hover:text-foreground">Blog</a></li>
+                  <li><a href="#" className="text-muted-foreground hover:text-foreground">Carreiras</a></li>
+                </ul>
+              </div>
+              <div>
+                <h4 className="font-semibold mb-2">Legal</h4>
+                <ul className="space-y-2">
+                  <li><a href="#" className="text-muted-foreground hover:text-foreground">Termos</a></li>
+                  <li><a href="#" className="text-muted-foreground hover:text-foreground">Privacidade</a></li>
+                  <li><a href="#" className="text-muted-foreground hover:text-foreground">Cookies</a></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 }
 
-interface FeatureCardProps {
-  icon: React.ReactNode;
-  title: string;
-  description: string;
-}
-
-function FeatureCard({ icon, title, description }: FeatureCardProps) {
+function FeatureCard({ icon, title, description }: { icon: React.ReactNode; title: string; description: string }) {
   return (
     <div className="flex flex-col items-center text-center p-6 rounded-xl bg-card border border-border/50 shadow-md hover:shadow-lg transition-all hover:translate-y-[-4px]">
-      <div className="mb-4 p-4 bg-gradient-to-br from-primary-a/20 to-primary/20 rounded-full">
+      <div className="mb-4 p-4 bg-gradient-to-br from-primary-a/20 to-primary-b/20 rounded-full">
         <div className="text-primary-a">
           {icon}
         </div>
       </div>
-      <h2 className="text-xl font-semibold mb-2">{title}</h2>
+      <h3 className="text-xl font-semibold mb-2">{title}</h3>
       <p className="text-muted-foreground">
         {description}
       </p>
     </div>
+  );
+}
+
+function PlanFeature({ children }: { children: React.ReactNode }) {
+  return (
+    <li className="flex items-center">
+      <Check className="h-5 w-5 mr-2 text-primary-a" />
+      <span>{children}</span>
+    </li>
+  );
+}
+
+function FaqItem({ question, children }: { question: string; children: React.ReactNode }) {
+  return (
+    <AccordionItem value={question.replace(/\s/g, '-').toLowerCase()} className="border rounded-lg px-4">
+      <AccordionTrigger className="text-left font-semibold py-4">{question}</AccordionTrigger>
+      <AccordionContent className="pb-4 text-muted-foreground">
+        {children}
+      </AccordionContent>
+    </AccordionItem>
   );
 }

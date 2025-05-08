@@ -25,3 +25,17 @@
   @apply bg-gradient-to-r from-primary-b to-primary-a bg-clip-text text-transparent;
   text-shadow: 0px 2px 4px rgba(0, 0, 0, 0.05);
 }
+
+/* Additional custom styles for the landing page */
+.hero-gradient {
+  background: linear-gradient(135deg, rgba(8,196,174,0.1) 0%, rgba(143,91,255,0.05) 100%);
+}
+
+.feature-icon {
+  @apply flex items-center justify-center h-12 w-12 rounded-full bg-primary-a-50 text-primary-a;
+}
+
+.testimonial-avatar {
+  @apply rounded-full bg-cover bg-center;
+}
+
