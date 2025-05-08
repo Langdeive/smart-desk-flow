@@ -133,6 +133,104 @@ export const useAgents = (companyId: string | undefined) => {
     }
   };
 
+  // Função para reenviar convite para um agente existente
+  const resendInvite = async (agent: Agent) => {
+    if (!companyId) {
+      toast.error('ID da empresa não encontrado');
+      return false;
+    }
+
+    try {
+      // Call the edge function to resend invitation
+      const { error } = await supabase.functions.invoke('invite_agent', {
+        body: {
+          email: agent.email,
+          name: agent.nome,
+          role: agent.funcao,
+          companyId: companyId
+        }
+      });
+
+      if (error) throw error;
+
+      toast.success('Convite reenviado com sucesso', {
+        description: `Um novo email foi enviado para ${agent.email}`
+      });
+      
+      return true;
+    } catch (error) {
+      console.error('Error resending invitation:', error);
+      toast.error('Erro ao reenviar convite', {
+        description: error instanceof Error ? error.message : 'Tente novamente'
+      });
+      return false;
+    }
+  };
+
+  // Função para remover um agente
+  const removeAgent = async (agentId: string) => {
+    if (!companyId) {
+      toast.error('ID da empresa não encontrado');
+      return false;
+    }
+
+    try {
+      const { error } = await supabase
+        .from('user_companies')
+        .delete()
+        .eq('user_id', agentId)
+        .eq('company_id', companyId);
+
+      if (error) throw error;
+
+      // Atualizar a lista de agentes após remoção
+      await fetchAgents();
+      
+      toast.success('Agente removido com sucesso');
+      return true;
+    } catch (error) {
+      console.error('Error removing agent:', error);
+      toast.error('Erro ao remover agente', {
+        description: error instanceof Error ? error.message : 'Tente novamente'
+      });
+      return false;
+    }
+  };
+
+  // Função para atualizar um agente
+  const updateAgent = async (agentId: string, data: { funcao?: 'admin' | 'agent', status?: 'active' | 'inactive' }) => {
+    if (!companyId) {
+      toast.error('ID da empresa não encontrado');
+      return false;
+    }
+
+    try {
+      // Atualizar na tabela user_companies
+      const { error } = await supabase
+        .from('user_companies')
+        .update({
+          role: data.funcao,
+          // Podemos adicionar campo active no futuro se necessário
+        })
+        .eq('user_id', agentId)
+        .eq('company_id', companyId);
+
+      if (error) throw error;
+
+      // Atualizar a lista de agentes
+      await fetchAgents();
+      
+      toast.success('Agente atualizado com sucesso');
+      return true;
+    } catch (error) {
+      console.error('Error updating agent:', error);
+      toast.error('Erro ao atualizar agente', {
+        description: error instanceof Error ? error.message : 'Tente novamente'
+      });
+      return false;
+    }
+  };
+
   useEffect(() => {
     if (companyId) {
       fetchAgents();
@@ -142,12 +240,18 @@ export const useAgents = (companyId: string | undefined) => {
     }
   }, [companyId, fetchAgents]);
 
+  const isEmpty = agents.length === 0 && !loading;
+
   return { 
     agents, 
     loading, 
-    isAdding, 
+    isAdding,
+    isEmpty,
     error,
     fetchAgents, 
-    addAgent 
+    addAgent,
+    resendInvite,
+    removeAgent,
+    updateAgent
   };
 };
