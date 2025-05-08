@@ -28,7 +28,7 @@
 
 /* Additional custom styles for the landing page */
 .hero-gradient {
-  background: linear-gradient(135deg, rgba(8,196,174,0.1) 0%, rgba(143,91,255,0.05) 100%);
+  background: radial-gradient(circle at center, rgba(213, 246, 243, 0.3) 0%, rgba(255, 255, 255, 0) 70%);
 }
 
 .feature-icon {
@@ -59,7 +59,7 @@
 /* Hero image size adjustment */
 .hero-dashboard-image {
   max-width: 90%;
-  max-height: 400px;
+  max-height: 380px;
   object-fit: contain;
   margin-left: auto;
 }
@@ -68,7 +68,55 @@
 .ai-agents-image {
   max-width: 100%;
   border-radius: 1rem;
-  margin: 2rem auto;
+  margin: 1.5rem auto;
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
 }
 
+/* Scroll reveal animations */
+.scroll-reveal {
+  opacity: 0;
+  transform: translateY(12px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.scroll-reveal.revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Card hover effects */
+.hover-card {
+  transition: all 0.15s ease-in-out;
+}
+
+.hover-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
+}
+
+/* Focus states for accessibility */
+a:focus-visible, button:focus-visible {
+  outline: 2px solid #C4B5FD;
+  outline-offset: 2px;
+}
+
+/* Section padding adjustments */
+.section-spacing {
+  padding: 3.5rem 0;
+}
+
+.section-spacing-sm {
+  padding: 2.5rem 0;
+}
+
+/* Text width constraint for readability */
+.readable-width {
+  max-width: 700px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Alternating sections */
+.bg-alt-section {
+  background-color: #F9FAFB;
+}
