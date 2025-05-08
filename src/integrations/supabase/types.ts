@@ -612,6 +612,10 @@ export type Database = {
         Args: Record<PropertyKey, never>
         Returns: undefined
       }
+      get_user_role_in_company: {
+        Args: { user_id: string; company_id: string }
+        Returns: string
+      }
       halfvec_avg: {
         Args: { "": number[] }
         Returns: unknown
@@ -697,6 +701,10 @@ export type Database = {
       sparsevec_typmod_in: {
         Args: { "": unknown[] }
         Returns: number
+      }
+      user_belongs_to_company: {
+        Args: { user_id: string; company_id: string }
+        Returns: boolean
       }
       validate_company_setup: {
         Args: { user_email: string }

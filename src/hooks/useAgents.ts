@@ -174,7 +174,7 @@ export const useAgents = (companyId: string | undefined) => {
     }
   };
 
-  // Função para remover um agente - usando fetch direto para API REST com query parameters
+  // Função para remover um agente - agora usando as políticas RLS atualizadas
   const removeAgent = async (agentId: string) => {
     if (!companyId) {
       toast.error('ID da empresa não encontrado');
@@ -184,40 +184,15 @@ export const useAgents = (companyId: string | undefined) => {
     try {
       console.log('Removing agent:', agentId, 'from company:', companyId);
       
-      // Get the current session
-      const { data: sessionData } = await supabase.auth.getSession();
-      const accessToken = sessionData.session?.access_token;
-      
-      if (!accessToken) {
-        throw new Error('No authentication session found');
-      }
-      
-      // Construir a URL com os parâmetros de consulta para o filtro WHERE
-      const url = new URL('https://jqtuzbldregwglevlhrw.supabase.co/rest/v1/user_companies');
-      
-      // Adicionar os parâmetros de filtro como query parameters
-      url.searchParams.append('user_id', `eq.${agentId}`);
-      url.searchParams.append('company_id', `eq.${companyId}`);
-      
-      // Usar diretamente o endpoint da API para evitar os problemas de RLS
-      const response = await fetch(url.toString(), {
-        method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${accessToken}`,
-          'apikey': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpxdHV6YmxkcmVnd2dsZXZsaHJ3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDE5MTI5NjIsImV4cCI6MjA1NzQ4ODk2Mn0.bhd499qbEtWuRUSqVW5nXoguZaB3EuFop5ucVhXkmhQ',
-          // Para DELETE, precisamos deste cabeçalho adicional para que o Supabase retorne os dados excluídos (opcional)
-          'Prefer': 'return=minimal',
-          // Adicionar headers para bypassing RLS
-          'X-Client-Info': 'admin-api',
-          'X-Supabase-Auth-Override': 'true'
-        }
-      });
+      // Use o SDK Supabase para fazer a operação DELETE
+      // Agora as políticas RLS devem permitir isso para administradores
+      const { error } = await supabase
+        .from('user_companies')
+        .delete()
+        .eq('user_id', agentId)
+        .eq('company_id', companyId);
 
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || 'Erro ao remover agente');
-      }
+      if (error) throw error;
 
       // Atualizar a lista de agentes após remoção
       await fetchAgents();
