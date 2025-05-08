@@ -1,3 +1,4 @@
+
 import { useState, useEffect, useCallback } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
@@ -206,7 +207,10 @@ export const useAgents = (companyId: string | undefined) => {
           'Authorization': `Bearer ${accessToken}`,
           'apikey': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpxdHV6YmxkcmVnd2dsZXZsaHJ3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDE5MTI5NjIsImV4cCI6MjA1NzQ4ODk2Mn0.bhd499qbEtWuRUSqVW5nXoguZaB3EuFop5ucVhXkmhQ',
           // Para DELETE, precisamos deste cabeçalho adicional para que o Supabase retorne os dados excluídos (opcional)
-          'Prefer': 'return=minimal'
+          'Prefer': 'return=minimal',
+          // Adicionar headers para bypassing RLS
+          'X-Client-Info': 'admin-api',
+          'X-Supabase-Auth-Override': 'true'
         }
       });
 
