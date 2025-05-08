@@ -31,7 +31,7 @@ export default function Index() {
             </div>
           </div>
           <div className="hidden lg:block">
-            <img alt="SolveFlow Dashboard" src="/lovable-uploads/75403112-3d4c-4f12-8ca3-18658afab044.png" className="rounded-lg shadow-xl hero-dashboard-image" />
+            
           </div>
         </div>
       </section>
@@ -160,7 +160,7 @@ export default function Index() {
           </div>
           
           <div className="mt-12">
-            <img src="/lovable-uploads/f8c16f45-5bec-4d68-b002-42962d124d55.png" alt="Equipe de IA - Laura, Ricardo e Helena" className="ai-agents-image mx-auto object-contain" />
+            <img src="/lovable-uploads/f8c16f45-5bec-4d68-b002-42962d124d55.png" alt="Equipe de IA - Laura, Ricardo e Helena" className="ai-agents-image mx-auto object-scale-down w-64 h-auto" />
           </div>
         </div>
       </section>
