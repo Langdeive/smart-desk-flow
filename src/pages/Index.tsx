@@ -6,35 +6,29 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import Logo from '@/components/ui/logo';
 import { Navbar } from '@/components/layout/Navbar';
-
 export default function Index() {
   // Scroll reveal effect
   useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('revealed');
-          }
-        });
-      },
-      { threshold: 0.1 }
-    );
-    
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('revealed');
+        }
+      });
+    }, {
+      threshold: 0.1
+    });
     const scrollElements = document.querySelectorAll('.scroll-reveal');
     scrollElements.forEach(el => {
       observer.observe(el);
     });
-    
     return () => {
       scrollElements.forEach(el => {
         observer.unobserve(el);
       });
     };
   }, []);
-
-  return (
-    <div className="min-h-screen">
+  return <div className="min-h-screen">
       <Navbar />
       <div className="pt-20"> {/* Add padding to compensate for fixed navbar */}
         {/* Hero Section - Height reduced */}
@@ -61,11 +55,7 @@ export default function Index() {
               </div>
             </div>
             <div className="hidden lg:block">
-              <img 
-                src="/lovable-uploads/ac74fffe-4ee3-4036-82bd-f6336fb9f963.png" 
-                alt="Support specialist" 
-                className="hero-dashboard-image"
-              />
+              <img src="/lovable-uploads/ac74fffe-4ee3-4036-82bd-f6336fb9f963.png" alt="Support specialist" className="hero-dashboard-image h-80" />
             </div>
           </div>
         </section>
@@ -449,8 +439,7 @@ export default function Index() {
           </div>
         </section>
       </div>
-    </div>
-  );
+    </div>;
 }
 
 // Keep feature card component
