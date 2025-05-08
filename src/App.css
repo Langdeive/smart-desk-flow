@@ -120,3 +120,16 @@ a:focus-visible, button:focus-visible {
 .bg-alt-section {
   background-color: #F9FAFB;
 }
+
+/* Problem cards styling */
+.problem-card {
+  border-color: #FCA5A5;
+  background-color: #FEF2F2;
+}
+
+/* Solution cards styling */
+.solution-card {
+  border-color: #86EFAC;
+  background-color: #F0FDF4;
+}
+

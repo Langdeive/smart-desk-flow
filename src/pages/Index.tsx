@@ -62,8 +62,8 @@ export default function Index() {
             </div>
             <div className="hidden lg:block">
               <img 
-                src="/lovable-uploads/b566d515-d82e-4f1c-af28-0e2d1e91140d.png" 
-                alt="Dashboard SolveFlow" 
+                src="/lovable-uploads/ac74fffe-4ee3-4036-82bd-f6336fb9f963.png" 
+                alt="Support specialist" 
                 className="hero-dashboard-image"
               />
             </div>
@@ -98,7 +98,7 @@ export default function Index() {
             <h2 className="text-2xl md:text-3xl font-bold font-manrope text-center mb-12">Transforme problemas em soluções</h2>
             
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
-              <Card className="border-[#FCA5A5] bg-[#FEF2F2] shadow-md hover-card">
+              <Card className="problem-card shadow-md hover-card">
                 <CardContent className="pt-6">
                   <div className="mb-4 p-2 bg-error/10 rounded-full w-10 h-10 flex items-center justify-center">
                     <Mail className="text-error h-5 w-5" />
@@ -110,7 +110,7 @@ export default function Index() {
                 </CardContent>
               </Card>
               
-              <Card className="border-[#FCA5A5] bg-[#FEF2F2] shadow-md hover-card">
+              <Card className="problem-card shadow-md hover-card">
                 <CardContent className="pt-6">
                   <div className="mb-4 p-2 bg-error/10 rounded-full w-10 h-10 flex items-center justify-center">
                     <MessageCircle className="text-error h-5 w-5" />
@@ -122,7 +122,7 @@ export default function Index() {
                 </CardContent>
               </Card>
               
-              <Card className="border-[#FCA5A5] bg-[#FEF2F2] shadow-md hover-card">
+              <Card className="problem-card shadow-md hover-card">
                 <CardContent className="pt-6">
                   <div className="mb-4 p-2 bg-error/10 rounded-full w-10 h-10 flex items-center justify-center">
                     <Clock className="text-error h-5 w-5" />
@@ -136,7 +136,7 @@ export default function Index() {
             </div>
             
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              <Card className="border-[#86EFAC] bg-[#F0FDF4] shadow-md hover-card">
+              <Card className="solution-card shadow-md hover-card">
                 <CardContent className="pt-6">
                   <div className="mb-4 p-2 bg-success/10 rounded-full w-10 h-10 flex items-center justify-center">
                     <Search className="h-5 w-5 text-success" />
@@ -148,7 +148,7 @@ export default function Index() {
                 </CardContent>
               </Card>
               
-              <Card className="border-[#86EFAC] bg-[#F0FDF4] shadow-md hover-card">
+              <Card className="solution-card shadow-md hover-card">
                 <CardContent className="pt-6">
                   <div className="mb-4 p-2 bg-success/10 rounded-full w-10 h-10 flex items-center justify-center">
                     <PanelLeft className="h-5 w-5 text-success" />
@@ -160,7 +160,7 @@ export default function Index() {
                 </CardContent>
               </Card>
               
-              <Card className="border-[#86EFAC] bg-[#F0FDF4] shadow-md hover-card">
+              <Card className="solution-card shadow-md hover-card">
                 <CardContent className="pt-6">
                   <div className="mb-4 p-2 bg-success/10 rounded-full w-10 h-10 flex items-center justify-center">
                     <Check className="h-5 w-5 text-success" />
@@ -176,7 +176,7 @@ export default function Index() {
         </section>
 
         {/* Funcionalidades-estrela */}
-        <section className="py-16 section-spacing">
+        <section className="py-16 section-spacing bg-white">
           <div className="container mx-auto px-4">
             <h2 className="text-2xl md:text-3xl font-bold font-manrope text-center mb-4">Funcionalidades-estrela</h2>
             <p className="text-lg text-muted-foreground text-center max-w-2xl mx-auto mb-12 readable-width">
@@ -261,7 +261,7 @@ export default function Index() {
         </section>
 
         {/* Depoimentos */}
-        <section className="py-16 section-spacing-sm">
+        <section className="py-16 section-spacing-sm bg-white">
           <div className="container mx-auto px-4">
             <h2 className="text-2xl md:text-3xl font-bold font-manrope text-center mb-10">O que nossos clientes dizem</h2>
             
@@ -366,7 +366,7 @@ export default function Index() {
         </section>
 
         {/* FAQ */}
-        <section id="faq" className="py-16 section-spacing">
+        <section id="faq" className="py-16 section-spacing bg-white">
           <div className="container mx-auto px-4 max-w-3xl">
             <h2 className="text-2xl md:text-3xl font-bold font-manrope text-center mb-12">Perguntas frequentes</h2>
             
