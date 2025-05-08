@@ -39,3 +39,19 @@
   @apply rounded-full bg-cover bg-center;
 }
 
+/* Logo animation for SolveFlow */
+@keyframes logo-glow {
+  0% {
+    filter: drop-shadow(0 0 5px rgba(8,196,174,0.5));
+  }
+  50% {
+    filter: drop-shadow(0 0 15px rgba(143,91,255,0.7));
+  }
+  100% {
+    filter: drop-shadow(0 0 5px rgba(8,196,174,0.5));
+  }
+}
+
+.animate-logo-glow {
+  animation: logo-glow 4s infinite alternate;
+}

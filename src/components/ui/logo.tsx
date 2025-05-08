@@ -6,17 +6,19 @@ interface LogoProps {
   className?: string;
   variant?: "full" | "icon";
   spin?: boolean;
+  glow?: boolean;
 }
 
-export const Logo: React.FC<LogoProps> = ({ className, variant = "full", spin = false }) => {
+export const Logo: React.FC<LogoProps> = ({ className, variant = "full", spin = false, glow = false }) => {
   return (
     <div className={cn("flex items-center", className)}>
       <div className={cn(
         "relative flex items-center justify-center",
-        spin && "animate-logo-spin"
+        spin && "animate-logo-spin",
+        glow && "animate-logo-glow"
       )}>
         <img 
-          src="/lovable-uploads/b566d515-d82e-4f1c-af28-0e2d1e91140d.png" 
+          src="/lovable-uploads/acb38c4c-968d-49c7-a3e2-c9f9d9478b75.png" 
           alt="Solveflow Logo" 
           className="h-8 w-auto"
         />

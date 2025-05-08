@@ -2,9 +2,10 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { ArrowRight, Check, Clock, CheckCircle, BarChart, MessageCircle } from 'lucide-react';
+import { ArrowRight, Check, Clock, CheckCircle, BarChart, MessageCircle, Mail, Search, PanelLeft } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
+import Logo from '@/components/ui/logo';
 
 export default function Index() {
   return (
@@ -15,7 +16,7 @@ export default function Index() {
           <div className="space-y-8">
             <div>
               <h1 className="text-4xl md:text-5xl font-extrabold font-manrope tracking-tight mb-4">
-                Fluxo inteligente que resolve seus tickets em minutos.
+                Atendimento ágil sem contratar mais gente
               </h1>
               <p className="text-xl text-muted-foreground">
                 Centralize atendimentos, deixe a IA classificar chamados e transforme cada solução em conhecimento sem frear sua equipe.
@@ -73,9 +74,9 @@ export default function Index() {
             <Card className="border-error/30 shadow-md">
               <CardContent className="pt-6">
                 <div className="mb-4 p-2 bg-error/10 rounded-full w-10 h-10 flex items-center justify-center">
-                  <span className="text-error text-lg font-bold">✕</span>
+                  <Mail className="text-error h-5 w-5" />
                 </div>
-                <h3 className="text-xl font-semibold mb-2">Tickets chegam incompletos.</h3>
+                <h3 className="text-xl font-semibold mb-2">Tickets vazios geram retrabalho.</h3>
                 <p className="text-muted-foreground">
                   Tempo perdido pedindo informações básicas que faltaram.
                 </p>
@@ -85,9 +86,9 @@ export default function Index() {
             <Card className="border-error/30 shadow-md">
               <CardContent className="pt-6">
                 <div className="mb-4 p-2 bg-error/10 rounded-full w-10 h-10 flex items-center justify-center">
-                  <span className="text-error text-lg font-bold">✕</span>
+                  <MessageCircle className="text-error h-5 w-5" />
                 </div>
-                <h3 className="text-xl font-semibold mb-2">Históricos espalhados em e-mails.</h3>
+                <h3 className="text-xl font-semibold mb-2">Informações perdidas em e-mails.</h3>
                 <p className="text-muted-foreground">
                   Informações importantes se perdem em threads intermináveis.
                 </p>
@@ -97,7 +98,7 @@ export default function Index() {
             <Card className="border-error/30 shadow-md">
               <CardContent className="pt-6">
                 <div className="mb-4 p-2 bg-error/10 rounded-full w-10 h-10 flex items-center justify-center">
-                  <span className="text-error text-lg font-bold">✕</span>
+                  <Clock className="text-error h-5 w-5" />
                 </div>
                 <h3 className="text-xl font-semibold mb-2">Primeira resposta demora horas.</h3>
                 <p className="text-muted-foreground">
@@ -111,9 +112,9 @@ export default function Index() {
             <Card className="border-success shadow-md">
               <CardContent className="pt-6">
                 <div className="mb-4 p-2 bg-success/10 rounded-full w-10 h-10 flex items-center justify-center">
-                  <CheckCircle className="h-5 w-5 text-success" />
+                  <Search className="h-5 w-5 text-success" />
                 </div>
-                <h3 className="text-xl font-semibold mb-2">Triagem automática coleta detalhes.</h3>
+                <h3 className="text-xl font-semibold mb-2">Laura, nossa IA de triagem, pede prints e logs antes de o ticket chegar ao agente.</h3>
                 <p className="text-muted-foreground">
                   IA identifica informações faltantes e solicita automaticamente.
                 </p>
@@ -123,9 +124,9 @@ export default function Index() {
             <Card className="border-success shadow-md">
               <CardContent className="pt-6">
                 <div className="mb-4 p-2 bg-success/10 rounded-full w-10 h-10 flex items-center justify-center">
-                  <CheckCircle className="h-5 w-5 text-success" />
+                  <PanelLeft className="h-5 w-5 text-success" />
                 </div>
-                <h3 className="text-xl font-semibold mb-2">Tudo num só painel.</h3>
+                <h3 className="text-xl font-semibold mb-2">Tudo chega num único painel com histórico completo e filtros inteligentes.</h3>
                 <p className="text-muted-foreground">
                   Histórico completo e contexto centralizado para resoluções mais rápidas.
                 </p>
@@ -135,9 +136,9 @@ export default function Index() {
             <Card className="border-success shadow-md">
               <CardContent className="pt-6">
                 <div className="mb-4 p-2 bg-success/10 rounded-full w-10 h-10 flex items-center justify-center">
-                  <CheckCircle className="h-5 w-5 text-success" />
+                  <Check className="h-5 w-5 text-success" />
                 </div>
-                <h3 className="text-xl font-semibold mb-2">Respostas geradas em segundos.</h3>
+                <h3 className="text-xl font-semibold mb-2">Ricardo propõe a solução pronta em segundos; o agente só clica "enviar".</h3>
                 <p className="text-muted-foreground">
                   IA sugere respostas baseadas no histórico e no conhecimento acumulado.
                 </p>
@@ -157,27 +158,27 @@ export default function Index() {
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             <FeatureCard
-              icon={<MessageCircle className="h-6 w-6" />}
-              title="IA de Triagem"
-              description="Prioriza chamados assim que chegam, identificando urgências automaticamente."
+              icon={<Search className="h-6 w-6" />}
+              title="Triagem Inteligente"
+              description="Prioriza e completa chamados automaticamente."
             />
             
             <FeatureCard
-              icon={<Check className="h-6 w-6" />}
+              icon={<MessageCircle className="h-6 w-6" />}
               title="Auto-respostas"
-              description="Sugestões prontas, aprovadas com 1 clique, acelerando seu atendimento."
+              description="Sugestões baseadas em casos já resolvidos."
             />
             
             <FeatureCard
               icon={<CheckCircle className="h-6 w-6" />}
               title="Base Viva"
-              description="Cada solução vira artigo; o conhecimento nunca se perde em sua empresa."
+              description="Helena transforma cada resolução em artigo pesquisável."
             />
             
             <FeatureCard
               icon={<BarChart className="h-6 w-6" />}
-              title="Relatórios smart"
-              description="Veja tempo médio e gargalos em poucos cliques para melhorar continuamente."
+              title="Relatórios Smart"
+              description="Tempo médio, gargalos e tendências em um clique."
             />
           </div>
         </div>
@@ -188,14 +189,14 @@ export default function Index() {
         <div className="container mx-auto px-4">
           <h2 className="text-3xl font-bold font-manrope text-center mb-16">Como Funciona</h2>
           
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
             <div className="flex flex-col items-center text-center">
               <div className="mb-6 p-4 bg-gradient-to-br from-primary-a to-primary-b/30 rounded-full w-16 h-16 flex items-center justify-center">
                 <span className="text-white text-2xl font-bold">1</span>
               </div>
-              <h3 className="text-xl font-semibold mb-2">Conecte seu e-mail ou WhatsApp</h3>
+              <h3 className="text-xl font-semibold mb-2">O cliente abre o ticket.</h3>
               <p className="text-muted-foreground">
-                Integre facilmente os canais onde seus clientes já estão.
+                E-mail ou portal; nada para instalar.
               </p>
             </div>
             
@@ -203,9 +204,9 @@ export default function Index() {
               <div className="mb-6 p-4 bg-gradient-to-br from-primary-a to-primary-b/30 rounded-full w-16 h-16 flex items-center justify-center">
                 <span className="text-white text-2xl font-bold">2</span>
               </div>
-              <h3 className="text-xl font-semibold mb-2">A IA organiza e classifica</h3>
+              <h3 className="text-xl font-semibold mb-2">Laura organiza e classifica.</h3>
               <p className="text-muted-foreground">
-                Categorização automática e sugestões de respostas prontas para usar.
+                Identifica prioridade e coleta o que estiver faltando.
               </p>
             </div>
             
@@ -213,15 +214,25 @@ export default function Index() {
               <div className="mb-6 p-4 bg-gradient-to-br from-primary-a to-primary-b/30 rounded-full w-16 h-16 flex items-center justify-center">
                 <span className="text-white text-2xl font-bold">3</span>
               </div>
-              <h3 className="text-xl font-semibold mb-2">Seu time aprova e resolve</h3>
+              <h3 className="text-xl font-semibold mb-2">Ricardo sugere a solução.</h3>
               <p className="text-muted-foreground">
-                Mantenha o controle humano enquanto a IA aumenta a produtividade.
+                Busca na base viva e entrega a resposta pronta.
+              </p>
+            </div>
+            
+            <div className="flex flex-col items-center text-center">
+              <div className="mb-6 p-4 bg-gradient-to-br from-primary-a to-primary-b/30 rounded-full w-16 h-16 flex items-center justify-center">
+                <span className="text-white text-2xl font-bold">4</span>
+              </div>
+              <h3 className="text-xl font-semibold mb-2">Agente aprova, Helena aprende.</h3>
+              <p className="text-muted-foreground">
+                Ticket resolvido; a solução vira conhecimento permanente.
               </p>
             </div>
           </div>
           
           <div className="text-center mt-16">
-            <p className="text-2xl font-semibold font-manrope">Menos caos, mais fluxo.</p>
+            <p className="text-2xl font-semibold font-manrope">Menos idas e vindas, mais problemas resolvidos — tudo num fluxo só.</p>
           </div>
         </div>
       </section>
@@ -377,9 +388,7 @@ export default function Index() {
         <div className="container mx-auto px-4">
           <div className="flex flex-col md:flex-row justify-between items-center">
             <div className="mb-6 md:mb-0">
-              <div className="text-xl font-manrope font-semibold tracking-heading bg-gradient-to-r from-primary-a to-primary-b bg-clip-text text-transparent">
-                SolveFlow
-              </div>
+              <Logo glow={true} />
               <p className="text-sm text-muted-foreground mt-2">
                 Criado pela Orbitus • © 2025
               </p>
