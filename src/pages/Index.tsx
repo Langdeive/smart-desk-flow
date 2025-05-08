@@ -1,3 +1,4 @@
+
 import React, { useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
@@ -32,10 +33,10 @@ export default function Index() {
       <Navbar />
       <div className="pt-20"> {/* Add padding to compensate for fixed navbar */}
         {/* Hero Section - Height reduced */}
-        <section className="container mx-auto py-16 px-4">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center hero-gradient">
-            <div className="space-y-6">
-              <div className="readable-width">
+        <section className="container mx-auto py-16 px-4 hero-gradient">
+          <div className="flex flex-col items-center text-center max-w-4xl mx-auto">
+            <div className="space-y-6 mb-8">
+              <div className="readable-width mx-auto">
                 <h1 className="text-3xl md:text-4xl font-bold font-manrope tracking-tight mb-4">
                   Atendimento ágil sem contratar mais gente
                 </h1>
@@ -43,7 +44,7 @@ export default function Index() {
                   Centralize atendimentos, deixe a IA classificar chamados e transforme cada solução em conhecimento sem frear sua equipe.
                 </p>
               </div>
-              <div className="flex flex-col sm:flex-row gap-4">
+              <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Button asChild size="lg" className="bg-gradient-to-r from-primary-b to-primary-b-600 shadow-md hover:shadow-lg transition-all">
                   <Link to="/register" className="px-6 py-3">
                     Teste grátis por 14 dias <ArrowRight className="ml-2 h-4 w-4" />
@@ -54,8 +55,8 @@ export default function Index() {
                 </Button>
               </div>
             </div>
-            <div className="hidden lg:block">
-              <img src="/lovable-uploads/ac74fffe-4ee3-4036-82bd-f6336fb9f963.png" alt="Support specialist" className="hero-dashboard-image h-80" />
+            <div className="mt-6">
+              <img src="/lovable-uploads/b566d515-d82e-4f1c-af28-0e2d1e91140d.png" alt="Support specialist" className="hero-dashboard-image h-80" />
             </div>
           </div>
         </section>
@@ -83,7 +84,7 @@ export default function Index() {
         </section>
 
         {/* Problema → Solução */}
-        <section id="features" className="py-16 bg-alt-section section-spacing">
+        <section id="features" className="py-16 section-spacing section-alt">
           <div className="container mx-auto px-4">
             <h2 className="text-2xl md:text-3xl font-bold font-manrope text-center mb-12">Transforme problemas em soluções</h2>
             
@@ -166,7 +167,7 @@ export default function Index() {
         </section>
 
         {/* Funcionalidades-estrela */}
-        <section className="py-16 section-spacing bg-white">
+        <section className="py-16 section-spacing bg-white section-white">
           <div className="container mx-auto px-4">
             <h2 className="text-2xl md:text-3xl font-bold font-manrope text-center mb-4">Funcionalidades-estrela</h2>
             <p className="text-lg text-muted-foreground text-center max-w-2xl mx-auto mb-12 readable-width">
@@ -190,7 +191,7 @@ export default function Index() {
         </section>
 
         {/* Como Funciona */}
-        <section className="py-16 bg-alt-section section-spacing-sm">
+        <section className="py-16 section-alt section-spacing-sm">
           <div className="container mx-auto px-4">
             <h2 className="text-2xl md:text-3xl font-bold font-manrope text-center mb-10">Como Funciona</h2>
             
@@ -251,7 +252,7 @@ export default function Index() {
         </section>
 
         {/* Depoimentos */}
-        <section className="py-16 section-spacing-sm bg-white">
+        <section className="py-16 section-spacing-sm section-white">
           <div className="container mx-auto px-4">
             <h2 className="text-2xl md:text-3xl font-bold font-manrope text-center mb-10">O que nossos clientes dizem</h2>
             
@@ -296,7 +297,7 @@ export default function Index() {
         </section>
 
         {/* Planos & Preços */}
-        <section id="plans" className="py-16 bg-alt-section section-spacing">
+        <section id="plans" className="py-16 section-alt section-spacing">
           <div className="container mx-auto px-4">
             <h2 className="text-2xl md:text-3xl font-bold font-manrope text-center mb-4">Planos que crescem com sua empresa</h2>
             <p className="text-lg text-muted-foreground text-center max-w-2xl mx-auto mb-8">
@@ -309,40 +310,60 @@ export default function Index() {
               </span>
             </div>
             
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-4xl mx-auto scroll-reveal">
-              <div></div>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto scroll-reveal">
+              <Card className="shadow-md hover-card border border-[#E9D8FF]">
+                <CardContent className="pt-6">
+                  <h3 className="text-xl font-semibold text-center mb-2">Trial</h3>
+                  <div className="text-3xl font-bold text-center mb-4 text-[#7B3DDB]">Grátis<span className="text-base font-normal text-muted-foreground"> • 14 dias</span></div>
+                  <ul className="space-y-2 mb-6">
+                    <PlanFeature>50 tickets para testar</PlanFeature>
+                    <PlanFeature>1 agente</PlanFeature>
+                    <PlanFeature>Triagem inteligente Laura</PlanFeature>
+                    <PlanFeature>Integração via e-mail</PlanFeature>
+                    <PlanFeature>Base Viva e relatórios básicos</PlanFeature>
+                  </ul>
+                  <p className="text-xs text-muted-foreground text-center mt-4">Ao atingir 50 tickets: basta escolher um plano pago.</p>
+                  <Button asChild className="w-full mt-4 bg-primary-b hover:bg-[#7B3DDB] transition-colors">
+                    <Link to="/register">Começar agora</Link>
+                  </Button>
+                </CardContent>
+              </Card>
+              
               <Card className="shadow-md hover-card border border-[#E9D8FF]">
                 <CardContent className="pt-6">
                   <h3 className="text-xl font-semibold text-center mb-2">Basic</h3>
-                  <div className="text-3xl font-bold text-center mb-4 text-[#7B3DDB]">R$ 197<span className="text-base font-normal text-muted-foreground">/mês</span></div>
+                  <div className="text-3xl font-bold text-center mb-4 text-[#7B3DDB]">R$ 99<span className="text-base font-normal text-muted-foreground">/mês</span></div>
                   <ul className="space-y-2 mb-6">
-                    <PlanFeature>Até 100 tickets/mês</PlanFeature>
-                    <PlanFeature>2 agentes</PlanFeature>
-                    <PlanFeature>Triagem automática</PlanFeature>
-                    <PlanFeature>Integração com e-mail</PlanFeature>
+                    <PlanFeature>100 tickets por mês</PlanFeature>
+                    <PlanFeature>1 agente incluído</PlanFeature>
+                    <PlanFeature>Triagem Laura + Respostas Ricardo</PlanFeature>
+                    <PlanFeature>Dashboard unificado</PlanFeature>
                     <PlanFeature>Suporte por e-mail</PlanFeature>
                   </ul>
-                  <Button asChild className="w-full bg-primary-b hover:bg-[#7B3DDB] transition-colors">
+                  <p className="text-xs text-muted-foreground text-center mt-4">R$ 0,90 por ticket extra</p>
+                  <Button asChild className="w-full mt-4 bg-primary-b hover:bg-[#7B3DDB] transition-colors">
                     <Link to="/selecionar-plano">Escolher plano</Link>
                   </Button>
                 </CardContent>
               </Card>
+              
               <Card className="shadow-md hover-card border-2 border-primary-b relative">
                 <div className="absolute -top-3 right-0 left-0 mx-auto w-fit px-3 py-1 bg-primary-b text-white text-xs font-semibold rounded-full">
                   Mais popular
                 </div>
                 <CardContent className="pt-6">
                   <h3 className="text-xl font-semibold text-center mb-2">Pro</h3>
-                  <div className="text-3xl font-bold text-center mb-4 text-[#7B3DDB]">R$ 497<span className="text-base font-normal text-muted-foreground">/mês</span></div>
+                  <div className="text-3xl font-bold text-center mb-4 text-[#7B3DDB]">R$ 199<span className="text-base font-normal text-muted-foreground">/mês</span></div>
                   <ul className="space-y-2 mb-6">
-                    <PlanFeature>Até 1000 tickets/mês</PlanFeature>
-                    <PlanFeature>Agentes ilimitados</PlanFeature>
-                    <PlanFeature>Triagem + sugestões IA</PlanFeature>
-                    <PlanFeature>Integração email + WhatsApp</PlanFeature>
+                    <PlanFeature>1 000 tickets por mês</PlanFeature>
+                    <PlanFeature>Até 5 agentes</PlanFeature>
+                    <PlanFeature>Triagem Laura + Respostas Ricardo</PlanFeature>
+                    <PlanFeature>Integrações e-mail e WhatsApp</PlanFeature>
+                    <PlanFeature>Relatórios avançados e Base Viva</PlanFeature>
                     <PlanFeature>Suporte prioritário</PlanFeature>
-                    <PlanFeature>Relatórios avançados</PlanFeature>
                   </ul>
-                  <Button asChild className="w-full bg-primary-b hover:bg-[#7B3DDB] transition-colors">
+                  <p className="text-xs text-muted-foreground text-center mt-4">R$ 0,50 por ticket extra</p>
+                  <Button asChild className="w-full mt-4 bg-primary-b hover:bg-[#7B3DDB] transition-colors">
                     <Link to="/selecionar-plano">Escolher plano</Link>
                   </Button>
                 </CardContent>
@@ -356,36 +377,36 @@ export default function Index() {
         </section>
 
         {/* FAQ */}
-        <section id="faq" className="py-16 section-spacing bg-white">
+        <section id="faq" className="py-16 section-spacing section-white">
           <div className="container mx-auto px-4 max-w-3xl">
             <h2 className="text-2xl md:text-3xl font-bold font-manrope text-center mb-12">Perguntas frequentes</h2>
             
             <Accordion type="single" collapsible className="space-y-4 scroll-reveal">
-              <FaqItem question="A IA fala português?">
-                Sim! Nossa IA é treinada para entender perfeitamente o português e todas as nuances técnicas comuns em ambientes de TI.
+              <FaqItem question="Como funciona a Base Viva e posso editar os artigos gerados?">
+                A cada ticket encerrado, a IA "Helena" cria um artigo interno com passo-a-passo e tags. Você pode revisar, editar título, anexar imagens ou transformar o artigo em tutorial público com um clique. Assim, o conhecimento fica padronizado e sempre atualizado.
               </FaqItem>
               
-              <FaqItem question="Posso integrar ao meu CRM?">
-                Oferecemos integrações com os principais CRMs do mercado. Para casos específicos, nossa API está disponível nos planos Pro.
+              <FaqItem question="Preciso instalar algo no servidor da minha empresa?">
+                Não. SolveFlow é 100 % SaaS. Basta criar a conta, conectar seu e-mail de suporte ou ativar o formulário no portal. A integração com WhatsApp requer apenas o código da Meta Business.
               </FaqItem>
               
-              <FaqItem question="Quanto tempo leva para implementar?">
-                Menos de 1 dia. A configuração básica leva cerca de 15 minutos e a integração com seus canais existentes pode ser feita no mesmo dia.
+              <FaqItem question="Em quanto tempo posso começar a usar?">
+                Menos de 15 min. Depois do cadastro, a plataforma importa seus e-mails de suporte mais recentes e já inicia a triagem automática.
               </FaqItem>
               
-              <FaqItem question="Como a IA aprende nossa base de conhecimento?">
-                A IA analisa seus tickets resolvidos e documentação existente. A cada ticket resolvido, o sistema fica mais inteligente e específico para seu contexto.
+              <FaqItem question="Como a IA aprende nosso contexto ao longo do tempo?">
+                Laura e Ricardo consultam os artigos criados por Helena e entendem os ajustes que você faz em cada ticket. Cada correção alimenta o modelo, reduzindo erros e melhorando as sugestões futuras.
               </FaqItem>
               
-              <FaqItem question="É seguro compartilhar dados de clientes?">
-                Absolutamente. Seguimos todas as normas da LGPD, usamos criptografia de ponta a ponta e não utilizamos dados de clientes para treinar modelos gerais.
+              <FaqItem question="O que acontece se eu ultrapassar o limite de tickets?">
+                No Plano Basic, cada ticket extra custa R$ 0,90; no Pro, R$ 0,50. Você acompanha o consumo em tempo real e recebe alerta aos 80 % do limite.
               </FaqItem>
             </Accordion>
           </div>
         </section>
 
         {/* CTA Final */}
-        <section className="py-12 bg-alt-section section-spacing-sm">
+        <section className="py-12 section-alt section-spacing-sm">
           <div className="container mx-auto px-4">
             <div className="p-8 bg-card rounded-2xl shadow-lg border border-border/50 backdrop-blur-sm max-w-3xl mx-auto text-center scroll-reveal">
               <h2 className="text-2xl md:text-3xl font-bold mb-4">Pronto para transformar seu atendimento?</h2>
@@ -400,7 +421,7 @@ export default function Index() {
         </section>
 
         {/* Footer */}
-        <section className="py-12 bg-white">
+        <section className="py-12 section-white">
           <div className="container mx-auto px-4">
             <div className="flex flex-col md:flex-row justify-between items-center">
               <div className="mb-6 md:mb-0">
