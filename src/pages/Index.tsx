@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
@@ -6,10 +5,8 @@ import { ArrowRight, Check, Clock, CheckCircle, BarChart, MessageCircle, Mail, S
 import { Card, CardContent } from '@/components/ui/card';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import Logo from '@/components/ui/logo';
-
 export default function Index() {
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-primary-a via-background to-primary-b/10">
+  return <div className="min-h-screen bg-gradient-to-br from-primary-a via-background to-primary-b/10">
       {/* Hero Section */}
       <section className="container mx-auto py-24 px-4">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
@@ -34,11 +31,7 @@ export default function Index() {
             </div>
           </div>
           <div className="hidden lg:block">
-            <img 
-              src="/lovable-uploads/dashboard-mockup.png" 
-              alt="SolveFlow Dashboard" 
-              className="rounded-lg shadow-xl"
-            />
+            <img alt="SolveFlow Dashboard" src="/lovable-uploads/75403112-3d4c-4f12-8ca3-18658afab044.png" className="rounded-lg shadow-xl object-contain" />
           </div>
         </div>
       </section>
@@ -157,29 +150,13 @@ export default function Index() {
           </p>
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            <FeatureCard
-              icon={<Search className="h-6 w-6" />}
-              title="Triagem Inteligente"
-              description="Prioriza e completa chamados automaticamente."
-            />
+            <FeatureCard icon={<Search className="h-6 w-6" />} title="Triagem Inteligente" description="Prioriza e completa chamados automaticamente." />
             
-            <FeatureCard
-              icon={<MessageCircle className="h-6 w-6" />}
-              title="Auto-respostas"
-              description="Sugestões baseadas em casos já resolvidos."
-            />
+            <FeatureCard icon={<MessageCircle className="h-6 w-6" />} title="Auto-respostas" description="Sugestões baseadas em casos já resolvidos." />
             
-            <FeatureCard
-              icon={<CheckCircle className="h-6 w-6" />}
-              title="Base Viva"
-              description="Helena transforma cada resolução em artigo pesquisável."
-            />
+            <FeatureCard icon={<CheckCircle className="h-6 w-6" />} title="Base Viva" description="Helena transforma cada resolução em artigo pesquisável." />
             
-            <FeatureCard
-              icon={<BarChart className="h-6 w-6" />}
-              title="Relatórios Smart"
-              description="Tempo médio, gargalos e tendências em um clique."
-            />
+            <FeatureCard icon={<BarChart className="h-6 w-6" />} title="Relatórios Smart" description="Tempo médio, gargalos e tendências em um clique." />
           </div>
         </div>
       </section>
@@ -422,13 +399,18 @@ export default function Index() {
           </div>
         </div>
       </footer>
-    </div>
-  );
+    </div>;
 }
-
-function FeatureCard({ icon, title, description }: { icon: React.ReactNode; title: string; description: string }) {
-  return (
-    <div className="flex flex-col items-center text-center p-6 rounded-xl bg-card border border-border/50 shadow-md hover:shadow-lg transition-all hover:translate-y-[-4px]">
+function FeatureCard({
+  icon,
+  title,
+  description
+}: {
+  icon: React.ReactNode;
+  title: string;
+  description: string;
+}) {
+  return <div className="flex flex-col items-center text-center p-6 rounded-xl bg-card border border-border/50 shadow-md hover:shadow-lg transition-all hover:translate-y-[-4px]">
       <div className="mb-4 p-4 bg-gradient-to-br from-primary-a/20 to-primary-b/20 rounded-full">
         <div className="text-primary-a">
           {icon}
@@ -438,26 +420,29 @@ function FeatureCard({ icon, title, description }: { icon: React.ReactNode; titl
       <p className="text-muted-foreground">
         {description}
       </p>
-    </div>
-  );
+    </div>;
 }
-
-function PlanFeature({ children }: { children: React.ReactNode }) {
-  return (
-    <li className="flex items-center">
+function PlanFeature({
+  children
+}: {
+  children: React.ReactNode;
+}) {
+  return <li className="flex items-center">
       <Check className="h-5 w-5 mr-2 text-primary-a" />
       <span>{children}</span>
-    </li>
-  );
+    </li>;
 }
-
-function FaqItem({ question, children }: { question: string; children: React.ReactNode }) {
-  return (
-    <AccordionItem value={question.replace(/\s/g, '-').toLowerCase()} className="border rounded-lg px-4">
+function FaqItem({
+  question,
+  children
+}: {
+  question: string;
+  children: React.ReactNode;
+}) {
+  return <AccordionItem value={question.replace(/\s/g, '-').toLowerCase()} className="border rounded-lg px-4">
       <AccordionTrigger className="text-left font-semibold py-4">{question}</AccordionTrigger>
       <AccordionContent className="pb-4 text-muted-foreground">
         {children}
       </AccordionContent>
-    </AccordionItem>
-  );
+    </AccordionItem>;
 }
