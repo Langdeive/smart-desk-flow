@@ -1,15 +1,16 @@
 
 import { useState, useEffect, useCallback } from 'react';
-import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
+import { Agent, NewAgentData } from '@/types/agent.types';
+import { 
+  fetchAgentsForCompany, 
+  inviteAgent, 
+  resendAgentInvite, 
+  removeAgentFromCompany, 
+  updateAgentDetails 
+} from '@/services/agentService';
 
-export type Agent = {
-  id: string;
-  nome: string;
-  email: string;
-  funcao: 'admin' | 'agent';
-  status: 'active' | 'inactive' | 'awaiting';
-};
+export type { Agent } from '@/types/agent.types';
 
 export const useAgents = (companyId: string | undefined) => {
   const [agents, setAgents] = useState<Agent[]>([]);
@@ -17,7 +18,7 @@ export const useAgents = (companyId: string | undefined) => {
   const [isAdding, setIsAdding] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // Usar useCallback para evitar recriações desnecessárias da função
+  // Fetch agents using useCallback to avoid unnecessary re-renders
   const fetchAgents = useCallback(async () => {
     if (!companyId) {
       console.log('No company ID available, skipping agent fetch');
@@ -28,32 +29,8 @@ export const useAgents = (companyId: string | undefined) => {
     setLoading(true);
     setError(null);
     try {
-      console.log('Fetching agents for company ID:', companyId);
-      
-      // Use agents_view which already has the correct join with auth.users
-      const { data, error } = await supabase
-        .from('agents_view')
-        .select('*')
-        .eq('company_id', companyId);
-      
-      if (error) throw error;
-      
-      console.log('Raw agents data:', data);
-      
-      if (Array.isArray(data)) {
-        // Format the data to match the Agent type
-        const formattedAgents: Agent[] = data.map(agent => ({
-          id: agent.id,
-          nome: agent.nome || 'Unknown User',
-          email: agent.email || '',
-          funcao: agent.funcao === 'admin' ? 'admin' : 'agent',
-          // Ensure status is one of the allowed values
-          status: validateAgentStatus(agent.status)
-        }));
-        
-        setAgents(formattedAgents);
-        console.log('Formatted agents:', formattedAgents);
-      }
+      const agentData = await fetchAgentsForCompany(companyId);
+      setAgents(agentData);
     } catch (error) {
       console.error('Error fetching agents:', error);
       setError(error instanceof Error ? error.message : 'Failed to fetch agents');
@@ -65,16 +42,8 @@ export const useAgents = (companyId: string | undefined) => {
     }
   }, [companyId]);
 
-  // Helper function to validate status is one of the allowed values
-  const validateAgentStatus = (status: string | null | undefined): Agent['status'] => {
-    if (status === 'active' || status === 'inactive' || status === 'awaiting') {
-      return status;
-    }
-    // Default to 'awaiting' if status is not one of the allowed values
-    return 'awaiting';
-  };
-
-  const addAgent = async (agentData: Omit<Agent, 'id' | 'status'>) => {
+  // Add a new agent
+  const addAgent = async (agentData: NewAgentData) => {
     if (!companyId) {
       const errorMsg = 'ID da empresa não encontrado. Crie sua empresa primeiro.';
       setError(errorMsg);
@@ -88,24 +57,9 @@ export const useAgents = (companyId: string | undefined) => {
     setError(null);
     
     try {
-      console.log('Adding agent with company ID:', companyId);
+      await inviteAgent(agentData, companyId);
       
-      // Call the edge function
-      const { data, error } = await supabase.functions.invoke('invite_agent', {
-        body: {
-          email: agentData.email,
-          name: agentData.nome,
-          role: agentData.funcao,
-          companyId: companyId
-        }
-      });
-
-      if (error) throw error;
-
-      // Log the response to help with debugging
-      console.log('Invite agent response:', data);
-
-      // If successful, refresh the agents list
+      // Refresh the agents list
       await fetchAgents();
       
       toast.success('Agente convidado com sucesso', {
@@ -133,7 +87,7 @@ export const useAgents = (companyId: string | undefined) => {
     }
   };
 
-  // Função para reenviar convite para um agente existente
+  // Resend invitation to an existing agent
   const resendInvite = async (agent: Agent) => {
     if (!companyId) {
       toast.error('ID da empresa não encontrado');
@@ -141,24 +95,7 @@ export const useAgents = (companyId: string | undefined) => {
     }
 
     try {
-      console.log('Resending invitation for agent:', agent.id);
-      
-      // Call the edge function to resend invitation
-      const { data, error } = await supabase.functions.invoke('invite_agent', {
-        body: {
-          email: agent.email,
-          name: agent.nome,
-          role: agent.funcao,
-          companyId: companyId
-        }
-      });
-
-      if (error) {
-        console.error('Error response from invite_agent:', error);
-        throw error;
-      }
-
-      console.log('Resend invitation response:', data);
+      await resendAgentInvite(agent, companyId);
       
       toast.success('Convite reenviado com sucesso', {
         description: `Um novo email foi enviado para ${agent.email}`
@@ -174,7 +111,7 @@ export const useAgents = (companyId: string | undefined) => {
     }
   };
 
-  // Função para remover um agente - agora usando as políticas RLS atualizadas
+  // Remove an agent
   const removeAgent = async (agentId: string) => {
     if (!companyId) {
       toast.error('ID da empresa não encontrado');
@@ -182,19 +119,9 @@ export const useAgents = (companyId: string | undefined) => {
     }
 
     try {
-      console.log('Removing agent:', agentId, 'from company:', companyId);
-      
-      // Use o SDK Supabase para fazer a operação DELETE
-      // Agora as políticas RLS devem permitir isso para administradores
-      const { error } = await supabase
-        .from('user_companies')
-        .delete()
-        .eq('user_id', agentId)
-        .eq('company_id', companyId);
+      await removeAgentFromCompany(agentId, companyId);
 
-      if (error) throw error;
-
-      // Atualizar a lista de agentes após remoção
+      // Update the agents list after removal
       await fetchAgents();
       
       toast.success('Agente removido com sucesso');
@@ -208,7 +135,7 @@ export const useAgents = (companyId: string | undefined) => {
     }
   };
 
-  // Função para atualizar um agente
+  // Update agent details
   const updateAgent = async (agentId: string, data: { funcao?: 'admin' | 'agent', status?: 'active' | 'inactive' }) => {
     if (!companyId) {
       toast.error('ID da empresa não encontrado');
@@ -216,22 +143,9 @@ export const useAgents = (companyId: string | undefined) => {
     }
 
     try {
-      console.log('Updating agent:', agentId, 'with data:', data);
-      
-      // Atualizar na tabela user_companies
-      const { error } = await supabase
-        .from('user_companies')
-        .update({
-          role: data.funcao,
-          // Adicionar status quando disponível na tabela
-          // status: data.status
-        })
-        .eq('user_id', agentId)
-        .eq('company_id', companyId);
+      await updateAgentDetails(agentId, companyId, data);
 
-      if (error) throw error;
-
-      // Atualizar a lista de agentes
+      // Update the agents list
       await fetchAgents();
       
       toast.success('Agente atualizado com sucesso');
@@ -245,6 +159,7 @@ export const useAgents = (companyId: string | undefined) => {
     }
   };
 
+  // Load agents on component mount or when companyId changes
   useEffect(() => {
     if (companyId) {
       fetchAgents();

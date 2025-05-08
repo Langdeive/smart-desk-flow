@@ -1,7 +1,6 @@
-
 import React, { useState, useEffect } from 'react';
 import { useAuth } from "@/hooks/useAuth";
-import { useAgents } from '@/hooks/useAgents';
+import { useAgents, Agent } from '@/hooks/useAgents';
 import AgentList from '@/components/agents/AgentList';
 import AgentSearch from '@/components/agents/AgentSearch';
 import AddAgentDialog from '@/components/agents/AddAgentDialog';
@@ -11,7 +10,6 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from 'react-router-dom';
 import { useDebounce } from '@/hooks/useDebounce';
-import { Agent } from '@/hooks/useAgents';
 
 export default function AgentManagement() {
   const navigate = useNavigate();
