@@ -174,7 +174,7 @@ export const useAgents = (companyId: string | undefined) => {
     }
   };
 
-  // Função para remover um agente - usando o cliente Supabase com SERVICE_ROLE
+  // Função para remover um agente - usando fetch direto para API REST
   const removeAgent = async (agentId: string) => {
     if (!companyId) {
       toast.error('ID da empresa não encontrado');
@@ -184,13 +184,21 @@ export const useAgents = (companyId: string | undefined) => {
     try {
       console.log('Removing agent:', agentId, 'from company:', companyId);
       
+      // Get the current session
+      const { data: sessionData } = await supabase.auth.getSession();
+      const accessToken = sessionData.session?.access_token;
+      
+      if (!accessToken) {
+        throw new Error('No authentication session found');
+      }
+      
       // Usar diretamente o endpoint da API para evitar os problemas de RLS
       const response = await fetch('https://jqtuzbldregwglevlhrw.supabase.co/rest/v1/user_companies', {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${supabase.auth.session()?.access_token}`,
-          'apikey': supabase.supabaseKey
+          'Authorization': `Bearer ${accessToken}`,
+          'apikey': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpxdHV6YmxkcmVnd2dsZXZsaHJ3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDE5MTI5NjIsImV4cCI6MjA1NzQ4ODk2Mn0.bhd499qbEtWuRUSqVW5nXoguZaB3EuFop5ucVhXkmhQ'
         },
         body: JSON.stringify({
           user_id: agentId,

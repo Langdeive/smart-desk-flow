@@ -18,10 +18,12 @@ serve(async (req) => {
     const serviceRoleKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') as string;
     const authHeader = req.headers.get('Authorization')!;
     
+    console.log("Authorization header present:", !!authHeader);
+    
     // Verificar autenticação do usuário que está enviando o convite
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
       return new Response(
-        JSON.stringify({ error: 'Unauthorized' }),
+        JSON.stringify({ error: 'Unauthorized - No valid bearer token provided' }),
         { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 401 }
       );
     }
@@ -32,17 +34,13 @@ serve(async (req) => {
     // Criar cliente Supabase com a chave de serviço para operações admin
     const supabaseAdmin = createClient(url, serviceRoleKey);
     
-    // Criar cliente com o token do usuário para verificar permissões
-    const userClient = createClient(url, serviceRoleKey, {
-      global: { headers: { Authorization: authHeader } }
-    });
-    
-    // Verificar se o usuário atual está autenticado
-    const { data: { user }, error: userError } = await userClient.auth.getUser();
+    // Verificar se o usuário atual está autenticado usando o token
+    const { data: { user }, error: userError } = await supabaseAdmin.auth.getUser(token);
     
     if (userError || !user) {
+      console.error("User verification failed:", userError);
       return new Response(
-        JSON.stringify({ error: 'Unauthorized - Valid authentication required' }),
+        JSON.stringify({ error: 'Unauthorized - Invalid user token', details: userError }),
         { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 401 }
       );
     }
@@ -62,7 +60,6 @@ serve(async (req) => {
     console.log(`Attempting to invite ${email} to company ${companyId} with role ${role}`);
 
     // Verificar se o usuário atual tem permissão na empresa (role = owner ou admin)
-    // Usar o serviço admin para evitar problemas de RLS
     const { data: userCompany, error: permissionError } = await supabaseAdmin
       .from('user_companies')
       .select('role')
@@ -70,11 +67,20 @@ serve(async (req) => {
       .eq('company_id', companyId)
       .single();
     
-    console.log("User permission check:", userCompany, permissionError);
+    console.log("User permission check result:", userCompany, permissionError);
     
-    if (permissionError || !userCompany || (userCompany.role !== 'owner' && userCompany.role !== 'admin')) {
+    if (permissionError) {
+      console.error("Permission check error:", permissionError);
       return new Response(
-        JSON.stringify({ error: 'Forbidden - You do not have permission to invite users to this company' }),
+        JSON.stringify({ error: 'Error checking permissions', details: permissionError }),
+        { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 500 }
+      );
+    }
+    
+    if (!userCompany || (userCompany.role !== 'owner' && userCompany.role !== 'admin')) {
+      console.error("Permission denied. User role:", userCompany?.role);
+      return new Response(
+        JSON.stringify({ error: 'Forbidden - You do not have permission to invite users to this company', role: userCompany?.role }),
         { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 403 }
       );
     }
