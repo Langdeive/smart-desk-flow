@@ -1,10 +1,4 @@
 
-// Aqui só podemos verificar o conteúdo da função existente, já que não temos acesso ao código original
-// Você pode solicitar ao usuário para compartilhar o arquivo se for necessário fazer mudanças
-
-// Como não podemos editar diretamente, precisaremos criar uma versão atualizada
-// Assumindo um template básico com as correções necessárias:
-
 import { serve } from 'https://deno.land/std@0.177.0/http/server.ts';
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.43.1';
 
@@ -32,18 +26,19 @@ serve(async (req) => {
       );
     }
 
+    // Extrair o token JWT
+    const token = authHeader.replace('Bearer ', '');
+    
     // Criar cliente Supabase com a chave de serviço para operações admin
     const supabaseAdmin = createClient(url, serviceRoleKey);
     
     // Criar cliente com o token do usuário para verificar permissões
-    const supabaseClient = createClient(
-      url,
-      serviceRoleKey,
-      { global: { headers: { Authorization: authHeader } } }
-    );
+    const userClient = createClient(url, serviceRoleKey, {
+      global: { headers: { Authorization: authHeader } }
+    });
     
     // Verificar se o usuário atual está autenticado
-    const { data: { user }, error: userError } = await supabaseClient.auth.getUser();
+    const { data: { user }, error: userError } = await userClient.auth.getUser();
     
     if (userError || !user) {
       return new Response(
@@ -51,6 +46,8 @@ serve(async (req) => {
         { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 401 }
       );
     }
+
+    console.log("User authenticated:", user.id);
 
     // Obter dados do convite
     const { email, name, role, companyId } = await req.json();
@@ -62,15 +59,20 @@ serve(async (req) => {
       );
     }
 
+    console.log(`Attempting to invite ${email} to company ${companyId} with role ${role}`);
+
     // Verificar se o usuário atual tem permissão na empresa (role = owner ou admin)
-    const { data: userPermission } = await supabaseClient
+    // Usar o serviço admin para evitar problemas de RLS
+    const { data: userCompany, error: permissionError } = await supabaseAdmin
       .from('user_companies')
       .select('role')
       .eq('user_id', user.id)
       .eq('company_id', companyId)
       .single();
     
-    if (!userPermission || (userPermission.role !== 'owner' && userPermission.role !== 'admin')) {
+    console.log("User permission check:", userCompany, permissionError);
+    
+    if (permissionError || !userCompany || (userCompany.role !== 'owner' && userCompany.role !== 'admin')) {
       return new Response(
         JSON.stringify({ error: 'Forbidden - You do not have permission to invite users to this company' }),
         { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 403 }
@@ -88,7 +90,7 @@ serve(async (req) => {
       userId = existingUser.id;
       
       // Verificar se já existe associação
-      const { data: existingRelation } = await supabaseClient
+      const { data: existingRelation } = await supabaseAdmin
         .from('user_companies')
         .select('id')
         .eq('user_id', userId)
@@ -116,29 +118,42 @@ serve(async (req) => {
       });
       
       if (createUserError) {
+        console.error("Error creating user:", createUserError);
         throw createUserError;
       }
       
       userId = newUser.user.id;
     }
 
+    console.log("Creating user_companies relation for user:", userId);
+
     // Criar a relação na tabela user_companies
-    await supabaseAdmin
+    const { error: relationError } = await supabaseAdmin
       .from('user_companies')
       .insert({
         user_id: userId,
         company_id: companyId,
         role: role || 'agent'
       });
+    
+    if (relationError) {
+      console.error("Error inserting user_companies relation:", relationError);
+      throw relationError;
+    }
 
     // Enviar email de convite/redefinição de senha
-    await supabaseAdmin.auth.admin.generateLink({
+    const { error: passwordResetError } = await supabaseAdmin.auth.admin.generateLink({
       type: 'recovery',
       email,
       options: {
         redirectTo: `${req.headers.get('origin')}/reset-password`
       }
     });
+    
+    if (passwordResetError) {
+      console.error("Error sending password reset email:", passwordResetError);
+      throw passwordResetError;
+    }
 
     return new Response(
       JSON.stringify({ 

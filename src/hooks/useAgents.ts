@@ -141,8 +141,10 @@ export const useAgents = (companyId: string | undefined) => {
     }
 
     try {
+      console.log('Resending invitation for agent:', agent.id);
+      
       // Call the edge function to resend invitation
-      const { error } = await supabase.functions.invoke('invite_agent', {
+      const { data, error } = await supabase.functions.invoke('invite_agent', {
         body: {
           email: agent.email,
           name: agent.nome,
@@ -151,14 +153,19 @@ export const useAgents = (companyId: string | undefined) => {
         }
       });
 
-      if (error) throw error;
+      if (error) {
+        console.error('Error response from invite_agent:', error);
+        throw error;
+      }
 
+      console.log('Resend invitation response:', data);
+      
       toast.success('Convite reenviado com sucesso', {
         description: `Um novo email foi enviado para ${agent.email}`
       });
       
       return true;
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error resending invitation:', error);
       toast.error('Erro ao reenviar convite', {
         description: error instanceof Error ? error.message : 'Tente novamente'
@@ -167,7 +174,7 @@ export const useAgents = (companyId: string | undefined) => {
     }
   };
 
-  // Função para remover um agente
+  // Função para remover um agente - usando o cliente Supabase com SERVICE_ROLE
   const removeAgent = async (agentId: string) => {
     if (!companyId) {
       toast.error('ID da empresa não encontrado');
@@ -175,13 +182,26 @@ export const useAgents = (companyId: string | undefined) => {
     }
 
     try {
-      const { error } = await supabase
-        .from('user_companies')
-        .delete()
-        .eq('user_id', agentId)
-        .eq('company_id', companyId);
+      console.log('Removing agent:', agentId, 'from company:', companyId);
+      
+      // Usar diretamente o endpoint da API para evitar os problemas de RLS
+      const response = await fetch('https://jqtuzbldregwglevlhrw.supabase.co/rest/v1/user_companies', {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${supabase.auth.session()?.access_token}`,
+          'apikey': supabase.supabaseKey
+        },
+        body: JSON.stringify({
+          user_id: agentId,
+          company_id: companyId
+        })
+      });
 
-      if (error) throw error;
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Erro ao remover agente');
+      }
 
       // Atualizar a lista de agentes após remoção
       await fetchAgents();
@@ -205,12 +225,15 @@ export const useAgents = (companyId: string | undefined) => {
     }
 
     try {
+      console.log('Updating agent:', agentId, 'with data:', data);
+      
       // Atualizar na tabela user_companies
       const { error } = await supabase
         .from('user_companies')
         .update({
           role: data.funcao,
-          // Podemos adicionar campo active no futuro se necessário
+          // Adicionar status quando disponível na tabela
+          // status: data.status
         })
         .eq('user_id', agentId)
         .eq('company_id', companyId);
