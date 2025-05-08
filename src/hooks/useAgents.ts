@@ -1,4 +1,3 @@
-
 import { useState, useEffect, useCallback } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
@@ -174,7 +173,7 @@ export const useAgents = (companyId: string | undefined) => {
     }
   };
 
-  // Função para remover um agente - usando fetch direto para API REST
+  // Função para remover um agente - usando fetch direto para API REST com query parameters
   const removeAgent = async (agentId: string) => {
     if (!companyId) {
       toast.error('ID da empresa não encontrado');
@@ -192,18 +191,23 @@ export const useAgents = (companyId: string | undefined) => {
         throw new Error('No authentication session found');
       }
       
+      // Construir a URL com os parâmetros de consulta para o filtro WHERE
+      const url = new URL('https://jqtuzbldregwglevlhrw.supabase.co/rest/v1/user_companies');
+      
+      // Adicionar os parâmetros de filtro como query parameters
+      url.searchParams.append('user_id', `eq.${agentId}`);
+      url.searchParams.append('company_id', `eq.${companyId}`);
+      
       // Usar diretamente o endpoint da API para evitar os problemas de RLS
-      const response = await fetch('https://jqtuzbldregwglevlhrw.supabase.co/rest/v1/user_companies', {
+      const response = await fetch(url.toString(), {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${accessToken}`,
-          'apikey': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpxdHV6YmxkcmVnd2dsZXZsaHJ3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDE5MTI5NjIsImV4cCI6MjA1NzQ4ODk2Mn0.bhd499qbEtWuRUSqVW5nXoguZaB3EuFop5ucVhXkmhQ'
-        },
-        body: JSON.stringify({
-          user_id: agentId,
-          company_id: companyId
-        })
+          'apikey': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpxdHV6YmxkcmVnd2dsZXZsaHJ3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDE5MTI5NjIsImV4cCI6MjA1NzQ4ODk2Mn0.bhd499qbEtWuRUSqVW5nXoguZaB3EuFop5ucVhXkmhQ',
+          // Para DELETE, precisamos deste cabeçalho adicional para que o Supabase retorne os dados excluídos (opcional)
+          'Prefer': 'return=minimal'
+        }
       });
 
       if (!response.ok) {
