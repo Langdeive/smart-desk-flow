@@ -5,6 +5,7 @@ import { NavMenu } from "./NavMenu";
 import { Sidebar } from "./Sidebar";
 import { Button } from "@/components/ui/button";
 import { Menu } from "lucide-react";
+import { Toaster } from "@/components/ui/toaster";
 
 export function AppLayout() {
   const [showSidebar, setShowSidebar] = useState(false);
@@ -22,7 +23,7 @@ export function AppLayout() {
           <Button
             variant="outline"
             size="icon"
-            className="fixed bottom-4 left-4 z-40 lg:hidden"
+            className="fixed bottom-4 left-4 z-40 lg:hidden shadow-lg"
             onClick={() => setShowSidebar(!showSidebar)}
           >
             <Menu className="h-4 w-4" />
@@ -43,6 +44,8 @@ export function AppLayout() {
           <Outlet />
         </main>
       </div>
+      {/* Toaster for notifications */}
+      <Toaster />
     </div>
   );
 }

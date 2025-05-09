@@ -28,7 +28,7 @@
 
 /* Additional custom styles for the landing page */
 .hero-gradient {
-  background: linear-gradient(to right, rgba(213, 246, 243, 0.5) 0%, rgba(255, 255, 255, 0) 100%);
+  background: linear-gradient(to right, rgba(213, 246, 243, 1) 0%, rgba(255, 255, 255, 0) 100%);
 }
 
 .feature-icon {
@@ -130,7 +130,7 @@ a:focus-visible, button:focus-visible {
 
 /* Seção alternada com fundo e gradiente - modificada com gradiente mais forte e da esquerda para direita */
 section.section-alt {
-  background-image: linear-gradient(to right, rgba(213, 246, 243, 0.5) 0%, rgba(255, 255, 255, 0) 100%);
+  background-image: linear-gradient(to right, rgba(213, 246, 243, 1) 0%, rgba(255, 255, 255, 0) 100%);
   background-color: #F9FAFB;
 }
 
