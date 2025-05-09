@@ -6,6 +6,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import Logo from '@/components/ui/logo';
 import { Navbar } from '@/components/layout/Navbar';
+
 export default function Index() {
   // Scroll reveal effect
   useEffect(() => {
@@ -28,6 +29,7 @@ export default function Index() {
       });
     };
   }, []);
+  
   return <div className="min-h-screen">
       <Navbar />
       <div className="pt-20"> {/* Add padding to compensate for fixed navbar */}
@@ -61,7 +63,7 @@ export default function Index() {
         </section>
 
         {/* Prova Social */}
-        <section className="bg-white py-8 section-spacing-sm">
+        <section className="py-8 section-spacing-sm section-white">
           <div className="container mx-auto px-4">
             <div className="flex flex-col items-center text-center">
               <div className="flex items-center gap-2 mb-4">
@@ -161,7 +163,7 @@ export default function Index() {
         </section>
 
         {/* Funcionalidades-estrela */}
-        <section className="py-16 section-spacing bg-white section-white">
+        <section className="py-16 section-spacing section-white">
           <div className="container mx-auto px-4">
             <h2 className="text-2xl md:text-3xl font-bold font-manrope text-center mb-4">Funcionalidades-estrela</h2>
             <p className="text-lg text-muted-foreground text-center max-w-2xl mx-auto mb-12 readable-width">
@@ -185,7 +187,7 @@ export default function Index() {
         </section>
 
         {/* Como Funciona */}
-        <section className="py-16 section-alt section-spacing-sm">
+        <section className="py-16 section-spacing-sm section-alt">
           <div className="container mx-auto px-4">
             <h2 className="text-2xl md:text-3xl font-bold font-manrope text-center mb-10">Como Funciona</h2>
             
@@ -291,7 +293,7 @@ export default function Index() {
         </section>
 
         {/* Planos & Preços */}
-        <section id="plans" className="py-16 section-alt section-spacing">
+        <section id="plans" className="py-16 section-spacing section-alt">
           <div className="container mx-auto px-4">
             <h2 className="text-2xl md:text-3xl font-bold font-manrope text-center mb-4">Planos que crescem com sua empresa</h2>
             <p className="text-lg text-muted-foreground text-center max-w-2xl mx-auto mb-8">
@@ -400,7 +402,7 @@ export default function Index() {
         </section>
 
         {/* CTA Final */}
-        <section className="py-12 section-alt section-spacing-sm">
+        <section className="py-12 section-spacing-sm section-alt">
           <div className="container mx-auto px-4">
             <div className="p-8 bg-card rounded-2xl shadow-lg border border-border/50 backdrop-blur-sm max-w-3xl mx-auto text-center scroll-reveal">
               <h2 className="text-2xl md:text-3xl font-bold mb-4">Pronto para transformar seu atendimento?</h2>

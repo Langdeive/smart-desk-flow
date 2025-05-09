@@ -116,11 +116,6 @@ a:focus-visible, button:focus-visible {
   margin-right: auto;
 }
 
-/* Alternating sections */
-.bg-alt-section {
-  background-color: #F9FAFB;
-}
-
 /* Problem cards styling */
 .problem-card {
   border-color: #FCA5A5;
@@ -133,22 +128,14 @@ a:focus-visible, button:focus-visible {
   background-color: #F0FDF4;
 }
 
-/* Custom gradient text */
-.gradient-text {
-  @apply bg-gradient-to-r from-primary-b to-primary-a bg-clip-text text-transparent;
-  text-shadow: 0px 2px 4px rgba(0, 0, 0, 0.05);
+/* Corrected: Removing duplicate .gradient-text and applying higher specificity to section classes */
+/* Seção alternada com fundo e gradiente */
+section.section-alt {
+  background-image: radial-gradient(circle at center, rgba(213, 246, 243, 0.3) 0%, rgba(255, 255, 255, 0) 70%);
+  background-color: #F9FAFB;
 }
 
-/* Additional custom styles for the landing page */
-.hero-gradient {
-  background: radial-gradient(circle at center, rgba(213, 246, 243, 0.3) 0%, rgba(255, 255, 255, 0) 70%);
-}
-
-/* Corrigido: Aplicando radial gradient nas seções alternadas */
-.section-alt {
-  background: radial-gradient(circle at center, rgba(213, 246, 243, 0.3) 0%, rgba(255, 255, 255, 0) 70%), #F9FAFB;
-}
-
-.section-white {
-  background: #FFFFFF;
+/* Seção branca sem gradiente */
+section.section-white {
+  background-color: #FFFFFF;
 }
