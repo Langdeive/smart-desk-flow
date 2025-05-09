@@ -124,5 +124,6 @@ export type ClientFormData = {
   name: string;
   external_id?: string;
   notes?: string;
+  is_active?: boolean;
   contacts: ContactInput[];
 };

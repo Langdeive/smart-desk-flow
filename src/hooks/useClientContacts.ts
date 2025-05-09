@@ -2,7 +2,7 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
-import { ClientContact, ContactInput } from '@/types';
+import { ClientContact, ContactFormValues } from '@/types';
 
 export const useClientContacts = (clientId?: string) => {
   const queryClient = useQueryClient();
@@ -11,13 +11,12 @@ export const useClientContacts = (clientId?: string) => {
     queryKey: ['client-contacts', clientId],
     queryFn: async () => {
       if (!clientId) return [];
-      
+
       const { data, error } = await supabase
         .from('client_contacts')
         .select('*')
         .eq('client_id', clientId)
-        .order('is_primary', { ascending: false })
-        .order('created_at', { ascending: true });
+        .order('is_primary', { ascending: false });
 
       if (error) throw error;
       return data as ClientContact[];
@@ -25,13 +24,39 @@ export const useClientContacts = (clientId?: string) => {
     enabled: !!clientId
   });
 
-  const createContact = useMutation({
-    mutationFn: async ({ clientId, ...data }: ContactInput & { clientId: string }) => {
-      const { error } = await supabase
+  const addContact = useMutation({
+    mutationFn: async ({ 
+      clientId, 
+      contact 
+    }: { 
+      clientId: string, 
+      contact: ContactFormValues 
+    }) => {
+      // If this contact is marked as primary, we first need to update the other contacts
+      if (contact.is_primary) {
+        const { error: updateError } = await supabase
+          .from('client_contacts')
+          .update({ is_primary: false })
+          .eq('client_id', clientId)
+          .eq('is_primary', true);
+
+        if (updateError) throw updateError;
+      }
+
+      const { data, error } = await supabase
         .from('client_contacts')
-        .insert({ ...data, client_id: clientId });
+        .insert({
+          client_id: clientId,
+          name: contact.name,
+          email: contact.email,
+          phone: contact.phone,
+          is_primary: contact.is_primary || false
+        })
+        .select()
+        .single();
 
       if (error) throw error;
+      return data;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['client-contacts'] });
@@ -45,13 +70,39 @@ export const useClientContacts = (clientId?: string) => {
   });
 
   const updateContact = useMutation({
-    mutationFn: async ({ id, ...data }: ContactInput & { id: string }) => {
-      const { error } = await supabase
+    mutationFn: async ({ 
+      contactId, 
+      contact 
+    }: { 
+      contactId: string, 
+      contact: ContactFormValues 
+    }) => {
+      // If this contact is marked as primary, we first need to update the other contacts
+      if (contact.is_primary) {
+        const { error: updateError } = await supabase
+          .from('client_contacts')
+          .update({ is_primary: false })
+          .eq('client_id', clientId)
+          .eq('is_primary', true)
+          .neq('id', contactId);
+
+        if (updateError) throw updateError;
+      }
+
+      const { data, error } = await supabase
         .from('client_contacts')
-        .update(data)
-        .eq('id', id);
+        .update({
+          name: contact.name,
+          email: contact.email,
+          phone: contact.phone,
+          is_primary: contact.is_primary || false
+        })
+        .eq('id', contactId)
+        .select()
+        .single();
 
       if (error) throw error;
+      return data;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['client-contacts'] });
@@ -65,11 +116,11 @@ export const useClientContacts = (clientId?: string) => {
   });
 
   const deleteContact = useMutation({
-    mutationFn: async (id: string) => {
+    mutationFn: async (contactId: string) => {
       const { error } = await supabase
         .from('client_contacts')
         .delete()
-        .eq('id', id);
+        .eq('id', contactId);
 
       if (error) throw error;
     },
@@ -87,7 +138,7 @@ export const useClientContacts = (clientId?: string) => {
   return {
     contacts,
     isLoading,
-    createContact,
+    addContact,
     updateContact,
     deleteContact
   };

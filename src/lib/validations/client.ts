@@ -14,6 +14,7 @@ export const clientSchema = z.object({
   name: z.string().min(2, 'Nome é obrigatório'),
   external_id: z.string().optional(),
   notes: z.string().optional(),
+  is_active: z.boolean().optional().default(true),
   contacts: z.array(contactSchema).min(1, 'Adicione pelo menos um contato')
 });
 

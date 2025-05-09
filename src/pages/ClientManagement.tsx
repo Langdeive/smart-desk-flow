@@ -12,16 +12,34 @@ import {
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
-import { Search, Plus, Edit2, Trash2 } from 'lucide-react';
+import { Plus, Search, FileText } from 'lucide-react';
 import { format } from 'date-fns';
 import { ClientDialog } from '@/components/clients/ClientDialog';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { useDebounce } from '@/hooks/useDebounce';
+import { ClientAvatar } from '@/components/clients/ClientAvatar';
+import { Pagination, PaginationContent, PaginationItem, PaginationLink } from '@/components/ui/pagination';
+import { Section } from '@/components/common/Section';
+import { SectionHeader } from '@/components/common/SectionHeader';
+import { Separator } from "@/components/ui/separator";
+import { ActionButton } from '@/components/common/ActionButton';
 
 export default function ClientManagement() {
   const [search, setSearch] = useState('');
+  const [status, setStatus] = useState<'all' | 'active' | 'inactive'>('all');
   const [selectedClientId, setSelectedClientId] = useState<string | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
-  const { clients, isLoading, deleteClient } = useClients(search);
+  const [itemsPerPage, setItemsPerPage] = useState(10);
+  
+  const debouncedSearch = useDebounce(search, 300);
+  const { clients, isLoading, deleteClient } = useClients(debouncedSearch);
+
+  // Filter clients based on status
+  const filteredClients = clients.filter(client => {
+    if (status === 'all') return true;
+    return status === 'active' ? client.is_active : !client.is_active;
+  });
 
   const handleDelete = (id: string) => {
     deleteClient.mutate(id);
@@ -29,15 +47,58 @@ export default function ClientManagement() {
 
   return (
     <div className="container mx-auto py-6">
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold">Clientes</h1>
-        <Button onClick={() => {
-          setSelectedClientId(null);
-          setDialogOpen(true);
-        }}>
-          <Plus className="h-4 w-4 mr-2" />
-          Novo Cliente
-        </Button>
+      <div className="mb-6">
+        <SectionHeader 
+          title="Clientes"
+          subtitle="Gerencie os clientes da sua empresa"
+          centered={false}
+        />
+      </div>
+
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
+        <div className="flex gap-2 w-full md:w-auto">
+          <div className="relative flex-1">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
+            <Input
+              placeholder="Buscar por nome ou ID externo"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className="pl-9 w-full md:w-[300px]"
+            />
+          </div>
+          <Select
+            value={status}
+            onValueChange={(value) => setStatus(value as 'all' | 'active' | 'inactive')}
+          >
+            <SelectTrigger className="w-[120px]">
+              <SelectValue placeholder="Status" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">Todos</SelectItem>
+              <SelectItem value="active">Ativos</SelectItem>
+              <SelectItem value="inactive">Inativos</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+
+        <div className="flex gap-2 w-full md:w-auto justify-end">
+          <ActionButton
+            variant="outline"
+            iconLeft={<FileText className="h-4 w-4" />}
+          >
+            Exportar CSV
+          </ActionButton>
+          <ActionButton 
+            onClick={() => {
+              setSelectedClientId(null);
+              setDialogOpen(true);
+            }}
+            iconLeft={<Plus className="h-4 w-4" />}
+          >
+            Novo Cliente
+          </ActionButton>
+        </div>
+
         <ClientDialog 
           open={dialogOpen}
           onOpenChange={setDialogOpen}
@@ -48,18 +109,8 @@ export default function ClientManagement() {
           clientId={selectedClientId} 
         />
       </div>
-      <div className="flex gap-2 mb-6">
-        <div className="relative flex-1">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
-          <Input
-            placeholder="Buscar por nome ou ID externo"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            className="pl-9"
-          />
-        </div>
-      </div>
-      <div className="border rounded-lg">
+
+      <div className="border rounded-lg overflow-hidden">
         <Table>
           <TableHeader>
             <TableRow>
@@ -77,19 +128,29 @@ export default function ClientManagement() {
                   Carregando clientes...
                 </TableCell>
               </TableRow>
-            ) : clients.length === 0 ? (
+            ) : filteredClients.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={5} className="text-center py-4">
-                  Nenhum cliente encontrado.
+                <TableCell colSpan={5} className="text-center py-8">
+                  <div className="flex flex-col items-center justify-center">
+                    <p className="text-muted-foreground mb-2">Nenhum cliente encontrado</p>
+                    <p className="text-sm text-muted-foreground">
+                      {search ? 'Tente ajustar sua busca' : 'Clique em "Novo Cliente" para começar'}
+                    </p>
+                  </div>
                 </TableCell>
               </TableRow>
             ) : (
-              clients.map((client) => (
-                <TableRow key={client.id}>
-                  <TableCell>{client.name}</TableCell>
+              filteredClients.map((client) => (
+                <TableRow key={client.id} className="hover:bg-muted/50">
+                  <TableCell>
+                    <div className="flex items-center gap-2">
+                      <ClientAvatar name={client.name} />
+                      <span className="font-medium">{client.name}</span>
+                    </div>
+                  </TableCell>
                   <TableCell>{client.external_id || '-'}</TableCell>
                   <TableCell>
-                    <Badge variant={client.is_active ? 'default' : 'secondary'}>
+                    <Badge variant={client.is_active ? 'success' : 'secondary'}>
                       {client.is_active ? 'Ativo' : 'Inativo'}
                     </Badge>
                   </TableCell>
@@ -106,7 +167,6 @@ export default function ClientManagement() {
                           setDialogOpen(true);
                         }}
                       >
-                        <Edit2 className="h-4 w-4 mr-2" />
                         Editar
                       </Button>
                       
@@ -117,7 +177,6 @@ export default function ClientManagement() {
                             size="sm"
                             className="text-destructive"
                           >
-                            <Trash2 className="h-4 w-4 mr-2" />
                             Excluir
                           </Button>
                         </AlertDialogTrigger>
@@ -148,6 +207,36 @@ export default function ClientManagement() {
           </TableBody>
         </Table>
       </div>
+
+      {filteredClients.length > 0 && (
+        <div className="flex items-center justify-between mt-4">
+          <div className="flex items-center gap-2 text-sm text-muted-foreground">
+            <span>Itens por página:</span>
+            <Select
+              value={itemsPerPage.toString()}
+              onValueChange={(value) => setItemsPerPage(Number(value))}
+            >
+              <SelectTrigger className="w-[80px] h-8">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="10">10</SelectItem>
+                <SelectItem value="25">25</SelectItem>
+                <SelectItem value="50">50</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
+          <Pagination>
+            <PaginationContent>
+              <PaginationItem>
+                <PaginationLink>1</PaginationLink>
+              </PaginationItem>
+              {/* Add proper pagination here */}
+            </PaginationContent>
+          </Pagination>
+        </div>
+      )}
     </div>
   );
 }

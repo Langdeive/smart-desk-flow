@@ -19,6 +19,7 @@ import {
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
+import { Switch } from '@/components/ui/switch';
 import { ContactList } from './ContactList';
 import { clientSchema, type ClientFormValues } from '@/lib/validations/client';
 import { useClients } from '@/hooks/useClients';
@@ -44,6 +45,7 @@ export function ClientDialog({ clientId, onClose, open, onOpenChange }: ClientDi
       name: '',
       external_id: '',
       notes: '',
+      is_active: true,
       contacts: []
     }
   });
@@ -53,7 +55,9 @@ export function ClientDialog({ clientId, onClose, open, onOpenChange }: ClientDi
       form.reset({
         name: client.name,
         external_id: client.external_id || '',
-        notes: client.notes || ''
+        notes: client.notes || '',
+        is_active: client.is_active !== false, // Default to true if undefined
+        contacts: []
       });
     } else {
       // Reset form when opening for a new client
@@ -61,6 +65,7 @@ export function ClientDialog({ clientId, onClose, open, onOpenChange }: ClientDi
         name: '',
         external_id: '',
         notes: '',
+        is_active: true,
         contacts: []
       });
     }
@@ -84,21 +89,15 @@ export function ClientDialog({ clientId, onClose, open, onOpenChange }: ClientDi
     if (clientId) {
       await updateClient.mutateAsync({ 
         id: clientId, 
-        name: data.name,
-        external_id: data.external_id,
-        notes: data.notes,
-        contacts: data.contacts
+        ...data
       });
     } else {
-      await createClient.mutateAsync({
-        name: data.name,
-        external_id: data.external_id,
-        notes: data.notes,
-        contacts: data.contacts
-      });
+      await createClient.mutateAsync(data);
     }
     onClose?.();
   };
+
+  const isPending = createClient.isPending || updateClient.isPending;
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -152,6 +151,28 @@ export function ClientDialog({ clientId, onClose, open, onOpenChange }: ClientDi
               )}
             />
 
+            {clientId && (
+              <FormField
+                control={form.control}
+                name="is_active"
+                render={({ field }) => (
+                  <FormItem className="flex items-center justify-between rounded-lg border p-4">
+                    <div className="space-y-0.5">
+                      <FormLabel className="text-base">
+                        Cliente ativo
+                      </FormLabel>
+                    </div>
+                    <FormControl>
+                      <Switch
+                        checked={field.value}
+                        onCheckedChange={field.onChange}
+                      />
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
+            )}
+
             <div className="space-y-4">
               <div className="flex justify-between items-center">
                 <h3 className="text-lg font-medium">Contatos</h3>
@@ -183,9 +204,9 @@ export function ClientDialog({ clientId, onClose, open, onOpenChange }: ClientDi
               </Button>
               <Button 
                 type="submit" 
-                disabled={createClient.isPending || updateClient.isPending}
+                disabled={isPending}
               >
-                {clientId ? 'Atualizar' : 'Criar'}
+                {isPending ? 'Salvando...' : clientId ? 'Atualizar' : 'Criar'}
               </Button>
             </div>
           </form>

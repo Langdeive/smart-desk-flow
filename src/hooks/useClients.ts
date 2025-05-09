@@ -83,11 +83,15 @@ export const useClients = (search?: string) => {
         .update({
           name: data.name,
           external_id: data.external_id,
-          notes: data.notes
+          notes: data.notes,
+          is_active: data.is_active
         })
         .eq('id', id);
 
       if (error) throw error;
+
+      // Handle contacts separately - this would involve additional logic to
+      // determine which contacts to add, update, or remove
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['clients'] });
