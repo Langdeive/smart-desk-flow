@@ -6,7 +6,6 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import Logo from '@/components/ui/logo';
 import { Navbar } from '@/components/layout/Navbar';
-
 export default function Index() {
   // Scroll reveal effect
   useEffect(() => {
@@ -29,7 +28,6 @@ export default function Index() {
       });
     };
   }, []);
-  
   return <div className="min-h-screen">
       <Navbar />
       <div className="pt-20"> {/* Add padding to compensate for fixed navbar */}
@@ -165,7 +163,7 @@ export default function Index() {
         {/* Funcionalidades-estrela */}
         <section className="py-16 section-spacing section-white">
           <div className="container mx-auto px-4">
-            <h2 className="text-2xl md:text-3xl font-bold font-manrope text-center mb-4">Funcionalidades-estrela</h2>
+            <h2 className="text-2xl md:text-3xl font-bold font-manrope text-center mb-4">Funcionalidades</h2>
             <p className="text-lg text-muted-foreground text-center max-w-2xl mx-auto mb-12 readable-width">
               Ferramentas poderosas que transformam seu atendimento
             </p>
