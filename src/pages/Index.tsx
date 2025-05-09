@@ -6,6 +6,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import Logo from '@/components/ui/logo';
 import { Navbar } from '@/components/layout/Navbar';
+
 export default function Index() {
   // Scroll reveal effect
   useEffect(() => {
