@@ -1,4 +1,3 @@
-
 import React, { useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
@@ -56,7 +55,7 @@ export default function Index() {
               </div>
             </div>
             <div className="mt-6">
-              <img src="/lovable-uploads/b566d515-d82e-4f1c-af28-0e2d1e91140d.png" alt="Support specialist" className="hero-dashboard-image h-80" />
+              
             </div>
           </div>
         </section>
