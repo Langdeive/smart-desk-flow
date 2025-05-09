@@ -1,3 +1,4 @@
+
 #root {
   max-width: 1280px;
   margin: 0 auto;
@@ -143,8 +144,9 @@ a:focus-visible, button:focus-visible {
   background: radial-gradient(circle at center, rgba(213, 246, 243, 0.3) 0%, rgba(255, 255, 255, 0) 70%);
 }
 
+/* Corrigido: Aplicando radial gradient nas seções alternadas */
 .section-alt {
-  background: #F9FAFB;
+  background: radial-gradient(circle at center, rgba(213, 246, 243, 0.3) 0%, rgba(255, 255, 255, 0) 70%), #F9FAFB;
 }
 
 .section-white {

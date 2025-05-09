@@ -31,11 +31,11 @@ export default function Index() {
   return <div className="min-h-screen">
       <Navbar />
       <div className="pt-20"> {/* Add padding to compensate for fixed navbar */}
-        {/* Hero Section - Height reduced */}
+        {/* Hero Section - Modificado para alinhar à esquerda com imagem à direita */}
         <section className="container mx-auto py-16 px-4 hero-gradient">
-          <div className="flex flex-col items-center text-center max-w-4xl mx-auto">
-            <div className="space-y-6 mb-8">
-              <div className="readable-width mx-auto">
+          <div className="flex flex-col md:flex-row items-center gap-8">
+            <div className="space-y-6 text-left md:w-1/2">
+              <div>
                 <h1 className="text-3xl md:text-4xl font-bold font-manrope tracking-tight mb-4">
                   Atendimento ágil sem contratar mais gente
                 </h1>
@@ -43,7 +43,7 @@ export default function Index() {
                   Centralize atendimentos, deixe a IA classificar chamados e transforme cada solução em conhecimento sem frear sua equipe.
                 </p>
               </div>
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <div className="flex flex-col sm:flex-row gap-4">
                 <Button asChild size="lg" className="bg-gradient-to-r from-primary-b to-primary-b-600 shadow-md hover:shadow-lg transition-all">
                   <Link to="/register" className="px-6 py-3">
                     Teste grátis por 14 dias <ArrowRight className="ml-2 h-4 w-4" />
@@ -54,8 +54,12 @@ export default function Index() {
                 </Button>
               </div>
             </div>
-            <div className="mt-6">
-              
+            <div className="md:w-1/2 flex justify-center md:justify-end">
+              <img 
+                src="/lovable-uploads/a9745599-7fd2-4a87-a7bf-e46917dec514.png" 
+                alt="Profissional de TI" 
+                className="max-w-full md:max-w-md h-auto"
+              />
             </div>
           </div>
         </section>
