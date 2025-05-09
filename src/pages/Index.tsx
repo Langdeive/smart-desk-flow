@@ -72,12 +72,7 @@ export default function Index() {
               <p className="text-lg text-muted-foreground mb-6">
                 Equipes de TI no Brasil já confiam na SolveFlow.
               </p>
-              <div className="flex flex-wrap justify-center gap-8 opacity-70 bg-gray-100 py-6 px-4 w-full rounded-lg">
-                <img src="/lovable-uploads/logo-placeholder-1.png" alt="Cliente" className="h-8" />
-                <img src="/lovable-uploads/logo-placeholder-2.png" alt="Cliente" className="h-8" />
-                <img src="/lovable-uploads/logo-placeholder-3.png" alt="Cliente" className="h-8" />
-                <img src="/lovable-uploads/logo-placeholder-4.png" alt="Cliente" className="h-8" />
-              </div>
+              
             </div>
           </div>
         </section>
