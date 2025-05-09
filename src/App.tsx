@@ -4,10 +4,11 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AppLayout } from "./components/layout/AppLayout";
 import { PlanSelectProvider } from "./contexts/PlanSelectContext";
 import { ThemeProvider } from "./hooks/use-theme";
+import { RequireAuth } from "./components/auth/RequireAuth";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import Login from "./pages/Login";
@@ -37,15 +38,47 @@ const App = () => {
               <Routes>
                 <Route element={<AppLayout />}>
                   <Route path="/" element={<Index />} />
-                  <Route path="/dashboard" element={<Dashboard />} />
-                  <Route path="/tickets" element={<TicketDashboard />} />
-                  <Route path="/tickets/new" element={<CreateTicket />} />
-                  <Route path="/tickets/:id" element={<TicketDetail />} />
-                  <Route path="/knowledge" element={<KnowledgeBase />} />
-                  <Route path="/settings" element={<Settings />} />
                   <Route path="/selecionar-plano" element={<PlanSelect />} />
-                  <Route path="/configuracoes/agentes" element={<AgentManagement />} />
-                  <Route path="/configuracoes/clientes" element={<ClientManagement />} />
+                  <Route path="/dashboard" element={
+                    <RequireAuth>
+                      <Dashboard />
+                    </RequireAuth>
+                  } />
+                  <Route path="/tickets" element={
+                    <RequireAuth>
+                      <TicketDashboard />
+                    </RequireAuth>
+                  } />
+                  <Route path="/tickets/new" element={
+                    <RequireAuth>
+                      <CreateTicket />
+                    </RequireAuth>
+                  } />
+                  <Route path="/tickets/:id" element={
+                    <RequireAuth>
+                      <TicketDetail />
+                    </RequireAuth>
+                  } />
+                  <Route path="/knowledge" element={
+                    <RequireAuth>
+                      <KnowledgeBase />
+                    </RequireAuth>
+                  } />
+                  <Route path="/settings" element={
+                    <RequireAuth>
+                      <Settings />
+                    </RequireAuth>
+                  } />
+                  <Route path="/configuracoes/agentes" element={
+                    <RequireAuth allowedRoles={['admin']}>
+                      <AgentManagement />
+                    </RequireAuth>
+                  } />
+                  <Route path="/configuracoes/clientes" element={
+                    <RequireAuth>
+                      <ClientManagement />
+                    </RequireAuth>
+                  } />
                 </Route>
                 <Route path="/login" element={<Login />} />
                 <Route path="/register" element={<Register />} />

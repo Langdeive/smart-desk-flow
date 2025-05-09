@@ -10,8 +10,8 @@ export function AppLayout() {
   const [showSidebar, setShowSidebar] = useState(false);
   const location = useLocation();
 
-  // Remover Sidebar e barra superior na landing page "/"
-  const isLanding = location.pathname === "/";
+  // Remover Sidebar e barra superior na landing page "/" e na página de seleção de plano
+  const isLanding = location.pathname === "/" || location.pathname === "/selecionar-plano";
 
   return (
     <div className="min-h-screen flex flex-col">
