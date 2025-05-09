@@ -55,11 +55,7 @@ export default function Index() {
               </div>
             </div>
             <div className="md:w-1/2 flex justify-center md:justify-end">
-              <img 
-                src="/lovable-uploads/a9745599-7fd2-4a87-a7bf-e46917dec514.png" 
-                alt="Profissional de TI" 
-                className="max-w-full md:max-w-md h-auto"
-              />
+              <img src="/lovable-uploads/a9745599-7fd2-4a87-a7bf-e46917dec514.png" alt="Profissional de TI" className="max-w-80 md:max-w-md h-auto " />
             </div>
           </div>
         </section>
