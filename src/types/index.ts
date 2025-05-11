@@ -1,3 +1,4 @@
+
 export type User = {
   id: string;
   email: string;
@@ -127,3 +128,6 @@ export type ClientFormData = {
   is_active?: boolean;
   contacts: ContactInput[];
 };
+
+// Export the ContactFormValues type from our validation schema
+export type { ContactFormValues, ClientFormValues } from "@/lib/validations/client";

@@ -25,7 +25,7 @@ import { clientSchema, type ClientFormValues } from '@/lib/validations/client';
 import { useClients } from '@/hooks/useClients';
 import { ContactDialog } from './ContactDialog';
 import { useClientContacts } from '@/hooks/useClientContacts';
-import { Client } from '@/types';
+import { Client, ClientFormData } from '@/types';
 
 interface ClientDialogProps {
   clientId?: string | null;
@@ -86,13 +86,22 @@ export function ClientDialog({ clientId, onClose, open, onOpenChange }: ClientDi
   }, [existingContacts, clientId, form]);
 
   const onSubmit = async (data: ClientFormValues) => {
+    // Ensure data has a non-optional name property as required by ClientFormData
+    const clientData: ClientFormData = {
+      name: data.name, // This is required by the schema
+      external_id: data.external_id,
+      notes: data.notes,
+      is_active: data.is_active,
+      contacts: data.contacts || []
+    };
+
     if (clientId) {
       await updateClient.mutateAsync({ 
         id: clientId, 
-        ...data
+        ...clientData
       });
     } else {
-      await createClient.mutateAsync(data);
+      await createClient.mutateAsync(clientData);
     }
     onClose?.();
   };

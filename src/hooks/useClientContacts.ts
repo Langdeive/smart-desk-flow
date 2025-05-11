@@ -2,7 +2,8 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
-import { ClientContact, ContactFormValues } from '@/types';
+import { ClientContact } from '@/types';
+import { ContactFormValues } from '@/lib/validations/client';
 
 export const useClientContacts = (clientId?: string) => {
   const queryClient = useQueryClient();
