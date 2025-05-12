@@ -21,6 +21,7 @@ import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
 import { Plus } from 'lucide-react';
 import { contactSchema, type ContactFormValues } from '@/lib/validations/client';
+import { useState } from 'react';
 
 interface ContactDialogProps {
   contact?: ContactFormValues;
@@ -28,6 +29,8 @@ interface ContactDialogProps {
 }
 
 export function ContactDialog({ contact, onSubmit }: ContactDialogProps) {
+  const [open, setOpen] = useState(false);
+
   const form = useForm<ContactFormValues>({
     resolver: zodResolver(contactSchema),
     defaultValues: contact || {
@@ -41,10 +44,11 @@ export function ContactDialog({ contact, onSubmit }: ContactDialogProps) {
   const handleSubmit = (data: ContactFormValues) => {
     onSubmit(data);
     form.reset();
+    setOpen(false); // Fechar o modal após a submissão
   };
 
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button variant="outline">
           <Plus className="h-4 w-4 mr-2" />

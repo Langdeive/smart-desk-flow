@@ -1,5 +1,5 @@
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { 
@@ -38,6 +38,7 @@ export function ClientDialog({ clientId, onClose, open, onOpenChange }: ClientDi
   const { clients, createClient, updateClient } = useClients();
   const { contacts: existingContacts, isLoading: contactsLoading } = useClientContacts(clientId || undefined);
   const client = clients?.find(c => c.id === clientId) as Client | undefined;
+  const [contacts, setContacts] = useState<ClientFormValues['contacts']>([]);
 
   const form = useForm<ClientFormValues>({
     resolver: zodResolver(clientSchema),
@@ -69,6 +70,8 @@ export function ClientDialog({ clientId, onClose, open, onOpenChange }: ClientDi
         contacts: []
       });
     }
+    // Reset the contacts state when the dialog opens/closes
+    setContacts([]);
   }, [client, form, open]);
 
   useEffect(() => {
@@ -79,11 +82,34 @@ export function ClientDialog({ clientId, onClose, open, onOpenChange }: ClientDi
         phone: contact.phone || undefined,
         is_primary: contact.is_primary
       }));
+      setContacts(mappedContacts);
       form.setValue('contacts', mappedContacts);
-    } else {
+    } else if (open && !clientId) {
+      // For new clients, ensure we start with an empty contacts array
+      setContacts([]);
       form.setValue('contacts', []);
     }
-  }, [existingContacts, clientId, form]);
+  }, [existingContacts, clientId, form, open]);
+
+  const handleAddContact = (contact: ClientFormValues['contacts'][0]) => {
+    const updatedContacts = [...contacts, contact];
+    setContacts(updatedContacts);
+    form.setValue('contacts', updatedContacts);
+  };
+
+  const handleDeleteContact = (index: number) => {
+    const updatedContacts = [...contacts];
+    updatedContacts.splice(index, 1);
+    setContacts(updatedContacts);
+    form.setValue('contacts', updatedContacts);
+  };
+
+  const handleEditContact = (index: number, updatedContact: ClientFormValues['contacts'][0]) => {
+    const updatedContacts = [...contacts];
+    updatedContacts[index] = updatedContact;
+    setContacts(updatedContacts);
+    form.setValue('contacts', updatedContacts);
+  };
 
   const onSubmit = async (data: ClientFormValues) => {
     // Ensure data has a non-optional name property as required by ClientFormData
@@ -186,24 +212,13 @@ export function ClientDialog({ clientId, onClose, open, onOpenChange }: ClientDi
               <div className="flex justify-between items-center">
                 <h3 className="text-lg font-medium">Contatos</h3>
                 <ContactDialog
-                  onSubmit={(contact) => {
-                    const contacts = form.getValues('contacts');
-                    form.setValue('contacts', [...contacts, contact]);
-                  }}
+                  onSubmit={handleAddContact}
                 />
               </div>
               <ContactList
-                contacts={form.watch('contacts')}
-                onDelete={(index) => {
-                  const contacts = form.getValues('contacts');
-                  contacts.splice(index, 1);
-                  form.setValue('contacts', contacts);
-                }}
-                onEdit={(index, contact) => {
-                  const contacts = form.getValues('contacts');
-                  contacts[index] = contact;
-                  form.setValue('contacts', contacts);
-                }}
+                contacts={contacts}
+                onDelete={handleDeleteContact}
+                onEdit={handleEditContact}
               />
             </div>
 
