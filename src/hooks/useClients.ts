@@ -14,19 +14,28 @@ export const useClients = (search?: string) => {
     queryFn: async () => {
       if (!companyId) return [];
 
-      const query = supabase
+      let query = supabase
         .from('clients')
         .select('*')
-        .eq('company_id', companyId)
         .order('name');
+      
+      // Apply company_id filter directly without using `.eq` to avoid potential RLS issues
+      if (companyId) {
+        query = query.filter('company_id', 'eq', companyId);
+      }
 
+      // Apply search filter if provided
       if (search) {
-        query.or(`name.ilike.%${search}%,external_id.ilike.%${search}%`);
+        query = query.or(`name.ilike.%${search}%,external_id.ilike.%${search}%`);
       }
 
       const { data, error } = await query;
 
-      if (error) throw error;
+      if (error) {
+        console.error('Error fetching clients:', error);
+        throw error;
+      }
+      
       return data as Client[];
     },
     enabled: !!companyId

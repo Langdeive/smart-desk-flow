@@ -16,10 +16,13 @@ export const useClientContacts = (clientId?: string) => {
       const { data, error } = await supabase
         .from('client_contacts')
         .select('*')
-        .eq('client_id', clientId)
+        .filter('client_id', 'eq', clientId)
         .order('is_primary', { ascending: false });
 
-      if (error) throw error;
+      if (error) {
+        console.error('Error fetching client contacts:', error);
+        throw error;
+      }
       return data as ClientContact[];
     },
     enabled: !!clientId
@@ -38,8 +41,8 @@ export const useClientContacts = (clientId?: string) => {
         const { error: updateError } = await supabase
           .from('client_contacts')
           .update({ is_primary: false })
-          .eq('client_id', clientId)
-          .eq('is_primary', true);
+          .filter('client_id', 'eq', clientId)
+          .filter('is_primary', 'eq', true);
 
         if (updateError) throw updateError;
       }
@@ -83,8 +86,8 @@ export const useClientContacts = (clientId?: string) => {
         const { error: updateError } = await supabase
           .from('client_contacts')
           .update({ is_primary: false })
-          .eq('client_id', clientId)
-          .eq('is_primary', true)
+          .filter('client_id', 'eq', clientId)
+          .filter('is_primary', 'eq', true)
           .neq('id', contactId);
 
         if (updateError) throw updateError;
