@@ -4,6 +4,8 @@ import { Button } from '@/components/ui/button';
 import { Edit2, Trash2 } from 'lucide-react';
 import { ContactDialog } from './ContactDialog';
 import type { ContactFormValues } from '@/lib/validations/client';
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { AlertTriangle } from 'lucide-react';
 
 interface ContactListProps {
   contacts: ContactFormValues[];
@@ -14,9 +16,12 @@ interface ContactListProps {
 export function ContactList({ contacts, onDelete, onEdit }: ContactListProps) {
   if (contacts.length === 0) {
     return (
-      <div className="text-center p-4 text-muted-foreground">
-        Nenhum contato adicionado
-      </div>
+      <Alert variant="destructive" className="bg-destructive/10 border-destructive/30">
+        <AlertTriangle className="h-4 w-4 text-destructive" />
+        <AlertDescription className="text-destructive">
+          É necessário adicionar pelo menos um contato para o cliente.
+        </AlertDescription>
+      </Alert>
     );
   }
 

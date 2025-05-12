@@ -26,6 +26,7 @@ import { useClients } from '@/hooks/useClients';
 import { ContactDialog } from './ContactDialog';
 import { useClientContacts } from '@/hooks/useClientContacts';
 import { Client, ClientFormData } from '@/types';
+import { toast } from 'sonner';
 
 interface ClientDialogProps {
   clientId?: string | null;
@@ -92,6 +93,7 @@ export function ClientDialog({ clientId, onClose, open, onOpenChange }: ClientDi
   }, [existingContacts, clientId, form, open]);
 
   const handleAddContact = (contact: ClientFormValues['contacts'][0]) => {
+    console.log("Adding contact:", contact);
     const updatedContacts = [...contacts, contact];
     setContacts(updatedContacts);
     form.setValue('contacts', updatedContacts);
@@ -112,6 +114,12 @@ export function ClientDialog({ clientId, onClose, open, onOpenChange }: ClientDi
   };
 
   const onSubmit = async (data: ClientFormValues) => {
+    // Check if there are contacts
+    if (!data.contacts || data.contacts.length === 0) {
+      toast.error("É necessário adicionar pelo menos um contato");
+      return;
+    }
+    
     // Ensure data has a non-optional name property as required by ClientFormData
     const clientData: ClientFormData = {
       name: data.name, // This is required by the schema
@@ -121,15 +129,20 @@ export function ClientDialog({ clientId, onClose, open, onOpenChange }: ClientDi
       contacts: data.contacts || []
     };
 
-    if (clientId) {
-      await updateClient.mutateAsync({ 
-        id: clientId, 
-        ...clientData
-      });
-    } else {
-      await createClient.mutateAsync(clientData);
+    try {
+      if (clientId) {
+        await updateClient.mutateAsync({ 
+          id: clientId, 
+          ...clientData
+        });
+      } else {
+        await createClient.mutateAsync(clientData);
+      }
+      onClose?.();
+    } catch (error) {
+      console.error("Error saving client:", error);
+      toast.error("Erro ao salvar cliente. Tente novamente.");
     }
-    onClose?.();
   };
 
   const isPending = createClient.isPending || updateClient.isPending;
@@ -215,10 +228,19 @@ export function ClientDialog({ clientId, onClose, open, onOpenChange }: ClientDi
                   onSubmit={handleAddContact}
                 />
               </div>
-              <ContactList
-                contacts={contacts}
-                onDelete={handleDeleteContact}
-                onEdit={handleEditContact}
+              <FormField
+                control={form.control}
+                name="contacts"
+                render={() => (
+                  <FormItem>
+                    <ContactList
+                      contacts={contacts}
+                      onDelete={handleDeleteContact}
+                      onEdit={handleEditContact}
+                    />
+                    <FormMessage />
+                  </FormItem>
+                )}
               />
             </div>
 
