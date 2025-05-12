@@ -92,6 +92,8 @@ export function ClientDialog({ clientId, onClose, open, onOpenChange }: ClientDi
       }));
       setContacts(mappedContacts);
       form.setValue('contacts', mappedContacts);
+      // Trigger validation after setting contacts
+      form.trigger('contacts');
     }
   }, [existingContacts, clientId, form]);
 

@@ -78,6 +78,7 @@ export const useClients = (search?: string) => {
 
   const updateClient = useMutation({
     mutationFn: async ({ id, ...data }: ClientFormData & { id: string }) => {
+      // Update client basic info
       const { error } = await supabase
         .from('clients')
         .update({
@@ -90,11 +91,32 @@ export const useClients = (search?: string) => {
 
       if (error) throw error;
 
-      // Handle contacts separately - this would involve additional logic to
-      // determine which contacts to add, update, or remove
+      // Handle contacts - first delete all existing contacts
+      if (data.contacts && data.contacts.length > 0) {
+        const { error: deleteError } = await supabase
+          .from('client_contacts')
+          .delete()
+          .eq('client_id', id);
+          
+        if (deleteError) throw deleteError;
+        
+        // Then insert the new/updated contacts
+        const { error: contactsError } = await supabase
+          .from('client_contacts')
+          .insert(
+            data.contacts.map((contact, index) => ({
+              ...contact,
+              client_id: id,
+              is_primary: index === 0 || contact.is_primary
+            }))
+          );
+          
+        if (contactsError) throw contactsError;
+      }
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['clients'] });
+      queryClient.invalidateQueries({ queryKey: ['client-contacts'] });
       toast.success('Cliente atualizado com sucesso');
     },
     onError: (error) => {

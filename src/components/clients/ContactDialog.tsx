@@ -1,5 +1,5 @@
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { 
@@ -22,7 +22,6 @@ import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
 import { Plus, Edit2 } from 'lucide-react';
 import { contactSchema, type ContactFormValues } from '@/lib/validations/client';
-import { useState } from 'react';
 
 interface ContactDialogProps {
   contact?: ContactFormValues;
