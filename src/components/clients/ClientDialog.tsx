@@ -53,29 +53,36 @@ export function ClientDialog({ clientId, onClose, open, onOpenChange }: ClientDi
   });
 
   useEffect(() => {
-    if (client) {
-      form.reset({
-        name: client.name,
-        external_id: client.external_id || '',
-        notes: client.notes || '',
-        is_active: client.is_active !== false, // Default to true if undefined
-        contacts: []
-      });
-    } else {
-      // Reset form when opening for a new client
-      form.reset({
-        name: '',
-        external_id: '',
-        notes: '',
-        is_active: true,
-        contacts: []
-      });
+    // Reset form when opening the dialog
+    if (open) {
+      if (client) {
+        form.reset({
+          name: client.name,
+          external_id: client.external_id || '',
+          notes: client.notes || '',
+          is_active: client.is_active !== false, // Default to true if undefined
+          contacts: []
+        });
+      } else {
+        // Reset form when opening for a new client
+        form.reset({
+          name: '',
+          external_id: '',
+          notes: '',
+          is_active: true,
+          contacts: []
+        });
+      }
+      // Reset the contacts state when the dialog opens
+      if (!clientId) {
+        setContacts([]);
+        form.setValue('contacts', []);
+      }
     }
-    // Reset the contacts state when the dialog opens/closes
-    setContacts([]);
-  }, [client, form, open]);
+  }, [client, form, open, clientId]);
 
   useEffect(() => {
+    // Load existing contacts when editing a client
     if (existingContacts && existingContacts.length > 0 && clientId) {
       const mappedContacts = existingContacts.map(contact => ({
         name: contact.name || undefined,
@@ -85,18 +92,21 @@ export function ClientDialog({ clientId, onClose, open, onOpenChange }: ClientDi
       }));
       setContacts(mappedContacts);
       form.setValue('contacts', mappedContacts);
-    } else if (open && !clientId) {
-      // For new clients, ensure we start with an empty contacts array
-      setContacts([]);
-      form.setValue('contacts', []);
     }
-  }, [existingContacts, clientId, form, open]);
+  }, [existingContacts, clientId, form]);
 
   const handleAddContact = (contact: ClientFormValues['contacts'][0]) => {
-    console.log("Adding contact:", contact);
+    console.log("Adding contact to ClientDialog:", contact);
+    
+    // Ensure we're working with a new array instance to trigger re-render
     const updatedContacts = [...contacts, contact];
     setContacts(updatedContacts);
+    
+    // Update the form value to ensure validation works correctly
     form.setValue('contacts', updatedContacts);
+    
+    // Trigger form validation to refresh error messages
+    form.trigger('contacts');
   };
 
   const handleDeleteContact = (index: number) => {
@@ -104,6 +114,7 @@ export function ClientDialog({ clientId, onClose, open, onOpenChange }: ClientDi
     updatedContacts.splice(index, 1);
     setContacts(updatedContacts);
     form.setValue('contacts', updatedContacts);
+    form.trigger('contacts');
   };
 
   const handleEditContact = (index: number, updatedContact: ClientFormValues['contacts'][0]) => {
@@ -111,6 +122,7 @@ export function ClientDialog({ clientId, onClose, open, onOpenChange }: ClientDi
     updatedContacts[index] = updatedContact;
     setContacts(updatedContacts);
     form.setValue('contacts', updatedContacts);
+    form.trigger('contacts');
   };
 
   const onSubmit = async (data: ClientFormValues) => {
@@ -157,6 +169,7 @@ export function ClientDialog({ clientId, onClose, open, onOpenChange }: ClientDi
         </DialogHeader>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+            {/* Basic client information fields */}
             <FormField
               control={form.control}
               name="name"
@@ -221,6 +234,7 @@ export function ClientDialog({ clientId, onClose, open, onOpenChange }: ClientDi
               />
             )}
 
+            {/* Contacts section */}
             <div className="space-y-4">
               <div className="flex justify-between items-center">
                 <h3 className="text-lg font-medium">Contatos</h3>

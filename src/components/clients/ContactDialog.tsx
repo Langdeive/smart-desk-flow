@@ -1,4 +1,5 @@
 
+import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { 
@@ -19,7 +20,7 @@ import {
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
-import { Plus } from 'lucide-react';
+import { Plus, Edit2 } from 'lucide-react';
 import { contactSchema, type ContactFormValues } from '@/lib/validations/client';
 import { useState } from 'react';
 
@@ -31,6 +32,7 @@ interface ContactDialogProps {
 export function ContactDialog({ contact, onSubmit }: ContactDialogProps) {
   const [open, setOpen] = useState(false);
 
+  // Set up the form with default values or existing contact values
   const form = useForm<ContactFormValues>({
     resolver: zodResolver(contactSchema),
     defaultValues: contact || {
@@ -41,17 +43,34 @@ export function ContactDialog({ contact, onSubmit }: ContactDialogProps) {
     }
   });
 
+  // Reset form when dialog opens with a different contact
+  useEffect(() => {
+    if (open) {
+      form.reset(contact || {
+        name: '',
+        email: '',
+        phone: '',
+        is_primary: false
+      });
+    }
+  }, [contact, form, open]);
+
   const handleSubmit = (data: ContactFormValues) => {
+    console.log("ContactDialog submitting:", data);
     onSubmit(data);
     form.reset();
-    setOpen(false); // Fechar o modal após a submissão
+    setOpen(false); // Close the modal after submission
   };
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button variant="outline">
-          <Plus className="h-4 w-4 mr-2" />
+          {contact ? (
+            <Edit2 className="h-4 w-4 mr-2" />
+          ) : (
+            <Plus className="h-4 w-4 mr-2" />
+          )}
           {contact ? 'Editar Contato' : 'Novo Contato'}
         </Button>
       </DialogTrigger>
@@ -70,7 +89,7 @@ export function ContactDialog({ contact, onSubmit }: ContactDialogProps) {
                 <FormItem>
                   <FormLabel>Nome</FormLabel>
                   <FormControl>
-                    <Input placeholder="Nome do contato" {...field} />
+                    <Input placeholder="Nome do contato" {...field} value={field.value || ''} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -87,7 +106,8 @@ export function ContactDialog({ contact, onSubmit }: ContactDialogProps) {
                     <Input 
                       type="email" 
                       placeholder="E-mail do contato" 
-                      {...field} 
+                      {...field}
+                      value={field.value || ''} 
                     />
                   </FormControl>
                   <FormMessage />
@@ -102,7 +122,11 @@ export function ContactDialog({ contact, onSubmit }: ContactDialogProps) {
                 <FormItem>
                   <FormLabel>Telefone</FormLabel>
                   <FormControl>
-                    <Input placeholder="Telefone do contato" {...field} />
+                    <Input 
+                      placeholder="Telefone do contato" 
+                      {...field} 
+                      value={field.value || ''}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -121,7 +145,7 @@ export function ContactDialog({ contact, onSubmit }: ContactDialogProps) {
                   </div>
                   <FormControl>
                     <Switch
-                      checked={field.value}
+                      checked={field.value || false}
                       onCheckedChange={field.onChange}
                     />
                   </FormControl>
