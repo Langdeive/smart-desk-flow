@@ -64,12 +64,23 @@
   margin-left: auto;
 }
 
-/* AI agents image in features section */
-.ai-agents-image {
-  max-width: 100%;
-  border-radius: 1rem;
-  margin: 1.5rem auto;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+/* Feature items styling */
+.feature-item {
+  position: relative;
+  z-index: 10;
+  backdrop-filter: blur(4px);
+  transition: all 0.3s ease;
+}
+
+.feature-item:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.07);
+}
+
+/* Features container with the gradient overlay */
+.features-container {
+  min-height: 500px;
+  position: relative;
 }
 
 /* Scroll reveal animations */
@@ -128,7 +139,7 @@ a:focus-visible, button:focus-visible {
   background-color: #F0FDF4;
 }
 
-/* Seção alternada com fundo e gradiente - modificada com gradiente mais forte e da esquerda para direita */
+/* Seção alternada com fundo e gradiente */
 section.section-alt {
   background-image: linear-gradient(to right, rgba(213, 246, 243, 1) 0%, rgba(255, 255, 255, 0) 100%);
   background-color: #F9FAFB;

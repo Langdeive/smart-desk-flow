@@ -8,6 +8,7 @@ import Logo from '@/components/ui/logo';
 import { Navbar } from '@/components/layout/Navbar';
 import { Section } from '@/components/common/Section';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import { FeatureCard } from '@/components/common/FeatureCard';
 
 export default function Index() {
   // Scroll reveal effect
@@ -161,34 +162,62 @@ export default function Index() {
           </div>
         </Section>
 
-        {/* Funcionalidades-estrela - Reorganizado para imagem à direita e funcionalidades à esquerda em coluna */}
-        <Section className="py-16 section-spacing section-white">
-          <h2 className="text-2xl md:text-3xl font-bold font-manrope text-center mb-4">Funcionalidades</h2>
-          <p className="text-lg text-muted-foreground text-center max-w-2xl mx-auto mb-12 readable-width">
-            Ferramentas poderosas que transformam seu atendimento
-          </p>
-          
-          <div className="flex flex-col md:flex-row gap-8 items-center">
-            {/* Funcionalidades à esquerda em formato de coluna */}
-            <div className="md:w-1/2 order-1">
-              <div className="grid grid-cols-1 gap-6 scroll-reveal">
-                <FeatureCard icon={<Search className="h-6 w-6" />} title="Triagem Inteligente" description="Prioriza e completa chamados automaticamente." />
-                
-                <FeatureCard icon={<MessageCircle className="h-6 w-6" />} title="Auto-respostas" description="Sugestões baseadas em casos já resolvidos." />
-                
-                <FeatureCard icon={<CheckCircle className="h-6 w-6" />} title="Base Viva" description="Helena transforma cada resolução em artigo pesquisável." />
-                
-                <FeatureCard icon={<BarChart className="h-6 w-6" />} title="Relatórios Smart" description="Tempo médio, gargalos e tendências em um clique." />
-              </div>
-            </div>
+        {/* Funcionalidades - Redesenhado para uma apresentação mais visual */}
+        <Section className="py-16 section-spacing section-white overflow-hidden">
+          <div className="container mx-auto">
+            <h2 className="text-2xl md:text-3xl font-bold font-manrope text-center mb-4">Funcionalidades</h2>
+            <p className="text-lg text-muted-foreground text-center max-w-2xl mx-auto mb-12 readable-width">
+              Ferramentas poderosas que transformam seu atendimento
+            </p>
             
-            {/* Imagem à direita */}
-            <div className="md:w-1/2 scroll-reveal order-2">
-              <img 
-                src="/lovable-uploads/f8c16f45-5bec-4d68-b002-42962d124d55.png" 
-                alt="Equipe de IA - Laura, Ricardo e Helena" 
-                className="ai-agents-image w-full" 
-              />
+            <div className="features-container relative">
+              {/* Imagem dos agentes com efeito de sobreposição e gradiente */}
+              <div className="hidden lg:block absolute right-0 top-1/2 transform -translate-y-1/2 w-1/2 h-full z-10">
+                <div className="relative h-full w-full">
+                  <div className="absolute -left-24 top-0 bottom-0 w-48 bg-gradient-to-r from-white to-transparent z-20"></div>
+                  <img 
+                    src="/lovable-uploads/f8c16f45-5bec-4d68-b002-42962d124d55.png" 
+                    alt="Equipe de IA - Laura, Ricardo e Helena" 
+                    className="h-auto max-h-[500px] object-contain ml-auto absolute right-0 top-1/2 transform -translate-y-1/2"
+                  />
+                </div>
+              </div>
+              
+              {/* Grid de funcionalidades */}
+              <div className="grid grid-cols-1 lg:grid-cols-1 lg:w-3/5 gap-6 scroll-reveal relative z-30">
+                <FeatureItem 
+                  icon={<Search className="h-5 w-5" />} 
+                  title="Triagem Inteligente" 
+                  description="Laura identifica prioridade, classifica e coleta o que estiver faltando automaticamente." 
+                />
+                
+                <FeatureItem 
+                  icon={<MessageCircle className="h-5 w-5" />} 
+                  title="Auto-respostas" 
+                  description="Ricardo sugere respostas inteligentes baseadas em casos já resolvidos com sucesso." 
+                />
+                
+                <FeatureItem 
+                  icon={<CheckCircle className="h-5 w-5" />} 
+                  title="Base Viva" 
+                  description="Helena transforma cada resolução em artigo pesquisável, ampliando o conhecimento da sua equipe." 
+                />
+                
+                <FeatureItem 
+                  icon={<BarChart className="h-5 w-5" />} 
+                  title="Relatórios Smart" 
+                  description="Visualize tempo médio de resposta, gargalos e tendências em tempo real com um só clique." 
+                />
+              </div>
+              
+              {/* Versão móvel da imagem - aparece apenas em telas pequenas */}
+              <div className="lg:hidden w-full mt-8">
+                <img 
+                  src="/lovable-uploads/f8c16f45-5bec-4d68-b002-42962d124d55.png" 
+                  alt="Equipe de IA - Laura, Ricardo e Helena" 
+                  className="w-full max-w-md mx-auto h-auto rounded-xl"
+                />
+              </div>
             </div>
           </div>
         </Section>
@@ -470,27 +499,27 @@ export default function Index() {
     </div>;
 }
 
-// Keep feature card component
-function FeatureCard({
-  icon,
-  title,
-  description
-}: {
-  icon: React.ReactNode;
-  title: string;
-  description: string;
-}) {
-  return <div className="flex flex-col p-6 rounded-xl bg-card border border-border/50 shadow-md hover-card">
-      <div className="mb-4 p-4 bg-gradient-to-br from-primary-a/20 to-primary-b/20 rounded-full w-fit">
-        <div className="text-primary-a">
-          {icon}
+// Feature item component with improved visual design
+function FeatureItem({ icon, title, description }: { icon: React.ReactNode; title: string; description: string }) {
+  return (
+    <div className="feature-item bg-white p-6 rounded-xl border border-border/30 shadow-sm hover:shadow-md transition-all">
+      <div className="flex items-start gap-4">
+        <div className="feature-icon-container flex-shrink-0">
+          <div className="w-10 h-10 rounded-full bg-gradient-to-br from-primary-a/20 to-primary-b/20 flex items-center justify-center">
+            <div className="text-primary-b">
+              {icon}
+            </div>
+          </div>
+        </div>
+        <div>
+          <h3 className="text-xl font-semibold mb-2">{title}</h3>
+          <p className="text-muted-foreground">
+            {description}
+          </p>
         </div>
       </div>
-      <h3 className="text-xl font-semibold mb-2">{title}</h3>
-      <p className="text-[#4B5563]">
-        {description}
-      </p>
-    </div>;
+    </div>
+  );
 }
 
 // Keep plan feature component
