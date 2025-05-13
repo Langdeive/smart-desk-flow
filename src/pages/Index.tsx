@@ -9,7 +9,6 @@ import { Navbar } from '@/components/layout/Navbar';
 import { Section } from '@/components/common/Section';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { FeatureCard } from '@/components/common/FeatureCard';
-
 export default function Index() {
   // Scroll reveal effect
   useEffect(() => {
@@ -32,7 +31,6 @@ export default function Index() {
       });
     };
   }, []);
-  
   return <div className="min-h-screen w-full">
       <Navbar />
       <div className="pt-20 w-full">
@@ -42,9 +40,7 @@ export default function Index() {
             <div className="flex flex-col md:flex-row items-center gap-8">
               <div className="space-y-6 text-left md:w-1/2">
                 <div>
-                  <h1 className="text-3xl md:text-4xl font-bold font-manrope tracking-tight mb-4">
-                    Atendimento ágil sem contratar mais gente
-                  </h1>
+                  <h1 className="text-3xl md:text-4xl font-bold font-manrope tracking-tight mb-4">Automatize e acelere o suporte utilizando IA, resolvendo tickets mais rápido e otimizando o tempo do time.</h1>
                   <p className="text-lg text-muted-foreground">
                     Centralize atendimentos, deixe a IA classificar chamados e transforme cada solução em conhecimento sem frear sua equipe.
                   </p>
@@ -175,48 +171,24 @@ export default function Index() {
               <div className="hidden lg:block absolute right-0 top-1/2 transform -translate-y-1/2 w-1/2 h-full z-10">
                 <div className="relative h-full w-full">
                   <div className="absolute -left-24 top-0 bottom-0 w-48 bg-gradient-to-r from-white to-transparent z-20"></div>
-                  <img 
-                    src="/lovable-uploads/f8c16f45-5bec-4d68-b002-42962d124d55.png" 
-                    alt="Equipe de IA - Laura, Ricardo e Helena" 
-                    className="h-auto max-h-[500px] object-contain ml-auto absolute right-0 top-1/2 transform -translate-y-1/2"
-                  />
+                  <img src="/lovable-uploads/f8c16f45-5bec-4d68-b002-42962d124d55.png" alt="Equipe de IA - Laura, Ricardo e Helena" className="h-auto max-h-[500px] object-contain ml-auto absolute right-0 top-1/2 transform -translate-y-1/2" />
                 </div>
               </div>
               
               {/* Grid de funcionalidades */}
               <div className="grid grid-cols-1 lg:grid-cols-1 lg:w-3/5 gap-6 scroll-reveal relative z-30">
-                <FeatureItem 
-                  icon={<Search className="h-5 w-5" />} 
-                  title="Triagem Inteligente" 
-                  description="Laura identifica prioridade, classifica e coleta o que estiver faltando automaticamente." 
-                />
+                <FeatureItem icon={<Search className="h-5 w-5" />} title="Triagem Inteligente" description="Laura identifica prioridade, classifica e coleta o que estiver faltando automaticamente." />
                 
-                <FeatureItem 
-                  icon={<MessageCircle className="h-5 w-5" />} 
-                  title="Auto-respostas" 
-                  description="Ricardo sugere respostas inteligentes baseadas em casos já resolvidos com sucesso." 
-                />
+                <FeatureItem icon={<MessageCircle className="h-5 w-5" />} title="Auto-respostas" description="Ricardo sugere respostas inteligentes baseadas em casos já resolvidos com sucesso." />
                 
-                <FeatureItem 
-                  icon={<CheckCircle className="h-5 w-5" />} 
-                  title="Base Viva" 
-                  description="Helena transforma cada resolução em artigo pesquisável, ampliando o conhecimento da sua equipe." 
-                />
+                <FeatureItem icon={<CheckCircle className="h-5 w-5" />} title="Base Viva" description="Helena transforma cada resolução em artigo pesquisável, ampliando o conhecimento da sua equipe." />
                 
-                <FeatureItem 
-                  icon={<BarChart className="h-5 w-5" />} 
-                  title="Relatórios Smart" 
-                  description="Visualize tempo médio de resposta, gargalos e tendências em tempo real com um só clique." 
-                />
+                <FeatureItem icon={<BarChart className="h-5 w-5" />} title="Relatórios Smart" description="Visualize tempo médio de resposta, gargalos e tendências em tempo real com um só clique." />
               </div>
               
               {/* Versão móvel da imagem - aparece apenas em telas pequenas */}
               <div className="lg:hidden w-full mt-8">
-                <img 
-                  src="/lovable-uploads/f8c16f45-5bec-4d68-b002-42962d124d55.png" 
-                  alt="Equipe de IA - Laura, Ricardo e Helena" 
-                  className="w-full max-w-md mx-auto h-auto rounded-xl"
-                />
+                <img src="/lovable-uploads/f8c16f45-5bec-4d68-b002-42962d124d55.png" alt="Equipe de IA - Laura, Ricardo e Helena" className="w-full max-w-md mx-auto h-auto rounded-xl" />
               </div>
             </div>
           </div>
@@ -500,9 +472,16 @@ export default function Index() {
 }
 
 // Feature item component with improved visual design
-function FeatureItem({ icon, title, description }: { icon: React.ReactNode; title: string; description: string }) {
-  return (
-    <div className="feature-item bg-white p-6 rounded-xl border border-border/30 shadow-sm hover:shadow-md transition-all">
+function FeatureItem({
+  icon,
+  title,
+  description
+}: {
+  icon: React.ReactNode;
+  title: string;
+  description: string;
+}) {
+  return <div className="feature-item bg-white p-6 rounded-xl border border-border/30 shadow-sm hover:shadow-md transition-all">
       <div className="flex items-start gap-4">
         <div className="feature-icon-container flex-shrink-0">
           <div className="w-10 h-10 rounded-full bg-gradient-to-br from-primary-a/20 to-primary-b/20 flex items-center justify-center">
@@ -518,8 +497,7 @@ function FeatureItem({ icon, title, description }: { icon: React.ReactNode; titl
           </p>
         </div>
       </div>
-    </div>
-  );
+    </div>;
 }
 
 // Keep plan feature component
