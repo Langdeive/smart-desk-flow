@@ -85,10 +85,8 @@ export default function Index() {
                 <div className="mb-4 p-2 bg-error/10 rounded-full w-10 h-10 flex items-center justify-center">
                   <Mail className="text-error h-5 w-5" />
                 </div>
-                <h3 className="text-xl font-semibold mb-2">Tickets vazios geram retrabalho.</h3>
-                <p className="text-muted-foreground">
-                  Tempo perdido pedindo informações básicas que faltaram.
-                </p>
+                <h3 className="text-xl font-semibold mb-2">Volume crescente de tickets sem equipe suficiente</h3>
+                <p className="text-muted-foreground">O time de suporte gasta horas classificando, priorizando e roteando solicitações.</p>
               </CardContent>
             </Card>
             
