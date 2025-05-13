@@ -1,4 +1,3 @@
-
 import React, { useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
@@ -35,7 +34,7 @@ export default function Index() {
   
   return <div className="min-h-screen w-full">
       <Navbar />
-      <div className="pt-20 w-full"> {/* Add full width */}
+      <div className="pt-20 w-full">
         {/* Hero Section - Modificado para alinhar à esquerda com imagem à direita */}
         <section className="w-full py-16 hero-gradient">
           <div className="container mx-auto px-4">
@@ -162,7 +161,7 @@ export default function Index() {
           </div>
         </Section>
 
-        {/* Funcionalidades-estrela - Reorganizado para imagem à esquerda e funcionalidades à direita */}
+        {/* Funcionalidades-estrela - Reorganizado para imagem à direita e funcionalidades à esquerda em coluna */}
         <Section className="py-16 section-spacing section-white">
           <h2 className="text-2xl md:text-3xl font-bold font-manrope text-center mb-4">Funcionalidades</h2>
           <p className="text-lg text-muted-foreground text-center max-w-2xl mx-auto mb-12 readable-width">
@@ -170,18 +169,9 @@ export default function Index() {
           </p>
           
           <div className="flex flex-col md:flex-row gap-8 items-center">
-            {/* Imagem à esquerda */}
-            <div className="md:w-1/3 scroll-reveal order-2 md:order-1">
-              <img 
-                src="/lovable-uploads/f8c16f45-5bec-4d68-b002-42962d124d55.png" 
-                alt="Equipe de IA - Laura, Ricardo e Helena" 
-                className="ai-agents-image w-full" 
-              />
-            </div>
-            
-            {/* Funcionalidades à direita */}
-            <div className="md:w-2/3 order-1 md:order-2">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 scroll-reveal">
+            {/* Funcionalidades à esquerda em formato de coluna */}
+            <div className="md:w-1/2 order-1">
+              <div className="grid grid-cols-1 gap-6 scroll-reveal">
                 <FeatureCard icon={<Search className="h-6 w-6" />} title="Triagem Inteligente" description="Prioriza e completa chamados automaticamente." />
                 
                 <FeatureCard icon={<MessageCircle className="h-6 w-6" />} title="Auto-respostas" description="Sugestões baseadas em casos já resolvidos." />
@@ -190,6 +180,15 @@ export default function Index() {
                 
                 <FeatureCard icon={<BarChart className="h-6 w-6" />} title="Relatórios Smart" description="Tempo médio, gargalos e tendências em um clique." />
               </div>
+            </div>
+            
+            {/* Imagem à direita */}
+            <div className="md:w-1/2 scroll-reveal order-2">
+              <img 
+                src="/lovable-uploads/f8c16f45-5bec-4d68-b002-42962d124d55.png" 
+                alt="Equipe de IA - Laura, Ricardo e Helena" 
+                className="ai-agents-image w-full" 
+              />
             </div>
           </div>
         </Section>
@@ -253,7 +252,7 @@ export default function Index() {
           </div>
         </Section>
 
-        {/* Depoimentos - Modificado para mostrar iniciais em vez de ícones vazios */}
+        {/* Depoimentos - Mantendo iniciais */}
         <Section className="py-16 section-spacing-sm section-white">
           <h2 className="text-2xl md:text-3xl font-bold font-manrope text-center mb-10">O que nossos clientes dizem</h2>
           
@@ -481,8 +480,8 @@ function FeatureCard({
   title: string;
   description: string;
 }) {
-  return <div className="flex flex-col items-center text-center p-6 rounded-xl bg-card border border-border/50 shadow-md hover-card">
-      <div className="mb-4 p-4 bg-gradient-to-br from-primary-a/20 to-primary-b/20 rounded-full">
+  return <div className="flex flex-col p-6 rounded-xl bg-card border border-border/50 shadow-md hover-card">
+      <div className="mb-4 p-4 bg-gradient-to-br from-primary-a/20 to-primary-b/20 rounded-full w-fit">
         <div className="text-primary-a">
           {icon}
         </div>
