@@ -40,9 +40,8 @@ export default function Index() {
             <div className="flex flex-col md:flex-row items-center gap-8">
               <div className="space-y-6 text-left md:w-1/2">
                 <div>
-                  <h1 className="text-3xl md:text-4xl font-bold font-manrope tracking-tight mb-4">Automatize e acelere o suporte utilizando IA, resolvendo tickets mais rápido e focando no que realmente importa</h1>
-                  <p className="text-lg text-muted-foreground">Centralize atendimentos, deixe a IA classificar chamados, encontrar a solução, e alimentar sua base de conhecimento sozinha.
-Cada novo artigo na base de conhecimento aumenta a chance da IA encontrar a solução sozinha para o novo ticket.</p>
+                  <h1 className="text-3xl md:text-4xl font-bold font-manrope tracking-tight mb-4">Chamados resolvidos antes mesmo de chegarem ao seu time</h1>
+                  <p className="text-lg text-muted-foreground">SolveFlow fecha o ciclo completo de suporte: classifica o ticket, propõe a resposta e transforma a solução em conhecimento, tudo com IA.</p>
                 </div>
                 <div className="flex flex-col sm:flex-row gap-4">
                   <Button asChild size="lg" className="bg-gradient-to-r from-primary-b to-primary-b-600 shadow-md hover:shadow-lg transition-all">
