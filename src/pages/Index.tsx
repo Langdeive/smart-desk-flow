@@ -95,10 +95,8 @@ export default function Index() {
                 <div className="mb-4 p-2 bg-error/10 rounded-full w-10 h-10 flex items-center justify-center">
                   <MessageCircle className="text-error h-5 w-5" />
                 </div>
-                <h3 className="text-xl font-semibold mb-2">Informações perdidas em e-mails.</h3>
-                <p className="text-muted-foreground">
-                  Informações importantes se perdem em threads intermináveis.
-                </p>
+                <h3 className="text-xl font-semibold mb-2">Respostas lentas e inconsistentes</h3>
+                <p className="text-muted-foreground">Clientes ficam esperando enquanto agentes procuram informações dispersas.</p>
               </CardContent>
             </Card>
             
@@ -107,10 +105,8 @@ export default function Index() {
                 <div className="mb-4 p-2 bg-error/10 rounded-full w-10 h-10 flex items-center justify-center">
                   <Clock className="text-error h-5 w-5" />
                 </div>
-                <h3 className="text-xl font-semibold mb-2">Primeira resposta demora horas.</h3>
-                <p className="text-muted-foreground">
-                  Clientes insatisfeitos com o tempo de espera para o primeiro contato.
-                </p>
+                <h3 className="text-xl font-semibold mb-2">Conhecimento “preso” na cabeça dos agentes</h3>
+                <p className="text-muted-foreground">Artigos não são atualizados, erros se repetem.</p>
               </CardContent>
             </Card>
           </div>
@@ -121,10 +117,8 @@ export default function Index() {
                 <div className="mb-4 p-2 bg-success/10 rounded-full w-10 h-10 flex items-center justify-center">
                   <Search className="h-5 w-5 text-success" />
                 </div>
-                <h3 className="text-xl font-semibold mb-2">Laura, nossa IA de triagem, pede prints e logs antes de o ticket chegar ao agente.</h3>
-                <p className="text-muted-foreground">
-                  IA identifica informações faltantes e solicita automaticamente.
-                </p>
+                <h3 className="text-xl font-semibold mb-2">Triagem Inteligente</h3>
+                <p className="text-muted-foreground">IA analisa cada ticket em segundos, define prioridade e envia ao agente ou fluxo correto, liberando até 60 % do tempo da equipe.</p>
               </CardContent>
             </Card>
             
@@ -133,10 +127,8 @@ export default function Index() {
                 <div className="mb-4 p-2 bg-success/10 rounded-full w-10 h-10 flex items-center justify-center">
                   <PanelLeft className="h-5 w-5 text-success" />
                 </div>
-                <h3 className="text-xl font-semibold mb-2">Tudo chega num único painel com histórico completo e filtros inteligentes.</h3>
-                <p className="text-muted-foreground">
-                  Histórico completo e contexto centralizado para resoluções mais rápidas.
-                </p>
+                <h3 className="text-xl font-semibold mb-2">Solução Automática</h3>
+                <p className="text-muted-foreground">Um modelo LLM cruza o ticket com a base de conhecimento, gera uma resposta pronta e sugere ao agente (ou envia direto em casos de alta confiança).</p>
               </CardContent>
             </Card>
             
@@ -146,9 +138,7 @@ export default function Index() {
                   <Check className="h-5 w-5 text-success" />
                 </div>
                 <h3 className="text-xl font-semibold mb-2">Ricardo propõe a solução pronta em segundos; o agente só clica "enviar".</h3>
-                <p className="text-muted-foreground">
-                  IA sugere respostas baseadas no histórico e no conhecimento acumulado.
-                </p>
+                <p className="text-muted-foreground">Quando um ticket é resolvido, a SolveFlow cria e publica um artigo, enriquecendo constantemente a base e aumentando a taxa de autosserviço.</p>
               </CardContent>
             </Card>
           </div>
