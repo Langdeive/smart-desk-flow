@@ -9,6 +9,7 @@ import { Navbar } from '@/components/layout/Navbar';
 import { Section } from '@/components/common/Section';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { FeatureCard } from '@/components/common/FeatureCard';
+
 export default function Index() {
   // Scroll reveal effect
   useEffect(() => {
@@ -163,13 +164,25 @@ export default function Index() {
               
               {/* Grid de funcionalidades */}
               <div className="grid grid-cols-1 lg:grid-cols-1 lg:w-3/5 gap-6 scroll-reveal relative z-30">
-                <FeatureItem icon={<Search className="h-5 w-5" />} title="Triagem Inteligente" description="Laura identifica prioridade, classifica e coleta o que estiver faltando automaticamente." />
+                <FeatureItem 
+                  icon={<Search className="h-5 w-5" />} 
+                  title="Triagem Inteligente" 
+                  description="A SolveFlow lê cada chamado, entende do que se trata e o encaminha para o lugar certo em segundos, sem você precisar tocar em nada." />
                 
-                <FeatureItem icon={<MessageCircle className="h-5 w-5" />} title="Auto-respostas" description="Ricardo sugere respostas inteligentes baseadas em casos já resolvidos com sucesso." />
+                <FeatureItem 
+                  icon={<MessageCircle className="h-5 w-5" />} 
+                  title="Solução Automática" 
+                  description="A IA encontra a resposta na base de conhecimento e já entrega uma mensagem prontinha, reduzindo o tempo de espera do cliente para quase zero." />
                 
-                <FeatureItem icon={<CheckCircle className="h-5 w-5" />} title="Base Viva" description="Helena transforma cada resolução em artigo pesquisável, ampliando o conhecimento da sua equipe." />
+                <FeatureItem 
+                  icon={<CheckCircle className="h-5 w-5" />} 
+                  title="Base de Conhecimento Viva" 
+                  description="Quando um ticket é resolvido, o sistema transforma a solução em um novo artigo, mantendo tudo atualizado sem trabalho extra da equipe." />
                 
-                <FeatureItem icon={<BarChart className="h-5 w-5" />} title="Relatórios Smart" description="Visualize tempo médio de resposta, gargalos e tendências em tempo real com um só clique." />
+                <FeatureItem 
+                  icon={<BarChart className="h-5 w-5" />} 
+                  title="Dashboards & Insights" 
+                  description="Gráficos claros mostram quanto tempo você está economizando, quais problemas mais aparecem e como melhorar o suporte antes que os clientes reclamem." />
               </div>
               
               {/* Versão móvel da imagem - aparece apenas em telas pequenas */}

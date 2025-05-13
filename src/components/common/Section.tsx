@@ -13,12 +13,12 @@ export function Section({ children, className, id, alternate = false }: SectionP
     <section
       id={id}
       className={cn(
-        "py-16 w-full", // Added w-full to ensure full width
+        "py-16 w-full", // Ensuring full width
         alternate ? "section-alt" : "section-white",
         className
       )}
     >
-      <div className="container mx-auto">{children}</div>
+      <div className="container mx-auto px-4">{children}</div>
     </section>
   );
 }
