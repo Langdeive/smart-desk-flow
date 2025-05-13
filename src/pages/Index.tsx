@@ -137,7 +137,7 @@ export default function Index() {
                 <div className="mb-4 p-2 bg-success/10 rounded-full w-10 h-10 flex items-center justify-center">
                   <Check className="h-5 w-5 text-success" />
                 </div>
-                <h3 className="text-xl font-semibold mb-2">Ricardo propõe a solução pronta em segundos; o agente só clica "enviar".</h3>
+                <h3 className="text-xl font-semibold mb-2">IA que escreve artigos</h3>
                 <p className="text-muted-foreground">Quando um ticket é resolvido, a SolveFlow cria e publica um artigo, enriquecendo constantemente a base e aumentando a taxa de autosserviço.</p>
               </CardContent>
             </Card>
@@ -235,7 +235,7 @@ export default function Index() {
           </div>
           
           <div className="text-center mt-12 readable-width mx-auto scroll-reveal">
-            <p className="text-xl font-semibold font-manrope text-[#4B5563]">Menos idas e vindas, mais problemas resolvidos — tudo num fluxo só.</p>
+            <p className="text-xl font-semibold font-manrope text-[#4B5563]">Menos tickets manuais, respostas mais rápidas e clientes mais satisfeitos, tudo com uma operação de suporte enxuta e escalável.</p>
           </div>
         </Section>
 
