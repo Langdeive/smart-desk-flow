@@ -13,7 +13,7 @@ export function Section({ children, className, id, alternate = false }: SectionP
     <section
       id={id}
       className={cn(
-        "py-16 px-4 md:px-8",
+        "py-16", // Removido px-4 md:px-8 para ocupar toda a largura
         alternate ? "section-alt" : "section-white",
         className
       )}
