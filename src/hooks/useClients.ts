@@ -1,3 +1,4 @@
+
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
@@ -18,7 +19,7 @@ export const useClients = (search?: string) => {
         .select('*')
         .order('name');
       
-      // Apply company_id filter
+      // Apply company_id filter - use eq here which is more explicit and clear
       if (companyId) {
         query = query.eq('company_id', companyId);
       }
