@@ -24,6 +24,7 @@ import { Section } from '@/components/common/Section';
 import { SectionHeader } from '@/components/common/SectionHeader';
 import { Separator } from "@/components/ui/separator";
 import { ActionButton } from '@/components/common/ActionButton';
+import { ClientFormData } from '@/types';
 
 export default function ClientManagement() {
   const [search, setSearch] = useState('');
@@ -33,7 +34,7 @@ export default function ClientManagement() {
   const [itemsPerPage, setItemsPerPage] = useState(10);
   
   const debouncedSearch = useDebounce(search, 300);
-  const { clients, isLoading, error, deleteClient } = useClients(debouncedSearch);
+  const { clients, isLoading, error, createClient, updateClient, deleteClient } = useClients(debouncedSearch);
 
   // Memoize filteredClients to prevent unnecessary re-renders
   const filteredClients = useCallback(() => {
@@ -62,6 +63,16 @@ export default function ClientManagement() {
     setSelectedClientId(id);
     setDialogOpen(true);
   }, []);
+
+  const handleSaveClient = useCallback(async (data: ClientFormData, id?: string) => {
+    if (id) {
+      await updateClient.mutateAsync({ id, ...data });
+    } else {
+      await createClient.mutateAsync(data);
+    }
+  }, [createClient, updateClient]);
+
+  const isPending = createClient.isPending || updateClient.isPending;
 
   return (
     <div className="container mx-auto py-6">
@@ -118,7 +129,10 @@ export default function ClientManagement() {
           open={dialogOpen}
           onOpenChange={setDialogOpen}
           onClose={handleDialogClose} 
-          clientId={selectedClientId} 
+          clientId={selectedClientId}
+          clients={clients || []}
+          onSave={handleSaveClient}
+          isPending={isPending}
         />
       </div>
 

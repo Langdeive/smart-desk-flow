@@ -22,7 +22,6 @@ import { Textarea } from '@/components/ui/textarea';
 import { Switch } from '@/components/ui/switch';
 import { ContactList } from './ContactList';
 import { clientSchema, type ClientFormValues } from '@/lib/validations/client';
-import { useClients } from '@/hooks/useClients';
 import { ContactDialog } from './ContactDialog';
 import { useClientContacts } from '@/hooks/useClientContacts';
 import { Client, ClientFormData } from '@/types';
@@ -33,12 +32,22 @@ interface ClientDialogProps {
   onClose?: () => void;
   open?: boolean;
   onOpenChange?: (open: boolean) => void;
+  clients: Client[];
+  onSave: (data: ClientFormData, id?: string) => Promise<void>;
+  isPending?: boolean;
 }
 
-export function ClientDialog({ clientId, onClose, open, onOpenChange }: ClientDialogProps) {
-  const { clients, createClient, updateClient } = useClients();
+export function ClientDialog({ 
+  clientId, 
+  onClose, 
+  open, 
+  onOpenChange, 
+  clients,
+  onSave,
+  isPending = false
+}: ClientDialogProps) {
   const { contacts: existingContacts, isLoading: contactsLoading } = useClientContacts(clientId || undefined);
-  const client = clients?.find(c => c.id === clientId) as Client | undefined;
+  const client = clients.find(c => c.id === clientId) as Client | undefined;
   const [contacts, setContacts] = useState<ClientFormValues['contacts']>([]);
 
   const form = useForm<ClientFormValues>({
@@ -144,22 +153,13 @@ export function ClientDialog({ clientId, onClose, open, onOpenChange }: ClientDi
     };
 
     try {
-      if (clientId) {
-        await updateClient.mutateAsync({ 
-          id: clientId, 
-          ...clientData
-        });
-      } else {
-        await createClient.mutateAsync(clientData);
-      }
+      await onSave(clientData, clientId || undefined);
       onClose?.();
     } catch (error) {
       console.error("Error saving client:", error);
       toast.error("Erro ao salvar cliente. Tente novamente.");
     }
   };
-
-  const isPending = createClient.isPending || updateClient.isPending;
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
