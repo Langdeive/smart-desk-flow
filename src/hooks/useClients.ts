@@ -1,3 +1,4 @@
+
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
@@ -106,6 +107,8 @@ export const useClients = (search?: string) => {
 
       // Handle contacts - first delete all existing contacts
       if (data.contacts && data.contacts.length > 0) {
+        console.log("Updating contacts for client", id, ":", data.contacts);
+        
         const { error: deleteError } = await supabase
           .from('client_contacts')
           .delete()
@@ -114,7 +117,7 @@ export const useClients = (search?: string) => {
         if (deleteError) throw deleteError;
         
         // Then insert the new/updated contacts
-        const { error: contactsError } = await supabase
+        const { data: insertedContacts, error: contactsError } = await supabase
           .from('client_contacts')
           .insert(
             data.contacts.map((contact, index) => ({
@@ -122,14 +125,20 @@ export const useClients = (search?: string) => {
               client_id: id,
               is_primary: index === 0 || contact.is_primary
             }))
-          );
+          )
+          .select();
           
         if (contactsError) throw contactsError;
+        
+        console.log("Inserted contacts:", insertedContacts);
       }
+      
+      // Return the client ID for further processing
+      return id;
     },
-    onSuccess: () => {
+    onSuccess: (clientId) => {
       queryClient.invalidateQueries({ queryKey: ['clients'] });
-      queryClient.invalidateQueries({ queryKey: ['client-contacts'] });
+      queryClient.invalidateQueries({ queryKey: ['client-contacts', clientId] });
       toast.success('Cliente atualizado com sucesso');
     },
     onError: (error) => {

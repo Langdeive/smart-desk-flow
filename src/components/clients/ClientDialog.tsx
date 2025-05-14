@@ -46,6 +46,7 @@ export function ClientDialog({
   onSave,
   isPending = false
 }: ClientDialogProps) {
+  // Use the queryClient to invalidate contacts when the dialog opens
   const { contacts: existingContacts, isLoading: contactsLoading } = useClientContacts(clientId || undefined);
   const client = clients.find(c => c.id === clientId) as Client | undefined;
   const [contacts, setContacts] = useState<ClientFormValues['contacts']>([]);
@@ -93,6 +94,7 @@ export function ClientDialog({
   useEffect(() => {
     // Load existing contacts when editing a client
     if (existingContacts && existingContacts.length > 0 && clientId) {
+      console.log("Loading existing contacts:", existingContacts);
       const mappedContacts = existingContacts.map(contact => ({
         name: contact.name || undefined,
         email: contact.email || undefined,

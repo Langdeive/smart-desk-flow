@@ -23,6 +23,7 @@ export const useClientContacts = (clientId?: string) => {
         console.error('Error fetching client contacts:', error);
         throw error;
       }
+      console.log("Fetched contacts for client", clientId, ":", data);
       return data as ClientContact[];
     },
     enabled: !!clientId
@@ -62,8 +63,11 @@ export const useClientContacts = (clientId?: string) => {
       if (error) throw error;
       return data;
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['client-contacts'] });
+    onSuccess: (_, variables) => {
+      // Invalidate specific client contacts query
+      queryClient.invalidateQueries({ 
+        queryKey: ['client-contacts', variables.clientId] 
+      });
       toast.success('Contato adicionado com sucesso');
     },
     onError: (error) => {
@@ -76,10 +80,12 @@ export const useClientContacts = (clientId?: string) => {
   const updateContact = useMutation({
     mutationFn: async ({ 
       contactId, 
-      contact 
+      contact,
+      clientId 
     }: { 
       contactId: string, 
-      contact: ContactFormValues 
+      contact: ContactFormValues,
+      clientId: string 
     }) => {
       // If this contact is marked as primary, we first need to update the other contacts
       if (contact.is_primary) {
@@ -108,8 +114,11 @@ export const useClientContacts = (clientId?: string) => {
       if (error) throw error;
       return data;
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['client-contacts'] });
+    onSuccess: (_, variables) => {
+      // Invalidate specific client contacts query
+      queryClient.invalidateQueries({
+        queryKey: ['client-contacts', variables.clientId]
+      });
       toast.success('Contato atualizado com sucesso');
     },
     onError: (error) => {
@@ -120,7 +129,7 @@ export const useClientContacts = (clientId?: string) => {
   });
 
   const deleteContact = useMutation({
-    mutationFn: async (contactId: string) => {
+    mutationFn: async ({ contactId, clientId }: { contactId: string, clientId: string }) => {
       const { error } = await supabase
         .from('client_contacts')
         .delete()
@@ -128,8 +137,11 @@ export const useClientContacts = (clientId?: string) => {
 
       if (error) throw error;
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['client-contacts'] });
+    onSuccess: (_, variables) => {
+      // Invalidate specific client contacts query
+      queryClient.invalidateQueries({ 
+        queryKey: ['client-contacts', variables.clientId] 
+      });
       toast.success('Contato removido com sucesso');
     },
     onError: (error) => {
