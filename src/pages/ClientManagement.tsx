@@ -125,15 +125,18 @@ export default function ClientManagement() {
           </ActionButton>
         </div>
 
-        <ClientDialog 
-          open={dialogOpen}
-          onOpenChange={setDialogOpen}
-          onClose={handleDialogClose} 
-          clientId={selectedClientId}
-          clients={clients || []}
-          onSave={handleSaveClient}
-          isPending={isPending}
-        />
+        {/* Renderiza ClientDialog apenas quando está aberto */}
+        {dialogOpen && (
+          <ClientDialog 
+            open={dialogOpen}
+            onOpenChange={setDialogOpen}
+            onClose={handleDialogClose} 
+            clientId={selectedClientId}
+            clients={clients || []}
+            onSave={handleSaveClient}
+            isPending={isPending}
+          />
+        )}
       </div>
 
       {error ? (
