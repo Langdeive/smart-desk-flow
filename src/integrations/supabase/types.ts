@@ -706,6 +706,10 @@ export type Database = {
         Args: { user_id: string; company_id: string }
         Returns: boolean
       }
+      user_belongs_to_company_safe: {
+        Args: { user_id: string; company_id: string }
+        Returns: boolean
+      }
       user_is_admin_or_owner: {
         Args: { user_id: string; company_id: string }
         Returns: boolean

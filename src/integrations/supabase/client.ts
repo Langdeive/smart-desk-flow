@@ -16,8 +16,13 @@ export const supabase = createClient<Database>(
     auth: {
       persistSession: true,
       autoRefreshToken: true,
-      // Não usar o localStorage personalizado, usar o padrão
-      // para garantir compatibilidade com o formato esperado pela SDK
+      // Use default localStorage for best compatibility
+    },
+    global: {
+      headers: {
+        // Add a cache-control header to prevent browser caching
+        'cache-control': 'no-store, max-age=0'
+      }
     }
   }
 );

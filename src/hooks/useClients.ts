@@ -1,4 +1,3 @@
-
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
@@ -19,9 +18,9 @@ export const useClients = (search?: string) => {
         .select('*')
         .order('name');
       
-      // Apply company_id filter directly without using `.eq` to avoid potential RLS issues
+      // Apply company_id filter
       if (companyId) {
-        query = query.filter('company_id', 'eq', companyId);
+        query = query.eq('company_id', companyId);
       }
 
       // Apply search filter if provided
