@@ -1,4 +1,3 @@
-
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
@@ -9,11 +8,13 @@ export const useClients = (search?: string) => {
   const queryClient = useQueryClient();
   const { companyId } = useAuth();
 
-  const { data: clients = [], isLoading } = useQuery({
+  const { data: clients = [], isLoading, error } = useQuery({
     queryKey: ['clients', search, companyId],
     queryFn: async () => {
       if (!companyId) return [];
 
+      console.log('Fetching clients for company:', companyId);
+      
       let query = supabase
         .from('clients')
         .select('*')
@@ -38,7 +39,10 @@ export const useClients = (search?: string) => {
       
       return data as Client[];
     },
-    enabled: !!companyId
+    enabled: !!companyId,
+    staleTime: 60000, // Cache results for 1 minute
+    refetchOnWindowFocus: false, // Don't refetch when window regains focus
+    retry: 1, // Only retry once if request fails
   });
 
   const createClient = useMutation({
@@ -190,6 +194,7 @@ export const useClients = (search?: string) => {
   return {
     clients,
     isLoading,
+    error,
     createClient,
     updateClient,
     toggleClientActive,
