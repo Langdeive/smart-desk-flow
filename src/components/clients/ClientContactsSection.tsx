@@ -47,7 +47,7 @@ export function ClientContactsSection({
         console.log("Not overwriting user-modified contacts:", contacts);
       }
     }
-  }, [existingContacts, clientId, form, contacts.length, hasUserModifiedContacts]);
+  }, [existingContacts, clientId, form, hasUserModifiedContacts]);
 
   const handleAddContact = (contact: ContactFormValues) => {
     console.log("Adding contact to ClientDialog:", contact);

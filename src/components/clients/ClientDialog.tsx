@@ -54,6 +54,7 @@ export function ClientDialog({
     // Reset form when opening the dialog
     if (open) {
       if (client) {
+        console.log("Resetting form with client data:", client);
         form.reset({
           name: client.name,
           external_id: client.external_id || '',
@@ -63,6 +64,7 @@ export function ClientDialog({
         });
       } else {
         // Reset form when opening for a new client
+        console.log("Resetting form for new client");
         form.reset({
           name: '',
           external_id: '',
@@ -75,6 +77,8 @@ export function ClientDialog({
   }, [client, form, open]);
 
   const onSubmit = async (data: ClientFormValues) => {
+    console.log("Form submitted with data:", data);
+    
     // Check if there are contacts
     if (!data.contacts || data.contacts.length === 0) {
       toast.error("É necessário adicionar pelo menos um contato");

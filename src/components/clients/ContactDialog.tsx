@@ -58,13 +58,18 @@ export function ContactDialog({ contact, onSubmit }: ContactDialogProps) {
     console.log("ContactDialog submitting:", data);
     onSubmit(data);
     form.reset();
-    setOpen(false); // Close the modal after submission
+    setOpen(false); // Close only the contact dialog
+  };
+
+  // This prevents click events from propagating to parent dialogs
+  const handleDialogClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
   };
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant="outline">
+        <Button variant="outline" onClick={(e) => e.stopPropagation()}>
           {contact ? (
             <Edit2 className="h-4 w-4 mr-2" />
           ) : (
@@ -73,7 +78,7 @@ export function ContactDialog({ contact, onSubmit }: ContactDialogProps) {
           {contact ? 'Editar Contato' : 'Novo Contato'}
         </Button>
       </DialogTrigger>
-      <DialogContent>
+      <DialogContent onClick={handleDialogClick}>
         <DialogHeader>
           <DialogTitle>
             {contact ? 'Editar Contato' : 'Novo Contato'}

@@ -26,7 +26,9 @@ export const useClientContacts = (clientId?: string) => {
       console.log("Fetched contacts for client", clientId, ":", data);
       return data as ClientContact[];
     },
-    enabled: !!clientId
+    enabled: !!clientId,
+    staleTime: 60000, // Cache for 1 minute to reduce excessive requests
+    refetchOnWindowFocus: false, // Don't refetch on window focus
   });
 
   const addContact = useMutation({
@@ -64,16 +66,9 @@ export const useClientContacts = (clientId?: string) => {
       return data;
     },
     onSuccess: (_, variables) => {
-      // Invalidate specific client contacts query
-      queryClient.invalidateQueries({ 
-        queryKey: ['client-contacts', variables.clientId] 
-      });
-      
-      // Also invalidate clients query to refresh any denormalized data
-      queryClient.invalidateQueries({
-        queryKey: ['clients']
-      });
-      
+      console.log("Contact added successfully");
+      // We don't invalidate the cache here to prevent unnecessary reloads
+      // The UI already shows the new contact in the client dialog
       toast.success('Contato adicionado com sucesso');
     },
     onError: (error) => {
@@ -121,16 +116,8 @@ export const useClientContacts = (clientId?: string) => {
       return data;
     },
     onSuccess: (_, variables) => {
-      // Invalidate specific client contacts query
-      queryClient.invalidateQueries({
-        queryKey: ['client-contacts', variables.clientId]
-      });
-      
-      // Also invalidate clients query to refresh any denormalized data
-      queryClient.invalidateQueries({
-        queryKey: ['clients']
-      });
-      
+      console.log("Contact updated successfully");
+      // Same here, don't invalidate the cache to prevent reloads
       toast.success('Contato atualizado com sucesso');
     },
     onError: (error) => {
@@ -150,16 +137,8 @@ export const useClientContacts = (clientId?: string) => {
       if (error) throw error;
     },
     onSuccess: (_, variables) => {
-      // Invalidate specific client contacts query
-      queryClient.invalidateQueries({ 
-        queryKey: ['client-contacts', variables.clientId] 
-      });
-      
-      // Also invalidate clients query to refresh any denormalized data
-      queryClient.invalidateQueries({
-        queryKey: ['clients']
-      });
-      
+      console.log("Contact deleted successfully");
+      // Same here, don't invalidate the cache to prevent reloads
       toast.success('Contato removido com sucesso');
     },
     onError: (error) => {

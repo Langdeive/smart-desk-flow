@@ -59,7 +59,10 @@ export function ContactList({ contacts, onDelete, onEdit }: ContactListProps) {
               variant="outline"
               size="icon"
               className="text-destructive"
-              onClick={() => onDelete(index)}
+              onClick={(e) => {
+                e.stopPropagation(); // Prevent event bubbling
+                onDelete(index);
+              }}
             >
               <Trash2 className="h-4 w-4" />
             </Button>
