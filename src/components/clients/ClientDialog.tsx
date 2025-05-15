@@ -95,18 +95,26 @@ export function ClientDialog({
     // Load existing contacts when editing a client
     if (existingContacts && existingContacts.length > 0 && clientId) {
       console.log("Loading existing contacts:", existingContacts);
-      const mappedContacts = existingContacts.map(contact => ({
-        name: contact.name || undefined,
-        email: contact.email || undefined,
-        phone: contact.phone || undefined,
-        is_primary: contact.is_primary
-      }));
-      setContacts(mappedContacts);
-      form.setValue('contacts', mappedContacts);
-      // Trigger validation after setting contacts
-      form.trigger('contacts');
+      
+      // Only update contacts if the local state is empty (no manually added contacts yet)
+      // This prevents overwriting contacts that might have been added manually
+      if (contacts.length === 0) {
+        const mappedContacts = existingContacts.map(contact => ({
+          name: contact.name || undefined,
+          email: contact.email || undefined,
+          phone: contact.phone || undefined,
+          is_primary: contact.is_primary
+        }));
+        
+        setContacts(mappedContacts);
+        form.setValue('contacts', mappedContacts);
+        // Trigger validation after setting contacts
+        form.trigger('contacts');
+      } else {
+        console.log("Not overwriting local contacts as they already exist:", contacts);
+      }
     }
-  }, [existingContacts, clientId, form]);
+  }, [existingContacts, clientId, form, contacts.length]);
 
   const handleAddContact = (contact: ClientFormValues['contacts'][0]) => {
     console.log("Adding contact to ClientDialog:", contact);

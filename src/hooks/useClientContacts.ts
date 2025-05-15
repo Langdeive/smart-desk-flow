@@ -68,6 +68,12 @@ export const useClientContacts = (clientId?: string) => {
       queryClient.invalidateQueries({ 
         queryKey: ['client-contacts', variables.clientId] 
       });
+      
+      // Also invalidate clients query to refresh any denormalized data
+      queryClient.invalidateQueries({
+        queryKey: ['clients']
+      });
+      
       toast.success('Contato adicionado com sucesso');
     },
     onError: (error) => {
@@ -119,6 +125,12 @@ export const useClientContacts = (clientId?: string) => {
       queryClient.invalidateQueries({
         queryKey: ['client-contacts', variables.clientId]
       });
+      
+      // Also invalidate clients query to refresh any denormalized data
+      queryClient.invalidateQueries({
+        queryKey: ['clients']
+      });
+      
       toast.success('Contato atualizado com sucesso');
     },
     onError: (error) => {
@@ -142,6 +154,12 @@ export const useClientContacts = (clientId?: string) => {
       queryClient.invalidateQueries({ 
         queryKey: ['client-contacts', variables.clientId] 
       });
+      
+      // Also invalidate clients query to refresh any denormalized data
+      queryClient.invalidateQueries({
+        queryKey: ['clients']
+      });
+      
       toast.success('Contato removido com sucesso');
     },
     onError: (error) => {
