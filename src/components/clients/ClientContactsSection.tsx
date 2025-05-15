@@ -23,15 +23,15 @@ export function ClientContactsSection({
   clientId 
 }: ClientContactsSectionProps) {
   const [contacts, setContacts] = useState<ClientFormValues['contacts']>([]);
+  const [hasUserModifiedContacts, setHasUserModifiedContacts] = useState(false);
 
   useEffect(() => {
     // Load existing contacts when editing a client
     if (existingContacts && existingContacts.length > 0 && clientId) {
       console.log("Loading existing contacts:", existingContacts);
       
-      // Only update contacts if the local state is empty (no manually added contacts yet)
-      // This prevents overwriting contacts that might have been added manually
-      if (contacts.length === 0) {
+      // Only update contacts if the user hasn't modified contacts manually
+      if (!hasUserModifiedContacts) {
         const mappedContacts = existingContacts.map(contact => ({
           name: contact.name || undefined,
           email: contact.email || undefined,
@@ -44,13 +44,16 @@ export function ClientContactsSection({
         // Trigger validation after setting contacts
         form.trigger('contacts');
       } else {
-        console.log("Not overwriting local contacts as they already exist:", contacts);
+        console.log("Not overwriting user-modified contacts:", contacts);
       }
     }
-  }, [existingContacts, clientId, form, contacts.length]);
+  }, [existingContacts, clientId, form, contacts.length, hasUserModifiedContacts]);
 
   const handleAddContact = (contact: ContactFormValues) => {
     console.log("Adding contact to ClientDialog:", contact);
+    
+    // Mark that user has modified contacts
+    setHasUserModifiedContacts(true);
     
     // Ensure we're working with a new array instance to trigger re-render
     const updatedContacts = [...contacts, contact];
@@ -64,6 +67,9 @@ export function ClientContactsSection({
   };
 
   const handleDeleteContact = (index: number) => {
+    // Mark that user has modified contacts
+    setHasUserModifiedContacts(true);
+    
     const updatedContacts = [...contacts];
     updatedContacts.splice(index, 1);
     setContacts(updatedContacts);
@@ -72,6 +78,9 @@ export function ClientContactsSection({
   };
 
   const handleEditContact = (index: number, updatedContact: ContactFormValues) => {
+    // Mark that user has modified contacts
+    setHasUserModifiedContacts(true);
+    
     const updatedContacts = [...contacts];
     updatedContacts[index] = updatedContact;
     setContacts(updatedContacts);
