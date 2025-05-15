@@ -8,24 +8,14 @@ import {
   DialogHeader, 
   DialogTitle,
 } from '@/components/ui/dialog';
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
+import { Form } from '@/components/ui/form';
 import { Button } from '@/components/ui/button';
-import { Textarea } from '@/components/ui/textarea';
-import { Switch } from '@/components/ui/switch';
-import { ContactList } from './ContactList';
 import { clientSchema, type ClientFormValues } from '@/lib/validations/client';
-import { ContactDialog } from './ContactDialog';
 import { useClientContacts } from '@/hooks/useClientContacts';
 import { Client, ClientFormData } from '@/types';
 import { toast } from 'sonner';
+import { ClientFormFields } from './ClientFormFields';
+import { ClientContactsSection } from './ClientContactsSection';
 
 interface ClientDialogProps {
   clientId?: string | null;
@@ -46,10 +36,8 @@ export function ClientDialog({
   onSave,
   isPending = false
 }: ClientDialogProps) {
-  // Use the queryClient to invalidate contacts when the dialog opens
   const { contacts: existingContacts, isLoading: contactsLoading } = useClientContacts(clientId || undefined);
   const client = clients.find(c => c.id === clientId) as Client | undefined;
-  const [contacts, setContacts] = useState<ClientFormValues['contacts']>([]);
 
   const form = useForm<ClientFormValues>({
     resolver: zodResolver(clientSchema),
@@ -83,68 +71,8 @@ export function ClientDialog({
           contacts: []
         });
       }
-      // Reset the contacts state when the dialog opens
-      if (!clientId) {
-        setContacts([]);
-        form.setValue('contacts', []);
-      }
     }
-  }, [client, form, open, clientId]);
-
-  useEffect(() => {
-    // Load existing contacts when editing a client
-    if (existingContacts && existingContacts.length > 0 && clientId) {
-      console.log("Loading existing contacts:", existingContacts);
-      
-      // Only update contacts if the local state is empty (no manually added contacts yet)
-      // This prevents overwriting contacts that might have been added manually
-      if (contacts.length === 0) {
-        const mappedContacts = existingContacts.map(contact => ({
-          name: contact.name || undefined,
-          email: contact.email || undefined,
-          phone: contact.phone || undefined,
-          is_primary: contact.is_primary
-        }));
-        
-        setContacts(mappedContacts);
-        form.setValue('contacts', mappedContacts);
-        // Trigger validation after setting contacts
-        form.trigger('contacts');
-      } else {
-        console.log("Not overwriting local contacts as they already exist:", contacts);
-      }
-    }
-  }, [existingContacts, clientId, form, contacts.length]);
-
-  const handleAddContact = (contact: ClientFormValues['contacts'][0]) => {
-    console.log("Adding contact to ClientDialog:", contact);
-    
-    // Ensure we're working with a new array instance to trigger re-render
-    const updatedContacts = [...contacts, contact];
-    setContacts(updatedContacts);
-    
-    // Update the form value to ensure validation works correctly
-    form.setValue('contacts', updatedContacts);
-    
-    // Trigger form validation to refresh error messages
-    form.trigger('contacts');
-  };
-
-  const handleDeleteContact = (index: number) => {
-    const updatedContacts = [...contacts];
-    updatedContacts.splice(index, 1);
-    setContacts(updatedContacts);
-    form.setValue('contacts', updatedContacts);
-    form.trigger('contacts');
-  };
-
-  const handleEditContact = (index: number, updatedContact: ClientFormValues['contacts'][0]) => {
-    const updatedContacts = [...contacts];
-    updatedContacts[index] = updatedContact;
-    setContacts(updatedContacts);
-    form.setValue('contacts', updatedContacts);
-    form.trigger('contacts');
-  };
+  }, [client, form, open]);
 
   const onSubmit = async (data: ClientFormValues) => {
     // Check if there are contacts
@@ -182,93 +110,18 @@ export function ClientDialog({
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
             {/* Basic client information fields */}
-            <FormField
-              control={form.control}
-              name="name"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Nome</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Nome do cliente" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
+            <ClientFormFields 
+              form={form} 
+              isEditing={!!clientId} 
             />
-
-            <FormField
-              control={form.control}
-              name="external_id"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>ID Externo</FormLabel>
-                  <FormControl>
-                    <Input placeholder="ID do sistema externo" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="notes"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Observações</FormLabel>
-                  <FormControl>
-                    <Textarea placeholder="Observações sobre o cliente" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            {clientId && (
-              <FormField
-                control={form.control}
-                name="is_active"
-                render={({ field }) => (
-                  <FormItem className="flex items-center justify-between rounded-lg border p-4">
-                    <div className="space-y-0.5">
-                      <FormLabel className="text-base">
-                        Cliente ativo
-                      </FormLabel>
-                    </div>
-                    <FormControl>
-                      <Switch
-                        checked={field.value}
-                        onCheckedChange={field.onChange}
-                      />
-                    </FormControl>
-                  </FormItem>
-                )}
-              />
-            )}
 
             {/* Contacts section */}
-            <div className="space-y-4">
-              <div className="flex justify-between items-center">
-                <h3 className="text-lg font-medium">Contatos</h3>
-                <ContactDialog
-                  onSubmit={handleAddContact}
-                />
-              </div>
-              <FormField
-                control={form.control}
-                name="contacts"
-                render={() => (
-                  <FormItem>
-                    <ContactList
-                      contacts={contacts}
-                      onDelete={handleDeleteContact}
-                      onEdit={handleEditContact}
-                    />
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
+            <ClientContactsSection 
+              form={form} 
+              existingContacts={existingContacts} 
+              isLoading={contactsLoading}
+              clientId={clientId}
+            />
 
             <div className="flex justify-end gap-2">
               <Button type="button" variant="outline" onClick={onClose}>
