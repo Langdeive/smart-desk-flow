@@ -11,6 +11,7 @@ import { ThemeProvider } from "./hooks/use-theme";
 import { RequireAuth } from "./components/auth/RequireAuth";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
+import Forbidden from "./pages/Forbidden";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Dashboard from "./pages/Dashboard";
@@ -70,7 +71,7 @@ const App = () => {
                     </RequireAuth>
                   } />
                   <Route path="/configuracoes/agentes" element={
-                    <RequireAuth allowedRoles={['admin']}>
+                    <RequireAuth allowedRoles={['admin', 'owner']}>
                       <AgentManagement />
                     </RequireAuth>
                   } />
@@ -79,6 +80,7 @@ const App = () => {
                       <ClientManagement />
                     </RequireAuth>
                   } />
+                  <Route path="/403" element={<Forbidden />} />
                 </Route>
                 <Route path="/login" element={<Login />} />
                 <Route path="/register" element={<Register />} />
