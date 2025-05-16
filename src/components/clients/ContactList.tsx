@@ -56,7 +56,7 @@ export function ContactList({ contacts, onDelete, onEdit }: ContactListProps) {
               <ContactDialog
                 contact={contact}
                 onSubmit={(updatedContact) => {
-                  e.stopPropagation();
+                  // Remove the reference to 'e' as it's not defined in this callback scope
                   onEdit(index, updatedContact);
                 }}
               />
