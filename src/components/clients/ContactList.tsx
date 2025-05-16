@@ -13,13 +13,15 @@ interface ContactListProps {
   onDelete: (index: number) => void;
   onEdit: (index: number, contact: ContactFormValues) => void;
   setContactDialogOpen?: (open: boolean) => void;
+  isProcessingContact?: boolean;
 }
 
 export function ContactList({ 
   contacts, 
   onDelete, 
   onEdit, 
-  setContactDialogOpen 
+  setContactDialogOpen,
+  isProcessingContact = false
 }: ContactListProps) {
   const [editingIndex, setEditingIndex] = useState<number | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -77,7 +79,9 @@ export function ContactList({
           <div className="flex gap-2" onClick={handleStopPropagation}>
             <Button
               variant="outline"
+              type="button"
               onClick={(e) => handleEditClick(index, e)}
+              disabled={isProcessingContact}
             >
               <Edit2 className="h-4 w-4 mr-2" />
               Editar
@@ -85,11 +89,13 @@ export function ContactList({
             <Button
               variant="outline"
               size="icon"
+              type="button"
               className="text-destructive"
               onClick={(e) => {
                 handleStopPropagation(e);
                 onDelete(index);
               }}
+              disabled={isProcessingContact}
             >
               <Trash2 className="h-4 w-4" />
             </Button>
@@ -113,6 +119,7 @@ export function ContactList({
               setEditingIndex(null);
             }
           }}
+          isProcessingContact={isProcessingContact}
         />
       )}
     </div>

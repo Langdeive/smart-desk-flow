@@ -28,15 +28,18 @@ interface ContactDialogProps {
   onSubmit: (contact: ContactFormValues) => void;
   openDialog?: boolean;
   setOpenDialog?: (open: boolean) => void;
+  isProcessingContact?: boolean;
 }
 
 export function ContactDialog({ 
   contact, 
   onSubmit, 
   openDialog, 
-  setOpenDialog 
+  setOpenDialog,
+  isProcessingContact = false
 }: ContactDialogProps) {
   const [open, setOpen] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   
   // Control open state from either internal or external state
   const isOpen = openDialog !== undefined ? openDialog : open;
@@ -69,14 +72,27 @@ export function ContactDialog({
         phone: '',
         is_primary: false
       });
+      setIsSubmitting(false);
     }
   }, [contact, form, isOpen]);
 
   const handleSubmit = (data: ContactFormValues) => {
     console.log("ContactDialog: handleSubmit FIRING with data:", data);
-    onSubmit(data);
-    form.reset();
-    setIsOpen(false);
+    
+    // Prevent multiple submissions
+    if (isSubmitting || isProcessingContact) {
+      console.log("ContactDialog: Preventing duplicate submission");
+      return;
+    }
+    
+    setIsSubmitting(true);
+    
+    // Use a small delay to prevent event propagation issues
+    setTimeout(() => {
+      onSubmit(data);
+      form.reset();
+      // The parent component will handle closing the dialog after processing
+    }, 50);
   };
 
   // Only use this for the trigger button, not inside the dialog
@@ -90,6 +106,9 @@ export function ContactDialog({
   return (
     <Dialog open={isOpen} onOpenChange={(newOpen) => {
       console.log("ContactDialog: onOpenChange called with", newOpen);
+      
+      preventPropagation({ preventDefault: () => {}, stopPropagation: () => {} } as React.MouseEvent);
+      
       // Prevent closing when clicking outside to improve UX
       if (isOpen && !newOpen) {
         // Confirm before closing if form has been modified
@@ -98,7 +117,10 @@ export function ContactDialog({
           if (!confirmClose) return;
         }
       }
-      setIsOpen(newOpen);
+      
+      if (!isProcessingContact) {
+        setIsOpen(newOpen);
+      }
     }}>
       {!openDialog && (
         <Button 
@@ -126,7 +148,7 @@ export function ContactDialog({
         className="z-[60]"
         onPointerDownOutside={(e) => {
           // Prevent closing when clicking outside the dialog
-          if (form.formState.isDirty) {
+          if (form.formState.isDirty || isProcessingContact) {
             e.preventDefault();
           }
         }}
@@ -139,8 +161,14 @@ export function ContactDialog({
         <Form {...form}>
           <form 
             onSubmit={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
               console.log("ContactDialog: Form submit event triggered");
-              form.handleSubmit(handleSubmit)(e);
+              if (!isSubmitting && !isProcessingContact) {
+                form.handleSubmit(handleSubmit)(e);
+              } else {
+                console.log("ContactDialog: Prevented duplicate form submission");
+              }
             }} 
             className="space-y-4"
           >
@@ -219,7 +247,12 @@ export function ContactDialog({
               <Button 
                 type="button" 
                 variant="outline" 
-                onClick={() => setIsOpen(false)}
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  setIsOpen(false);
+                }}
+                disabled={isProcessingContact || isSubmitting}
               >
                 Cancelar
               </Button>
@@ -227,7 +260,9 @@ export function ContactDialog({
                 type="submit"
                 onClick={(e) => {
                   console.log("ContactDialog: Submit button clicked");
+                  e.stopPropagation();
                 }}
+                disabled={isProcessingContact || isSubmitting}
               >
                 {contact ? 'Atualizar' : 'Adicionar'}
               </Button>

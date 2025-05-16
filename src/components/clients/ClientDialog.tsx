@@ -1,5 +1,5 @@
 
-import { useEffect } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { 
@@ -38,6 +38,9 @@ export function ClientDialog({
 }: ClientDialogProps) {
   const { contacts: existingContacts, isLoading: contactsLoading } = useClientContacts(clientId || undefined);
   const client = clients.find(c => c.id === clientId) as Client | undefined;
+  const [isManualSubmit, setIsManualSubmit] = useState(false);
+  const [isContactProcessing, setIsContactProcessing] = useState(false);
+  const formRef = useRef<HTMLFormElement>(null);
 
   const form = useForm<ClientFormValues>({
     resolver: zodResolver(clientSchema),
@@ -54,6 +57,7 @@ export function ClientDialog({
   useEffect(() => {
     if (open) {
       console.log("ClientDialog: Dialog opened, resetting form", client ? "with client data" : "for new client");
+      setIsManualSubmit(false);
       
       // Reset the form with client data or default values
       form.reset({
@@ -66,8 +70,33 @@ export function ClientDialog({
     }
   }, [client, form, open, clientId]);
 
+  // Monitor contact processing state
+  useEffect(() => {
+    const subscription = form.watch((value, { name, type }) => {
+      console.log(`ClientDialog: Form value changed: ${name}, type: ${type}`);
+      
+      // If contacts are changing, we need to ensure this doesn't trigger a form submission
+      if (name?.includes('contacts')) {
+        setIsContactProcessing(true);
+        
+        // Reset the flag after a short delay
+        setTimeout(() => {
+          setIsContactProcessing(false);
+        }, 200);
+      }
+    });
+    
+    return () => subscription.unsubscribe();
+  }, [form]);
+
   const onSubmit = async (data: ClientFormValues) => {
-    console.log("ClientDialog: Form submitted with data:", data);
+    console.log("ClientDialog: Form submitted with data:", data, "isManualSubmit:", isManualSubmit);
+    
+    // Safety check: only allow submission if it was manually triggered or we're not processing contacts
+    if (!isManualSubmit && isContactProcessing) {
+      console.log("ClientDialog: Preventing automatic form submission during contact processing");
+      return;
+    }
     
     // Check if there are contacts
     if (!data.contacts || data.contacts.length === 0) {
@@ -101,6 +130,8 @@ export function ClientDialog({
       toast.error("Erro ao salvar cliente", {
         description: error instanceof Error ? error.message : 'Tente novamente'
       });
+    } finally {
+      setIsManualSubmit(false);
     }
   };
 
@@ -114,8 +145,18 @@ export function ClientDialog({
         </DialogHeader>
         <Form {...form}>
           <form 
+            ref={formRef}
             onSubmit={(e) => {
-              console.log("ClientDialog: Form submit event triggered");
+              console.log("ClientDialog: Form submit event triggered, isContactProcessing:", isContactProcessing);
+              
+              // Only process submit if we're not currently processing contacts
+              if (isContactProcessing) {
+                console.log("ClientDialog: Preventing form submission during contact processing");
+                e.preventDefault();
+                e.stopPropagation();
+                return false;
+              }
+              
               form.handleSubmit(onSubmit)(e);
             }} 
             className="space-y-4"
@@ -138,13 +179,22 @@ export function ClientDialog({
               <Button 
                 type="button" 
                 variant="outline" 
-                onClick={() => onClose?.()}
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  onClose?.();
+                }}
               >
                 Cancelar
               </Button>
               <Button 
                 type="submit" 
-                disabled={isPending}
+                disabled={isPending || isContactProcessing}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  console.log("ClientDialog: Manual submit button clicked");
+                  setIsManualSubmit(true);
+                }}
               >
                 {isPending ? 'Salvando...' : clientId ? 'Atualizar' : 'Criar'}
               </Button>

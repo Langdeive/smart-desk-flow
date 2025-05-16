@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from 'react';
 import { UseFormReturn, useFieldArray } from 'react-hook-form';
 import { ContactDialog } from './ContactDialog';
@@ -29,6 +30,7 @@ export function ClientContactsSection({
 
   const [hasInitializedContacts, setHasInitializedContacts] = useState(false);
   const [contactDialogOpen, setContactDialogOpen] = useState(false);
+  const [isProcessingContact, setIsProcessingContact] = useState(false);
 
   useEffect(() => {
     // Load existing contacts when editing a client, but only once
@@ -55,6 +57,7 @@ export function ClientContactsSection({
 
   const handleAddContact = (contact: ContactFormValues) => {
     console.log("ClientContactsSection: handleAddContact called with contact:", contact);
+    setIsProcessingContact(true);
     
     // If this contact is marked as primary, update other contacts to not be primary
     if (contact.is_primary) {
@@ -69,9 +72,12 @@ export function ClientContactsSection({
     // Validate the contacts field after update
     form.trigger('contacts');
     
-    // Close the dialog after successful addition
-    setContactDialogOpen(false);
-    console.log("Dialog should now be closed. ContactDialogOpen:", contactDialogOpen);
+    // Delay closing the dialog to prevent event propagation issues
+    setTimeout(() => {
+      setContactDialogOpen(false);
+      setIsProcessingContact(false);
+      console.log("Contact dialog closed with delay. ContactDialogOpen:", false);
+    }, 100);
   };
 
   const handleDeleteContact = (index: number) => {
@@ -80,6 +86,8 @@ export function ClientContactsSection({
   };
 
   const handleEditContact = (index: number, updatedContact: ContactFormValues) => {
+    setIsProcessingContact(true);
+    
     // If this contact is marked as primary, update other contacts to not be primary
     if (updatedContact.is_primary) {
       fields.forEach((_, fieldIndex) => {
@@ -92,6 +100,11 @@ export function ClientContactsSection({
     // Update the contact
     update(index, updatedContact);
     form.trigger('contacts');
+    
+    // Delay to prevent event propagation issues
+    setTimeout(() => {
+      setIsProcessingContact(false);
+    }, 100);
   };
 
   const handleOpenContactDialog = (e: React.MouseEvent) => {
@@ -127,6 +140,7 @@ export function ClientContactsSection({
               onDelete={handleDeleteContact}
               onEdit={handleEditContact}
               setContactDialogOpen={setContactDialogOpen}
+              isProcessingContact={isProcessingContact}
             />
             <FormMessage />
           </FormItem>
@@ -138,6 +152,7 @@ export function ClientContactsSection({
         onSubmit={handleAddContact}
         openDialog={contactDialogOpen}
         setOpenDialog={setContactDialogOpen}
+        isProcessingContact={isProcessingContact}
       />
     </div>
   );
