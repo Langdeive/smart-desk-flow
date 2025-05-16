@@ -7,7 +7,6 @@ import {
   DialogContent, 
   DialogHeader, 
   DialogTitle,
-  DialogTrigger,
   DialogClose
 } from '@/components/ui/dialog';
 import {
@@ -21,16 +20,33 @@ import {
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
-import { Plus, Edit2 } from 'lucide-react';
+import { Edit2, Plus } from 'lucide-react';
 import { contactSchema, type ContactFormValues } from '@/lib/validations/client';
 
 interface ContactDialogProps {
   contact?: ContactFormValues;
   onSubmit: (contact: ContactFormValues) => void;
+  openDialog?: boolean;
+  setOpenDialog?: (open: boolean) => void;
 }
 
-export function ContactDialog({ contact, onSubmit }: ContactDialogProps) {
+export function ContactDialog({ 
+  contact, 
+  onSubmit, 
+  openDialog, 
+  setOpenDialog 
+}: ContactDialogProps) {
   const [open, setOpen] = useState(false);
+  
+  // Control open state from either internal or external state
+  const isOpen = openDialog !== undefined ? openDialog : open;
+  const setIsOpen = (newOpen: boolean) => {
+    if (setOpenDialog) {
+      setOpenDialog(newOpen);
+    } else {
+      setOpen(newOpen);
+    }
+  };
 
   // Set up the form with default values or existing contact values
   const form = useForm<ContactFormValues>({
@@ -45,7 +61,7 @@ export function ContactDialog({ contact, onSubmit }: ContactDialogProps) {
 
   // Reset form when dialog opens with a different contact
   useEffect(() => {
-    if (open) {
+    if (isOpen) {
       form.reset(contact || {
         name: '',
         email: '',
@@ -53,13 +69,13 @@ export function ContactDialog({ contact, onSubmit }: ContactDialogProps) {
         is_primary: false
       });
     }
-  }, [contact, form, open]);
+  }, [contact, form, isOpen]);
 
   const handleSubmit = (data: ContactFormValues) => {
     console.log("ContactDialog submitting:", data);
     onSubmit(data);
     form.reset();
-    setOpen(false);
+    setIsOpen(false);
   };
 
   // Prevent event propagation to parent elements
@@ -71,30 +87,38 @@ export function ContactDialog({ contact, onSubmit }: ContactDialogProps) {
   };
 
   return (
-    <Dialog open={open} onOpenChange={(newOpen) => {
+    <Dialog open={isOpen} onOpenChange={(newOpen) => {
       // Prevent closing when clicking outside to improve UX
-      if (open && !newOpen) {
+      if (isOpen && !newOpen) {
         // Confirm before closing if form has been modified
         if (form.formState.isDirty) {
           const confirmClose = window.confirm("Deseja descartar as alterações?");
           if (!confirmClose) return;
         }
       }
-      setOpen(newOpen);
+      setIsOpen(newOpen);
     }}>
-      <DialogTrigger asChild onClick={preventPropagation}>
+      {!openDialog && (
         <Button 
           variant="outline" 
-          onClick={preventPropagation}
+          onClick={(e) => {
+            preventPropagation(e);
+            setIsOpen(true);
+          }}
         >
           {contact ? (
-            <Edit2 className="h-4 w-4 mr-2" />
+            <>
+              <Edit2 className="h-4 w-4 mr-2" />
+              Editar Contato
+            </>
           ) : (
-            <Plus className="h-4 w-4 mr-2" />
+            <>
+              <Plus className="h-4 w-4 mr-2" />
+              Novo Contato
+            </>
           )}
-          {contact ? 'Editar Contato' : 'Novo Contato'}
         </Button>
-      </DialogTrigger>
+      )}
       <DialogContent className="z-[60]" onClick={preventPropagation} onPointerDownOutside={(e) => {
         // Prevent closing when clicking outside the dialog
         if (form.formState.isDirty) {
@@ -185,7 +209,7 @@ export function ContactDialog({ contact, onSubmit }: ContactDialogProps) {
                 variant="outline" 
                 onClick={(e) => {
                   preventPropagation(e);
-                  setOpen(false);
+                  setIsOpen(false);
                 }}
               >
                 Cancelar

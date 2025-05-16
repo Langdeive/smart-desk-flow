@@ -6,14 +6,24 @@ import { ContactDialog } from './ContactDialog';
 import type { ContactFormValues } from '@/lib/validations/client';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { AlertTriangle } from 'lucide-react';
+import { useState } from 'react';
 
 interface ContactListProps {
   contacts: ContactFormValues[];
   onDelete: (index: number) => void;
   onEdit: (index: number, contact: ContactFormValues) => void;
+  setContactDialogOpen?: (open: boolean) => void;
 }
 
-export function ContactList({ contacts, onDelete, onEdit }: ContactListProps) {
+export function ContactList({ 
+  contacts, 
+  onDelete, 
+  onEdit, 
+  setContactDialogOpen 
+}: ContactListProps) {
+  const [editingIndex, setEditingIndex] = useState<number | null>(null);
+  const [dialogOpen, setDialogOpen] = useState(false);
+  
   if (contacts.length === 0) {
     return (
       <Alert variant="destructive" className="bg-destructive/10 border-destructive/30">
@@ -26,8 +36,16 @@ export function ContactList({ contacts, onDelete, onEdit }: ContactListProps) {
   }
 
   const handleStopPropagation = (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+  };
+
+  const handleEditClick = (index: number, e: React.MouseEvent) => {
+    handleStopPropagation(e);
+    setEditingIndex(index);
+    setDialogOpen(true);
   };
 
   return (
@@ -57,14 +75,13 @@ export function ContactList({ contacts, onDelete, onEdit }: ContactListProps) {
             </div>
           </div>
           <div className="flex gap-2" onClick={handleStopPropagation}>
-            <div onClick={handleStopPropagation}>
-              <ContactDialog
-                contact={contact}
-                onSubmit={(updatedContact) => {
-                  onEdit(index, updatedContact);
-                }}
-              />
-            </div>
+            <Button
+              variant="outline"
+              onClick={(e) => handleEditClick(index, e)}
+            >
+              <Edit2 className="h-4 w-4 mr-2" />
+              Editar
+            </Button>
             <Button
               variant="outline"
               size="icon"
@@ -79,6 +96,24 @@ export function ContactList({ contacts, onDelete, onEdit }: ContactListProps) {
           </div>
         </div>
       ))}
+
+      {/* Editing dialog */}
+      {editingIndex !== null && (
+        <ContactDialog
+          contact={contacts[editingIndex]}
+          onSubmit={(updatedContact) => {
+            onEdit(editingIndex, updatedContact);
+            setEditingIndex(null);
+          }}
+          openDialog={dialogOpen}
+          setOpenDialog={(open) => {
+            setDialogOpen(open);
+            if (!open) {
+              setEditingIndex(null);
+            }
+          }}
+        />
+      )}
     </div>
   );
 }

@@ -64,13 +64,18 @@ export function Sidebar({ className }: SidebarProps) {
     },
   ];
   
+  // Toggle sidebar function that directly sets the state
+  const toggleSidebar = () => {
+    setIsOpen(!isOpen);
+  };
+  
   return (
     <>
       <Button 
         variant="outline" 
         size="icon" 
         className="fixed top-4 left-4 z-50 lg:hidden"
-        onClick={() => setIsOpen(!isOpen)}
+        onClick={toggleSidebar}
       >
         {isOpen ? <X className="h-5 w-5 text-neutral-700" /> : <Menu className="h-5 w-5 text-neutral-700" />}
       </Button>

@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { UseFormReturn, useFieldArray } from 'react-hook-form';
 import { ContactDialog } from './ContactDialog';
@@ -7,7 +6,8 @@ import { FormField, FormItem, FormMessage } from '@/components/ui/form';
 import { ClientFormValues, ContactFormValues } from '@/lib/validations/client';
 import { ClientContact } from '@/types';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { AlertTriangle } from 'lucide-react';
+import { AlertTriangle, Plus } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
 interface ClientContactsSectionProps {
   form: UseFormReturn<ClientFormValues>;
@@ -29,6 +29,7 @@ export function ClientContactsSection({
   });
 
   const [hasInitializedContacts, setHasInitializedContacts] = useState(false);
+  const [contactDialogOpen, setContactDialogOpen] = useState(false);
 
   useEffect(() => {
     // Load existing contacts when editing a client, but only once
@@ -100,7 +101,21 @@ export function ClientContactsSection({
       <div className="flex justify-between items-center">
         <h3 className="text-lg font-medium">Contatos</h3>
         <div onClick={handleStopPropagation}>
-          <ContactDialog onSubmit={handleAddContact} />
+          <ContactDialog 
+            onSubmit={handleAddContact}
+            openDialog={contactDialogOpen}
+            setOpenDialog={setContactDialogOpen}
+          />
+          <Button 
+            variant="outline" 
+            onClick={(e) => {
+              handleStopPropagation(e);
+              setContactDialogOpen(true);
+            }}
+          >
+            <Plus className="h-4 w-4 mr-2" />
+            Novo Contato
+          </Button>
         </div>
       </div>
       <FormField
@@ -112,6 +127,7 @@ export function ClientContactsSection({
               contacts={fields as ContactFormValues[]}
               onDelete={handleDeleteContact}
               onEdit={handleEditContact}
+              setContactDialogOpen={setContactDialogOpen}
             />
             <FormMessage />
           </FormItem>
