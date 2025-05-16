@@ -53,7 +53,7 @@ export function ClientDialog({
   // Reset form when opening the dialog or when client changes
   useEffect(() => {
     if (open) {
-      console.log("Dialog opened, resetting form", client ? "with client data" : "for new client");
+      console.log("ClientDialog: Dialog opened, resetting form", client ? "with client data" : "for new client");
       
       // Reset the form with client data or default values
       form.reset({
@@ -67,7 +67,7 @@ export function ClientDialog({
   }, [client, form, open, clientId]);
 
   const onSubmit = async (data: ClientFormValues) => {
-    console.log("Form submitted with data:", data);
+    console.log("ClientDialog: Form submitted with data:", data);
     
     // Check if there are contacts
     if (!data.contacts || data.contacts.length === 0) {
@@ -98,7 +98,9 @@ export function ClientDialog({
       }
     } catch (error) {
       console.error("Error saving client:", error);
-      toast.error("Erro ao salvar cliente. Tente novamente.");
+      toast.error("Erro ao salvar cliente", {
+        description: error instanceof Error ? error.message : 'Tente novamente'
+      });
     }
   };
 
@@ -111,7 +113,13 @@ export function ClientDialog({
           </DialogTitle>
         </DialogHeader>
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+          <form 
+            onSubmit={(e) => {
+              console.log("ClientDialog: Form submit event triggered");
+              form.handleSubmit(onSubmit)(e);
+            }} 
+            className="space-y-4"
+          >
             {/* Basic client information fields */}
             <ClientFormFields 
               form={form} 

@@ -62,6 +62,7 @@ export function ContactDialog({
   // Reset form when dialog opens with a different contact
   useEffect(() => {
     if (isOpen) {
+      console.log("ContactDialog: Dialog opened, resetting form");
       form.reset(contact || {
         name: '',
         email: '',
@@ -72,13 +73,13 @@ export function ContactDialog({
   }, [contact, form, isOpen]);
 
   const handleSubmit = (data: ContactFormValues) => {
-    console.log("ContactDialog handleSubmit FIRING with data:", data);
+    console.log("ContactDialog: handleSubmit FIRING with data:", data);
     onSubmit(data);
     form.reset();
     setIsOpen(false);
   };
 
-  // Only prevent event propagation for specific click events
+  // Only use this for the trigger button, not inside the dialog
   const preventPropagation = (e: React.MouseEvent) => {
     if (e) {
       e.preventDefault();
@@ -88,6 +89,7 @@ export function ContactDialog({
 
   return (
     <Dialog open={isOpen} onOpenChange={(newOpen) => {
+      console.log("ContactDialog: onOpenChange called with", newOpen);
       // Prevent closing when clicking outside to improve UX
       if (isOpen && !newOpen) {
         // Confirm before closing if form has been modified
@@ -100,6 +102,7 @@ export function ContactDialog({
     }}>
       {!openDialog && (
         <Button 
+          type="button" // Explicitly set type to button
           variant="outline" 
           onClick={(e) => {
             preventPropagation(e);
@@ -120,8 +123,7 @@ export function ContactDialog({
         </Button>
       )}
       <DialogContent 
-        className="z-[60]" 
-        // Don't prevent all clicks on DialogContent, just handle specific cases
+        className="z-[60]"
         onPointerDownOutside={(e) => {
           // Prevent closing when clicking outside the dialog
           if (form.formState.isDirty) {
@@ -135,7 +137,13 @@ export function ContactDialog({
           </DialogTitle>
         </DialogHeader>
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4">
+          <form 
+            onSubmit={(e) => {
+              console.log("ContactDialog: Form submit event triggered");
+              form.handleSubmit(handleSubmit)(e);
+            }} 
+            className="space-y-4"
+          >
             <FormField
               control={form.control}
               name="name"
@@ -211,14 +219,16 @@ export function ContactDialog({
               <Button 
                 type="button" 
                 variant="outline" 
-                onClick={(e) => {
-                  preventPropagation(e);
-                  setIsOpen(false);
-                }}
+                onClick={() => setIsOpen(false)}
               >
                 Cancelar
               </Button>
-              <Button type="submit">
+              <Button 
+                type="submit"
+                onClick={(e) => {
+                  console.log("ContactDialog: Submit button clicked");
+                }}
+              >
                 {contact ? 'Atualizar' : 'Adicionar'}
               </Button>
             </div>

@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { UseFormReturn, useFieldArray } from 'react-hook-form';
 import { ContactDialog } from './ContactDialog';
@@ -95,6 +94,14 @@ export function ClientContactsSection({
     form.trigger('contacts');
   };
 
+  const handleOpenContactDialog = (e: React.MouseEvent) => {
+    // Prevent the event from propagating to the parent form
+    e.preventDefault();
+    e.stopPropagation();
+    console.log("Opening contact dialog");
+    setContactDialogOpen(true);
+  };
+
   return (
     <div className="space-y-4">
       <div className="flex justify-between items-center">
@@ -102,7 +109,8 @@ export function ClientContactsSection({
         <div>
           <Button 
             variant="outline" 
-            onClick={() => setContactDialogOpen(true)}
+            type="button" // Explicitly set type to button to prevent form submission
+            onClick={handleOpenContactDialog}
           >
             <Plus className="h-4 w-4 mr-2" />
             Novo Contato
