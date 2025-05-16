@@ -131,7 +131,8 @@ export function ContactDialog({
           </DialogTitle>
         </DialogHeader>
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4" onClick={preventPropagation}>
+          {/* IMPORTANT: Removed onClick={preventPropagation} from the form element */}
+          <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4">
             <FormField
               control={form.control}
               name="name"
