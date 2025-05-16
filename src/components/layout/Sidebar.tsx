@@ -81,17 +81,17 @@ export function Sidebar({ className }: SidebarProps) {
         className
       )}>
         <div className="p-4 border-b">
-          <Link to="/" className="flex items-center gap-2">
+          <Link to="/dashboard" className="flex items-center gap-2">
             <Logo />
           </Link>
         </div>
         
         <div className="flex-1 overflow-auto py-4">
           <Link
-            to="/"
+            to="/dashboard"
             className={cn(
               "flex items-center mx-3 px-3 py-2 rounded-lg text-sm transition-colors duration-default",
-              isActive("/") 
+              isActive("/dashboard") 
                 ? "bg-primary-a text-white" 
                 : "text-neutral-700 hover:bg-neutral-100"
             )}
@@ -138,12 +138,14 @@ export function Sidebar({ className }: SidebarProps) {
           </Accordion>
         </div>
         
-        <div className="p-4 border-t">
-          <Button variant="outline" className="w-full" onClick={() => setIsOpen(false)}>
-            <X className="mr-2 h-4 w-4" />
-            Fechar Menu
-          </Button>
-        </div>
+        {isOpen && (
+          <div className="p-4 border-t lg:hidden">
+            <Button variant="outline" className="w-full" onClick={() => setIsOpen(false)}>
+              <X className="mr-2 h-4 w-4" />
+              Fechar Menu
+            </Button>
+          </div>
+        )}
       </div>
     </>
   );

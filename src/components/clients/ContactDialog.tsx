@@ -64,8 +64,10 @@ export function ContactDialog({ contact, onSubmit }: ContactDialogProps) {
 
   // Prevent event propagation to parent elements
   const preventPropagation = (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
   };
 
   return (
@@ -93,7 +95,7 @@ export function ContactDialog({ contact, onSubmit }: ContactDialogProps) {
           {contact ? 'Editar Contato' : 'Novo Contato'}
         </Button>
       </DialogTrigger>
-      <DialogContent onClick={preventPropagation} onPointerDownOutside={(e) => {
+      <DialogContent className="z-[60]" onClick={preventPropagation} onPointerDownOutside={(e) => {
         // Prevent closing when clicking outside the dialog
         if (form.formState.isDirty) {
           e.preventDefault();
