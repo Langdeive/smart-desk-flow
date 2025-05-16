@@ -1,3 +1,4 @@
+
 import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -6,7 +7,6 @@ import {
   DialogContent, 
   DialogHeader, 
   DialogTitle,
-  DialogClose,
 } from '@/components/ui/dialog';
 import { Form } from '@/components/ui/form';
 import { Button } from '@/components/ui/button';
@@ -16,7 +16,6 @@ import { Client, ClientFormData } from '@/types';
 import { toast } from 'sonner';
 import { ClientFormFields } from './ClientFormFields';
 import { ClientContactsSection } from './ClientContactsSection';
-import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
 
 interface ClientDialogProps {
   clientId?: string | null;
@@ -103,24 +102,16 @@ export function ClientDialog({
     }
   };
 
-  // This prevents the dialog from closing when interacting with child components
-  const handleDialogClick = (e: React.MouseEvent) => {
-    e.stopPropagation();
-  };
-
-  // Using Sheet instead of Dialog for Contact Creation/Editing would be a better UX
-  // But for now, let's keep with improved Dialog behavior
-
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-2xl" onClick={handleDialogClick}>
+      <DialogContent className="max-w-2xl">
         <DialogHeader>
           <DialogTitle>
             {clientId ? 'Editar Cliente' : 'Novo Cliente'}
           </DialogTitle>
         </DialogHeader>
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4" onClick={handleDialogClick}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
             {/* Basic client information fields */}
             <ClientFormFields 
               form={form} 
@@ -139,10 +130,7 @@ export function ClientDialog({
               <Button 
                 type="button" 
                 variant="outline" 
-                onClick={(e) => {
-                  e.stopPropagation(); 
-                  onClose?.();
-                }}
+                onClick={() => onClose?.()}
               >
                 Cancelar
               </Button>

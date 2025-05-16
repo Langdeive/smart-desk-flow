@@ -72,13 +72,13 @@ export function ContactDialog({
   }, [contact, form, isOpen]);
 
   const handleSubmit = (data: ContactFormValues) => {
-    console.log("ContactDialog submitting:", data);
+    console.log("ContactDialog handleSubmit FIRING with data:", data);
     onSubmit(data);
     form.reset();
     setIsOpen(false);
   };
 
-  // Prevent event propagation to parent elements - but not for form submission
+  // Only prevent event propagation for specific click events
   const preventPropagation = (e: React.MouseEvent) => {
     if (e) {
       e.preventDefault();
@@ -119,19 +119,22 @@ export function ContactDialog({
           )}
         </Button>
       )}
-      <DialogContent className="z-[60]" onClick={preventPropagation} onPointerDownOutside={(e) => {
-        // Prevent closing when clicking outside the dialog
-        if (form.formState.isDirty) {
-          e.preventDefault();
-        }
-      }}>
+      <DialogContent 
+        className="z-[60]" 
+        // Don't prevent all clicks on DialogContent, just handle specific cases
+        onPointerDownOutside={(e) => {
+          // Prevent closing when clicking outside the dialog
+          if (form.formState.isDirty) {
+            e.preventDefault();
+          }
+        }}
+      >
         <DialogHeader>
           <DialogTitle>
             {contact ? 'Editar Contato' : 'Novo Contato'}
           </DialogTitle>
         </DialogHeader>
         <Form {...form}>
-          {/* IMPORTANT: Removed onClick={preventPropagation} from the form element */}
           <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4">
             <FormField
               control={form.control}
@@ -215,7 +218,6 @@ export function ContactDialog({
               >
                 Cancelar
               </Button>
-              {/* Remove preventPropagation from submit button to allow form submission */}
               <Button type="submit">
                 {contact ? 'Atualizar' : 'Adicionar'}
               </Button>

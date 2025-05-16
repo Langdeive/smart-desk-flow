@@ -6,9 +6,8 @@ import { ContactList } from './ContactList';
 import { FormField, FormItem, FormMessage } from '@/components/ui/form';
 import { ClientFormValues, ContactFormValues } from '@/lib/validations/client';
 import { ClientContact } from '@/types';
-import { Alert, AlertDescription } from '@/components/ui/alert';
-import { AlertTriangle, Plus } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { Plus } from 'lucide-react';
 
 interface ClientContactsSectionProps {
   form: UseFormReturn<ClientFormValues>;
@@ -56,7 +55,7 @@ export function ClientContactsSection({
   }, [existingContacts, clientId, append, remove, fields, hasInitializedContacts]);
 
   const handleAddContact = (contact: ContactFormValues) => {
-    console.log("Adding contact to ClientDialog:", contact);
+    console.log("ClientContactsSection: handleAddContact called with contact:", contact);
     
     // If this contact is marked as primary, update other contacts to not be primary
     if (contact.is_primary) {
@@ -73,6 +72,7 @@ export function ClientContactsSection({
     
     // Close the dialog after successful addition
     setContactDialogOpen(false);
+    console.log("Dialog should now be closed. ContactDialogOpen:", contactDialogOpen);
   };
 
   const handleDeleteContact = (index: number) => {
@@ -95,24 +95,14 @@ export function ClientContactsSection({
     form.trigger('contacts');
   };
 
-  const handleStopPropagation = (e: React.MouseEvent) => {
-    if (e) {
-      e.preventDefault();
-      e.stopPropagation();
-    }
-  };
-
   return (
-    <div className="space-y-4" onClick={handleStopPropagation}>
+    <div className="space-y-4">
       <div className="flex justify-between items-center">
         <h3 className="text-lg font-medium">Contatos</h3>
-        <div onClick={handleStopPropagation}>
+        <div>
           <Button 
             variant="outline" 
-            onClick={(e) => {
-              handleStopPropagation(e);
-              setContactDialogOpen(true);
-            }}
+            onClick={() => setContactDialogOpen(true)}
           >
             <Plus className="h-4 w-4 mr-2" />
             Novo Contato
