@@ -1,6 +1,6 @@
 
 import { useState, useEffect } from 'react';
-import { UseFormReturn } from 'react-hook-form';
+import { UseFormReturn, useFieldArray } from 'react-hook-form';
 import { ContactDialog } from './ContactDialog';
 import { ContactList } from './ContactList';
 import { FormField, FormItem, FormMessage } from '@/components/ui/form';
@@ -22,69 +22,71 @@ export function ClientContactsSection({
   isLoading,
   clientId 
 }: ClientContactsSectionProps) {
-  const [contacts, setContacts] = useState<ClientFormValues['contacts']>([]);
-  const [hasUserModifiedContacts, setHasUserModifiedContacts] = useState(false);
+  // Use useFieldArray to manage contacts
+  const { fields, append, remove, update } = useFieldArray({
+    control: form.control,
+    name: "contacts",
+  });
+
+  const [hasInitializedContacts, setHasInitializedContacts] = useState(false);
 
   useEffect(() => {
-    // Load existing contacts when editing a client
-    if (existingContacts && existingContacts.length > 0 && clientId) {
+    // Load existing contacts when editing a client, but only once
+    if (existingContacts && existingContacts.length > 0 && clientId && !hasInitializedContacts) {
       console.log("Loading existing contacts:", existingContacts);
       
-      // Only update contacts if the user hasn't modified contacts manually
-      if (!hasUserModifiedContacts) {
-        const mappedContacts = existingContacts.map(contact => ({
+      // Clear any existing fields first to avoid duplication
+      fields.forEach((_, index) => remove(index));
+
+      // Map and append contacts
+      existingContacts.forEach(contact => {
+        append({
           name: contact.name || undefined,
           email: contact.email || undefined,
           phone: contact.phone || undefined,
           is_primary: contact.is_primary
-        }));
-        
-        setContacts(mappedContacts);
-        form.setValue('contacts', mappedContacts);
-        // Trigger validation after setting contacts
-        form.trigger('contacts');
-      } else {
-        console.log("Not overwriting user-modified contacts:", contacts);
-      }
+        });
+      });
+      
+      // Mark as initialized to prevent reloading
+      setHasInitializedContacts(true);
     }
-  }, [existingContacts, clientId, form, hasUserModifiedContacts]);
+  }, [existingContacts, clientId, append, remove, fields, hasInitializedContacts]);
 
   const handleAddContact = (contact: ContactFormValues) => {
     console.log("Adding contact to ClientDialog:", contact);
     
-    // Mark that user has modified contacts
-    setHasUserModifiedContacts(true);
+    // If this contact is marked as primary, update other contacts to not be primary
+    if (contact.is_primary) {
+      fields.forEach((_, index) => {
+        update(index, { ...form.getValues(`contacts.${index}`), is_primary: false });
+      });
+    }
     
-    // Ensure we're working with a new array instance to trigger re-render
-    const updatedContacts = [...contacts, contact];
-    setContacts(updatedContacts);
+    // Add new contact
+    append(contact);
     
-    // Update the form value to ensure validation works correctly
-    form.setValue('contacts', updatedContacts);
-    
-    // Trigger form validation to refresh error messages
+    // Validate the contacts field after update
     form.trigger('contacts');
   };
 
   const handleDeleteContact = (index: number) => {
-    // Mark that user has modified contacts
-    setHasUserModifiedContacts(true);
-    
-    const updatedContacts = [...contacts];
-    updatedContacts.splice(index, 1);
-    setContacts(updatedContacts);
-    form.setValue('contacts', updatedContacts);
+    remove(index);
     form.trigger('contacts');
   };
 
   const handleEditContact = (index: number, updatedContact: ContactFormValues) => {
-    // Mark that user has modified contacts
-    setHasUserModifiedContacts(true);
+    // If this contact is marked as primary, update other contacts to not be primary
+    if (updatedContact.is_primary) {
+      fields.forEach((_, fieldIndex) => {
+        if (fieldIndex !== index) {
+          update(fieldIndex, { ...form.getValues(`contacts.${fieldIndex}`), is_primary: false });
+        }
+      });
+    }
     
-    const updatedContacts = [...contacts];
-    updatedContacts[index] = updatedContact;
-    setContacts(updatedContacts);
-    form.setValue('contacts', updatedContacts);
+    // Update the contact
+    update(index, updatedContact);
     form.trigger('contacts');
   };
 
@@ -100,7 +102,7 @@ export function ClientContactsSection({
         render={() => (
           <FormItem>
             <ContactList
-              contacts={contacts}
+              contacts={fields as ContactFormValues[]}
               onDelete={handleDeleteContact}
               onEdit={handleEditContact}
             />

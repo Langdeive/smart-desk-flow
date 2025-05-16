@@ -1,5 +1,5 @@
 
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { 
@@ -50,31 +50,21 @@ export function ClientDialog({
     }
   });
 
+  // Reset form when opening the dialog or when client changes
   useEffect(() => {
-    // Reset form when opening the dialog
     if (open) {
-      if (client) {
-        console.log("Resetting form with client data:", client);
-        form.reset({
-          name: client.name,
-          external_id: client.external_id || '',
-          notes: client.notes || '',
-          is_active: client.is_active !== false, // Default to true if undefined
-          contacts: []
-        });
-      } else {
-        // Reset form when opening for a new client
-        console.log("Resetting form for new client");
-        form.reset({
-          name: '',
-          external_id: '',
-          notes: '',
-          is_active: true,
-          contacts: []
-        });
-      }
+      console.log("Dialog opened, resetting form", client ? "with client data" : "for new client");
+      
+      // Reset the form with client data or default values
+      form.reset({
+        name: client?.name || '',
+        external_id: client?.external_id || '',
+        notes: client?.notes || '',
+        is_active: client?.is_active !== false, // Default to true if undefined
+        contacts: [] // Contacts will be set by ClientContactsSection from existingContacts
+      });
     }
-  }, [client, form, open]);
+  }, [client, form, open, clientId]);
 
   const onSubmit = async (data: ClientFormValues) => {
     console.log("Form submitted with data:", data);
@@ -85,27 +75,41 @@ export function ClientDialog({
       return;
     }
     
-    // Ensure data has a non-optional name property as required by ClientFormData
-    const clientData: ClientFormData = {
-      name: data.name, // This is required by the schema
-      external_id: data.external_id,
-      notes: data.notes,
-      is_active: data.is_active,
-      contacts: data.contacts || []
-    };
-
     try {
+      // Ensure data has a non-optional name property as required by ClientFormData
+      const clientData: ClientFormData = {
+        name: data.name, // This is required by the schema
+        external_id: data.external_id,
+        notes: data.notes,
+        is_active: data.is_active,
+        contacts: data.contacts.map(contact => ({
+          name: contact.name,
+          email: contact.email,
+          phone: contact.phone,
+          is_primary: contact.is_primary || false
+        }))
+      };
+
       await onSave(clientData, clientId || undefined);
-      onClose?.();
+      
+      // Only close the dialog after successful save
+      if (onClose) {
+        onClose();
+      }
     } catch (error) {
       console.error("Error saving client:", error);
       toast.error("Erro ao salvar cliente. Tente novamente.");
     }
   };
 
+  // This prevents the dialog from closing when interacting with child components
+  const handleDialogClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+  };
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-2xl">
+      <DialogContent className="max-w-2xl" onClick={handleDialogClick}>
         <DialogHeader>
           <DialogTitle>
             {clientId ? 'Editar Cliente' : 'Novo Cliente'}
@@ -128,7 +132,14 @@ export function ClientDialog({
             />
 
             <div className="flex justify-end gap-2">
-              <Button type="button" variant="outline" onClick={onClose}>
+              <Button 
+                type="button" 
+                variant="outline" 
+                onClick={(e) => {
+                  e.stopPropagation(); 
+                  onClose?.();
+                }}
+              >
                 Cancelar
               </Button>
               <Button 

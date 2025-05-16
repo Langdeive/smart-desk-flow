@@ -27,7 +27,7 @@ export const useClientContacts = (clientId?: string) => {
       return data as ClientContact[];
     },
     enabled: !!clientId,
-    staleTime: 60000, // Cache for 1 minute to reduce excessive requests
+    staleTime: 300000, // Cache for 5 minutes to reduce excessive requests
     refetchOnWindowFocus: false, // Don't refetch on window focus
   });
 
@@ -65,10 +65,19 @@ export const useClientContacts = (clientId?: string) => {
       if (error) throw error;
       return data;
     },
-    onSuccess: (_, variables) => {
+    onSuccess: (data, variables) => {
       console.log("Contact added successfully");
-      // We don't invalidate the cache here to prevent unnecessary reloads
-      // The UI already shows the new contact in the client dialog
+      
+      // Instead of invalidating the cache, update it directly with the new contact
+      const currentContacts = queryClient.getQueryData<ClientContact[]>(
+        ['client-contacts', variables.clientId]
+      ) || [];
+      
+      queryClient.setQueryData(
+        ['client-contacts', variables.clientId], 
+        [...currentContacts, data]
+      );
+      
       toast.success('Contato adicionado com sucesso');
     },
     onError: (error) => {
@@ -115,9 +124,23 @@ export const useClientContacts = (clientId?: string) => {
       if (error) throw error;
       return data;
     },
-    onSuccess: (_, variables) => {
+    onSuccess: (updatedContact, variables) => {
       console.log("Contact updated successfully");
-      // Same here, don't invalidate the cache to prevent reloads
+      
+      // Update the cache directly instead of invalidating
+      const currentContacts = queryClient.getQueryData<ClientContact[]>(
+        ['client-contacts', variables.clientId]
+      ) || [];
+      
+      const updatedContacts = currentContacts.map(contact => 
+        contact.id === variables.contactId ? updatedContact : contact
+      );
+      
+      queryClient.setQueryData(
+        ['client-contacts', variables.clientId], 
+        updatedContacts
+      );
+      
       toast.success('Contato atualizado com sucesso');
     },
     onError: (error) => {
@@ -135,10 +158,25 @@ export const useClientContacts = (clientId?: string) => {
         .eq('id', contactId);
 
       if (error) throw error;
+      return contactId;
     },
-    onSuccess: (_, variables) => {
+    onSuccess: (deletedContactId, variables) => {
       console.log("Contact deleted successfully");
-      // Same here, don't invalidate the cache to prevent reloads
+      
+      // Update the cache directly instead of invalidating
+      const currentContacts = queryClient.getQueryData<ClientContact[]>(
+        ['client-contacts', variables.clientId]
+      ) || [];
+      
+      const updatedContacts = currentContacts.filter(
+        contact => contact.id !== deletedContactId
+      );
+      
+      queryClient.setQueryData(
+        ['client-contacts', variables.clientId], 
+        updatedContacts
+      );
+      
       toast.success('Contato removido com sucesso');
     },
     onError: (error) => {

@@ -58,7 +58,7 @@ export function ContactDialog({ contact, onSubmit }: ContactDialogProps) {
     console.log("ContactDialog submitting:", data);
     onSubmit(data);
     form.reset();
-    setOpen(false); // Close only the contact dialog
+    setOpen(false);
   };
 
   // This prevents click events from propagating to parent dialogs
@@ -69,7 +69,13 @@ export function ContactDialog({ contact, onSubmit }: ContactDialogProps) {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant="outline" onClick={(e) => e.stopPropagation()}>
+        <Button 
+          variant="outline" 
+          onClick={(e) => {
+            // Prevent the click event from reaching parent elements
+            e.stopPropagation();
+          }}
+        >
           {contact ? (
             <Edit2 className="h-4 w-4 mr-2" />
           ) : (

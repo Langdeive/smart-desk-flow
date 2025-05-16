@@ -31,6 +31,7 @@ export function ContactList({ contacts, onDelete, onEdit }: ContactListProps) {
         <div
           key={index}
           className="flex items-center justify-between p-4 border rounded-lg"
+          onClick={(e) => e.stopPropagation()}
         >
           <div className="space-y-1">
             <div className="flex items-center gap-2">
@@ -50,11 +51,16 @@ export function ContactList({ contacts, onDelete, onEdit }: ContactListProps) {
               )}
             </div>
           </div>
-          <div className="flex gap-2">
-            <ContactDialog
-              contact={contact}
-              onSubmit={(updatedContact) => onEdit(index, updatedContact)}
-            />
+          <div className="flex gap-2" onClick={(e) => e.stopPropagation()}>
+            <div onClick={(e) => e.stopPropagation()}>
+              <ContactDialog
+                contact={contact}
+                onSubmit={(updatedContact) => {
+                  e.stopPropagation();
+                  onEdit(index, updatedContact);
+                }}
+              />
+            </div>
             <Button
               variant="outline"
               size="icon"
