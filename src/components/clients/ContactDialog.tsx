@@ -78,7 +78,7 @@ export function ContactDialog({
     setIsOpen(false);
   };
 
-  // Prevent event propagation to parent elements
+  // Prevent event propagation to parent elements - but not for form submission
   const preventPropagation = (e: React.MouseEvent) => {
     if (e) {
       e.preventDefault();
@@ -214,7 +214,8 @@ export function ContactDialog({
               >
                 Cancelar
               </Button>
-              <Button type="submit" onClick={preventPropagation}>
+              {/* Remove preventPropagation from submit button to allow form submission */}
+              <Button type="submit">
                 {contact ? 'Atualizar' : 'Adicionar'}
               </Button>
             </div>

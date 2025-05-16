@@ -70,6 +70,9 @@ export function ClientContactsSection({
     
     // Validate the contacts field after update
     form.trigger('contacts');
+    
+    // Close the dialog after successful addition
+    setContactDialogOpen(false);
   };
 
   const handleDeleteContact = (index: number) => {
