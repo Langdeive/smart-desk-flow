@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from 'react';
 import { UseFormReturn, useFieldArray } from 'react-hook-form';
 import { ContactDialog } from './ContactDialog';
@@ -92,8 +93,10 @@ export function ClientContactsSection({
   };
 
   const handleStopPropagation = (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
   };
 
   return (
@@ -101,11 +104,6 @@ export function ClientContactsSection({
       <div className="flex justify-between items-center">
         <h3 className="text-lg font-medium">Contatos</h3>
         <div onClick={handleStopPropagation}>
-          <ContactDialog 
-            onSubmit={handleAddContact}
-            openDialog={contactDialogOpen}
-            setOpenDialog={setContactDialogOpen}
-          />
           <Button 
             variant="outline" 
             onClick={(e) => {
@@ -132,6 +130,13 @@ export function ClientContactsSection({
             <FormMessage />
           </FormItem>
         )}
+      />
+
+      {/* Renderizar ContactDialog apenas uma vez, controlado por estado */}
+      <ContactDialog 
+        onSubmit={handleAddContact}
+        openDialog={contactDialogOpen}
+        setOpenDialog={setContactDialogOpen}
       />
     </div>
   );

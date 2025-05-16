@@ -104,6 +104,7 @@ export function ContactList({
           onSubmit={(updatedContact) => {
             onEdit(editingIndex, updatedContact);
             setEditingIndex(null);
+            setDialogOpen(false);
           }}
           openDialog={dialogOpen}
           setOpenDialog={(open) => {
