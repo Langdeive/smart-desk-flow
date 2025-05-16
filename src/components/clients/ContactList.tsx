@@ -25,13 +25,18 @@ export function ContactList({ contacts, onDelete, onEdit }: ContactListProps) {
     );
   }
 
+  const handleStopPropagation = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+  };
+
   return (
     <div className="space-y-2">
       {contacts.map((contact, index) => (
         <div
           key={index}
           className="flex items-center justify-between p-4 border rounded-lg"
-          onClick={(e) => e.stopPropagation()}
+          onClick={handleStopPropagation}
         >
           <div className="space-y-1">
             <div className="flex items-center gap-2">
@@ -51,12 +56,11 @@ export function ContactList({ contacts, onDelete, onEdit }: ContactListProps) {
               )}
             </div>
           </div>
-          <div className="flex gap-2" onClick={(e) => e.stopPropagation()}>
-            <div onClick={(e) => e.stopPropagation()}>
+          <div className="flex gap-2" onClick={handleStopPropagation}>
+            <div onClick={handleStopPropagation}>
               <ContactDialog
                 contact={contact}
                 onSubmit={(updatedContact) => {
-                  // Remove the reference to 'e' as it's not defined in this callback scope
                   onEdit(index, updatedContact);
                 }}
               />
@@ -66,7 +70,7 @@ export function ContactList({ contacts, onDelete, onEdit }: ContactListProps) {
               size="icon"
               className="text-destructive"
               onClick={(e) => {
-                e.stopPropagation(); // Prevent event bubbling
+                handleStopPropagation(e);
                 onDelete(index);
               }}
             >

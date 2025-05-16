@@ -90,11 +90,18 @@ export function ClientContactsSection({
     form.trigger('contacts');
   };
 
+  const handleStopPropagation = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+  };
+
   return (
-    <div className="space-y-4">
+    <div className="space-y-4" onClick={handleStopPropagation}>
       <div className="flex justify-between items-center">
         <h3 className="text-lg font-medium">Contatos</h3>
-        <ContactDialog onSubmit={handleAddContact} />
+        <div onClick={handleStopPropagation}>
+          <ContactDialog onSubmit={handleAddContact} />
+        </div>
       </div>
       <FormField
         control={form.control}

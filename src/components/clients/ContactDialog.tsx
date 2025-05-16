@@ -7,7 +7,8 @@ import {
   DialogContent, 
   DialogHeader, 
   DialogTitle,
-  DialogTrigger
+  DialogTrigger,
+  DialogClose
 } from '@/components/ui/dialog';
 import {
   Form,
@@ -61,20 +62,28 @@ export function ContactDialog({ contact, onSubmit }: ContactDialogProps) {
     setOpen(false);
   };
 
-  // This prevents click events from propagating to parent dialogs
-  const handleDialogClick = (e: React.MouseEvent) => {
+  // Prevent event propagation to parent elements
+  const preventPropagation = (e: React.MouseEvent) => {
+    e.preventDefault();
     e.stopPropagation();
   };
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
+    <Dialog open={open} onOpenChange={(newOpen) => {
+      // Prevent closing when clicking outside to improve UX
+      if (open && !newOpen) {
+        // Confirm before closing if form has been modified
+        if (form.formState.isDirty) {
+          const confirmClose = window.confirm("Deseja descartar as alterações?");
+          if (!confirmClose) return;
+        }
+      }
+      setOpen(newOpen);
+    }}>
+      <DialogTrigger asChild onClick={preventPropagation}>
         <Button 
           variant="outline" 
-          onClick={(e) => {
-            // Prevent the click event from reaching parent elements
-            e.stopPropagation();
-          }}
+          onClick={preventPropagation}
         >
           {contact ? (
             <Edit2 className="h-4 w-4 mr-2" />
@@ -84,7 +93,12 @@ export function ContactDialog({ contact, onSubmit }: ContactDialogProps) {
           {contact ? 'Editar Contato' : 'Novo Contato'}
         </Button>
       </DialogTrigger>
-      <DialogContent onClick={handleDialogClick}>
+      <DialogContent onClick={preventPropagation} onPointerDownOutside={(e) => {
+        // Prevent closing when clicking outside the dialog
+        if (form.formState.isDirty) {
+          e.preventDefault();
+        }
+      }}>
         <DialogHeader>
           <DialogTitle>
             {contact ? 'Editar Contato' : 'Novo Contato'}
@@ -163,8 +177,18 @@ export function ContactDialog({ contact, onSubmit }: ContactDialogProps) {
               )}
             />
 
-            <div className="flex justify-end">
-              <Button type="submit">
+            <div className="flex justify-end gap-2">
+              <Button 
+                type="button" 
+                variant="outline" 
+                onClick={(e) => {
+                  preventPropagation(e);
+                  setOpen(false);
+                }}
+              >
+                Cancelar
+              </Button>
+              <Button type="submit" onClick={preventPropagation}>
                 {contact ? 'Atualizar' : 'Adicionar'}
               </Button>
             </div>
