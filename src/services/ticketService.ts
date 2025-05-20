@@ -1,3 +1,4 @@
+
 import { supabase } from "@/integrations/supabase/client";
 import { Ticket, Message, Attachment, TicketStatus, TicketPriority, TicketCategory } from "@/types";
 
@@ -126,9 +127,10 @@ export const getTicketById = async (id: string): Promise<Ticket> => {
 export const createTicket = async (ticket: Partial<Ticket>): Promise<Ticket> => {
   const dbTicket = mapAppTicketToDbTicket(ticket);
   
+  // Fix: Pass a single object instead of an array wrapped in a single-element array
   const { data, error } = await supabase
     .from('tickets')
-    .insert([dbTicket])
+    .insert(dbTicket)
     .select();
   
   if (error) {
@@ -265,7 +267,7 @@ export const addMessageToTicket = async (message: Omit<Message, "id" | "createdA
   
   const { data, error } = await supabase
     .from('messages')
-    .insert([dbMessage])
+    .insert(dbMessage)
     .select();
   
   if (error) {
@@ -330,7 +332,7 @@ export const uploadAttachment = async (
   
   const { data, error } = await supabase
     .from('attachments')
-    .insert([attachmentData])
+    .insert(attachmentData)
     .select();
   
   if (error) {
