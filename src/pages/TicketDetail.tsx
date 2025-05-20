@@ -1,7 +1,6 @@
-
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { Layout } from "@/components/layout/AppLayout";
+import { AppLayout } from "@/components/layout/AppLayout";
 import TicketHeader from "@/components/ticket/TicketHeader";
 import TicketDetailsPanel from "@/components/ticket/TicketDetailsPanel";
 import TicketConversation from "@/components/ticket/TicketConversation";
@@ -161,24 +160,24 @@ const TicketDetail = () => {
   };
 
   if (loading) {
-    return <Layout>Carregando...</Layout>;
+    return <AppLayout>Carregando...</AppLayout>;
   }
 
   if (error || !ticket) {
     return (
-      <Layout>
+      <AppLayout>
         <div className="flex flex-col items-center justify-center h-64">
           <h2 className="text-2xl font-bold text-gray-800 mb-4">
             {error || "Ticket não encontrado"}
           </h2>
           <Button onClick={() => navigate("/tickets")}>Voltar para a lista de tickets</Button>
         </div>
-      </Layout>
+      </AppLayout>
     );
   }
 
   return (
-    <Layout>
+    <AppLayout>
       <div className="container mx-auto px-4 py-6">
         <TicketHeader 
           ticket={ticket} 
@@ -228,7 +227,7 @@ const TicketDetail = () => {
           </div>
         </div>
       </div>
-    </Layout>
+    </AppLayout>
   );
 };
 
