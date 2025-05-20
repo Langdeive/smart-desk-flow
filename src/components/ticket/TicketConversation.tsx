@@ -7,7 +7,8 @@ import { MessageList } from "@/components/MessageList";
 import { FileUploader } from "@/components/FileUploader";
 import { useToast } from "@/hooks/use-toast";
 import { Message, Attachment, Ticket } from "@/types";
-import { MessageSquare, BrainCircuit } from "lucide-react";
+import { MessageSquare, BrainCircuit, Loader2 } from "lucide-react";
+import { reprocessTicket } from "@/services/aiProcessingService";
 
 interface TicketConversationProps {
   ticket: Ticket;
@@ -26,22 +27,37 @@ const TicketConversation: React.FC<TicketConversationProps> = ({
   const [newMessage, setNewMessage] = useState("");
   const [newFiles, setNewFiles] = useState<File[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [isProcessing, setIsProcessing] = useState(false);
 
-  const handleAiSuggestion = () => {
-    setIsLoading(true);
-    
-    // Simulação da resposta da IA
-    setTimeout(() => {
-      const aiSuggestion = "Com base nas informações fornecidas pelo cliente, sugiro informar que estamos avaliando a implementação do recurso de exportação de relatórios para a próxima atualização. Peça mais detalhes sobre os tipos de dados que ele precisa incluir nos relatórios para ajudarmos a priorizar esta funcionalidade.";
+  const handleRequestAIAnalysis = async () => {
+    if (isProcessing) return;
+
+    setIsProcessing(true);
+    try {
+      const success = await reprocessTicket(ticket.id);
       
-      setNewMessage(aiSuggestion);
-      setIsLoading(false);
-      
+      if (success) {
+        toast({
+          title: "Análise solicitada",
+          description: "O ticket foi enviado para processamento pela IA.",
+        });
+      } else {
+        toast({
+          title: "Erro na solicitação",
+          description: "Não foi possível processar o ticket. Tente novamente mais tarde.",
+          variant: "destructive",
+        });
+      }
+    } catch (error) {
+      console.error("Erro ao solicitar análise da IA:", error);
       toast({
-        title: "Sugestão da IA",
-        description: "Uma resposta foi gerada com base no histórico do ticket.",
+        title: "Erro na solicitação",
+        description: "Ocorreu um erro ao solicitar a análise da IA.",
+        variant: "destructive",
       });
-    }, 1500);
+    } finally {
+      setIsProcessing(false);
+    }
   };
 
   const handleSendMessage = async () => {
@@ -97,19 +113,27 @@ const TicketConversation: React.FC<TicketConversationProps> = ({
         <div className="flex justify-between w-full">
           <Button
             variant="outline"
-            onClick={handleAiSuggestion}
-            disabled={isLoading}
+            onClick={handleRequestAIAnalysis}
+            disabled={isProcessing}
           >
-            <BrainCircuit className="mr-2 h-4 w-4" />
-            Sugerir Resposta
+            {isProcessing ? (
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+            ) : (
+              <BrainCircuit className="mr-2 h-4 w-4" />
+            )}
+            {isProcessing ? "Processando..." : "Analisar com IA"}
           </Button>
           
           <Button
             onClick={handleSendMessage}
             disabled={isLoading || (!newMessage.trim() && newFiles.length === 0)}
           >
-            <MessageSquare className="mr-2 h-4 w-4" />
-            Enviar Resposta
+            {isLoading ? (
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+            ) : (
+              <MessageSquare className="mr-2 h-4 w-4" />
+            )}
+            {isLoading ? "Enviando..." : "Enviar Resposta"}
           </Button>
         </div>
       </CardFooter>

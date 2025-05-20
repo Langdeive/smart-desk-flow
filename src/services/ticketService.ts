@@ -16,14 +16,20 @@ const mapDbTicketToAppTicket = (dbTicket: any): Ticket => {
     createdAt: new Date(dbTicket.created_at),
     updatedAt: new Date(dbTicket.updated_at),
     source: dbTicket.source as "web" | "email" | "whatsapp",
-    aiProcessed: dbTicket.ai_processed,
-    needsHumanReview: dbTicket.needs_human_review
+    aiProcessed: dbTicket.ai_processed || false,
+    needsHumanReview: dbTicket.needs_human_review || true,
+    contactId: dbTicket.contact_id,
+    // AI classification fields
+    aiClassification: dbTicket.ai_classification,
+    suggestedPriority: dbTicket.suggested_priority as TicketPriority,
+    needsAdditionalInfo: dbTicket.needs_additional_info || false,
+    confidenceScore: dbTicket.confidence_score
   };
 };
 
 // Helper function to convert app ticket to database ticket
-const mapAppTicketToDbTicket = (appTicket: Omit<Ticket, "id" | "createdAt" | "updatedAt" | "aiProcessed" | "needsHumanReview">) => {
-  return {
+const mapAppTicketToDbTicket = (appTicket: Partial<Ticket>) => {
+  const dbTicket: Record<string, any> = {
     title: appTicket.title,
     description: appTicket.description,
     status: appTicket.status,
@@ -32,8 +38,19 @@ const mapAppTicketToDbTicket = (appTicket: Omit<Ticket, "id" | "createdAt" | "up
     user_id: appTicket.userId,
     agent_id: appTicket.agentId,
     company_id: appTicket.companyId,
-    source: appTicket.source
+    source: appTicket.source,
+    contact_id: appTicket.contactId
   };
+  
+  // Add AI-related fields if they exist
+  if ('aiProcessed' in appTicket) dbTicket.ai_processed = appTicket.aiProcessed;
+  if ('needsHumanReview' in appTicket) dbTicket.needs_human_review = appTicket.needsHumanReview;
+  if ('aiClassification' in appTicket) dbTicket.ai_classification = appTicket.aiClassification;
+  if ('suggestedPriority' in appTicket) dbTicket.suggested_priority = appTicket.suggestedPriority;
+  if ('needsAdditionalInfo' in appTicket) dbTicket.needs_additional_info = appTicket.needsAdditionalInfo;
+  if ('confidenceScore' in appTicket) dbTicket.confidence_score = appTicket.confidenceScore;
+  
+  return dbTicket;
 };
 
 // Helper function to convert database message to app message
@@ -106,7 +123,7 @@ export const getTicketById = async (id: string): Promise<Ticket> => {
 };
 
 // Create a new ticket
-export const createTicket = async (ticket: Omit<Ticket, "id" | "createdAt" | "updatedAt" | "aiProcessed" | "needsHumanReview">): Promise<Ticket> => {
+export const createTicket = async (ticket: Partial<Ticket>): Promise<Ticket> => {
   const dbTicket = mapAppTicketToDbTicket(ticket);
   
   const { data, error } = await supabase
@@ -116,6 +133,25 @@ export const createTicket = async (ticket: Omit<Ticket, "id" | "createdAt" | "up
   
   if (error) {
     console.error('Error creating ticket:', error);
+    throw error;
+  }
+  
+  return mapDbTicketToAppTicket(data[0]);
+};
+
+// Update ticket
+export const updateTicket = async (id: string, ticketData: Partial<Ticket>): Promise<Ticket> => {
+  const dbTicket = mapAppTicketToDbTicket(ticketData);
+  dbTicket.updated_at = new Date().toISOString();
+  
+  const { data, error } = await supabase
+    .from('tickets')
+    .update(dbTicket)
+    .eq('id', id)
+    .select();
+  
+  if (error) {
+    console.error('Error updating ticket:', error);
     throw error;
   }
   
@@ -167,6 +203,40 @@ export const updateTicketAgent = async (id: string, agentId: string | null): Pro
   
   if (error) {
     console.error('Error updating ticket agent:', error);
+    throw error;
+  }
+  
+  return mapDbTicketToAppTicket(data[0]);
+};
+
+// Update ticket AI processing status
+export const updateTicketAIStatus = async (
+  id: string,
+  aiData: {
+    aiProcessed?: boolean;
+    aiClassification?: string;
+    suggestedPriority?: TicketPriority;
+    needsAdditionalInfo?: boolean;
+    confidenceScore?: number;
+    needsHumanReview?: boolean;
+  }
+): Promise<Ticket> => {
+  const { data, error } = await supabase
+    .from('tickets')
+    .update({
+      ai_processed: aiData.aiProcessed,
+      ai_classification: aiData.aiClassification,
+      suggested_priority: aiData.suggestedPriority,
+      needs_additional_info: aiData.needsAdditionalInfo,
+      confidence_score: aiData.confidenceScore,
+      needs_human_review: aiData.needsHumanReview,
+      updated_at: new Date().toISOString()
+    })
+    .eq('id', id)
+    .select();
+  
+  if (error) {
+    console.error('Error updating ticket AI status:', error);
     throw error;
   }
   
@@ -269,4 +339,20 @@ export const uploadAttachment = async (
   }
   
   return mapDbAttachmentToAppAttachment(data[0]);
+};
+
+// Get tickets that need AI processing
+export const getTicketsNeedingAIProcessing = async (): Promise<Ticket[]> => {
+  const { data, error } = await supabase
+    .from('tickets')
+    .select('*')
+    .eq('ai_processed', false)
+    .order('created_at', { ascending: true });
+  
+  if (error) {
+    console.error('Error fetching tickets needing AI processing:', error);
+    throw error;
+  }
+  
+  return data.map(mapDbTicketToAppTicket);
 };

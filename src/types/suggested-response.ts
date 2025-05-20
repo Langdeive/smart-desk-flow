@@ -18,3 +18,14 @@ export interface SuggestedResponseWithTicket extends SuggestedResponse {
     priority: string;
   };
 }
+
+export interface SuggestedResponseMetrics {
+  total: number;
+  applied: number;
+  approved: number;
+  rejected: number;
+  pending: number;
+  avgConfidence: number;
+  applicationRate: number;
+  approvalRate: number;
+}
