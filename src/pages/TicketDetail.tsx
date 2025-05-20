@@ -160,29 +160,24 @@ const TicketDetail = () => {
     return handleSendMessage(message, []);
   };
 
-  if (loading) {
-    return (
-      <AppLayout>
-        <div>Carregando...</div>
-      </AppLayout>
-    );
-  }
+  // Render the content without AppLayout, which will be handled by the router
+  const renderContent = () => {
+    if (loading) {
+      return <div>Carregando...</div>;
+    }
 
-  if (error || !ticket) {
-    return (
-      <AppLayout>
+    if (error || !ticket) {
+      return (
         <div className="flex flex-col items-center justify-center h-64">
           <h2 className="text-2xl font-bold text-gray-800 mb-4">
             {error || "Ticket não encontrado"}
           </h2>
           <Button onClick={() => navigate("/tickets")}>Voltar para a lista de tickets</Button>
         </div>
-      </AppLayout>
-    );
-  }
+      );
+    }
 
-  return (
-    <AppLayout>
+    return (
       <div className="container mx-auto px-4 py-6">
         <TicketHeader 
           ticket={ticket} 
@@ -232,8 +227,11 @@ const TicketDetail = () => {
           </div>
         </div>
       </div>
-    </AppLayout>
-  );
+    );
+  };
+
+  // Return only the content, as the AppLayout will be provided by the router
+  return renderContent();
 };
 
 export default TicketDetail;
