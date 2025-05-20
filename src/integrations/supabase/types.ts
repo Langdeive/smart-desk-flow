@@ -405,54 +405,110 @@ export type Database = {
         }
         Relationships: []
       }
+      suggested_responses: {
+        Row: {
+          applied: boolean | null
+          applied_at: string | null
+          applied_by: string | null
+          approved: boolean | null
+          confidence: number
+          created_at: string
+          id: string
+          message: string
+          ticket_id: string
+        }
+        Insert: {
+          applied?: boolean | null
+          applied_at?: string | null
+          applied_by?: string | null
+          approved?: boolean | null
+          confidence: number
+          created_at?: string
+          id?: string
+          message: string
+          ticket_id: string
+        }
+        Update: {
+          applied?: boolean | null
+          applied_at?: string | null
+          applied_by?: string | null
+          approved?: boolean | null
+          confidence?: number
+          created_at?: string
+          id?: string
+          message?: string
+          ticket_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "suggested_responses_ticket_id_fkey"
+            columns: ["ticket_id"]
+            isOneToOne: false
+            referencedRelation: "tickets"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       tickets: {
         Row: {
           agent_id: string | null
+          ai_classification: string | null
           ai_processed: boolean
           category: string
           company_id: string
+          confidence_score: number | null
           contact_id: string | null
           created_at: string
           description: string
           id: string
+          needs_additional_info: boolean | null
           needs_human_review: boolean
           priority: string
           source: string
           status: string
+          suggested_priority: string | null
           title: string
           updated_at: string
           user_id: string
         }
         Insert: {
           agent_id?: string | null
+          ai_classification?: string | null
           ai_processed?: boolean
           category: string
           company_id: string
+          confidence_score?: number | null
           contact_id?: string | null
           created_at?: string
           description: string
           id?: string
+          needs_additional_info?: boolean | null
           needs_human_review?: boolean
           priority?: string
           source?: string
           status?: string
+          suggested_priority?: string | null
           title: string
           updated_at?: string
           user_id: string
         }
         Update: {
           agent_id?: string | null
+          ai_classification?: string | null
           ai_processed?: boolean
           category?: string
           company_id?: string
+          confidence_score?: number | null
           contact_id?: string | null
           created_at?: string
           description?: string
           id?: string
+          needs_additional_info?: boolean | null
           needs_human_review?: boolean
           priority?: string
           source?: string
           status?: string
+          suggested_priority?: string | null
           title?: string
           updated_at?: string
           user_id?: string

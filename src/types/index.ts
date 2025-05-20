@@ -1,4 +1,3 @@
-
 export type User = {
   id: string;
   email: string;
@@ -49,6 +48,11 @@ export type Ticket = {
   aiProcessed: boolean;
   needsHumanReview: boolean;
   contactId?: string;
+  // Novos campos de classificação de IA
+  aiClassification?: string;
+  suggestedPriority?: TicketPriority;
+  needsAdditionalInfo?: boolean;
+  confidenceScore?: number;
 };
 
 export type TicketHistoryItem = {
