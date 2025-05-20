@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { Layout } from "@/components/layout/Layout";
+import { Layout } from "@/components/layout/AppLayout";
 import TicketHeader from "@/components/ticket/TicketHeader";
 import TicketDetailsPanel from "@/components/ticket/TicketDetailsPanel";
 import TicketConversation from "@/components/ticket/TicketConversation";
@@ -18,7 +18,7 @@ import {
   uploadAttachment
 } from "@/services/ticketService";
 import { useAuth } from "@/hooks/useAuth";
-import { statusLabels, priorityLabels, formatDate } from "@/components/ticket/TicketUtils";
+import { statusLabels, priorityLabels, formatDate, statusColors } from "@/components/ticket/TicketUtils";
 import AISuggestedResponses from "@/components/ticket/AISuggestedResponses";
 import { useRealtimeTicketUpdates } from "@/hooks/useRealtimeTicketUpdates";
 import AIAnalysisPanel from "@/components/ticket/AIAnalysisPanel";
@@ -180,7 +180,11 @@ const TicketDetail = () => {
   return (
     <Layout>
       <div className="container mx-auto px-4 py-6">
-        <TicketHeader ticket={ticket} />
+        <TicketHeader 
+          ticket={ticket} 
+          statusColors={statusColors} 
+          statusLabels={statusLabels} 
+        />
         
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6">
           <div className="md:col-span-2">
