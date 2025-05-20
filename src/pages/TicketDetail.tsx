@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { AppLayout } from "@/components/layout/AppLayout";
@@ -160,7 +161,11 @@ const TicketDetail = () => {
   };
 
   if (loading) {
-    return <AppLayout>Carregando...</AppLayout>;
+    return (
+      <AppLayout>
+        <div>Carregando...</div>
+      </AppLayout>
+    );
   }
 
   if (error || !ticket) {
