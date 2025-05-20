@@ -46,6 +46,7 @@ type DbTicket = {
   suggested_priority?: string;
   needs_additional_info?: boolean;
   confidence_score?: number;
+  updated_at?: string; // Added this property to fix the error
 };
 
 // Helper function to convert app ticket to database ticket
