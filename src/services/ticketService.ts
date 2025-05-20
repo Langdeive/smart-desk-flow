@@ -28,22 +28,42 @@ const mapDbTicketToAppTicket = (dbTicket: any): Ticket => {
   };
 };
 
+// Define the database ticket type to match what Supabase expects
+type DbTicket = {
+  title: string;
+  description: string;
+  status: string;
+  priority: string;
+  category: string;
+  user_id: string;
+  agent_id?: string;
+  company_id: string;
+  source: string;
+  contact_id?: string;
+  ai_processed?: boolean;
+  needs_human_review?: boolean;
+  ai_classification?: string;
+  suggested_priority?: string;
+  needs_additional_info?: boolean;
+  confidence_score?: number;
+};
+
 // Helper function to convert app ticket to database ticket
-const mapAppTicketToDbTicket = (appTicket: Partial<Ticket>) => {
-  const dbTicket: Record<string, any> = {
-    title: appTicket.title,
-    description: appTicket.description,
-    status: appTicket.status,
-    priority: appTicket.priority,
-    category: appTicket.category,
-    user_id: appTicket.userId,
-    agent_id: appTicket.agentId,
-    company_id: appTicket.companyId,
-    source: appTicket.source,
-    contact_id: appTicket.contactId
+const mapAppTicketToDbTicket = (appTicket: Partial<Ticket>): DbTicket => {
+  const dbTicket: DbTicket = {
+    title: appTicket.title!,
+    description: appTicket.description!,
+    status: appTicket.status!,
+    priority: appTicket.priority!,
+    category: appTicket.category!,
+    user_id: appTicket.userId!,
+    company_id: appTicket.companyId!,
+    source: appTicket.source!,
   };
   
-  // Add AI-related fields if they exist
+  // Add optional fields if they exist
+  if (appTicket.agentId) dbTicket.agent_id = appTicket.agentId;
+  if (appTicket.contactId) dbTicket.contact_id = appTicket.contactId;
   if ('aiProcessed' in appTicket) dbTicket.ai_processed = appTicket.aiProcessed;
   if ('needsHumanReview' in appTicket) dbTicket.needs_human_review = appTicket.needsHumanReview;
   if ('aiClassification' in appTicket) dbTicket.ai_classification = appTicket.aiClassification;
@@ -67,8 +87,17 @@ const mapDbMessageToAppMessage = (dbMessage: any): Message => {
   };
 };
 
+// Define the database message type
+type DbMessage = {
+  content: string;
+  ticket_id: string;
+  user_id: string;
+  is_from_client: boolean;
+  is_automatic: boolean;
+};
+
 // Helper function to convert app message to database message
-const mapAppMessageToDbMessage = (appMessage: Omit<Message, "id" | "createdAt">) => {
+const mapAppMessageToDbMessage = (appMessage: Omit<Message, "id" | "createdAt">): DbMessage => {
   return {
     content: appMessage.content,
     ticket_id: appMessage.ticketId,
@@ -90,6 +119,16 @@ const mapDbAttachmentToAppAttachment = (dbAttachment: any): Attachment => {
     messageId: dbAttachment.message_id,
     createdAt: new Date(dbAttachment.created_at)
   };
+};
+
+// Define the database attachment type
+type DbAttachment = {
+  file_name: string;
+  file_type: string;
+  file_size: number;
+  file_url: string;
+  ticket_id: string;
+  message_id?: string;
 };
 
 // Get all tickets
@@ -127,7 +166,6 @@ export const getTicketById = async (id: string): Promise<Ticket> => {
 export const createTicket = async (ticket: Partial<Ticket>): Promise<Ticket> => {
   const dbTicket = mapAppTicketToDbTicket(ticket);
   
-  // Fix: Pass a single object instead of an array wrapped in a single-element array
   const { data, error } = await supabase
     .from('tickets')
     .insert(dbTicket)
@@ -321,14 +359,17 @@ export const uploadAttachment = async (
     .getPublicUrl(filePath);
   
   // Create attachment record in database
-  const attachmentData = {
+  const attachmentData: DbAttachment = {
     file_name: file.name,
     file_type: file.type,
     file_size: file.size,
     file_url: publicUrl,
     ticket_id: ticketId,
-    message_id: messageId || null
   };
+  
+  if (messageId) {
+    attachmentData.message_id = messageId;
+  }
   
   const { data, error } = await supabase
     .from('attachments')
