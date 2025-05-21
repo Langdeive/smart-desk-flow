@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { AppLayout } from "@/components/layout/AppLayout";
 import TicketHeader from "@/components/ticket/TicketHeader";
@@ -35,14 +35,25 @@ const TicketDetail = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  // Use the hook with the proper parameters
-  const { ticket, isLoading, error: ticketError, setTicket, isSubscribed } = useRealtimeTicketUpdates({
+  // Memoize the onUpdate callback to prevent it from causing re-renders
+  const handleTicketUpdate = useCallback((updatedTicket: Ticket) => {
+    console.log('Ticket updated via realtime:', updatedTicket);
+    // No state updates here - the hook will handle the ticket state
+  }, []);
+
+  // Use the optimized hook with the memoized callback
+  const { 
+    ticket, 
+    isLoading: ticketLoading, 
+    error: ticketError, 
+    setTicket,
+    isSubscribed 
+  } = useRealtimeTicketUpdates({
     ticketId: id || '',
-    onUpdate: (updatedTicket) => {
-      console.log('Ticket updated via realtime:', updatedTicket);
-    }
+    onUpdate: handleTicketUpdate
   });
 
+  // Load messages and attachments only when needed
   useEffect(() => {
     const fetchTicketData = async () => {
       if (!id) return;
@@ -159,7 +170,7 @@ const TicketDetail = () => {
 
   // Render the content without AppLayout, which will be handled by the router
   const renderContent = () => {
-    if (loading || isLoading) {
+    if (loading || ticketLoading) {
       return <div>Carregando...</div>;
     }
 
