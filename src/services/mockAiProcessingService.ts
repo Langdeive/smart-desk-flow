@@ -21,7 +21,7 @@ export const processTicketWithAi = async (ticket: Ticket): Promise<boolean> => {
     const aiClassification = categories[categoryIndex];
     
     // Randomly determine priority
-    const priorities: TicketPriority[] = ['low', 'medium', 'high'];
+    const priorities: TicketPriority[] = ['low', 'medium', 'high', 'critical'];
     const priorityIndex = Math.floor(Math.random() * priorities.length);
     const suggestedPriority = priorities[priorityIndex];
     
@@ -57,11 +57,11 @@ export const processTicketWithAi = async (ticket: Ticket): Promise<boolean> => {
       const suggestedMessage = responses[responseIndex];
       
       // Add suggested response
-      await createSuggestedResponse({
-        ticketId: ticket.id,
-        message: suggestedMessage,
-        confidence: confidenceScore
-      });
+      await createSuggestedResponse(
+        ticket.id,
+        suggestedMessage,
+        confidenceScore
+      );
     }
     
     console.log('[MOCK AI] Successfully processed ticket:', ticket.id);
