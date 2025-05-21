@@ -1,10 +1,22 @@
 
-import { createClient } from '@supabase/supabase-js';
-import type { Ticket } from '@/types';
+import { Ticket } from '@/types';
+import { supabase } from '@/integrations/supabase/client';
+import { getSystemSetting } from '@/services/settingsService';
 
-// Esta função seria chamada quando um trigger de banco de dados é acionado
-export const sendTicketToN8n = async (ticket: Ticket, n8nWebhookUrl: string) => {
+/**
+ * Sends a ticket to n8n for AI processing
+ */
+export const sendTicketToN8n = async (ticket: Ticket, companyId: string): Promise<{success: boolean, error?: any}> => {
   try {
+    // Get webhook URL from settings
+    const n8nWebhookUrl = await getSystemSetting<string>(companyId, 'n8n_webhook_url');
+    const enableProcessing = await getSystemSetting<boolean>(companyId, 'enable_ai_processing');
+    
+    if (!n8nWebhookUrl || !enableProcessing) {
+      console.log('N8n processing not configured or disabled for company:', companyId);
+      return { success: false, error: 'N8n webhook not configured or processing disabled' };
+    }
+    
     console.log('Enviando ticket para processamento n8n:', ticket.id);
     
     const response = await fetch(n8nWebhookUrl, {
@@ -15,7 +27,8 @@ export const sendTicketToN8n = async (ticket: Ticket, n8nWebhookUrl: string) => 
       body: JSON.stringify({
         eventType: 'ticket.created',
         data: ticket,
-        timestamp: new Date().toISOString()
+        timestamp: new Date().toISOString(),
+        companyId: companyId
       }),
     });
 
@@ -31,46 +44,60 @@ export const sendTicketToN8n = async (ticket: Ticket, n8nWebhookUrl: string) => 
   }
 };
 
-// Esta função seria usada para receber atualizações do n8n
-export const processN8nUpdate = async (updateData: any) => {
+/**
+ * Processes an update received from n8n
+ */
+export const processN8nUpdate = async (updateData: {
+  ticketId: string;
+  aiClassification?: string;
+  suggestedPriority?: string;
+  suggestedKnowledgeArticles?: any[];
+  aiResponse?: string;
+  needsHumanReview?: boolean;
+  confidenceScore?: number;
+}) => {
+  // Destructure the update data
   const { 
     ticketId, 
     aiClassification, 
     suggestedPriority, 
     suggestedKnowledgeArticles,
-    aiResponse 
+    aiResponse,
+    needsHumanReview,
+    confidenceScore
   } = updateData;
   
-  // Configuração do cliente Supabase (em produção, isso seria feito via env vars)
-  const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-  const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
-  const supabase = createClient(supabaseUrl, supabaseKey);
-  
   try {
-    // Atualizar o ticket com os dados processados pela IA
+    // Update the ticket with the AI processed data
     const { error } = await supabase
       .from('tickets')
       .update({
-        category: aiClassification,
-        priority: suggestedPriority,
-        aiProcessed: true,
-        aiSuggestion: aiResponse,
-        updatedAt: new Date().toISOString()
+        ai_processed: true,
+        ai_classification: aiClassification,
+        suggested_priority: suggestedPriority,
+        needs_human_review: needsHumanReview ?? true,
+        confidence_score: confidenceScore,
+        updated_at: new Date().toISOString()
       })
       .eq('id', ticketId);
       
     if (error) throw error;
     
-    // Publicar evento interno no sistema
-    const eventData = {
-      type: 'ticket.ai_processed',
-      ticketId,
-      timestamp: new Date().toISOString(),
-      suggestedArticles: suggestedKnowledgeArticles
-    };
+    // If there's an AI response, create a suggested response
+    if (aiResponse) {
+      const { error: responseError } = await supabase
+        .from('suggested_responses')
+        .insert({
+          ticket_id: ticketId,
+          message: aiResponse,
+          confidence: confidenceScore || 0.7,
+        });
+      
+      if (responseError) throw responseError;
+    }
     
-    // Em um sistema completo, aqui publicaríamos o evento para outros serviços
-    console.log('Evento publicado:', eventData);
+    // Publish event internally
+    console.log('Ticket AI processed successfully:', ticketId);
     
     return { success: true };
   } catch (error) {

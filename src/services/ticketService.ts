@@ -1,6 +1,6 @@
-
 import { supabase } from "@/integrations/supabase/client";
 import { Ticket, Message, Attachment, TicketStatus, TicketPriority, TicketCategory } from "@/types";
+import { sendTicketToN8n } from "@/utils/supabaseEvents";
 
 // Helper function to convert database ticket to app ticket
 const mapDbTicketToAppTicket = (dbTicket: any): Ticket => {
@@ -177,7 +177,15 @@ export const createTicket = async (ticket: Partial<Ticket>): Promise<Ticket> => 
     throw error;
   }
   
-  return mapDbTicketToAppTicket(data[0]);
+  const createdTicket = mapDbTicketToAppTicket(data[0]);
+  
+  // Send the new ticket to n8n for processing
+  if (createdTicket.companyId) {
+    sendTicketToN8n(createdTicket, createdTicket.companyId)
+      .catch(err => console.error('Failed to send ticket to n8n:', err));
+  }
+  
+  return createdTicket;
 };
 
 // Update ticket
@@ -196,7 +204,21 @@ export const updateTicket = async (id: string, ticketData: Partial<Ticket>): Pro
     throw error;
   }
   
-  return mapDbTicketToAppTicket(data[0]);
+  const updatedTicket = mapDbTicketToAppTicket(data[0]);
+  
+  // Check if we should send updates to n8n
+  if (updatedTicket.companyId) {
+    getSystemSetting(updatedTicket.companyId, 'events_to_n8n')
+      .then(events => {
+        if (events && events.ticketUpdated) {
+          sendTicketToN8n(updatedTicket, updatedTicket.companyId)
+            .catch(err => console.error('Failed to send ticket update to n8n:', err));
+        }
+      })
+      .catch(err => console.error('Failed to check event settings:', err));
+  }
+  
+  return updatedTicket;
 };
 
 // Update ticket status
@@ -247,7 +269,21 @@ export const updateTicketAgent = async (id: string, agentId: string | null): Pro
     throw error;
   }
   
-  return mapDbTicketToAppTicket(data[0]);
+  const updatedTicket = mapDbTicketToAppTicket(data[0]);
+  
+  // Check if we should send updates to n8n
+  if (updatedTicket.companyId) {
+    getSystemSetting(updatedTicket.companyId, 'events_to_n8n')
+      .then(events => {
+        if (events && events.ticketAssigned) {
+          sendTicketToN8n(updatedTicket, updatedTicket.companyId)
+            .catch(err => console.error('Failed to send ticket assign to n8n:', err));
+        }
+      })
+      .catch(err => console.error('Failed to check event settings:', err));
+  }
+  
+  return updatedTicket;
 };
 
 // Update ticket AI processing status
@@ -314,7 +350,28 @@ export const addMessageToTicket = async (message: Omit<Message, "id" | "createdA
     throw error;
   }
   
-  return mapDbMessageToAppMessage(data[0]);
+  const createdMessage = mapDbMessageToAppMessage(data[0]);
+  
+  // Get the ticket for this message
+  const ticket = await getTicketById(message.ticketId);
+  
+  // Check if we should send message updates to n8n
+  if (ticket.companyId) {
+    getSystemSetting(ticket.companyId, 'events_to_n8n')
+      .then(events => {
+        if (events && events.messageCreated) {
+          // Send event with both ticket and message
+          sendTicketToN8n({
+            ...ticket,
+            message: createdMessage
+          }, ticket.companyId)
+            .catch(err => console.error('Failed to send message event to n8n:', err));
+        }
+      })
+      .catch(err => console.error('Failed to check event settings:', err));
+  }
+  
+  return createdMessage;
 };
 
 // Get attachments for a ticket

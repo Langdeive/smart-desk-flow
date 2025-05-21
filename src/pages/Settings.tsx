@@ -9,12 +9,24 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { useToast } from "@/hooks/use-toast";
+import { useAuth } from "@/hooks/useAuth";
+import { getN8nSettings, saveN8nSettings, N8nSettings } from "@/services/settingsService";
 
 const Settings = () => {
   const { toast } = useToast();
-  const [n8nWebhookUrl, setN8nWebhookUrl] = useState<string>("");
-  const [enableAiProcessing, setEnableAiProcessing] = useState<boolean>(true);
+  const { user } = useAuth();
+  const [n8nSettings, setN8nSettings] = useState<N8nSettings>({
+    webhookUrl: "",
+    enableProcessing: true,
+    events: {
+      ticketCreated: true,
+      ticketUpdated: true,
+      messageCreated: true,
+      ticketAssigned: true
+    }
+  });
   const [isSaving, setIsSaving] = useState<boolean>(false);
+  const [isTesting, setIsTesting] = useState<boolean>(false);
   const { theme, setTheme } = useTheme();
   const [isDarkMode, setIsDarkMode] = useState(theme === "dark");
 
@@ -28,34 +40,55 @@ const Settings = () => {
     });
   };
 
-  // Em um app real, isso viria do Supabase
+  // Load settings from database
   useEffect(() => {
-    // Simulando carregamento das configurações
     const loadSettings = async () => {
-      // Aqui você buscaria do Supabase
-      setN8nWebhookUrl("https://n8n.seudominio.com/webhook/ai-processor");
+      if (!user?.appMetadata?.company_id) {
+        console.error("Company ID not found in user metadata");
+        return;
+      }
+      
+      try {
+        const settings = await getN8nSettings(user.appMetadata.company_id);
+        setN8nSettings(settings);
+      } catch (error) {
+        console.error("Error loading settings:", error);
+        toast({
+          title: "Erro ao carregar configurações",
+          description: "Não foi possível carregar suas configurações.",
+          variant: "destructive",
+        });
+      }
     };
     
-    loadSettings();
-  }, []);
+    if (user) {
+      loadSettings();
+    }
+  }, [user, toast]);
 
   const handleSaveSettings = async () => {
+    if (!user?.appMetadata?.company_id) {
+      toast({
+        title: "Erro ao salvar",
+        description: "ID da empresa não encontrado.",
+        variant: "destructive",
+      });
+      return;
+    }
+
     setIsSaving(true);
     
     try {
-      // Aqui você salvaria no Supabase
-      console.log("Salvando configurações:", {
-        n8nWebhookUrl,
-        enableAiProcessing
-      });
+      const success = await saveN8nSettings(user.appMetadata.company_id, n8nSettings);
       
-      // Simulando um delay de API
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      toast({
-        title: "Configurações salvas",
-        description: "Suas configurações de integração foram atualizadas com sucesso.",
-      });
+      if (success) {
+        toast({
+          title: "Configurações salvas",
+          description: "Suas configurações de integração foram atualizadas com sucesso.",
+        });
+      } else {
+        throw new Error("Failed to save settings");
+      }
     } catch (error) {
       console.error("Erro ao salvar configurações:", error);
       toast({
@@ -70,7 +103,7 @@ const Settings = () => {
 
   // Função para testar o webhook
   const testN8nWebhook = async () => {
-    if (!n8nWebhookUrl) {
+    if (!n8nSettings.webhookUrl) {
       toast({
         title: "URL não definida",
         description: "Por favor, insira a URL do webhook n8n antes de testar.",
@@ -79,9 +112,11 @@ const Settings = () => {
       return;
     }
     
+    setIsTesting(true);
+    
     try {
       // Enviar um payload de teste para o webhook
-      const response = await fetch(n8nWebhookUrl, {
+      const response = await fetch(n8nSettings.webhookUrl, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -108,7 +143,36 @@ const Settings = () => {
         description: `Não foi possível conectar ao webhook. ${error}`,
         variant: "destructive",
       });
+    } finally {
+      setIsTesting(false);
     }
+  };
+
+  // Update webhook URL
+  const handleWebhookUrlChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setN8nSettings(prev => ({
+      ...prev,
+      webhookUrl: e.target.value
+    }));
+  };
+
+  // Update processing enabled
+  const handleProcessingEnabledChange = (checked: boolean) => {
+    setN8nSettings(prev => ({
+      ...prev,
+      enableProcessing: checked
+    }));
+  };
+
+  // Update event settings
+  const handleEventChange = (event: keyof N8nSettings['events'], checked: boolean) => {
+    setN8nSettings(prev => ({
+      ...prev,
+      events: {
+        ...prev.events,
+        [event]: checked
+      }
+    }));
   };
 
   // Modify the General tab content
@@ -172,8 +236,8 @@ const Settings = () => {
                 <Label htmlFor="n8nWebhookUrl">URL do Webhook n8n</Label>
                 <Input
                   id="n8nWebhookUrl"
-                  value={n8nWebhookUrl}
-                  onChange={(e) => setN8nWebhookUrl(e.target.value)}
+                  value={n8nSettings.webhookUrl}
+                  onChange={handleWebhookUrlChange}
                   placeholder="https://seu-servidor-n8n.com/webhook/endpoint"
                 />
                 <p className="text-sm text-muted-foreground">
@@ -184,8 +248,8 @@ const Settings = () => {
               <div className="flex items-center space-x-2">
                 <Switch
                   id="enableAiProcessing"
-                  checked={enableAiProcessing}
-                  onCheckedChange={setEnableAiProcessing}
+                  checked={n8nSettings.enableProcessing}
+                  onCheckedChange={handleProcessingEnabledChange}
                 />
                 <Label htmlFor="enableAiProcessing">Ativar processamento automático via n8n</Label>
               </div>
@@ -194,29 +258,52 @@ const Settings = () => {
                 <Label>Eventos Enviados para n8n</Label>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
                   <div className="flex items-center space-x-2">
-                    <Switch id="event-ticket-created" defaultChecked />
+                    <Switch 
+                      id="event-ticket-created" 
+                      checked={n8nSettings.events.ticketCreated}
+                      onCheckedChange={(checked) => handleEventChange('ticketCreated', checked)}
+                    />
                     <Label htmlFor="event-ticket-created">Ticket Criado</Label>
                   </div>
                   <div className="flex items-center space-x-2">
-                    <Switch id="event-ticket-updated" defaultChecked />
+                    <Switch 
+                      id="event-ticket-updated"
+                      checked={n8nSettings.events.ticketUpdated}
+                      onCheckedChange={(checked) => handleEventChange('ticketUpdated', checked)}
+                    />
                     <Label htmlFor="event-ticket-updated">Ticket Atualizado</Label>
                   </div>
                   <div className="flex items-center space-x-2">
-                    <Switch id="event-message-created" defaultChecked />
+                    <Switch 
+                      id="event-message-created"
+                      checked={n8nSettings.events.messageCreated}
+                      onCheckedChange={(checked) => handleEventChange('messageCreated', checked)}
+                    />
                     <Label htmlFor="event-message-created">Nova Mensagem</Label>
                   </div>
                   <div className="flex items-center space-x-2">
-                    <Switch id="event-ticket-assigned" defaultChecked />
+                    <Switch 
+                      id="event-ticket-assigned"
+                      checked={n8nSettings.events.ticketAssigned}
+                      onCheckedChange={(checked) => handleEventChange('ticketAssigned', checked)}
+                    />
                     <Label htmlFor="event-ticket-assigned">Ticket Atribuído</Label>
                   </div>
                 </div>
               </div>
             </CardContent>
             <CardFooter className="flex flex-col sm:flex-row gap-3 items-start sm:items-center">
-              <Button onClick={testN8nWebhook} variant="outline">
-                Testar Conexão
+              <Button 
+                onClick={testN8nWebhook} 
+                variant="outline"
+                disabled={isTesting || !n8nSettings.webhookUrl}
+              >
+                {isTesting ? "Testando..." : "Testar Conexão"}
               </Button>
-              <Button onClick={handleSaveSettings} disabled={isSaving}>
+              <Button 
+                onClick={handleSaveSettings} 
+                disabled={isSaving}
+              >
                 {isSaving ? "Salvando..." : "Salvar Configurações"}
               </Button>
             </CardFooter>
