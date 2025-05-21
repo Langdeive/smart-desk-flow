@@ -1,7 +1,7 @@
 
 import { Ticket, TicketPriority } from "@/types";
 import { updateTicketAIStatus } from "./ticketService";
-import { addSuggestedResponse } from "./suggestedResponseService";
+import { createSuggestedResponse } from "./suggestedResponseService";
 
 /**
  * Process a ticket with simulated AI - this will be replaced by n8n
@@ -21,7 +21,7 @@ export const processTicketWithAi = async (ticket: Ticket): Promise<boolean> => {
     const aiClassification = categories[categoryIndex];
     
     // Randomly determine priority
-    const priorities: TicketPriority[] = ['low', 'medium', 'high', 'urgent'];
+    const priorities: TicketPriority[] = ['low', 'medium', 'high'];
     const priorityIndex = Math.floor(Math.random() * priorities.length);
     const suggestedPriority = priorities[priorityIndex];
     
@@ -57,7 +57,7 @@ export const processTicketWithAi = async (ticket: Ticket): Promise<boolean> => {
       const suggestedMessage = responses[responseIndex];
       
       // Add suggested response
-      await addSuggestedResponse({
+      await createSuggestedResponse({
         ticketId: ticket.id,
         message: suggestedMessage,
         confidence: confidenceScore

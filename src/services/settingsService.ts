@@ -1,5 +1,6 @@
 
 import { supabase } from "@/integrations/supabase/client";
+import { Json } from "@/integrations/supabase/types";
 
 export type SystemSettingKey = 'n8n_webhook_url' | 'enable_ai_processing' | 'events_to_n8n';
 
@@ -55,10 +56,13 @@ export const saveSystemSetting = async <T>(
   key: SystemSettingKey,
   value: T
 ): Promise<boolean> => {
+  // Convert value to a JSON-compatible format that Supabase can handle
+  const jsonValue = value as unknown as Json;
+  
   const { error } = await supabase
     .from('system_settings')
     .upsert(
-      { company_id: companyId, key, value },
+      { company_id: companyId, key, value: jsonValue },
       { onConflict: 'company_id,key' }
     );
 

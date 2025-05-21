@@ -13,6 +13,7 @@ export const useRealtimeTicketUpdates = ({ ticketId, onUpdate }: UseRealtimeTick
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
   const [ticket, setTicket] = useState<Ticket | null>(null);
+  const [isSubscribed, setIsSubscribed] = useState(false);
 
   useEffect(() => {
     let mounted = true;
@@ -68,7 +69,10 @@ export const useRealtimeTicketUpdates = ({ ticketId, onUpdate }: UseRealtimeTick
           }
         }
       )
-      .subscribe();
+      .subscribe((status) => {
+        console.log('Subscription status:', status);
+        setIsSubscribed(status === 'SUBSCRIBED');
+      });
 
     // Cleanup function
     return () => {
@@ -77,5 +81,5 @@ export const useRealtimeTicketUpdates = ({ ticketId, onUpdate }: UseRealtimeTick
     };
   }, [ticketId, onUpdate]);
 
-  return { ticket, isLoading, error, setTicket };
+  return { ticket, isLoading, error, setTicket, isSubscribed };
 };

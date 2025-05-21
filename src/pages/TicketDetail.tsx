@@ -30,18 +30,17 @@ const TicketDetail = () => {
   const { toast } = useToast();
   const { user } = useAuth();
 
-  const [ticket, setTicket] = useState<Ticket | null>(null);
   const [messages, setMessages] = useState<Message[]>([]);
   const [attachments, setAttachments] = useState<Attachment[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  // Usar o hook de atualizações em tempo real
-  const { isSubscribed } = useRealtimeTicketUpdates(id, (updatedTicket) => {
-    setTicket(prevTicket => {
-      if (!prevTicket) return updatedTicket;
-      return { ...prevTicket, ...updatedTicket };
-    });
+  // Use the hook with the proper parameters
+  const { ticket, isLoading, error: ticketError, setTicket, isSubscribed } = useRealtimeTicketUpdates({
+    ticketId: id || '',
+    onUpdate: (updatedTicket) => {
+      console.log('Ticket updated via realtime:', updatedTicket);
+    }
   });
 
   useEffect(() => {
@@ -50,13 +49,11 @@ const TicketDetail = () => {
       
       setLoading(true);
       try {
-        const [ticketData, messagesData, attachmentsData] = await Promise.all([
-          getTicketById(id),
+        const [messagesData, attachmentsData] = await Promise.all([
           getMessagesForTicket(id),
           getAttachmentsForTicket(id)
         ]);
         
-        setTicket(ticketData);
         setMessages(messagesData);
         setAttachments(attachmentsData);
         setError(null);
@@ -162,11 +159,11 @@ const TicketDetail = () => {
 
   // Render the content without AppLayout, which will be handled by the router
   const renderContent = () => {
-    if (loading) {
+    if (loading || isLoading) {
       return <div>Carregando...</div>;
     }
 
-    if (error || !ticket) {
+    if (error || ticketError || !ticket) {
       return (
         <div className="flex flex-col items-center justify-center h-64">
           <h2 className="text-2xl font-bold text-gray-800 mb-4">

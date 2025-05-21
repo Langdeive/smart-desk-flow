@@ -1,6 +1,8 @@
+
 import { supabase } from "@/integrations/supabase/client";
 import { Ticket, Message, Attachment, TicketStatus, TicketPriority, TicketCategory } from "@/types";
 import { sendTicketToN8n } from "@/utils/supabaseEvents";
+import { getSystemSetting } from "@/services/settingsService";
 
 // Helper function to convert database ticket to app ticket
 const mapDbTicketToAppTicket = (dbTicket: any): Ticket => {
@@ -208,7 +210,12 @@ export const updateTicket = async (id: string, ticketData: Partial<Ticket>): Pro
   
   // Check if we should send updates to n8n
   if (updatedTicket.companyId) {
-    getSystemSetting(updatedTicket.companyId, 'events_to_n8n')
+    getSystemSetting<{
+      ticketCreated: boolean;
+      ticketUpdated: boolean;
+      messageCreated: boolean;
+      ticketAssigned: boolean;
+    }>(updatedTicket.companyId, 'events_to_n8n')
       .then(events => {
         if (events && events.ticketUpdated) {
           sendTicketToN8n(updatedTicket, updatedTicket.companyId)
@@ -273,7 +280,12 @@ export const updateTicketAgent = async (id: string, agentId: string | null): Pro
   
   // Check if we should send updates to n8n
   if (updatedTicket.companyId) {
-    getSystemSetting(updatedTicket.companyId, 'events_to_n8n')
+    getSystemSetting<{
+      ticketCreated: boolean;
+      ticketUpdated: boolean;
+      messageCreated: boolean;
+      ticketAssigned: boolean;
+    }>(updatedTicket.companyId, 'events_to_n8n')
       .then(events => {
         if (events && events.ticketAssigned) {
           sendTicketToN8n(updatedTicket, updatedTicket.companyId)
@@ -357,12 +369,22 @@ export const addMessageToTicket = async (message: Omit<Message, "id" | "createdA
   
   // Check if we should send message updates to n8n
   if (ticket.companyId) {
-    getSystemSetting(ticket.companyId, 'events_to_n8n')
+    getSystemSetting<{
+      ticketCreated: boolean;
+      ticketUpdated: boolean;
+      messageCreated: boolean;
+      ticketAssigned: boolean;
+    }>(ticket.companyId, 'events_to_n8n')
       .then(events => {
         if (events && events.messageCreated) {
-          // Send event with both ticket and message
+          // Clone the ticket and attach message information
+          const ticketWithMessage = {
+            ...ticket
+          };
+          
+          // Send event with ticket and message information
           sendTicketToN8n({
-            ...ticket,
+            ticket: ticketWithMessage,
             message: createdMessage
           }, ticket.companyId)
             .catch(err => console.error('Failed to send message event to n8n:', err));

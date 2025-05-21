@@ -6,7 +6,7 @@ import { getSystemSetting } from '@/services/settingsService';
 /**
  * Sends a ticket to n8n for AI processing
  */
-export const sendTicketToN8n = async (ticket: Ticket, companyId: string): Promise<{success: boolean, error?: any}> => {
+export const sendTicketToN8n = async (payload: Ticket | { ticket: Ticket, message: any }, companyId: string): Promise<{success: boolean, error?: any}> => {
   try {
     // Get webhook URL from settings
     const n8nWebhookUrl = await getSystemSetting<string>(companyId, 'n8n_webhook_url');
@@ -17,7 +17,20 @@ export const sendTicketToN8n = async (ticket: Ticket, companyId: string): Promis
       return { success: false, error: 'N8n webhook not configured or processing disabled' };
     }
     
-    console.log('Enviando ticket para processamento n8n:', ticket.id);
+    console.log('Enviando dados para processamento n8n');
+    
+    // Determine event type based on payload structure
+    let eventType = 'ticket.created';
+    let data = payload;
+    
+    if ('message' in payload) {
+      eventType = 'message.created';
+      data = payload;
+    } else if (('agentId' in payload) && payload.agentId) {
+      eventType = 'ticket.assigned';
+    } else {
+      eventType = 'ticket.updated';
+    }
     
     const response = await fetch(n8nWebhookUrl, {
       method: 'POST',
@@ -25,10 +38,10 @@ export const sendTicketToN8n = async (ticket: Ticket, companyId: string): Promis
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        eventType: 'ticket.created',
-        data: ticket,
+        eventType,
+        data,
         timestamp: new Date().toISOString(),
-        companyId: companyId
+        companyId
       }),
     });
 
@@ -36,10 +49,10 @@ export const sendTicketToN8n = async (ticket: Ticket, companyId: string): Promis
       throw new Error(`Erro ao enviar para n8n: ${response.statusText}`);
     }
 
-    console.log('Ticket enviado com sucesso para n8n:', ticket.id);
+    console.log('Dados enviados com sucesso para n8n');
     return { success: true };
   } catch (error) {
-    console.error('Erro ao enviar ticket para n8n:', error);
+    console.error('Erro ao enviar dados para n8n:', error);
     return { success: false, error };
   }
 };
