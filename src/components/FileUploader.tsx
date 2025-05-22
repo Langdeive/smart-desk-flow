@@ -1,7 +1,7 @@
 
 import React, { useCallback } from "react";
 import { useDropzone } from "react-dropzone";
-import { X, Upload } from "lucide-react";
+import { X, Upload, FileText } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 interface FileUploaderProps {
@@ -51,6 +51,25 @@ export const FileUploader: React.FC<FileUploaderProps> = ({
     else return (size / (1024 * 1024)).toFixed(1) + ' MB';
   };
 
+  const getFileIcon = (file: File) => {
+    const extension = file.name.split('.').pop()?.toLowerCase();
+    
+    if (['jpg', 'jpeg', 'png', 'gif', 'bmp', 'svg', 'webp'].includes(extension || '')) {
+      return (
+        <div className="h-8 w-8 rounded border bg-gray-100 flex items-center justify-center">
+          <img 
+            src={URL.createObjectURL(file)} 
+            alt={file.name}
+            className="h-8 w-8 object-cover rounded"
+            onLoad={(e) => URL.revokeObjectURL((e.target as HTMLImageElement).src)}
+          />
+        </div>
+      );
+    }
+    
+    return <FileText className="h-8 w-8 text-gray-400" />;
+  };
+
   return (
     <div className="space-y-4">
       <div
@@ -87,10 +106,13 @@ export const FileUploader: React.FC<FileUploaderProps> = ({
                 className="flex items-center justify-between p-3 text-sm"
               >
                 <div className="flex items-center gap-2 overflow-hidden">
-                  <span className="truncate">{file.name}</span>
-                  <span className="text-gray-500 text-xs">
-                    {formatFileSize(file.size)}
-                  </span>
+                  {getFileIcon(file)}
+                  <div className="overflow-hidden">
+                    <p className="truncate">{file.name}</p>
+                    <p className="text-gray-500 text-xs">
+                      {formatFileSize(file.size)}
+                    </p>
+                  </div>
                 </div>
                 <Button
                   variant="ghost"

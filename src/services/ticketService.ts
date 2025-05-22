@@ -39,8 +39,8 @@ export {
 // Export mapper utilities for testing or advanced use cases
 export {
   mapDbTicketToAppTicket,
-  mapAppTicketToDbTicket,
   mapDbMessageToAppMessage,
+  mapAppTicketToDbTicket,
   mapAppMessageToDbMessage,
   mapDbAttachmentToAppAttachment,
 } from './ticket/mappers';
