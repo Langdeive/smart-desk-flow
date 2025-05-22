@@ -45,9 +45,5 @@ export {
   mapDbAttachmentToAppAttachment,
 } from './ticket/mappers';
 
-// Export types
-export {
-  DbTicket,
-  DbMessage,
-  DbAttachment,
-} from './ticket/mappers';
+// Export types with the 'export type' syntax to fix the error
+export type { DbTicket, DbMessage, DbAttachment } from './ticket/mappers';
