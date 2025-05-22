@@ -48,11 +48,15 @@ export type Ticket = {
   aiProcessed: boolean;
   needsHumanReview: boolean;
   contactId?: string;
-  // Novos campos de classificação de IA
+  // AI classification fields
   aiClassification?: string;
   suggestedPriority?: TicketPriority;
   needsAdditionalInfo?: boolean;
   confidenceScore?: number;
+  // SLA fields
+  firstResponseDeadline?: Date;
+  resolutionDeadline?: Date;
+  slaStatus?: "on_track" | "at_risk" | "breached";
 };
 
 export type TicketHistoryItem = {
@@ -135,3 +139,24 @@ export type ClientFormData = {
 
 // Export the ContactFormValues type from our validation schema
 export type { ContactFormValues, ClientFormValues } from "@/lib/validations/client";
+
+// SLA Configuration Type
+export type SLAConfig = {
+  firstResponseHours: {
+    low: number;
+    medium: number;
+    high: number;
+    critical: number;
+  };
+  resolutionHours: {
+    low: number;
+    medium: number;
+    high: number;
+    critical: number;
+  };
+  businessHours: {
+    start: string; // e.g. "09:00"
+    end: string; // e.g. "18:00"
+    workDays: number[]; // e.g. [1,2,3,4,5] for Mon-Fri
+  };
+};

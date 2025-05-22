@@ -46,7 +46,9 @@ export const useRealtimeTicketUpdates = ({ ticketId, onUpdate }: UseRealtimeTick
       }
     };
 
-    fetchTicket();
+    if (ticketId) {
+      fetchTicket();
+    }
 
     return () => {
       mounted = false;
@@ -111,6 +113,48 @@ export const useRealtimeTicketUpdates = ({ ticketId, onUpdate }: UseRealtimeTick
           }
         }
       )
+      // Also subscribe to updates to the ticket history
+      .on(
+        'postgres_changes',
+        {
+          event: 'INSERT',
+          schema: 'public',
+          table: 'historico_tickets',
+          filter: `ticket_id=eq.${ticketId}`,
+        },
+        async () => {
+          console.log('[WebSocket] Ticket history updated');
+          // We don't need to do anything special here, just force a refresh of the ticket
+          if (!localUpdateInProgressRef.current) {
+            try {
+              const updatedTicket = await getTicketById(ticketId);
+              setTicket(updatedTicket);
+              previousTicketRef.current = updatedTicket;
+              
+              if (onUpdate) {
+                onUpdate(updatedTicket);
+              }
+            } catch (err) {
+              console.error('[WebSocket] Error fetching ticket after history update:', err);
+            }
+          }
+        }
+      )
+      // Also subscribe to updates to the suggested responses
+      .on(
+        'postgres_changes',
+        {
+          event: '*', // INSERT, UPDATE, DELETE
+          schema: 'public',
+          table: 'suggested_responses',
+          filter: `ticket_id=eq.${ticketId}`,
+        },
+        () => {
+          console.log('[WebSocket] Suggested responses updated');
+          // We don't need to update the ticket here, this will be handled by
+          // the component that displays suggested responses
+        }
+      )
       .subscribe((status) => {
         console.log('[WebSocket] Subscription status:', status);
         setIsSubscribed(status === 'SUBSCRIBED');
@@ -127,7 +171,7 @@ export const useRealtimeTicketUpdates = ({ ticketId, onUpdate }: UseRealtimeTick
         channelRef.current = null;
       }
     };
-  }, [ticketId]); // Only recreate subscription when ticketId changes
+  }, [ticketId, onUpdate]); // Include onUpdate in dependencies
 
   // Custom setTicket function that marks updates as local
   const updateTicket = (newTicket: Ticket) => {

@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useCallback } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { AppLayout } from "@/components/layout/AppLayout";
@@ -23,6 +22,8 @@ import AISuggestedResponses from "@/components/ticket/AISuggestedResponses";
 import { useRealtimeTicketUpdates } from "@/hooks/useRealtimeTicketUpdates";
 import AIAnalysisPanel from "@/components/ticket/AIAnalysisPanel";
 import AttachmentsPanel from "@/components/ticket/AttachmentsPanel";
+import AgentAssignmentPanel from "@/components/ticket/AgentAssignmentPanel";
+import SLAInfoPanel from "@/components/ticket/SLAInfoPanel";
 
 const TicketDetail = () => {
   const { id } = useParams<{ id: string }>();
@@ -220,6 +221,23 @@ const TicketDetail = () => {
               onPriorityChange={handlePriorityChange}
               formatDate={formatDate}
             />
+            
+            {/* Add the new AgentAssignmentPanel component */}
+            {user && (
+              <AgentAssignmentPanel
+                ticketId={ticket.id}
+                currentAgentId={ticket.agentId}
+                companyId={ticket.companyId}
+              />
+            )}
+            
+            {/* Add the SLA info panel */}
+            {(ticket.firstResponseDeadline || ticket.resolutionDeadline) && (
+              <SLAInfoPanel 
+                ticket={ticket}
+                formatDate={formatDate}
+              />
+            )}
             
             {ticket.aiProcessed && (
               <AIAnalysisPanel 
