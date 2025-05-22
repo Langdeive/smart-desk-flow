@@ -1,0 +1,142 @@
+
+import { Ticket, Message, Attachment, TicketStatus, TicketPriority, TicketCategory } from "@/types";
+
+// Helper function to convert database ticket to app ticket
+export const mapDbTicketToAppTicket = (dbTicket: any): Ticket => {
+  return {
+    id: dbTicket.id,
+    title: dbTicket.title,
+    description: dbTicket.description,
+    status: dbTicket.status as TicketStatus,
+    priority: dbTicket.priority as TicketPriority,
+    category: dbTicket.category as TicketCategory,
+    userId: dbTicket.user_id,
+    agentId: dbTicket.agent_id,
+    companyId: dbTicket.company_id,
+    createdAt: new Date(dbTicket.created_at),
+    updatedAt: new Date(dbTicket.updated_at),
+    source: dbTicket.source as "web" | "email" | "whatsapp",
+    aiProcessed: dbTicket.ai_processed || false,
+    needsHumanReview: dbTicket.needs_human_review || true,
+    contactId: dbTicket.contact_id,
+    // AI classification fields
+    aiClassification: dbTicket.ai_classification,
+    suggestedPriority: dbTicket.suggested_priority as TicketPriority,
+    needsAdditionalInfo: dbTicket.needs_additional_info || false,
+    confidenceScore: dbTicket.confidence_score,
+    // SLA fields
+    firstResponseDeadline: dbTicket.first_response_deadline ? new Date(dbTicket.first_response_deadline) : undefined,
+    resolutionDeadline: dbTicket.resolution_deadline ? new Date(dbTicket.resolution_deadline) : undefined,
+    slaStatus: dbTicket.sla_status as "on_track" | "at_risk" | "breached" | undefined
+  };
+};
+
+// Define the database ticket type to match what Supabase expects
+export type DbTicket = {
+  title: string;
+  description: string;
+  status: string;
+  priority: string;
+  category: string;
+  user_id: string;
+  agent_id?: string;
+  company_id: string;
+  source: string;
+  contact_id?: string;
+  ai_processed?: boolean;
+  needs_human_review?: boolean;
+  ai_classification?: string;
+  suggested_priority?: string;
+  needs_additional_info?: boolean;
+  confidence_score?: number;
+  first_response_deadline?: string;
+  resolution_deadline?: string;
+  sla_status?: string;
+  updated_at?: string;
+};
+
+// Helper function to convert app ticket to database ticket
+export const mapAppTicketToDbTicket = (appTicket: Partial<Ticket>): DbTicket => {
+  const dbTicket: DbTicket = {
+    title: appTicket.title!,
+    description: appTicket.description!,
+    status: appTicket.status!,
+    priority: appTicket.priority!,
+    category: appTicket.category!,
+    user_id: appTicket.userId!,
+    company_id: appTicket.companyId!,
+    source: appTicket.source!,
+  };
+  
+  // Add optional fields if they exist
+  if (appTicket.agentId) dbTicket.agent_id = appTicket.agentId;
+  if (appTicket.contactId) dbTicket.contact_id = appTicket.contactId;
+  if ('aiProcessed' in appTicket) dbTicket.ai_processed = appTicket.aiProcessed;
+  if ('needsHumanReview' in appTicket) dbTicket.needs_human_review = appTicket.needsHumanReview;
+  if ('aiClassification' in appTicket) dbTicket.ai_classification = appTicket.aiClassification;
+  if ('suggestedPriority' in appTicket) dbTicket.suggested_priority = appTicket.suggestedPriority;
+  if ('needsAdditionalInfo' in appTicket) dbTicket.needs_additional_info = appTicket.needsAdditionalInfo;
+  if ('confidenceScore' in appTicket) dbTicket.confidence_score = appTicket.confidenceScore;
+  if (appTicket.firstResponseDeadline) dbTicket.first_response_deadline = appTicket.firstResponseDeadline.toISOString();
+  if (appTicket.resolutionDeadline) dbTicket.resolution_deadline = appTicket.resolutionDeadline.toISOString();
+  if (appTicket.slaStatus) dbTicket.sla_status = appTicket.slaStatus;
+  
+  return dbTicket;
+};
+
+// Helper function to convert database message to app message
+export const mapDbMessageToAppMessage = (dbMessage: any): Message => {
+  return {
+    id: dbMessage.id,
+    content: dbMessage.content,
+    ticketId: dbMessage.ticket_id,
+    userId: dbMessage.user_id,
+    createdAt: new Date(dbMessage.created_at),
+    isFromClient: dbMessage.is_from_client,
+    isAutomatic: dbMessage.is_automatic
+  };
+};
+
+// Define the database message type
+export type DbMessage = {
+  content: string;
+  ticket_id: string;
+  user_id: string;
+  is_from_client: boolean;
+  is_automatic: boolean;
+};
+
+// Helper function to convert app message to database message
+export const mapAppMessageToDbMessage = (appMessage: Omit<Message, "id" | "createdAt">): DbMessage => {
+  return {
+    content: appMessage.content,
+    ticket_id: appMessage.ticketId,
+    user_id: appMessage.userId,
+    is_from_client: appMessage.isFromClient,
+    is_automatic: appMessage.isAutomatic
+  };
+};
+
+// Helper function to convert database attachment to app attachment
+export const mapDbAttachmentToAppAttachment = (dbAttachment: any): Attachment => {
+  return {
+    id: dbAttachment.id,
+    fileName: dbAttachment.file_name,
+    fileType: dbAttachment.file_type,
+    fileSize: dbAttachment.file_size,
+    fileUrl: dbAttachment.file_url,
+    ticketId: dbAttachment.ticket_id,
+    messageId: dbAttachment.message_id,
+    createdAt: new Date(dbAttachment.created_at)
+  };
+};
+
+// Define the database attachment type
+export type DbAttachment = {
+  file_name: string;
+  file_type: string;
+  file_size: number;
+  file_url: string;
+  ticket_id: string;
+  message_id?: string;
+};
