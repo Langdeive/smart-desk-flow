@@ -34,15 +34,21 @@ const AgentAssignmentPanel: React.FC<AgentAssignmentPanelProps> = ({
   const handleAgentChange = async (agentId: string) => {
     if (agentId === currentAgentId) return;
     
+    // Special handling for "unassigned" value
+    const isUnassigning = agentId === "unassigned";
+    const actualAgentId = isUnassigning ? null : agentId;
+    
     setIsSaving(true);
     try {
       const previousAgentName = currentAgentId 
         ? agents.find(a => a.id === currentAgentId)?.nome || currentAgentId 
         : "Não atribuído";
         
-      const newAgentName = agents.find(a => a.id === agentId)?.nome || agentId;
+      const newAgentName = isUnassigning 
+        ? "Não atribuído" 
+        : agents.find(a => a.id === agentId)?.nome || agentId;
       
-      await updateTicketAgent(ticketId, agentId);
+      await updateTicketAgent(ticketId, actualAgentId as string);
       
       // Register in the ticket history
       await addManualHistoryEntry(
@@ -52,7 +58,7 @@ const AgentAssignmentPanel: React.FC<AgentAssignmentPanelProps> = ({
         newAgentName
       );
       
-      setSelectedAgentId(agentId);
+      setSelectedAgentId(isUnassigning ? undefined : agentId);
       toast({
         title: "Atribuição atualizada",
         description: `Ticket atribuído para ${newAgentName}`,
@@ -93,14 +99,14 @@ const AgentAssignmentPanel: React.FC<AgentAssignmentPanelProps> = ({
               Agente Responsável
             </p>
             <Select 
-              value={selectedAgentId || ""} 
+              value={selectedAgentId || "unassigned"} 
               onValueChange={handleAgentChange}
             >
               <SelectTrigger>
                 <SelectValue placeholder="Selecionar agente" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">
+                <SelectItem value="unassigned">
                   Não atribuído
                 </SelectItem>
                 {agents.map((agent) => (
