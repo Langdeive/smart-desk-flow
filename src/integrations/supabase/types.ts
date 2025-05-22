@@ -495,10 +495,13 @@ export type Database = {
           contact_id: string | null
           created_at: string
           description: string
+          first_response_deadline: string | null
           id: string
           needs_additional_info: boolean | null
           needs_human_review: boolean
           priority: string
+          resolution_deadline: string | null
+          sla_status: string | null
           source: string
           status: string
           suggested_priority: string | null
@@ -516,10 +519,13 @@ export type Database = {
           contact_id?: string | null
           created_at?: string
           description: string
+          first_response_deadline?: string | null
           id?: string
           needs_additional_info?: boolean | null
           needs_human_review?: boolean
           priority?: string
+          resolution_deadline?: string | null
+          sla_status?: string | null
           source?: string
           status?: string
           suggested_priority?: string | null
@@ -537,10 +543,13 @@ export type Database = {
           contact_id?: string | null
           created_at?: string
           description?: string
+          first_response_deadline?: string | null
           id?: string
           needs_additional_info?: boolean | null
           needs_human_review?: boolean
           priority?: string
+          resolution_deadline?: string | null
+          sla_status?: string | null
           source?: string
           status?: string
           suggested_priority?: string | null

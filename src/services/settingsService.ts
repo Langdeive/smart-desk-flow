@@ -2,7 +2,11 @@
 import { supabase } from "@/integrations/supabase/client";
 import { Json } from "@/integrations/supabase/types";
 
-export type SystemSettingKey = 'n8n_webhook_url' | 'enable_ai_processing' | 'events_to_n8n';
+export type SystemSettingKey = 
+  | 'n8n_webhook_url' 
+  | 'enable_ai_processing' 
+  | 'events_to_n8n'
+  | 'sla_config';
 
 export interface SystemSetting<T = any> {
   id: string;
@@ -46,6 +50,29 @@ export const getSystemSetting = async <T>(
   }
 
   return data.value as T;
+};
+
+/**
+ * Update a system setting
+ */
+export const updateSystemSetting = async <T>(
+  companyId: string,
+  key: SystemSettingKey,
+  value: T
+): Promise<boolean> => {
+  const { error } = await supabase
+    .from('system_settings')
+    .upsert(
+      { company_id: companyId, key, value: value as unknown as Json },
+      { onConflict: 'company_id,key' }
+    );
+
+  if (error) {
+    console.error('Error updating system setting:', error);
+    return false;
+  }
+
+  return true;
 };
 
 /**

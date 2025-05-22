@@ -20,7 +20,7 @@ const AgentAssignmentPanel: React.FC<AgentAssignmentPanelProps> = ({
   currentAgentId,
   companyId
 }) => {
-  const { agents, isLoading } = useAgents(companyId);
+  const { agents, loading } = useAgents(companyId);
   const [selectedAgentId, setSelectedAgentId] = useState<string | undefined>(currentAgentId);
   const [isSaving, setIsSaving] = useState(false);
   const { toast } = useToast();
@@ -82,10 +82,10 @@ const AgentAssignmentPanel: React.FC<AgentAssignmentPanelProps> = ({
         </CardTitle>
       </CardHeader>
       <CardContent>
-        {isLoading || isSaving ? (
+        {loading || isSaving ? (
           <div className="flex items-center justify-center py-2">
             <Loader2 className="h-5 w-5 animate-spin mr-2" />
-            <p>{isLoading ? "Carregando agentes..." : "Atualizando..."}</p>
+            <p>{loading ? "Carregando agentes..." : "Atualizando..."}</p>
           </div>
         ) : (
           <div>
