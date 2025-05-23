@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { useAuth } from '@/hooks/useAuth';
 import { useClients } from '@/hooks/useClients';
@@ -36,8 +35,8 @@ export const useTicketCreation = () => {
     firstResponseHours: Record<TicketPriority, number>;
   } | null>(null);
   
-  // Determine if the current user is an agent (admin/agent) or a client
-  const isAgent = role === 'admin' || role === 'agent';
+  // Determine if the current user is an agent (admin/agent/owner) or a client
+  const isAgent = role === 'admin' || role === 'agent' || role === 'owner';
   
   // DEBUG: Log authentication and role information
   console.log("DEBUG TicketCreation - User:", user?.email);
