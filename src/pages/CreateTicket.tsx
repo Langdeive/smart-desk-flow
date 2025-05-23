@@ -47,6 +47,7 @@ const CreateTicket = () => {
     isSubmitting,
     handleClientChange,
     handleContactChange,
+    handleCreateContact,
     submitTicket,
     getSLAText,
   } = useTicketCreation();
@@ -82,6 +83,16 @@ const CreateTicket = () => {
   const onSubmit = async (data: TicketFormValues) => {
     await submitTicket(data);
   };
+  
+  const handleNewContactCreate = async (contactData: { name: string; email: string; clientId: string }) => {
+    const newContact = await handleCreateContact(contactData);
+    if (newContact) {
+      // Set the form values with the newly created contact
+      form.setValue("contactId", newContact.id);
+      form.setValue("name", newContact.name || "");
+      form.setValue("email", newContact.email || "");
+    }
+  };
 
   return (
     <div className="container mx-auto py-8 px-4">
@@ -105,6 +116,7 @@ const CreateTicket = () => {
                 contactsLoading={contactsLoading}
                 handleClientChange={handleClientChange}
                 handleContactChange={handleContactChange}
+                onCreateContact={handleNewContactCreate}
               />
               
               {/* Basic Ticket Info */}

@@ -40,7 +40,11 @@ export const useTicketCreation = () => {
   const isAgent = role === 'admin' || role === 'agent';
   
   const { clients, isLoading: clientsLoading } = useClients();
-  const { contacts, isLoading: contactsLoading } = useClientContacts(selectedClientId);
+  const { 
+    contacts, 
+    isLoading: contactsLoading, 
+    addContact 
+  } = useClientContacts(selectedClientId);
   
   // Load SLA configuration on component mount
   useEffect(() => {
@@ -72,6 +76,43 @@ export const useTicketCreation = () => {
       contactName: selectedContact?.name || '',
       contactEmail: selectedContact?.email || '',
     };
+  };
+  
+  const handleCreateContact = async ({ name, email, clientId }: { name: string; email: string; clientId: string }) => {
+    if (!clientId || !name || !email) {
+      toast({
+        title: "Dados incompletos",
+        description: "Por favor, preencha todos os campos para criar um contato.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    try {
+      const newContact = await addContact.mutateAsync({
+        clientId,
+        contact: {
+          name,
+          email,
+          is_primary: false
+        }
+      });
+      
+      toast({
+        title: "Contato criado",
+        description: `Contato ${name} foi criado com sucesso.`,
+      });
+      
+      return newContact;
+    } catch (error) {
+      console.error("Erro ao criar contato:", error);
+      toast({
+        title: "Erro ao criar contato",
+        description: "Ocorreu um erro ao criar o contato. Por favor, tente novamente.",
+        variant: "destructive",
+      });
+      return null;
+    }
   };
   
   const submitTicket = async (formData: Partial<TicketFormData>) => {
@@ -156,6 +197,7 @@ export const useTicketCreation = () => {
     isSubmitting,
     handleClientChange,
     handleContactChange,
+    handleCreateContact,
     submitTicket,
     getSLAText,
   };
