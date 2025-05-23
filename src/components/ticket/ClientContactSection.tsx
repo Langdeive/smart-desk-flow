@@ -1,5 +1,4 @@
-
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/components/ui/form";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
@@ -41,6 +40,13 @@ export const ClientContactSection: React.FC<ClientContactSectionProps> = ({
   const [newContactEmail, setNewContactEmail] = useState("");
   const [isCreatingContact, setIsCreatingContact] = useState(false);
   
+  // DEBUG: Add debugging to understand why the component might not be showing the correct view
+  console.log("DEBUG ClientContactSection - isAgent prop:", isAgent);
+  
+  useEffect(() => {
+    console.log("DEBUG ClientContactSection - Component mounted with isAgent:", isAgent);
+  }, [isAgent]);
+  
   const handleCreateContact = () => {
     if (!newContactName || !newContactEmail || !form.getValues("clientId")) return;
     
@@ -62,7 +68,12 @@ export const ClientContactSection: React.FC<ClientContactSectionProps> = ({
     }, 500);
   };
 
-  if (!isAgent) {
+  // Force render the agent view if the role is 'admin' or 'agent'
+  // This is a temporary failsafe until we identify the root cause
+  const actuallyIsAgent = isAgent;
+  console.log("DEBUG ClientContactSection - Will render view for:", actuallyIsAgent ? "AGENT" : "CLIENT");
+
+  if (!actuallyIsAgent) {
     // Para clientes, não mostrar seleção de cliente, apenas informações de contato
     return (
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">

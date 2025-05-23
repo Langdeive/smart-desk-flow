@@ -39,6 +39,12 @@ export const useTicketCreation = () => {
   // Determine if the current user is an agent (admin/agent) or a client
   const isAgent = role === 'admin' || role === 'agent';
   
+  // DEBUG: Log authentication and role information
+  console.log("DEBUG TicketCreation - User:", user?.email);
+  console.log("DEBUG TicketCreation - Role from useAuth:", role);
+  console.log("DEBUG TicketCreation - isAgent determined as:", isAgent);
+  console.log("DEBUG TicketCreation - User app_metadata:", user?.app_metadata);
+  
   const { clients, isLoading: clientsLoading } = useClients();
   const { 
     contacts, 

@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
@@ -43,6 +42,12 @@ export const useAuth = () => {
         console.log("Retrieved role from app_metadata:", userData.app_metadata.role);
       }
     }
+    
+    // DEBUG: Log user metadata for debugging purposes
+    console.log("DEBUG Auth - User email:", userData.email);
+    console.log("DEBUG Auth - User metadata:", userData);
+    console.log("DEBUG Auth - Role set to:", userData.app_metadata?.role);
+    console.log("DEBUG Auth - Is admin/agent?", userData.app_metadata?.role === 'admin' || userData.app_metadata?.role === 'agent');
   };
 
   // Function to refresh session and reload user metadata with debounce

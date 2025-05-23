@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -15,6 +14,7 @@ import { TicketBasicInfo } from "@/components/ticket/TicketBasicInfo";
 import { TicketAdvancedFields } from "@/components/ticket/TicketAdvancedFields";
 import { FileUploader } from "@/components/FileUploader";
 import { useAgents } from "@/hooks/useAgents";
+import { useAuth } from "@/hooks/useAuth";
 
 const ticketFormSchema = z.object({
   title: z.string().min(5, { message: "O título deve ter pelo menos 5 caracteres" }),
@@ -52,6 +52,14 @@ const CreateTicket = () => {
     getSLAText,
   } = useTicketCreation();
 
+  // DEBUG: Add direct auth hook to double-check role information 
+  const { role: directRole } = useAuth();
+  
+  // DEBUG: Add console logs to help debug the issue
+  console.log("DEBUG CreateTicket - Direct role from useAuth:", directRole);
+  console.log("DEBUG CreateTicket - isAgent from useTicketCreation:", isAgent);
+  console.log("DEBUG CreateTicket - User data:", user);
+
   const [characterCount, setCharacterCount] = useState(0);
   const { agents } = useAgents(user?.app_metadata?.company_id || "");
   
@@ -79,6 +87,12 @@ const CreateTicket = () => {
     const descriptionValue = form.watch("description");
     setCharacterCount(descriptionValue?.length || 0);
   }, [form.watch("description")]);
+
+  // DEBUG: Log whenever key form properties change
+  useEffect(() => {
+    console.log("DEBUG CreateTicket - Form client ID:", form.getValues("clientId"));
+    console.log("DEBUG CreateTicket - Form contact ID:", form.getValues("contactId"));
+  }, [form.watch("clientId"), form.watch("contactId")]);
 
   const onSubmit = async (data: TicketFormValues) => {
     await submitTicket(data);
