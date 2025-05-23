@@ -74,21 +74,31 @@ export const useTicketCreation = () => {
     };
   };
   
-  const submitTicket = async (data: TicketFormData) => {
+  const submitTicket = async (formData: Partial<TicketFormData>) => {
+    if (!formData.title || !formData.description || !formData.category || 
+        !formData.priority || !formData.clientId) {
+      toast({
+        title: "Dados incompletos",
+        description: "Por favor, preencha todos os campos obrigatórios.",
+        variant: "destructive",
+      });
+      return;
+    }
+    
     try {
       setIsSubmitting(true);
       
-      // Create the ticket
+      // Create the ticket with required fields
       const ticket = await createTicket({
-        title: data.title,
-        description: data.description,
+        title: formData.title,
+        description: formData.description,
         status: "new",
-        priority: data.priority,
-        category: data.category,
-        userId: data.clientId,
+        priority: formData.priority,
+        category: formData.category,
+        userId: formData.clientId,
         companyId: companyId || "",
         source: "web",
-        contactId: data.contactId || undefined
+        contactId: formData.contactId
       });
       
       // Upload any attachments

@@ -30,6 +30,7 @@ const ticketFormSchema = z.object({
   source: z.string().optional()
 });
 
+// Create a type that matches our zod schema
 type TicketFormValues = z.infer<typeof ticketFormSchema>;
 
 const CreateTicket = () => {
@@ -53,11 +54,11 @@ const CreateTicket = () => {
   const [characterCount, setCharacterCount] = useState(0);
   const { agents } = useAgents(user?.app_metadata?.company_id || "");
   
-  const defaultValues: Partial<TicketFormValues> = {
+  const defaultValues: TicketFormValues = {
     title: "",
     description: "",
-    category: "technical_issue",
-    priority: "medium",
+    category: "technical_issue" as TicketCategory,
+    priority: "medium" as TicketPriority,
     clientId: isAgent ? "" : (user?.id || ""),
     contactId: "",
     name: user?.user_metadata?.name || "",
