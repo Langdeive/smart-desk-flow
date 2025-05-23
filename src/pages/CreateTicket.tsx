@@ -8,7 +8,7 @@ import { Form } from "@/components/ui/form";
 import { Card, CardContent } from "@/components/ui/card";
 import { Loader2 } from "lucide-react";
 import { TicketCategory, TicketPriority } from "@/types";
-import { useTicketCreation } from "@/hooks/useTicketCreation";
+import { useTicketCreation, TicketFormData } from "@/hooks/useTicketCreation";
 import { TicketFormHeader } from "@/components/ticket/TicketFormHeader";
 import { ClientContactSection } from "@/components/ticket/ClientContactSection";
 import { TicketBasicInfo } from "@/components/ticket/TicketBasicInfo";

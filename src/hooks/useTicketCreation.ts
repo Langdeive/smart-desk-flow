@@ -9,15 +9,17 @@ import { useToast } from '@/hooks/use-toast';
 import { TicketCategory, TicketPriority } from '@/types';
 import { getSLAConfig } from '@/services/ticketService';
 
-interface TicketFormData {
+export interface TicketFormData {
   title: string;
   description: string;
   category: TicketCategory;
   priority: TicketPriority;
   clientId: string;
-  contactId: string;
+  contactId?: string;
   name: string;
   email: string;
+  agentId?: string;
+  tags?: string;
 }
 
 export const useTicketCreation = () => {
