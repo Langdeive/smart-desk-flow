@@ -1,4 +1,3 @@
-
 import { supabase } from "@/integrations/supabase/client";
 import { Message, Attachment } from "@/types";
 import { sendTicketToN8n } from "@/utils/supabaseEvents";
@@ -41,30 +40,24 @@ export const addMessageToTicket = async (message: Omit<Message, "id" | "createdA
   // Get the ticket for this message
   const ticket = await getTicketById(message.ticketId);
   
-  // Check if we should send message updates to n8n
+  // Check if we should send message updates to n8n using fallback configuration
   if (ticket.companyId) {
-    getSystemSetting<{
+    const events = await getSystemSetting<{
       ticketCreated: boolean;
       ticketUpdated: boolean;
       messageCreated: boolean;
       ticketAssigned: boolean;
-    }>(ticket.companyId, 'events_to_n8n')
-      .then(events => {
-        if (events && events.messageCreated) {
-          // Clone the ticket and attach message information
-          const ticketWithMessage = {
-            ...ticket
-          };
-          
-          // Send event with ticket and message information
-          sendTicketToN8n({
-            ticket: ticketWithMessage,
-            message: createdMessage
-          }, ticket.companyId)
-            .catch(err => console.error('Failed to send message event to n8n:', err));
-        }
-      })
-      .catch(err => console.error('Failed to check event settings:', err));
+    }>(ticket.companyId, 'events_to_n8n');
+    
+    if (events?.messageCreated) {
+      const ticketWithMessage = { ...ticket };
+      
+      sendTicketToN8n({
+        ticket: ticketWithMessage,
+        message: createdMessage
+      }, ticket.companyId)
+        .catch(err => console.error('Failed to send message event to n8n:', err));
+    }
   }
   
   return createdMessage;

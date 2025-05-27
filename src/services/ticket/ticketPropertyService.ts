@@ -1,4 +1,3 @@
-
 import { supabase } from "@/integrations/supabase/client";
 import { Ticket, TicketStatus, TicketPriority } from "@/types";
 import { sendTicketToN8n } from "@/utils/supabaseEvents";
@@ -55,21 +54,19 @@ export const updateTicketAgent = async (id: string, agentId: string | null): Pro
   
   const updatedTicket = mapDbTicketToAppTicket(data[0]);
   
-  // Check if we should send updates to n8n
+  // Check if we should send updates to n8n using fallback configuration
   if (updatedTicket.companyId) {
-    getSystemSetting<{
+    const events = await getSystemSetting<{
       ticketCreated: boolean;
       ticketUpdated: boolean;
       messageCreated: boolean;
       ticketAssigned: boolean;
-    }>(updatedTicket.companyId, 'events_to_n8n')
-      .then(events => {
-        if (events && events.ticketAssigned) {
-          sendTicketToN8n(updatedTicket, updatedTicket.companyId)
-            .catch(err => console.error('Failed to send ticket assign to n8n:', err));
-        }
-      })
-      .catch(err => console.error('Failed to check event settings:', err));
+    }>(updatedTicket.companyId, 'events_to_n8n');
+    
+    if (events?.ticketAssigned) {
+      sendTicketToN8n(updatedTicket, updatedTicket.companyId)
+        .catch(err => console.error('Failed to send ticket assign to n8n:', err));
+    }
   }
   
   return updatedTicket;

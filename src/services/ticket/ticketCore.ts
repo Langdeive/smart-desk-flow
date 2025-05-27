@@ -20,7 +20,6 @@ export const getAllTickets = async (): Promise<Ticket[]> => {
   return data.map(mapDbTicketToAppTicket);
 };
 
-// Get a single ticket by ID
 export const getTicketById = async (id: string): Promise<Ticket> => {
   const { data, error } = await supabase
     .from('tickets')
@@ -36,7 +35,6 @@ export const getTicketById = async (id: string): Promise<Ticket> => {
   return mapDbTicketToAppTicket(data);
 };
 
-// Create a new ticket
 export const createTicket = async (ticket: Partial<Ticket>): Promise<Ticket> => {
   const dbTicket = mapAppTicketToDbTicket(ticket);
   
@@ -52,16 +50,24 @@ export const createTicket = async (ticket: Partial<Ticket>): Promise<Ticket> => 
   
   const createdTicket = mapDbTicketToAppTicket(data[0]);
   
-  // Send the new ticket to n8n for processing
+  // Send the new ticket to n8n for processing using fallback configuration
   if (createdTicket.companyId) {
-    sendTicketToN8n(createdTicket, createdTicket.companyId)
-      .catch(err => console.error('Failed to send ticket to n8n:', err));
+    const events = await getSystemSetting<{
+      ticketCreated: boolean;
+      ticketUpdated: boolean;
+      messageCreated: boolean;
+      ticketAssigned: boolean;
+    }>(createdTicket.companyId, 'events_to_n8n');
+    
+    if (events?.ticketCreated) {
+      sendTicketToN8n(createdTicket, createdTicket.companyId)
+        .catch(err => console.error('Failed to send ticket to n8n:', err));
+    }
   }
   
   return createdTicket;
 };
 
-// Update ticket
 export const updateTicket = async (id: string, ticketData: Partial<Ticket>): Promise<Ticket> => {
   const dbTicket = mapAppTicketToDbTicket(ticketData);
   dbTicket.updated_at = new Date().toISOString();
@@ -79,21 +85,19 @@ export const updateTicket = async (id: string, ticketData: Partial<Ticket>): Pro
   
   const updatedTicket = mapDbTicketToAppTicket(data[0]);
   
-  // Check if we should send updates to n8n
+  // Check if we should send updates to n8n using fallback configuration
   if (updatedTicket.companyId) {
-    getSystemSetting<{
+    const events = await getSystemSetting<{
       ticketCreated: boolean;
       ticketUpdated: boolean;
       messageCreated: boolean;
       ticketAssigned: boolean;
-    }>(updatedTicket.companyId, 'events_to_n8n')
-      .then(events => {
-        if (events && events.ticketUpdated) {
-          sendTicketToN8n(updatedTicket, updatedTicket.companyId)
-            .catch(err => console.error('Failed to send ticket update to n8n:', err));
-        }
-      })
-      .catch(err => console.error('Failed to check event settings:', err));
+    }>(updatedTicket.companyId, 'events_to_n8n');
+    
+    if (events?.ticketUpdated) {
+      sendTicketToN8n(updatedTicket, updatedTicket.companyId)
+        .catch(err => console.error('Failed to send ticket update to n8n:', err));
+    }
   }
   
   return updatedTicket;

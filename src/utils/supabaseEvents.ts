@@ -11,6 +11,12 @@ export const sendTicketToN8n = async (payload: Ticket | { ticket: Ticket, messag
     // Get webhook URL and processing settings with fallback to global configuration
     const n8nWebhookUrl = await getSystemSetting<string>(companyId, 'n8n_webhook_url');
     const enableProcessing = await getSystemSetting<boolean>(companyId, 'enable_ai_processing');
+    const events = await getSystemSetting<{
+      ticketCreated: boolean;
+      ticketUpdated: boolean;
+      messageCreated: boolean;
+      ticketAssigned: boolean;
+    }>(companyId, 'events_to_n8n');
     
     console.log(`N8n webhook URL for company ${companyId}:`, n8nWebhookUrl);
     console.log(`Processing enabled for company ${companyId}:`, enableProcessing);
@@ -25,20 +31,34 @@ export const sendTicketToN8n = async (payload: Ticket | { ticket: Ticket, messag
       return { success: false, error: 'N8n processing disabled' };
     }
     
-    console.log('Enviando dados para processamento n8n');
-    
     // Determine event type based on payload structure
     let eventType = 'ticket.created';
     let data = payload;
     
     if ('message' in payload) {
       eventType = 'message.created';
-      data = payload;
+      // Check if message events are enabled
+      if (!events?.messageCreated) {
+        console.log('Message events disabled for company:', companyId);
+        return { success: false, error: 'Message events disabled' };
+      }
     } else if (('agentId' in payload) && payload.agentId) {
       eventType = 'ticket.assigned';
+      // Check if assignment events are enabled
+      if (!events?.ticketAssigned) {
+        console.log('Assignment events disabled for company:', companyId);
+        return { success: false, error: 'Assignment events disabled' };
+      }
     } else {
       eventType = 'ticket.updated';
+      // Check if update events are enabled
+      if (!events?.ticketUpdated) {
+        console.log('Update events disabled for company:', companyId);
+        return { success: false, error: 'Update events disabled' };
+      }
     }
+    
+    console.log('Enviando dados para processamento n8n');
     
     const response = await fetch(n8nWebhookUrl, {
       method: 'POST',
@@ -77,7 +97,6 @@ export const processN8nUpdate = async (updateData: {
   needsHumanReview?: boolean;
   confidenceScore?: number;
 }) => {
-  // Destructure the update data
   const { 
     ticketId, 
     aiClassification, 
@@ -89,7 +108,6 @@ export const processN8nUpdate = async (updateData: {
   } = updateData;
   
   try {
-    // Update the ticket with the AI processed data
     const { error } = await supabase
       .from('tickets')
       .update({
@@ -104,7 +122,6 @@ export const processN8nUpdate = async (updateData: {
       
     if (error) throw error;
     
-    // If there's an AI response, create a suggested response
     if (aiResponse) {
       const { error: responseError } = await supabase
         .from('suggested_responses')
@@ -117,7 +134,6 @@ export const processN8nUpdate = async (updateData: {
       if (responseError) throw responseError;
     }
     
-    // Publish event internally
     console.log('Ticket AI processed successfully:', ticketId);
     
     return { success: true };
