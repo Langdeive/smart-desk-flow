@@ -11,6 +11,8 @@ import { Switch } from "@/components/ui/switch";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/useAuth";
 import { getN8nSettings, saveN8nSettings, N8nSettings } from "@/services/settingsService";
+import GlobalSettingsPanel from "@/components/settings/GlobalSettingsPanel";
+import ConfigurationIndicator from "@/components/settings/ConfigurationIndicator";
 
 const Settings = () => {
   const { toast } = useToast();
@@ -29,6 +31,9 @@ const Settings = () => {
   const [isTesting, setIsTesting] = useState<boolean>(false);
   const { theme, setTheme } = useTheme();
   const [isDarkMode, setIsDarkMode] = useState(theme === "dark");
+
+  // Check if user is a developer
+  const isDeveloper = user?.appMetadata?.role === 'developer';
 
   const toggleTheme = (checked: boolean) => {
     setIsDarkMode(checked);
@@ -115,7 +120,6 @@ const Settings = () => {
     setIsTesting(true);
     
     try {
-      // Enviar um payload de teste para o webhook
       const response = await fetch(n8nSettings.webhookUrl, {
         method: "POST",
         headers: {
@@ -217,6 +221,7 @@ const Settings = () => {
         <TabsList>
           <TabsTrigger value="general">Geral</TabsTrigger>
           <TabsTrigger value="integrations">Integrações</TabsTrigger>
+          {isDeveloper && <TabsTrigger value="global">Global</TabsTrigger>}
           <TabsTrigger value="notifications">Notificações</TabsTrigger>
           <TabsTrigger value="ai">Inteligência Artificial</TabsTrigger>
         </TabsList>
@@ -226,7 +231,23 @@ const Settings = () => {
         <TabsContent value="integrations">
           <Card>
             <CardHeader>
-              <CardTitle>Integração com n8n</CardTitle>
+              <CardTitle className="flex items-center justify-between">
+                Integração com n8n
+                {user?.appMetadata?.company_id && (
+                  <div className="flex gap-2">
+                    <ConfigurationIndicator
+                      companyId={user.appMetadata.company_id}
+                      settingKey="n8n_webhook_url"
+                      label="Webhook URL"
+                    />
+                    <ConfigurationIndicator
+                      companyId={user.appMetadata.company_id}
+                      settingKey="enable_ai_processing"
+                      label="Processamento IA"
+                    />
+                  </div>
+                )}
+              </CardTitle>
               <CardDescription>
                 Configure a integração com n8n para processamento automático de tickets e automações.
               </CardDescription>
@@ -309,6 +330,12 @@ const Settings = () => {
             </CardFooter>
           </Card>
         </TabsContent>
+
+        {isDeveloper && (
+          <TabsContent value="global">
+            <GlobalSettingsPanel />
+          </TabsContent>
+        )}
         
         <TabsContent value="notifications">
           <Card>

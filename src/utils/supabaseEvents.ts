@@ -4,17 +4,25 @@ import { supabase } from '@/integrations/supabase/client';
 import { getSystemSetting } from '@/services/settingsService';
 
 /**
- * Sends a ticket to n8n for AI processing
+ * Sends a ticket to n8n for AI processing with fallback to global configuration
  */
 export const sendTicketToN8n = async (payload: Ticket | { ticket: Ticket, message: any }, companyId: string): Promise<{success: boolean, error?: any}> => {
   try {
-    // Get webhook URL from settings
+    // Get webhook URL and processing settings with fallback to global configuration
     const n8nWebhookUrl = await getSystemSetting<string>(companyId, 'n8n_webhook_url');
     const enableProcessing = await getSystemSetting<boolean>(companyId, 'enable_ai_processing');
     
-    if (!n8nWebhookUrl || !enableProcessing) {
-      console.log('N8n processing not configured or disabled for company:', companyId);
-      return { success: false, error: 'N8n webhook not configured or processing disabled' };
+    console.log(`N8n webhook URL for company ${companyId}:`, n8nWebhookUrl);
+    console.log(`Processing enabled for company ${companyId}:`, enableProcessing);
+    
+    if (!n8nWebhookUrl) {
+      console.log('N8n webhook URL not configured (neither for company nor globally):', companyId);
+      return { success: false, error: 'N8n webhook not configured' };
+    }
+    
+    if (!enableProcessing) {
+      console.log('N8n processing disabled for company:', companyId);
+      return { success: false, error: 'N8n processing disabled' };
     }
     
     console.log('Enviando dados para processamento n8n');
