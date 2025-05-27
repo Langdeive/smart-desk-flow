@@ -9,7 +9,7 @@ export interface DeveloperAuditLog {
   resource_id?: string;
   old_value?: any;
   new_value?: any;
-  ip_address?: string;
+  ip_address?: unknown; // Changed from string to unknown to match Supabase type
   user_agent?: string;
   created_at: string;
 }
