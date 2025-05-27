@@ -1,9 +1,8 @@
-
 export type User = {
   id: string;
   email: string;
   name: string;
-  role: "admin" | "agent" | "client";
+  role: "admin" | "agent" | "client" | "owner" | "developer";
   companyId: string;
 };
 

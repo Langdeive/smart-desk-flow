@@ -35,8 +35,8 @@ export const useTicketCreation = () => {
     firstResponseHours: Record<TicketPriority, number>;
   } | null>(null);
   
-  // Determine if the current user is an agent (admin/agent/owner) or a client
-  const isAgent = role === 'admin' || role === 'agent' || role === 'owner';
+  // Determine if the current user is an agent (admin/agent/owner/developer) or a client
+  const isAgent = role === 'admin' || role === 'agent' || role === 'owner' || role === 'developer';
   
   // DEBUG: Log authentication and role information
   console.log("DEBUG TicketCreation - User:", user?.email);

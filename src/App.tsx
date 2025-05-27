@@ -66,17 +66,17 @@ const App = () => {
                     </RequireAuth>
                   } />
                   <Route path="/settings" element={
-                    <RequireAuth>
+                    <RequireAuth allowedRoles={['developer']}>
                       <Settings />
                     </RequireAuth>
                   } />
                   <Route path="/configuracoes/agentes" element={
-                    <RequireAuth allowedRoles={['admin', 'owner']}>
+                    <RequireAuth allowedRoles={['admin', 'owner', 'developer']}>
                       <AgentManagement />
                     </RequireAuth>
                   } />
                   <Route path="/configuracoes/clientes" element={
-                    <RequireAuth>
+                    <RequireAuth allowedRoles={['admin', 'owner', 'developer']}>
                       <ClientManagement />
                     </RequireAuth>
                   } />
