@@ -1,89 +1,5 @@
 
-import { Ticket } from '@/types';
 import { supabase } from '@/integrations/supabase/client';
-import { getSystemSetting } from '@/services/settingsService';
-
-/**
- * Sends a ticket to n8n for AI processing with fallback to global configuration
- */
-export const sendTicketToN8n = async (payload: Ticket | { ticket: Ticket, message: any }, companyId: string): Promise<{success: boolean, error?: any}> => {
-  try {
-    // Get webhook URL and processing settings with fallback to global configuration
-    const n8nWebhookUrl = await getSystemSetting<string>(companyId, 'n8n_webhook_url');
-    const enableProcessing = await getSystemSetting<boolean>(companyId, 'enable_ai_processing');
-    const events = await getSystemSetting<{
-      ticketCreated: boolean;
-      ticketUpdated: boolean;
-      messageCreated: boolean;
-      ticketAssigned: boolean;
-    }>(companyId, 'events_to_n8n');
-    
-    console.log(`N8n webhook URL for company ${companyId}:`, n8nWebhookUrl);
-    console.log(`Processing enabled for company ${companyId}:`, enableProcessing);
-    
-    if (!n8nWebhookUrl) {
-      console.log('N8n webhook URL not configured (neither for company nor globally):', companyId);
-      return { success: false, error: 'N8n webhook not configured' };
-    }
-    
-    if (!enableProcessing) {
-      console.log('N8n processing disabled for company:', companyId);
-      return { success: false, error: 'N8n processing disabled' };
-    }
-    
-    // Determine event type based on payload structure
-    let eventType = 'ticket.created';
-    let data = payload;
-    
-    if ('message' in payload) {
-      eventType = 'message.created';
-      // Check if message events are enabled
-      if (!events?.messageCreated) {
-        console.log('Message events disabled for company:', companyId);
-        return { success: false, error: 'Message events disabled' };
-      }
-    } else if (('agentId' in payload) && payload.agentId) {
-      eventType = 'ticket.assigned';
-      // Check if assignment events are enabled
-      if (!events?.ticketAssigned) {
-        console.log('Assignment events disabled for company:', companyId);
-        return { success: false, error: 'Assignment events disabled' };
-      }
-    } else {
-      eventType = 'ticket.updated';
-      // Check if update events are enabled
-      if (!events?.ticketUpdated) {
-        console.log('Update events disabled for company:', companyId);
-        return { success: false, error: 'Update events disabled' };
-      }
-    }
-    
-    console.log('Enviando dados para processamento n8n');
-    
-    const response = await fetch(n8nWebhookUrl, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        eventType,
-        data,
-        timestamp: new Date().toISOString(),
-        companyId
-      }),
-    });
-
-    if (!response.ok) {
-      throw new Error(`Erro ao enviar para n8n: ${response.statusText}`);
-    }
-
-    console.log('Dados enviados com sucesso para n8n');
-    return { success: true };
-  } catch (error) {
-    console.error('Erro ao enviar dados para n8n:', error);
-    return { success: false, error };
-  }
-};
 
 /**
  * Processes an update received from n8n
@@ -139,6 +55,46 @@ export const processN8nUpdate = async (updateData: {
     return { success: true };
   } catch (error) {
     console.error('Erro ao processar atualização do n8n:', error);
+    return { success: false, error };
+  }
+};
+
+/**
+ * Get n8n integration logs for monitoring
+ */
+export const getN8nIntegrationLogs = async (companyId: string, limit: number = 50) => {
+  try {
+    const { data, error } = await supabase
+      .from('n8n_integration_logs')
+      .select('*')
+      .eq('company_id', companyId)
+      .order('created_at', { ascending: false })
+      .limit(limit);
+    
+    if (error) throw error;
+    
+    return { success: true, data };
+  } catch (error) {
+    console.error('Erro ao buscar logs de integração n8n:', error);
+    return { success: false, error };
+  }
+};
+
+/**
+ * Get n8n integration statistics
+ */
+export const getN8nIntegrationStats = async (companyId: string) => {
+  try {
+    const { data, error } = await supabase
+      .from('n8n_integration_stats')
+      .select('*')
+      .eq('company_id', companyId);
+    
+    if (error) throw error;
+    
+    return { success: true, data };
+  } catch (error) {
+    console.error('Erro ao buscar estatísticas de integração n8n:', error);
     return { success: false, error };
   }
 };

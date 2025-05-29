@@ -420,6 +420,63 @@ export type Database = {
         }
         Relationships: []
       }
+      n8n_integration_logs: {
+        Row: {
+          company_id: string
+          created_at: string
+          error_message: string | null
+          event_type: string
+          id: string
+          last_attempt_at: string | null
+          max_retries: number
+          next_retry_at: string | null
+          request_payload: Json
+          resource_id: string
+          resource_type: string
+          response_body: string | null
+          response_status: number | null
+          retry_count: number
+          status: string
+          webhook_url: string
+        }
+        Insert: {
+          company_id: string
+          created_at?: string
+          error_message?: string | null
+          event_type: string
+          id?: string
+          last_attempt_at?: string | null
+          max_retries?: number
+          next_retry_at?: string | null
+          request_payload: Json
+          resource_id: string
+          resource_type: string
+          response_body?: string | null
+          response_status?: number | null
+          retry_count?: number
+          status?: string
+          webhook_url: string
+        }
+        Update: {
+          company_id?: string
+          created_at?: string
+          error_message?: string | null
+          event_type?: string
+          id?: string
+          last_attempt_at?: string | null
+          max_retries?: number
+          next_retry_at?: string | null
+          request_payload?: Json
+          resource_id?: string
+          resource_type?: string
+          response_body?: string | null
+          response_status?: number | null
+          retry_count?: number
+          status?: string
+          webhook_url?: string
+        }
+        Relationships: []
+      }
       planos: {
         Row: {
           criado_em: string | null
@@ -737,6 +794,19 @@ export type Database = {
         }
         Relationships: []
       }
+      n8n_integration_stats: {
+        Row: {
+          avg_retry_count: number | null
+          company_id: string | null
+          event_type: string | null
+          failed_requests: number | null
+          last_request_at: string | null
+          max_retries_reached: number | null
+          successful_requests: number | null
+          total_requests: number | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
       belongs_to_company: {
@@ -747,9 +817,17 @@ export type Database = {
         Args: { "": string } | { "": unknown }
         Returns: unknown
       }
+      cleanup_old_n8n_logs: {
+        Args: Record<PropertyKey, never>
+        Returns: number
+      }
       fix_inconsistent_user_companies: {
         Args: Record<PropertyKey, never>
         Returns: undefined
+      }
+      get_system_setting_value: {
+        Args: { p_company_id: string; p_key: string }
+        Returns: Json
       }
       get_user_role_in_company: {
         Args: { user_id: string; company_id: string }
@@ -791,6 +869,10 @@ export type Database = {
         Args: { "": unknown }
         Returns: unknown
       }
+      is_event_enabled: {
+        Args: { p_company_id: string; p_event_key: string }
+        Returns: boolean
+      }
       ivfflat_bit_support: {
         Args: { "": unknown }
         Returns: unknown
@@ -828,6 +910,20 @@ export type Database = {
           funcao?: string
         }
         Returns: Json
+      }
+      retry_failed_n8n_requests: {
+        Args: Record<PropertyKey, never>
+        Returns: number
+      }
+      send_to_n8n_webhook: {
+        Args: {
+          p_company_id: string
+          p_event_type: string
+          p_resource_type: string
+          p_resource_id: string
+          p_payload: Json
+        }
+        Returns: string
       }
       sparsevec_out: {
         Args: { "": unknown }

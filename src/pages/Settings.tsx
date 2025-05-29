@@ -14,6 +14,7 @@ import { getN8nSettings, saveN8nSettings, N8nSettings } from "@/services/setting
 import { supabase } from "@/integrations/supabase/client";
 import GlobalSettingsPanel from "@/components/settings/GlobalSettingsPanel";
 import ConfigurationIndicator from "@/components/settings/ConfigurationIndicator";
+import N8nIntegrationMonitoring from "@/components/settings/N8nIntegrationMonitoring";
 
 const Settings = () => {
   const { toast } = useToast();
@@ -152,7 +153,7 @@ const Settings = () => {
       if (success) {
         toast({
           title: "Configurações salvas",
-          description: "Suas configurações de integração foram atualizadas com sucesso.",
+          description: "Suas configurações de integração foram atualizadas com sucesso. As integrações agora são processadas automaticamente pelo backend.",
         });
       } else {
         throw new Error("Failed to save settings");
@@ -201,7 +202,7 @@ const Settings = () => {
       
       toast({
         title: "Conexão bem-sucedida",
-        description: "O webhook do n8n está configurado corretamente.",
+        description: "O webhook do n8n está configurado corretamente e será usado automaticamente pelo backend.",
       });
     } catch (error) {
       console.error("Erro ao testar webhook:", error);
@@ -285,6 +286,7 @@ const Settings = () => {
           <TabsTrigger value="general">Geral</TabsTrigger>
           <TabsTrigger value="integrations">Integrações</TabsTrigger>
           {isDeveloper && <TabsTrigger value="global">Global</TabsTrigger>}
+          <TabsTrigger value="monitoring">Monitoramento</TabsTrigger>
           <TabsTrigger value="notifications">Notificações</TabsTrigger>
           <TabsTrigger value="ai">Inteligência Artificial</TabsTrigger>
         </TabsList>
@@ -312,7 +314,8 @@ const Settings = () => {
                 )}
               </CardTitle>
               <CardDescription>
-                Configure a integração com n8n para processamento automático de tickets e automações.
+                Configure a integração com n8n para processamento automático de tickets. 
+                As integrações são processadas automaticamente pelo backend via triggers do banco de dados.
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
@@ -325,7 +328,7 @@ const Settings = () => {
                   placeholder="https://seu-servidor-n8n.com/webhook/endpoint"
                 />
                 <p className="text-sm text-muted-foreground">
-                  Insira a URL do webhook criado no n8n para receber eventos de tickets.
+                  Insira a URL do webhook criado no n8n para receber eventos de tickets automaticamente.
                 </p>
               </div>
               
@@ -339,7 +342,7 @@ const Settings = () => {
               </div>
               
               <div className="space-y-2">
-                <Label>Eventos Enviados para n8n</Label>
+                <Label>Eventos Enviados para n8n (Automático)</Label>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
                   <div className="flex items-center space-x-2">
                     <Switch 
@@ -374,6 +377,9 @@ const Settings = () => {
                     <Label htmlFor="event-ticket-assigned">Ticket Atribuído</Label>
                   </div>
                 </div>
+                <p className="text-sm text-muted-foreground">
+                  Os eventos são enviados automaticamente pelo backend quando ocorrem alterações nos dados.
+                </p>
               </div>
             </CardContent>
             <CardFooter className="flex flex-col sm:flex-row gap-3 items-start sm:items-center">
@@ -399,6 +405,10 @@ const Settings = () => {
             <GlobalSettingsPanel />
           </TabsContent>
         )}
+
+        <TabsContent value="monitoring">
+          <N8nIntegrationMonitoring />
+        </TabsContent>
         
         <TabsContent value="notifications">
           <Card>

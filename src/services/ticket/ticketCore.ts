@@ -1,8 +1,6 @@
 
 import { supabase } from "@/integrations/supabase/client";
 import { Ticket } from "@/types";
-import { sendTicketToN8n } from "@/utils/supabaseEvents";
-import { getSystemSetting } from "@/services/settingsService";
 import { mapDbTicketToAppTicket, mapAppTicketToDbTicket } from "./mappers";
 
 // Get all tickets
@@ -50,20 +48,8 @@ export const createTicket = async (ticket: Partial<Ticket>): Promise<Ticket> => 
   
   const createdTicket = mapDbTicketToAppTicket(data[0]);
   
-  // Send the new ticket to n8n for processing using fallback configuration
-  if (createdTicket.companyId) {
-    const events = await getSystemSetting<{
-      ticketCreated: boolean;
-      ticketUpdated: boolean;
-      messageCreated: boolean;
-      ticketAssigned: boolean;
-    }>(createdTicket.companyId, 'events_to_n8n');
-    
-    if (events?.ticketCreated) {
-      sendTicketToN8n(createdTicket, createdTicket.companyId)
-        .catch(err => console.error('Failed to send ticket to n8n:', err));
-    }
-  }
+  // Ticket creation automatically triggers n8n integration via database trigger
+  console.log('Ticket created, n8n integration triggered automatically:', createdTicket.id);
   
   return createdTicket;
 };
@@ -85,20 +71,8 @@ export const updateTicket = async (id: string, ticketData: Partial<Ticket>): Pro
   
   const updatedTicket = mapDbTicketToAppTicket(data[0]);
   
-  // Check if we should send updates to n8n using fallback configuration
-  if (updatedTicket.companyId) {
-    const events = await getSystemSetting<{
-      ticketCreated: boolean;
-      ticketUpdated: boolean;
-      messageCreated: boolean;
-      ticketAssigned: boolean;
-    }>(updatedTicket.companyId, 'events_to_n8n');
-    
-    if (events?.ticketUpdated) {
-      sendTicketToN8n(updatedTicket, updatedTicket.companyId)
-        .catch(err => console.error('Failed to send ticket update to n8n:', err));
-    }
-  }
+  // Ticket update automatically triggers n8n integration via database trigger
+  console.log('Ticket updated, n8n integration triggered automatically:', updatedTicket.id);
   
   return updatedTicket;
 };

@@ -1,7 +1,6 @@
+
 import { supabase } from "@/integrations/supabase/client";
 import { Ticket, TicketStatus, TicketPriority } from "@/types";
-import { sendTicketToN8n } from "@/utils/supabaseEvents";
-import { getSystemSetting } from "@/services/settingsService";
 import { mapDbTicketToAppTicket } from "./mappers";
 
 // Update ticket status
@@ -16,6 +15,9 @@ export const updateTicketStatus = async (id: string, status: TicketStatus): Prom
     console.error('Error updating ticket status:', error);
     throw error;
   }
+  
+  // Status update automatically triggers n8n integration via database trigger
+  console.log('Ticket status updated, n8n integration triggered automatically:', id);
   
   return mapDbTicketToAppTicket(data[0]);
 };
@@ -32,6 +34,9 @@ export const updateTicketPriority = async (id: string, priority: TicketPriority)
     console.error('Error updating ticket priority:', error);
     throw error;
   }
+  
+  // Priority update automatically triggers n8n integration via database trigger
+  console.log('Ticket priority updated, n8n integration triggered automatically:', id);
   
   return mapDbTicketToAppTicket(data[0]);
 };
@@ -54,20 +59,8 @@ export const updateTicketAgent = async (id: string, agentId: string | null): Pro
   
   const updatedTicket = mapDbTicketToAppTicket(data[0]);
   
-  // Check if we should send updates to n8n using fallback configuration
-  if (updatedTicket.companyId) {
-    const events = await getSystemSetting<{
-      ticketCreated: boolean;
-      ticketUpdated: boolean;
-      messageCreated: boolean;
-      ticketAssigned: boolean;
-    }>(updatedTicket.companyId, 'events_to_n8n');
-    
-    if (events?.ticketAssigned) {
-      sendTicketToN8n(updatedTicket, updatedTicket.companyId)
-        .catch(err => console.error('Failed to send ticket assign to n8n:', err));
-    }
-  }
+  // Agent assignment automatically triggers n8n integration via database trigger
+  console.log('Ticket agent assigned, n8n integration triggered automatically:', id);
   
   return updatedTicket;
 };
@@ -102,6 +95,9 @@ export const updateTicketAIStatus = async (
     console.error('Error updating ticket AI status:', error);
     throw error;
   }
+  
+  // AI status update automatically triggers n8n integration via database trigger
+  console.log('Ticket AI status updated, n8n integration triggered automatically:', id);
   
   return mapDbTicketToAppTicket(data[0]);
 };

@@ -1,9 +1,7 @@
+
 import { supabase } from "@/integrations/supabase/client";
 import { Message, Attachment } from "@/types";
-import { sendTicketToN8n } from "@/utils/supabaseEvents";
-import { getSystemSetting } from "@/services/settingsService";
 import { mapDbMessageToAppMessage, mapAppMessageToDbMessage, mapDbAttachmentToAppAttachment } from "./mappers";
-import { getTicketById } from "./ticketCore";
 
 // Get messages for a ticket
 export const getMessagesForTicket = async (ticketId: string): Promise<Message[]> => {
@@ -37,28 +35,8 @@ export const addMessageToTicket = async (message: Omit<Message, "id" | "createdA
   
   const createdMessage = mapDbMessageToAppMessage(data[0]);
   
-  // Get the ticket for this message
-  const ticket = await getTicketById(message.ticketId);
-  
-  // Check if we should send message updates to n8n using fallback configuration
-  if (ticket.companyId) {
-    const events = await getSystemSetting<{
-      ticketCreated: boolean;
-      ticketUpdated: boolean;
-      messageCreated: boolean;
-      ticketAssigned: boolean;
-    }>(ticket.companyId, 'events_to_n8n');
-    
-    if (events?.messageCreated) {
-      const ticketWithMessage = { ...ticket };
-      
-      sendTicketToN8n({
-        ticket: ticketWithMessage,
-        message: createdMessage
-      }, ticket.companyId)
-        .catch(err => console.error('Failed to send message event to n8n:', err));
-    }
-  }
+  // Message creation automatically triggers n8n integration via database trigger
+  console.log('Message created, n8n integration triggered automatically:', createdMessage.id);
   
   return createdMessage;
 };
