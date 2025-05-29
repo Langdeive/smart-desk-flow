@@ -11,6 +11,7 @@ import { Switch } from "@/components/ui/switch";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/useAuth";
 import { getN8nSettings, saveN8nSettings, N8nSettings } from "@/services/settingsService";
+import { supabase } from "@/integrations/supabase/client";
 import GlobalSettingsPanel from "@/components/settings/GlobalSettingsPanel";
 import ConfigurationIndicator from "@/components/settings/ConfigurationIndicator";
 
@@ -29,11 +30,12 @@ const Settings = () => {
   });
   const [isSaving, setIsSaving] = useState<boolean>(false);
   const [isTesting, setIsTesting] = useState<boolean>(false);
+  const [companyId, setCompanyId] = useState<string | null>(null);
   const { theme, setTheme } = useTheme();
   const [isDarkMode, setIsDarkMode] = useState(theme === "dark");
 
   // Check if user is a developer
-  const isDeveloper = user?.appMetadata?.role === 'developer';
+  const isDeveloper = user?.app_metadata?.role === 'developer';
 
   const toggleTheme = (checked: boolean) => {
     setIsDarkMode(checked);
@@ -45,16 +47,66 @@ const Settings = () => {
     });
   };
 
+  // Get company ID with fallback
+  const getCompanyId = async (): Promise<string | null> => {
+    // First try to get from user metadata
+    const metadataCompanyId = user?.app_metadata?.company_id;
+    if (metadataCompanyId) {
+      console.log("Company ID found in metadata:", metadataCompanyId);
+      return metadataCompanyId;
+    }
+
+    // Fallback: get from user_companies table
+    if (user?.id) {
+      console.log("Company ID not in metadata, fetching from user_companies for user:", user.id);
+      try {
+        const { data, error } = await supabase
+          .from('user_companies')
+          .select('company_id')
+          .eq('user_id', user.id)
+          .single();
+        
+        if (error) {
+          console.error("Error fetching company from user_companies:", error);
+          return null;
+        }
+        
+        if (data?.company_id) {
+          console.log("Company ID found in user_companies:", data.company_id);
+          return data.company_id;
+        }
+      } catch (err) {
+        console.error("Exception fetching company ID:", err);
+      }
+    }
+
+    console.error("Company ID not found in metadata or user_companies table");
+    return null;
+  };
+
   // Load settings from database
   useEffect(() => {
     const loadSettings = async () => {
-      if (!user?.appMetadata?.company_id) {
-        console.error("Company ID not found in user metadata");
+      if (!user) {
+        console.log("No user found, skipping settings load");
         return;
       }
       
       try {
-        const settings = await getN8nSettings(user.appMetadata.company_id);
+        const resolvedCompanyId = await getCompanyId();
+        setCompanyId(resolvedCompanyId);
+        
+        if (!resolvedCompanyId) {
+          console.error("Cannot load settings: Company ID not found");
+          toast({
+            title: "Erro ao carregar configurações",
+            description: "ID da empresa não encontrado. Entre em contato com o suporte.",
+            variant: "destructive",
+          });
+          return;
+        }
+        
+        const settings = await getN8nSettings(resolvedCompanyId);
         setN8nSettings(settings);
       } catch (error) {
         console.error("Error loading settings:", error);
@@ -66,16 +118,26 @@ const Settings = () => {
       }
     };
     
-    if (user) {
-      loadSettings();
-    }
+    loadSettings();
   }, [user, toast]);
 
   const handleSaveSettings = async () => {
-    if (!user?.appMetadata?.company_id) {
+    if (!user) {
       toast({
         title: "Erro ao salvar",
-        description: "ID da empresa não encontrado.",
+        description: "Usuário não autenticado.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    // Get company ID with fallback
+    const resolvedCompanyId = companyId || await getCompanyId();
+    
+    if (!resolvedCompanyId) {
+      toast({
+        title: "Erro ao salvar",
+        description: "ID da empresa não encontrado. Verifique se você está associado a uma empresa.",
         variant: "destructive",
       });
       return;
@@ -84,7 +146,8 @@ const Settings = () => {
     setIsSaving(true);
     
     try {
-      const success = await saveN8nSettings(user.appMetadata.company_id, n8nSettings);
+      console.log("Saving settings for company:", resolvedCompanyId);
+      const success = await saveN8nSettings(resolvedCompanyId, n8nSettings);
       
       if (success) {
         toast({
@@ -233,15 +296,15 @@ const Settings = () => {
             <CardHeader>
               <CardTitle className="flex items-center justify-between">
                 Integração com n8n
-                {user?.appMetadata?.company_id && (
+                {companyId && (
                   <div className="flex gap-2">
                     <ConfigurationIndicator
-                      companyId={user.appMetadata.company_id}
+                      companyId={companyId}
                       settingKey="n8n_webhook_url"
                       label="Webhook URL"
                     />
                     <ConfigurationIndicator
-                      companyId={user.appMetadata.company_id}
+                      companyId={companyId}
                       settingKey="enable_ai_processing"
                       label="Processamento IA"
                     />
@@ -323,7 +386,7 @@ const Settings = () => {
               </Button>
               <Button 
                 onClick={handleSaveSettings} 
-                disabled={isSaving}
+                disabled={isSaving || !companyId}
               >
                 {isSaving ? "Salvando..." : "Salvar Configurações"}
               </Button>
