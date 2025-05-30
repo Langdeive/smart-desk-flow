@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -19,7 +20,7 @@ import { useAuth } from "@/hooks/useAuth";
 const ticketFormSchema = z.object({
   title: z.string().min(5, { message: "O título deve ter pelo menos 5 caracteres" }),
   description: z.string().min(20, { message: "A descrição deve ter pelo menos 20 caracteres" }).max(2000, { message: "A descrição não pode ter mais de 2000 caracteres" }),
-  category: z.enum(["technical_issue", "feature_request", "billing", "general_inquiry", "other"]),
+  category: z.string().min(1, { message: "Selecione uma categoria" }), // Alterado para aceitar qualquer string
   priority: z.enum(["low", "medium", "high", "critical"]),
   clientId: z.string().min(1, { message: "Selecione um cliente" }),
   contactId: z.string().optional(),
@@ -66,7 +67,7 @@ const CreateTicket = () => {
   const defaultValues: TicketFormValues = {
     title: "",
     description: "",
-    category: "technical_issue" as TicketCategory,
+    category: "technical_issue", // Valor padrão como string
     priority: "medium" as TicketPriority,
     clientId: isAgent ? "" : (user?.id || ""),
     contactId: "",
