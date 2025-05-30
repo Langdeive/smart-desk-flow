@@ -9,28 +9,11 @@ import { getN8nIntegrationLogs, getN8nIntegrationStats } from "@/utils/supabaseE
 import { formatDistanceToNow } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { RefreshCw, AlertCircle, CheckCircle, Clock, XCircle } from "lucide-react";
+import { Tables } from "@/integrations/supabase/types";
 
-interface IntegrationLog {
-  id: string;
-  event_type: string;
-  resource_type: string;
-  resource_id: string;
-  status: 'pending' | 'success' | 'failed' | 'max_retries_reached';
-  error_message?: string;
-  retry_count: number;
-  created_at: string;
-  last_attempt_at?: string;
-}
-
-interface IntegrationStats {
-  event_type: string;
-  total_requests: number;
-  successful_requests: number;
-  failed_requests: number;
-  max_retries_reached: number;
-  avg_retry_count: number;
-  last_request_at: string;
-}
+// Use os tipos exatos do Supabase
+type IntegrationLog = Tables<'n8n_integration_logs'>;
+type IntegrationStats = Tables<'n8n_integration_stats'>;
 
 const N8nIntegrationMonitoring: React.FC = () => {
   const { companyId } = useAuth();
@@ -89,16 +72,18 @@ const N8nIntegrationMonitoring: React.FC = () => {
       max_retries_reached: "destructive"
     } as const;
     
+    const variant = variants[status as keyof typeof variants] || "secondary";
+    
     return (
-      <Badge variant={variants[status as keyof typeof variants] || "secondary"}>
+      <Badge variant={variant}>
         {status}
       </Badge>
     );
   };
 
-  const calculateSuccessRate = (successful: number, total: number) => {
-    if (total === 0) return 0;
-    return Math.round((successful / total) * 100);
+  const calculateSuccessRate = (successful: number | null, total: number | null) => {
+    if (!total || total === 0) return 0;
+    return Math.round(((successful || 0) / total) * 100);
   };
 
   if (!companyId) {
@@ -151,8 +136,8 @@ const N8nIntegrationMonitoring: React.FC = () => {
             </Card>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {stats.map((stat) => (
-                <Card key={stat.event_type}>
+              {stats.map((stat, index) => (
+                <Card key={`${stat.event_type}-${index}`}>
                   <CardHeader className="pb-3">
                     <CardTitle className="text-sm font-medium">
                       {stat.event_type}
@@ -162,18 +147,18 @@ const N8nIntegrationMonitoring: React.FC = () => {
                     <div className="space-y-2">
                       <div className="flex justify-between items-center">
                         <span className="text-sm text-muted-foreground">Total</span>
-                        <span className="font-medium">{stat.total_requests}</span>
+                        <span className="font-medium">{stat.total_requests || 0}</span>
                       </div>
                       <div className="flex justify-between items-center">
                         <span className="text-sm text-muted-foreground">Sucesso</span>
                         <span className="font-medium text-green-600">
-                          {stat.successful_requests}
+                          {stat.successful_requests || 0}
                         </span>
                       </div>
                       <div className="flex justify-between items-center">
                         <span className="text-sm text-muted-foreground">Falha</span>
                         <span className="font-medium text-red-600">
-                          {stat.failed_requests + stat.max_retries_reached}
+                          {(stat.failed_requests || 0) + (stat.max_retries_reached || 0)}
                         </span>
                       </div>
                       <div className="flex justify-between items-center">
@@ -182,14 +167,16 @@ const N8nIntegrationMonitoring: React.FC = () => {
                           {calculateSuccessRate(stat.successful_requests, stat.total_requests)}%
                         </Badge>
                       </div>
-                      <div className="pt-2 border-t">
-                        <span className="text-xs text-muted-foreground">
-                          Última: {formatDistanceToNow(new Date(stat.last_request_at), { 
-                            addSuffix: true, 
-                            locale: ptBR 
-                          })}
-                        </span>
-                      </div>
+                      {stat.last_request_at && (
+                        <div className="pt-2 border-t">
+                          <span className="text-xs text-muted-foreground">
+                            Última: {formatDistanceToNow(new Date(stat.last_request_at), { 
+                              addSuffix: true, 
+                              locale: ptBR 
+                            })}
+                          </span>
+                        </div>
+                      )}
                     </div>
                   </CardContent>
                 </Card>
