@@ -1,4 +1,3 @@
-
 import { supabase } from '@/integrations/supabase/client';
 import { createTicket } from '@/services/ticketService';
 
@@ -11,8 +10,8 @@ export const createTestTicket = async (companyId: string, userId: string) => {
     
     // Criar ticket de teste
     const testTicket = await createTicket({
-      title: 'Ticket de Teste - Integração N8N CORRIGIDA',
-      description: 'Este é um ticket criado para testar a integração corrigida com n8n. A função send_to_n8n_webhook foi atualizada para usar tipos corretos (jsonb ao invés de text).',
+      title: 'Ticket de Teste - Nova Edge Function N8N',
+      description: 'Este é um ticket criado para testar a nova Edge Function que resolve o problema de "Out of memory" do pg_net. Agora as requisições HTTP são feitas via Edge Function.',
       category: 'technical_issue',
       priority: 'medium',
       userId: userId,
@@ -134,6 +133,55 @@ export const getRecentLogs = async (companyId: string, limit: number = 10) => {
 };
 
 /**
+ * Função para testar Edge Function diretamente
+ */
+export const testEdgeFunctionDirectly = async (companyId: string) => {
+  try {
+    console.log('🔧 Testando Edge Function diretamente...');
+    
+    const testPayload = {
+      webhookUrl: 'https://httpbin.org/post', // URL de teste que sempre responde
+      payload: {
+        eventType: 'test.edge_function',
+        timestamp: new Date().toISOString(),
+        source: 'debug-panel',
+        message: 'Teste direto da nova Edge Function n8n-webhook'
+      },
+      logId: 'test-log-id',
+      companyId: companyId,
+      eventType: 'test.edge_function'
+    };
+    
+    const { data, error } = await supabase.functions.invoke('n8n-webhook', {
+      body: testPayload,
+    });
+    
+    if (error) {
+      console.error('❌ Erro na Edge Function:', error);
+      return {
+        success: false,
+        error: error.message,
+        details: error
+      };
+    }
+    
+    console.log('✅ Edge Function respondeu:', data);
+    
+    return {
+      success: true,
+      response: data,
+      message: 'Edge Function funcionando corretamente'
+    };
+  } catch (error) {
+    console.error('❌ Erro ao testar Edge Function:', error);
+    return { 
+      success: false, 
+      error: error instanceof Error ? error.message : 'Erro desconhecido'
+    };
+  }
+};
+
+/**
  * Função para testar webhook diretamente
  */
 export const testWebhookDirectly = async (webhookUrl: string) => {
@@ -144,7 +192,7 @@ export const testWebhookDirectly = async (webhookUrl: string) => {
       eventType: 'test.connection',
       timestamp: new Date().toISOString(),
       source: 'debug-panel',
-      message: 'Teste direto da correção da função send_to_n8n_webhook'
+      message: 'Teste direto após migração para Edge Function'
     };
     
     const response = await fetch(webhookUrl, {

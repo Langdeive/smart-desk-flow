@@ -1,12 +1,11 @@
-
 import React, { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/useAuth";
-import { createTestTicket, checkCompanySettings, getRecentLogs, testWebhookDirectly } from "@/utils/debugTicketCreation";
-import { AlertCircle, CheckCircle, Play, RefreshCw, Settings, Bug, Zap, Info, ExternalLink, Activity, TrendingUp } from "lucide-react";
+import { createTestTicket, checkCompanySettings, getRecentLogs, testWebhookDirectly, testEdgeFunctionDirectly } from "@/utils/debugTicketCreation";
+import { AlertCircle, CheckCircle, Play, RefreshCw, Settings, Bug, Zap, Info, ExternalLink, Activity, TrendingUp, Cpu } from "lucide-react";
 
 const N8nDebugPanel: React.FC = () => {
   const { companyId, user } = useAuth();
@@ -14,10 +13,12 @@ const N8nDebugPanel: React.FC = () => {
   const [isTestingTicket, setIsTestingTicket] = useState(false);
   const [isCheckingSettings, setIsCheckingSettings] = useState(false);
   const [isTestingWebhook, setIsTestingWebhook] = useState(false);
+  const [isTestingEdgeFunction, setIsTestingEdgeFunction] = useState(false);
   const [testResults, setTestResults] = useState<any>(null);
   const [settingsCheck, setSettingsCheck] = useState<any>(null);
   const [recentLogs, setRecentLogs] = useState<any>(null);
   const [webhookTest, setWebhookTest] = useState<any>(null);
+  const [edgeFunctionTest, setEdgeFunctionTest] = useState<any>(null);
 
   const handleTestTicketCreation = async () => {
     if (!companyId) {
@@ -45,7 +46,7 @@ const N8nDebugPanel: React.FC = () => {
       
       if (result.success) {
         const statusMessage = result.hasSuccessfulLog 
-          ? '✅ Correção funcionando! Integração com sucesso!' 
+          ? '✅ Edge Function funcionando! Integração com sucesso!' 
           : result.hasFailedLog
             ? '⚠️ Ainda há falhas - veja os logs detalhados'
             : result.hasLogs 
@@ -73,6 +74,33 @@ const N8nDebugPanel: React.FC = () => {
       });
     } finally {
       setIsTestingTicket(false);
+    }
+  };
+
+  const handleTestEdgeFunction = async () => {
+    if (!companyId) {
+      toast({
+        title: "Erro",
+        description: "ID da empresa não encontrado.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setIsTestingEdgeFunction(true);
+    try {
+      const result = await testEdgeFunctionDirectly(companyId);
+      setEdgeFunctionTest(result);
+      
+      toast({
+        title: result.success ? "Edge Function funcionando" : "Falha na Edge Function",
+        description: result.success ? "Teste realizado com sucesso" : `Erro: ${result.error}`,
+        variant: result.success ? "default" : "destructive",
+      });
+    } catch (error) {
+      console.error('Erro no teste da Edge Function:', error);
+    } finally {
+      setIsTestingEdgeFunction(false);
     }
   };
 
@@ -164,29 +192,29 @@ const N8nDebugPanel: React.FC = () => {
         <CardHeader>
           <CardTitle className="flex items-center">
             <Bug className="h-5 w-5 mr-2" />
-            Painel de Debug N8N - Correção Implementada
+            Painel de Debug N8N - Nova Edge Function
           </CardTitle>
           <CardDescription>
-            Teste e valide se a correção da função send_to_n8n_webhook está funcionando corretamente
+            Teste e valide a nova Edge Function que resolve o problema "Out of memory"
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
-          {/* Status da correção */}
+          {/* Status da migração */}
           <div className="bg-green-50 border border-green-200 p-3 rounded-lg">
             <div className="flex items-center">
               <CheckCircle className="h-4 w-4 text-green-500 mr-2" />
               <span className="text-sm text-green-700">
-                <strong>Status da Correção:</strong> Função send_to_n8n_webhook atualizada com tipos corretos (jsonb)
+                <strong>Migração Concluída:</strong> HTTP requests agora são processados via Edge Function
               </span>
             </div>
           </div>
 
-          {/* Info sobre extensão pg_net */}
+          {/* Info sobre a solução */}
           <div className="bg-blue-50 border border-blue-200 p-3 rounded-lg">
             <div className="flex items-center">
               <Info className="h-4 w-4 text-blue-500 mr-2" />
               <span className="text-sm text-blue-700">
-                <strong>Sistema:</strong> Extensão pg_net (v0.14.0) + Correção de tipos implementada
+                <strong>Nova Arquitetura:</strong> Edge Function + pg_net resolveu "Out of memory"
               </span>
             </div>
           </div>
@@ -199,6 +227,15 @@ const N8nDebugPanel: React.FC = () => {
             >
               <Settings className="h-4 w-4 mr-2" />
               {isCheckingSettings ? "Verificando..." : "Verificar Configurações"}
+            </Button>
+            
+            <Button
+              onClick={handleTestEdgeFunction}
+              disabled={isTestingEdgeFunction}
+              variant="outline"
+            >
+              <Cpu className="h-4 w-4 mr-2" />
+              {isTestingEdgeFunction ? "Testando..." : "Testar Edge Function"}
             </Button>
             
             <Button
@@ -218,6 +255,38 @@ const N8nDebugPanel: React.FC = () => {
               {isTestingTicket ? "Testando..." : "Criar Ticket de Teste"}
             </Button>
           </div>
+
+          {edgeFunctionTest && (
+            <div className="bg-muted p-4 rounded-lg space-y-3">
+              <h4 className="font-semibold flex items-center">
+                <Cpu className="h-4 w-4 mr-2" />
+                Teste da Edge Function
+              </h4>
+              <div className="space-y-2">
+                <div className="flex items-center justify-between">
+                  <span className="text-sm">Status:</span>
+                  <Badge variant={edgeFunctionTest.success ? "default" : "destructive"}>
+                    {edgeFunctionTest.success ? "Sucesso" : "Falha"}
+                  </Badge>
+                </div>
+                {edgeFunctionTest.message && (
+                  <div className="text-sm text-muted-foreground">
+                    <strong>Mensagem:</strong> {edgeFunctionTest.message}
+                  </div>
+                )}
+                {edgeFunctionTest.error && (
+                  <div className="text-xs text-red-600">
+                    <strong>Erro:</strong> {edgeFunctionTest.error}
+                  </div>
+                )}
+                {edgeFunctionTest.response && (
+                  <div className="text-xs text-muted-foreground">
+                    <strong>Resposta:</strong> {JSON.stringify(edgeFunctionTest.response, null, 2)}
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
 
           {webhookTest && (
             <div className="bg-muted p-4 rounded-lg space-y-3">
