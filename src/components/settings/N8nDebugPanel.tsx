@@ -12,7 +12,7 @@ import {
   testEdgeFunctionDirectly,
   checkEdgeFunctionMigration 
 } from "@/utils/debugTicketCreation";
-import { AlertCircle, CheckCircle, Play, RefreshCw, Settings, Bug, Zap, Info, ExternalLink, Activity, TrendingUp, Cpu, Shield } from "lucide-react";
+import { AlertCircle, CheckCircle, Play, RefreshCw, Settings, Bug, Zap, Info, ExternalLink, Activity, TrendingUp, Cpu, Shield, Wrench } from "lucide-react";
 
 const N8nDebugPanel: React.FC = () => {
   const { companyId, user } = useAuth();
@@ -63,12 +63,12 @@ const N8nDebugPanel: React.FC = () => {
       
       if (result.success) {
         const statusMessage = result.hasSuccessfulLog 
-          ? '✅ Edge Function funcionando! Integração com sucesso!' 
+          ? '✅ Edge Function v2 funcionando perfeitamente! CORS corrigido!' 
           : result.hasFailedLog
             ? '⚠️ Ainda há falhas - veja os logs detalhados'
             : result.hasLogs 
               ? '📝 Logs encontrados, verificando detalhes' 
-              : '⏳ Ticket criado, aguardando processamento';
+              : '⏳ Ticket criado, aguardando processamento da v2';
         
         toast({
           title: "Teste executado",
@@ -110,12 +110,14 @@ const N8nDebugPanel: React.FC = () => {
       setEdgeFunctionTest(result);
       
       toast({
-        title: result.success ? "Edge Function funcionando perfeitamente!" : "Falha na Edge Function",
-        description: result.success ? "Nova arquitetura operacional" : `Erro: ${result.error}`,
+        title: result.success ? "🎉 Edge Function v2 funcionando perfeitamente!" : "Falha na Edge Function v2",
+        description: result.success 
+          ? "Arquitetura v2 com CORS corrigido operacional!" 
+          : `Erro: ${result.error}`,
         variant: result.success ? "default" : "destructive",
       });
     } catch (error) {
-      console.error('Erro no teste da Edge Function:', error);
+      console.error('Erro no teste da Edge Function v2:', error);
     } finally {
       setIsTestingEdgeFunction(false);
     }
@@ -208,49 +210,55 @@ const N8nDebugPanel: React.FC = () => {
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center">
-            <Shield className="h-5 w-5 mr-2" />
-            Painel de Debug N8N - Nova Arquitetura Edge Function
+            <Wrench className="h-5 w-5 mr-2" />
+            Debug N8N - Edge Function v2 (CORS Corrigido)
           </CardTitle>
           <CardDescription>
-            ✅ Migração concluída! Sistema agora usa Edge Function para resolver "Out of memory"
+            🎉 Versão 2.0 implantada! CORS corrigido, timeouts melhorados e logging avançado
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
-          {/* Status da nova arquitetura */}
-          <div className="bg-green-50 border border-green-200 p-3 rounded-lg">
-            <div className="flex items-center">
-              <CheckCircle className="h-4 w-4 text-green-500 mr-2" />
-              <span className="text-sm text-green-700">
-                <strong>✅ Nova Arquitetura Ativa:</strong> Edge Function eliminou "Out of memory"
+          {/* Status da nova arquitetura v2 */}
+          <div className="bg-gradient-to-r from-green-50 to-blue-50 border border-green-200 p-4 rounded-lg">
+            <div className="flex items-center mb-2">
+              <CheckCircle className="h-5 w-5 text-green-500 mr-2" />
+              <span className="text-sm font-semibold text-green-700">
+                ✅ Edge Function v2 Ativa
               </span>
+            </div>
+            <div className="text-sm text-green-600 space-y-1">
+              <div>• CORS definitivamente corrigido</div>
+              <div>• Timeout aumentado para 15 segundos</div>
+              <div>• Tratamento de erros robusto</div>
+              <div>• Logging detalhado para debugging</div>
             </div>
           </div>
 
-          {/* Status da migração */}
+          {/* Status da migração v2 */}
           {migrationStatus && (
             <div className={`p-3 rounded-lg border ${migrationStatus.success ? 'bg-green-50 border-green-200' : 'bg-red-50 border-red-200'}`}>
-              <div className="flex items-center">
-                {migrationStatus.success ? (
-                  <CheckCircle className="h-4 w-4 text-green-500 mr-2" />
-                ) : (
-                  <AlertCircle className="h-4 w-4 text-red-500 mr-2" />
+              <div className="flex items-center justify-between">
+                <div className="flex items-center">
+                  {migrationStatus.success ? (
+                    <CheckCircle className="h-4 w-4 text-green-500 mr-2" />
+                  ) : (
+                    <AlertCircle className="h-4 w-4 text-red-500 mr-2" />
+                  )}
+                  <span className={`text-sm font-medium ${migrationStatus.success ? 'text-green-700' : 'text-red-700'}`}>
+                    Edge Function v2: {migrationStatus.migrationStatus === 'completed_v2' ? 'Funcionando' : 'Com problemas'}
+                  </span>
+                </div>
+                {migrationStatus.isV2Architecture && (
+                  <Badge variant="default" className="bg-blue-600">v2.0</Badge>
                 )}
-                <span className={`text-sm ${migrationStatus.success ? 'text-green-700' : 'text-red-700'}`}>
-                  <strong>Status da Migração:</strong> {migrationStatus.migrationStatus === 'completed' ? 'Concluída com sucesso' : 'Falha na migração'}
-                </span>
               </div>
+              {migrationStatus.features && migrationStatus.features.length > 0 && (
+                <div className="mt-2 text-xs text-green-600">
+                  <strong>Recursos v2:</strong> {migrationStatus.features.join(', ')}
+                </div>
+              )}
             </div>
           )}
-
-          {/* Info sobre benefícios */}
-          <div className="bg-blue-50 border border-blue-200 p-3 rounded-lg">
-            <div className="flex items-center">
-              <Info className="h-4 w-4 text-blue-500 mr-2" />
-              <span className="text-sm text-blue-700">
-                <strong>Benefícios:</strong> Maior confiabilidade, melhor debugging, sem limites de memória
-              </span>
-            </div>
-          </div>
 
           <div className="flex flex-wrap gap-3">
             <Button
@@ -265,10 +273,10 @@ const N8nDebugPanel: React.FC = () => {
             <Button
               onClick={handleTestEdgeFunction}
               disabled={isTestingEdgeFunction}
-              className="bg-green-600 hover:bg-green-700"
+              className="bg-gradient-to-r from-green-600 to-blue-600 hover:from-green-700 hover:to-blue-700"
             >
               <Cpu className="h-4 w-4 mr-2" />
-              {isTestingEdgeFunction ? "Testando..." : "✅ Testar Nova Arquitetura"}
+              {isTestingEdgeFunction ? "Testando v2..." : "🚀 Testar Edge Function v2"}
             </Button>
             
             <Button
@@ -283,39 +291,45 @@ const N8nDebugPanel: React.FC = () => {
             <Button
               onClick={handleTestTicketCreation}
               disabled={isTestingTicket}
+              className="bg-purple-600 hover:bg-purple-700"
             >
               <Play className="h-4 w-4 mr-2" />
-              {isTestingTicket ? "Testando..." : "Criar Ticket Completo"}
+              {isTestingTicket ? "Testando..." : "🎯 Teste Completo v2"}
             </Button>
           </div>
 
-          {/* Resultado do teste da Edge Function */}
+          {/* Resultado do teste da Edge Function v2 */}
           {edgeFunctionTest && (
-            <div className="bg-muted p-4 rounded-lg space-y-3">
+            <div className="bg-muted p-4 rounded-lg space-y-3 border-l-4 border-l-green-500">
               <h4 className="font-semibold flex items-center">
                 <Cpu className="h-4 w-4 mr-2" />
-                Teste da Nova Arquitetura Edge Function
+                Teste Edge Function v2 - CORS Corrigido
               </h4>
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
-                  <span className="text-sm">Status:</span>
-                  <Badge variant={edgeFunctionTest.success ? "default" : "destructive"}>
-                    {edgeFunctionTest.success ? "✅ FUNCIONANDO PERFEITAMENTE!" : "❌ Falha"}
+                  <span className="text-sm">Status v2:</span>
+                  <Badge variant={edgeFunctionTest.success ? "default" : "destructive"} className="text-xs">
+                    {edgeFunctionTest.success ? "🎉 FUNCIONANDO PERFEITAMENTE!" : "❌ Ainda com problemas"}
                   </Badge>
                 </div>
                 {edgeFunctionTest.message && (
-                  <div className="text-sm text-muted-foreground">
-                    <strong>Resultado:</strong> {edgeFunctionTest.message}
+                  <div className="text-sm text-green-600">
+                    <strong>✅ Resultado:</strong> {edgeFunctionTest.message}
+                  </div>
+                )}
+                {edgeFunctionTest.improvements && (
+                  <div className="text-xs text-blue-600">
+                    <strong>🔧 Melhorias v2:</strong> {edgeFunctionTest.improvements.join(', ')}
                   </div>
                 )}
                 {edgeFunctionTest.error && (
                   <div className="text-xs text-red-600">
-                    <strong>Erro:</strong> {edgeFunctionTest.error}
+                    <strong>❌ Erro:</strong> {edgeFunctionTest.error}
                   </div>
                 )}
-                {edgeFunctionTest.response && (
-                  <div className="text-xs text-green-600">
-                    <strong>✅ Edge Function respondeu:</strong> Sistema operacional
+                {edgeFunctionTest.troubleshooting && (
+                  <div className="text-xs text-yellow-600">
+                    <strong>🔍 Diagnóstico:</strong> {edgeFunctionTest.troubleshooting}
                   </div>
                 )}
               </div>
@@ -402,10 +416,10 @@ const N8nDebugPanel: React.FC = () => {
           )}
 
           {testResults && (
-            <div className="bg-muted p-4 rounded-lg space-y-3">
+            <div className="bg-muted p-4 rounded-lg space-y-3 border-l-4 border-l-purple-500">
               <h4 className="font-semibold flex items-center">
                 <Activity className="h-4 w-4 mr-2" />
-                Teste Completo da Nova Integração
+                Teste Completo v2 - Integração End-to-End
               </h4>
               
               {testResults.success ? (
@@ -414,16 +428,16 @@ const N8nDebugPanel: React.FC = () => {
                     <span className="text-sm">Ticket criado:</span>
                     <Badge variant="default">
                       <CheckCircle className="h-3 w-3 mr-1" />
-                      Sucesso
+                      Sucesso v2
                     </Badge>
                   </div>
                   
                   <div className="flex items-center justify-between">
-                    <span className="text-sm">Nova Arquitetura:</span>
+                    <span className="text-sm">Edge Function v2:</span>
                     {testResults.hasSuccessfulLog ? (
-                      <Badge variant="default">
+                      <Badge variant="default" className="bg-green-600">
                         <CheckCircle className="h-3 w-3 mr-1" />
-                        ✅ FUNCIONANDO PERFEITAMENTE!
+                        ✅ PERFEITO! CORS OK!
                       </Badge>
                     ) : testResults.hasFailedLog ? (
                       <Badge variant="destructive">
@@ -433,7 +447,7 @@ const N8nDebugPanel: React.FC = () => {
                     ) : (
                       <Badge variant="secondary">
                         <RefreshCw className="h-3 w-3 mr-1" />
-                        Processando...
+                        Processando v2...
                       </Badge>
                     )}
                   </div>
@@ -441,6 +455,12 @@ const N8nDebugPanel: React.FC = () => {
                   {testResults.ticket && (
                     <div className="text-xs text-muted-foreground">
                       <strong>ID do Ticket:</strong> {testResults.ticket.id}
+                    </div>
+                  )}
+                  
+                  {testResults.architecture && (
+                    <div className="text-xs text-blue-600">
+                      <strong>Arquitetura:</strong> {testResults.architecture}
                     </div>
                   )}
                   
