@@ -13,7 +13,7 @@ export const createTestTicket = async (companyId: string) => {
     const testTicket = await createTicket({
       title: 'Ticket de Teste - Integração N8N',
       description: 'Este é um ticket criado para testar a integração com n8n e validar se os triggers estão funcionando corretamente.',
-      category: 'technical',
+      category: 'technical_issue',
       priority: 'medium',
       userId: 'test-user-id',
       companyId,
