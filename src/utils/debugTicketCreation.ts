@@ -11,19 +11,19 @@ export const createTestTicket = async (companyId: string, userId: string) => {
     
     // Criar ticket de teste
     const testTicket = await createTicket({
-      title: 'Ticket de Teste - Integração N8N',
-      description: 'Este é um ticket criado para testar a integração com n8n e validar se os triggers estão funcionando corretamente.',
+      title: 'Ticket de Teste - Integração N8N CORRIGIDA',
+      description: 'Este é um ticket criado para testar a integração corrigida com n8n. A função send_to_n8n_webhook foi atualizada para usar tipos corretos (jsonb ao invés de text).',
       category: 'technical_issue',
       priority: 'medium',
-      userId: userId, // Usar o ID do usuário autenticado
+      userId: userId,
       companyId,
       source: 'web',
     });
     
     console.log('✅ Ticket criado:', testTicket);
     
-    // Aguardar um pouco para os triggers processarem
-    await new Promise(resolve => setTimeout(resolve, 3000));
+    // Aguardar um pouco mais para os triggers processarem
+    await new Promise(resolve => setTimeout(resolve, 5000));
     
     // Verificar se foi criado log na tabela de integração
     const { data: logs, error } = await supabase
@@ -44,7 +44,9 @@ export const createTestTicket = async (companyId: string, userId: string) => {
       ticket: testTicket, 
       logs: logs || [],
       hasLogs: logs && logs.length > 0,
-      hasSuccessfulLog: logs && logs.some(log => log.status === 'success')
+      hasSuccessfulLog: logs && logs.some(log => log.status === 'success'),
+      hasFailedLog: logs && logs.some(log => log.status === 'failed'),
+      latestLog: logs && logs.length > 0 ? logs[0] : null
     };
     
   } catch (error) {
@@ -83,7 +85,8 @@ export const checkCompanySettings = async (companyId: string) => {
       settings: settingsMap,
       hasWebhookUrl: !!settingsMap.n8n_webhook_url,
       isProcessingEnabled: settingsMap.enable_ai_processing === true,
-      eventsConfig: settingsMap.events_to_n8n || {}
+      eventsConfig: settingsMap.events_to_n8n || {},
+      webhookUrl: settingsMap.n8n_webhook_url || ''
     };
     
   } catch (error) {
@@ -109,9 +112,64 @@ export const getRecentLogs = async (companyId: string, limit: number = 10) => {
       return { success: false, error };
     }
     
-    return { success: true, logs: logs || [] };
+    const successCount = logs?.filter(log => log.status === 'success').length || 0;
+    const failedCount = logs?.filter(log => log.status === 'failed').length || 0;
+    const pendingCount = logs?.filter(log => log.status === 'pending').length || 0;
+    
+    return { 
+      success: true, 
+      logs: logs || [],
+      stats: {
+        total: logs?.length || 0,
+        success: successCount,
+        failed: failedCount,
+        pending: pendingCount,
+        successRate: logs?.length ? (successCount / logs.length * 100).toFixed(1) : '0'
+      }
+    };
   } catch (error) {
     console.error('❌ Erro ao buscar logs recentes:', error);
     return { success: false, error };
+  }
+};
+
+/**
+ * Função para testar webhook diretamente
+ */
+export const testWebhookDirectly = async (webhookUrl: string) => {
+  try {
+    console.log('🔗 Testando webhook diretamente:', webhookUrl);
+    
+    const testPayload = {
+      eventType: 'test.connection',
+      timestamp: new Date().toISOString(),
+      source: 'debug-panel',
+      message: 'Teste direto da correção da função send_to_n8n_webhook'
+    };
+    
+    const response = await fetch(webhookUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(testPayload),
+    });
+    
+    const responseData = await response.text();
+    
+    return {
+      success: response.ok,
+      status: response.status,
+      statusText: response.statusText,
+      response: responseData,
+      url: webhookUrl
+    };
+  } catch (error) {
+    console.error('❌ Erro ao testar webhook:', error);
+    return { 
+      success: false, 
+      error: error instanceof Error ? error.message : 'Erro desconhecido',
+      url: webhookUrl
+    };
   }
 };
