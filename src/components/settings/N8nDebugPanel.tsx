@@ -9,7 +9,7 @@ import { createTestTicket, checkCompanySettings, getRecentLogs } from "@/utils/d
 import { AlertCircle, CheckCircle, Play, RefreshCw, Settings, Bug } from "lucide-react";
 
 const N8nDebugPanel: React.FC = () => {
-  const { companyId } = useAuth();
+  const { companyId, user } = useAuth();
   const { toast } = useToast();
   const [isTestingTicket, setIsTestingTicket] = useState(false);
   const [isCheckingSettings, setIsCheckingSettings] = useState(false);
@@ -26,9 +26,18 @@ const N8nDebugPanel: React.FC = () => {
       return;
     }
 
+    if (!user?.id) {
+      toast({
+        title: "Erro",
+        description: "Usuário não autenticado.",
+        variant: "destructive",
+      });
+      return;
+    }
+
     setIsTestingTicket(true);
     try {
-      const result = await createTestTicket(companyId);
+      const result = await createTestTicket(companyId, user.id);
       setTestResults(result);
       
       if (result.success) {

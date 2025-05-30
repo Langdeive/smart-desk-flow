@@ -5,7 +5,7 @@ import { createTicket } from '@/services/ticketService';
 /**
  * Função para testar a criação de tickets e validar integração n8n
  */
-export const createTestTicket = async (companyId: string) => {
+export const createTestTicket = async (companyId: string, userId: string) => {
   try {
     console.log('🧪 Criando ticket de teste...');
     
@@ -15,7 +15,7 @@ export const createTestTicket = async (companyId: string) => {
       description: 'Este é um ticket criado para testar a integração com n8n e validar se os triggers estão funcionando corretamente.',
       category: 'technical_issue',
       priority: 'medium',
-      userId: 'test-user-id',
+      userId: userId, // Usar o ID do usuário autenticado
       companyId,
       source: 'web',
     });
