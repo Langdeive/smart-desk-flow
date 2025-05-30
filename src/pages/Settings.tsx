@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { useTheme } from "next-themes";
 import { Moon, Sun } from "lucide-react";
@@ -290,8 +291,6 @@ const Settings = () => {
           {isDeveloper && <TabsTrigger value="global">Global</TabsTrigger>}
           <TabsTrigger value="monitoring">Monitoramento</TabsTrigger>
           <TabsTrigger value="debug">Debug</TabsTrigger>
-          <TabsTrigger value="notifications">Notificações</TabsTrigger>
-          <TabsTrigger value="ai">Inteligência Artificial</TabsTrigger>
         </TabsList>
         
         {renderGeneralTab()}
@@ -419,38 +418,6 @@ const Settings = () => {
 
         <TabsContent value="debug">
           <N8nDebugPanel />
-        </TabsContent>
-        
-        <TabsContent value="notifications">
-          <Card>
-            <CardHeader>
-              <CardTitle>Configurações de Notificações</CardTitle>
-              <CardDescription>
-                Configure como e quando notificações serão enviadas.
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <p className="text-sm text-muted-foreground">
-                As configurações de notificações serão implementadas em breve.
-              </p>
-            </CardContent>
-          </Card>
-        </TabsContent>
-        
-        <TabsContent value="ai">
-          <Card>
-            <CardHeader>
-              <CardTitle>Configurações de IA</CardTitle>
-              <CardDescription>
-                Configure o comportamento da inteligência artificial.
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <p className="text-sm text-muted-foreground">
-                As configurações de IA serão implementadas em breve.
-              </p>
-            </CardContent>
-          </Card>
         </TabsContent>
       </Tabs>
     </div>

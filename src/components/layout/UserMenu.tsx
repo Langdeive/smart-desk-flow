@@ -21,13 +21,17 @@ interface UserMenuProps {
 export function UserMenu({ user, onSignOut }: UserMenuProps) {
   if (!user) return null;
   
+  // Get the first letter of the user's name for the avatar
+  const userInitial = user.name ? user.name.charAt(0).toUpperCase() : user.email.charAt(0).toUpperCase();
+  
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" className="relative h-8 w-8 rounded-full">
           <Avatar className="h-8 w-8">
-            <AvatarImage src="/placeholder.svg" alt="Avatar" />
-            <AvatarFallback>{user.name.charAt(0)}</AvatarFallback>
+            <AvatarFallback className="bg-primary text-primary-foreground font-semibold">
+              {userInitial}
+            </AvatarFallback>
           </Avatar>
         </Button>
       </DropdownMenuTrigger>
