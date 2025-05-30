@@ -6,12 +6,12 @@ import { createTicket } from '@/services/ticketService';
  */
 export const createTestTicket = async (companyId: string, userId: string) => {
   try {
-    console.log('🧪 Criando ticket de teste...');
+    console.log('🧪 Criando ticket de teste com nova arquitetura Edge Function...');
     
     // Criar ticket de teste
     const testTicket = await createTicket({
-      title: 'Ticket de Teste - Nova Edge Function N8N',
-      description: 'Este é um ticket criado para testar a nova Edge Function que resolve o problema de "Out of memory" do pg_net. Agora as requisições HTTP são feitas via Edge Function.',
+      title: 'Ticket de Teste - Nova Arquitetura Edge Function',
+      description: 'Este ticket foi criado para testar a nova arquitetura que usa Edge Function para resolver o problema "Out of memory" do pg_net. A integração agora usa uma Edge Function dedicada para processar requisições HTTP de forma mais confiável.',
       category: 'technical_issue',
       priority: 'medium',
       userId: userId,
@@ -19,10 +19,10 @@ export const createTestTicket = async (companyId: string, userId: string) => {
       source: 'web',
     });
     
-    console.log('✅ Ticket criado:', testTicket);
+    console.log('✅ Ticket criado com nova arquitetura:', testTicket);
     
-    // Aguardar um pouco mais para os triggers processarem
-    await new Promise(resolve => setTimeout(resolve, 5000));
+    // Aguardar processamento da Edge Function
+    await new Promise(resolve => setTimeout(resolve, 3000));
     
     // Verificar se foi criado log na tabela de integração
     const { data: logs, error } = await supabase
@@ -36,7 +36,7 @@ export const createTestTicket = async (companyId: string, userId: string) => {
       return { success: false, error, ticket: testTicket };
     }
     
-    console.log('📊 Logs encontrados:', logs);
+    console.log('📊 Logs da nova arquitetura encontrados:', logs);
     
     return { 
       success: true, 
@@ -45,7 +45,8 @@ export const createTestTicket = async (companyId: string, userId: string) => {
       hasLogs: logs && logs.length > 0,
       hasSuccessfulLog: logs && logs.some(log => log.status === 'success'),
       hasFailedLog: logs && logs.some(log => log.status === 'failed'),
-      latestLog: logs && logs.length > 0 ? logs[0] : null
+      latestLog: logs && logs.length > 0 ? logs[0] : null,
+      architecture: 'edge_function' // Identificador da nova arquitetura
     };
     
   } catch (error) {
@@ -124,7 +125,8 @@ export const getRecentLogs = async (companyId: string, limit: number = 10) => {
         failed: failedCount,
         pending: pendingCount,
         successRate: logs?.length ? (successCount / logs.length * 100).toFixed(1) : '0'
-      }
+      },
+      architecture: 'edge_function'
     };
   } catch (error) {
     console.error('❌ Erro ao buscar logs recentes:', error);
@@ -137,7 +139,7 @@ export const getRecentLogs = async (companyId: string, limit: number = 10) => {
  */
 export const testEdgeFunctionDirectly = async (companyId: string) => {
   try {
-    console.log('🔧 Testando Edge Function diretamente...');
+    console.log('🔧 Testando Edge Function n8n-webhook diretamente...');
     
     const testPayload = {
       webhookUrl: 'https://httpbin.org/post', // URL de teste que sempre responde
@@ -145,9 +147,9 @@ export const testEdgeFunctionDirectly = async (companyId: string) => {
         eventType: 'test.edge_function',
         timestamp: new Date().toISOString(),
         source: 'debug-panel',
-        message: 'Teste direto da nova Edge Function n8n-webhook'
+        message: 'Teste direto da Edge Function n8n-webhook - Nova Arquitetura'
       },
-      logId: 'test-log-id',
+      logId: 'test-log-id-' + Date.now(),
       companyId: companyId,
       eventType: 'test.edge_function'
     };
@@ -161,7 +163,8 @@ export const testEdgeFunctionDirectly = async (companyId: string) => {
       return {
         success: false,
         error: error.message,
-        details: error
+        details: error,
+        architecture: 'edge_function'
       };
     }
     
@@ -170,13 +173,15 @@ export const testEdgeFunctionDirectly = async (companyId: string) => {
     return {
       success: true,
       response: data,
-      message: 'Edge Function funcionando corretamente'
+      message: 'Edge Function n8n-webhook funcionando perfeitamente com nova arquitetura',
+      architecture: 'edge_function'
     };
   } catch (error) {
     console.error('❌ Erro ao testar Edge Function:', error);
     return { 
       success: false, 
-      error: error instanceof Error ? error.message : 'Erro desconhecido'
+      error: error instanceof Error ? error.message : 'Erro desconhecido',
+      architecture: 'edge_function'
     };
   }
 };
@@ -218,6 +223,41 @@ export const testWebhookDirectly = async (webhookUrl: string) => {
       success: false, 
       error: error instanceof Error ? error.message : 'Erro desconhecido',
       url: webhookUrl
+    };
+  }
+};
+
+/**
+ * Função para verificar status da migração para Edge Function
+ */
+export const checkEdgeFunctionMigration = async () => {
+  try {
+    console.log('🔍 Verificando status da migração para Edge Function...');
+    
+    // Testa se a Edge Function está disponível
+    const { data, error } = await supabase.functions.invoke('n8n-webhook', {
+      body: {
+        webhookUrl: 'https://httpbin.org/post',
+        payload: { test: true },
+        logId: 'migration-check',
+        companyId: 'test',
+        eventType: 'migration.check'
+      },
+    });
+    
+    return {
+      success: !error,
+      edgeFunctionAvailable: !error,
+      response: data,
+      error: error?.message,
+      migrationStatus: !error ? 'completed' : 'pending'
+    };
+  } catch (error) {
+    return {
+      success: false,
+      edgeFunctionAvailable: false,
+      error: error instanceof Error ? error.message : 'Erro desconhecido',
+      migrationStatus: 'failed'
     };
   }
 };
