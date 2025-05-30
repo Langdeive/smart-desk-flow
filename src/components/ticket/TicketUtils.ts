@@ -33,6 +33,47 @@ export const priorityColors: Record<TicketPriority, string> = {
   critical: "border-red-700 text-red-700",
 };
 
+// Fallback category labels para compatibilidade
+export const fallbackCategoryLabels: Record<string, string> = {
+  technical_issue: "Problema Técnico",
+  feature_request: "Solicitação de Recurso",
+  billing: "Faturamento",
+  general_inquiry: "Dúvida Geral",
+  other: "Outro",
+};
+
+// Função helper para obter a label de uma categoria
+export const getCategoryLabel = (categoryKey: string, categories?: { key: string; name: string }[]): string => {
+  // Primeiro tenta encontrar na lista de categorias dinâmicas
+  const dynamicCategory = categories?.find(cat => cat.key === categoryKey);
+  if (dynamicCategory) {
+    return dynamicCategory.name;
+  }
+  
+  // Fallback para categorias hardcoded
+  return fallbackCategoryLabels[categoryKey] || categoryKey;
+};
+
+// Função helper para obter a cor de uma categoria
+export const getCategoryColor = (categoryKey: string, categories?: { key: string; color: string }[]): string => {
+  // Primeiro tenta encontrar na lista de categorias dinâmicas
+  const dynamicCategory = categories?.find(cat => cat.key === categoryKey);
+  if (dynamicCategory) {
+    return dynamicCategory.color;
+  }
+  
+  // Fallback para cores padrão baseadas na categoria
+  const defaultColors: Record<string, string> = {
+    technical_issue: "#ef4444",
+    feature_request: "#3b82f6",
+    billing: "#f59e0b",
+    general_inquiry: "#6b7280",
+    other: "#8b5cf6",
+  };
+  
+  return defaultColors[categoryKey] || "#6b7280";
+};
+
 export const formatDate = (date: Date): string => {
   return new Intl.DateTimeFormat('pt-BR', {
     day: '2-digit',

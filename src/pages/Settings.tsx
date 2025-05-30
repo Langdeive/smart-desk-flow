@@ -15,6 +15,7 @@ import GlobalSettingsPanel from "@/components/settings/GlobalSettingsPanel";
 import ConfigurationIndicator from "@/components/settings/ConfigurationIndicator";
 import N8nIntegrationMonitoring from "@/components/settings/N8nIntegrationMonitoring";
 import N8nDebugPanel from "@/components/settings/N8nDebugPanel";
+import CategoryManagement from "@/components/categories/CategoryManagement";
 
 const Settings = () => {
   const { toast } = useToast();
@@ -284,6 +285,7 @@ const Settings = () => {
       <Tabs defaultValue="integrations" className="mb-6">
         <TabsList>
           <TabsTrigger value="general">Geral</TabsTrigger>
+          <TabsTrigger value="categories">Categorias</TabsTrigger>
           <TabsTrigger value="integrations">Integrações</TabsTrigger>
           {isDeveloper && <TabsTrigger value="global">Global</TabsTrigger>}
           <TabsTrigger value="monitoring">Monitoramento</TabsTrigger>
@@ -293,6 +295,10 @@ const Settings = () => {
         </TabsList>
         
         {renderGeneralTab()}
+        
+        <TabsContent value="categories">
+          <CategoryManagement />
+        </TabsContent>
         
         <TabsContent value="integrations">
           <Card>

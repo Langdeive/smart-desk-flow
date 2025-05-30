@@ -1,3 +1,4 @@
+
 export type User = {
   id: string;
   email: string;
@@ -25,12 +26,14 @@ export type TicketStatus =
 
 export type TicketPriority = "low" | "medium" | "high" | "critical";
 
+// Manter compatibilidade com categorias hardcoded existentes
 export type TicketCategory = 
   | "technical_issue" 
   | "feature_request" 
   | "billing" 
   | "general_inquiry" 
-  | "other";
+  | "other"
+  | string; // Permitir categorias dinâmicas
 
 export type Ticket = {
   id: string;
@@ -160,3 +163,6 @@ export type SLAConfig = {
     workDays: number[]; // e.g. [1,2,3,4,5] for Mon-Fri
   };
 };
+
+// Export category types
+export type { Category, CategoryInput, AgentCategory, CategoryWithCount } from './category';

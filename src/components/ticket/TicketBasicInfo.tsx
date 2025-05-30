@@ -4,10 +4,12 @@ import { FormField, FormItem, FormLabel, FormControl, FormDescription, FormMessa
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { TicketCategory, TicketPriority } from "@/types";
+import { TicketPriority } from "@/types";
 import { Badge } from "@/components/ui/badge";
 import { Sparkles } from "lucide-react";
 import { UseFormReturn } from "react-hook-form";
+import { useCategoriesForSelect } from "@/hooks/useCategories";
+import { useAuth } from "@/hooks/useAuth";
 
 interface TicketBasicInfoProps {
   form: UseFormReturn<any>;
@@ -15,13 +17,8 @@ interface TicketBasicInfoProps {
 }
 
 export const TicketBasicInfo: React.FC<TicketBasicInfoProps> = ({ form, characterCount }) => {
-  const categoryLabels: Record<TicketCategory, string> = {
-    technical_issue: "Problema Técnico",
-    feature_request: "Solicitação de Recurso",
-    billing: "Faturamento",
-    general_inquiry: "Dúvida Geral",
-    other: "Outro",
-  };
+  const { companyId } = useAuth();
+  const { data: categories = [], isLoading: categoriesLoading } = useCategoriesForSelect(companyId);
 
   const priorityLabels: Record<TicketPriority, string> = {
     low: "Baixa",
@@ -85,16 +82,24 @@ export const TicketBasicInfo: React.FC<TicketBasicInfoProps> = ({ form, characte
                   IA pode classificar
                 </Badge>
               </div>
-              <Select onValueChange={field.onChange} value={field.value}>
+              <Select onValueChange={field.onChange} value={field.value} disabled={categoriesLoading}>
                 <FormControl>
                   <SelectTrigger>
-                    <SelectValue placeholder="Selecione uma categoria" />
+                    <SelectValue placeholder={categoriesLoading ? "Carregando..." : "Selecione uma categoria"} />
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
-                  {Object.entries(categoryLabels).map(([value, label]) => (
-                    <SelectItem key={value} value={value}>
-                      {label}
+                  {categories.map((category) => (
+                    <SelectItem key={category.value} value={category.value}>
+                      <div className="flex items-center gap-2">
+                        {category.color && (
+                          <div 
+                            className="w-3 h-3 rounded-full" 
+                            style={{ backgroundColor: category.color }}
+                          />
+                        )}
+                        {category.label}
+                      </div>
                     </SelectItem>
                   ))}
                 </SelectContent>

@@ -9,6 +9,38 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      agent_categories: {
+        Row: {
+          agent_id: string
+          category_id: string
+          competence_level: number | null
+          created_at: string
+          id: string
+        }
+        Insert: {
+          agent_id: string
+          category_id: string
+          competence_level?: number | null
+          created_at?: string
+          id?: string
+        }
+        Update: {
+          agent_id?: string
+          category_id?: string
+          competence_level?: number | null
+          created_at?: string
+          id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "agent_categories_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "categories"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       agentes: {
         Row: {
           company_id: string
@@ -86,6 +118,45 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      categories: {
+        Row: {
+          color: string | null
+          company_id: string
+          created_at: string
+          description: string | null
+          id: string
+          is_active: boolean
+          is_default: boolean
+          key: string
+          name: string
+          updated_at: string
+        }
+        Insert: {
+          color?: string | null
+          company_id: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          is_active?: boolean
+          is_default?: boolean
+          key: string
+          name: string
+          updated_at?: string
+        }
+        Update: {
+          color?: string | null
+          company_id?: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          is_active?: boolean
+          is_default?: boolean
+          key?: string
+          name?: string
+          updated_at?: string
+        }
+        Relationships: []
       }
       client_contacts: {
         Row: {
