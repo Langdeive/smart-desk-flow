@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { useTheme } from "next-themes";
 import { Moon, Sun } from "lucide-react";
@@ -15,6 +14,7 @@ import { supabase } from "@/integrations/supabase/client";
 import GlobalSettingsPanel from "@/components/settings/GlobalSettingsPanel";
 import ConfigurationIndicator from "@/components/settings/ConfigurationIndicator";
 import N8nIntegrationMonitoring from "@/components/settings/N8nIntegrationMonitoring";
+import N8nDebugPanel from "@/components/settings/N8nDebugPanel";
 
 const Settings = () => {
   const { toast } = useToast();
@@ -287,6 +287,7 @@ const Settings = () => {
           <TabsTrigger value="integrations">Integrações</TabsTrigger>
           {isDeveloper && <TabsTrigger value="global">Global</TabsTrigger>}
           <TabsTrigger value="monitoring">Monitoramento</TabsTrigger>
+          <TabsTrigger value="debug">Debug</TabsTrigger>
           <TabsTrigger value="notifications">Notificações</TabsTrigger>
           <TabsTrigger value="ai">Inteligência Artificial</TabsTrigger>
         </TabsList>
@@ -408,6 +409,10 @@ const Settings = () => {
 
         <TabsContent value="monitoring">
           <N8nIntegrationMonitoring />
+        </TabsContent>
+
+        <TabsContent value="debug">
+          <N8nDebugPanel />
         </TabsContent>
         
         <TabsContent value="notifications">
