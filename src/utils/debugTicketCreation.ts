@@ -115,29 +115,3 @@ export const getRecentLogs = async (companyId: string, limit: number = 10) => {
     return { success: false, error };
   }
 };
-
-/**
- * Função para validar a extensão pg_net
- */
-export const validatePgNetExtension = async () => {
-  try {
-    const { data, error } = await supabase
-      .rpc('get_installed_extensions');
-    
-    if (error) {
-      console.error('❌ Erro ao verificar extensões:', error);
-      return { success: false, error };
-    }
-    
-    const hasHttp = data?.some((ext: any) => ext.name === 'http' || ext.name === 'pg_net');
-    
-    return {
-      success: true,
-      hasHttpExtension: hasHttp,
-      extensions: data || []
-    };
-  } catch (error) {
-    console.error('❌ Erro ao validar extensões:', error);
-    return { success: false, error: 'Unable to check extensions' };
-  }
-};

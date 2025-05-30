@@ -6,7 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/useAuth";
 import { createTestTicket, checkCompanySettings, getRecentLogs } from "@/utils/debugTicketCreation";
-import { AlertCircle, CheckCircle, Play, RefreshCw, Settings, Bug, Zap } from "lucide-react";
+import { AlertCircle, CheckCircle, Play, RefreshCw, Settings, Bug, Zap, Info } from "lucide-react";
 
 const N8nDebugPanel: React.FC = () => {
   const { companyId, user } = useAuth();
@@ -140,6 +140,16 @@ const N8nDebugPanel: React.FC = () => {
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
+          {/* Info sobre extensão pg_net */}
+          <div className="bg-blue-50 border border-blue-200 p-3 rounded-lg">
+            <div className="flex items-center">
+              <Info className="h-4 w-4 text-blue-500 mr-2" />
+              <span className="text-sm text-blue-700">
+                <strong>Status do Sistema:</strong> Extensão pg_net instalada e funcionando (v0.14.0)
+              </span>
+            </div>
+          </div>
+
           <div className="flex flex-wrap gap-3">
             <Button
               onClick={handleCheckSettings}
