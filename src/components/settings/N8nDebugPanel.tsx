@@ -6,7 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/useAuth";
 import { createTestTicket, checkCompanySettings, getRecentLogs } from "@/utils/debugTicketCreation";
-import { AlertCircle, CheckCircle, Play, RefreshCw, Settings, Bug } from "lucide-react";
+import { AlertCircle, CheckCircle, Play, RefreshCw, Settings, Bug, Zap } from "lucide-react";
 
 const N8nDebugPanel: React.FC = () => {
   const { companyId, user } = useAuth();
@@ -15,6 +15,7 @@ const N8nDebugPanel: React.FC = () => {
   const [isCheckingSettings, setIsCheckingSettings] = useState(false);
   const [testResults, setTestResults] = useState<any>(null);
   const [settingsCheck, setSettingsCheck] = useState<any>(null);
+  const [recentLogs, setRecentLogs] = useState<any>(null);
 
   const handleTestTicketCreation = async () => {
     if (!companyId) {
@@ -41,10 +42,16 @@ const N8nDebugPanel: React.FC = () => {
       setTestResults(result);
       
       if (result.success) {
+        const statusMessage = result.hasSuccessfulLog 
+          ? 'Integração funcionando corretamente!' 
+          : result.hasLogs 
+            ? 'Logs encontrados, verifique detalhes' 
+            : 'Ticket criado, mas sem logs de integração';
+        
         toast({
           title: "Teste executado",
-          description: `Ticket criado. ${result.hasLogs ? 'Logs encontrados!' : 'Nenhum log encontrado.'}`,
-          variant: result.hasLogs ? "default" : "destructive",
+          description: statusMessage,
+          variant: result.hasSuccessfulLog ? "default" : "destructive",
         });
       } else {
         toast({
@@ -70,10 +77,15 @@ const N8nDebugPanel: React.FC = () => {
 
     setIsCheckingSettings(true);
     try {
-      const result = await checkCompanySettings(companyId);
-      setSettingsCheck(result);
+      const [settingsResult, logsResult] = await Promise.all([
+        checkCompanySettings(companyId),
+        getRecentLogs(companyId, 5)
+      ]);
       
-      if (result.success) {
+      setSettingsCheck(settingsResult);
+      setRecentLogs(logsResult);
+      
+      if (settingsResult.success) {
         toast({
           title: "Verificação concluída",
           description: "Configurações verificadas com sucesso.",
@@ -102,6 +114,19 @@ const N8nDebugPanel: React.FC = () => {
     </Badge>
   );
 
+  const getLogStatusIcon = (status: string) => {
+    switch (status) {
+      case 'success':
+        return <CheckCircle className="h-3 w-3 text-green-500" />;
+      case 'failed':
+        return <AlertCircle className="h-3 w-3 text-red-500" />;
+      case 'pending':
+        return <RefreshCw className="h-3 w-3 text-yellow-500 animate-spin" />;
+      default:
+        return <AlertCircle className="h-3 w-3 text-gray-500" />;
+    }
+  };
+
   return (
     <div className="space-y-6">
       <Card>
@@ -111,7 +136,7 @@ const N8nDebugPanel: React.FC = () => {
             Painel de Debug N8N
           </CardTitle>
           <CardDescription>
-            Teste e valide se a integração com n8n está funcionando corretamente
+            Teste e valide se a integração com n8n está funcionando corretamente após as correções
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
@@ -136,7 +161,10 @@ const N8nDebugPanel: React.FC = () => {
 
           {settingsCheck && settingsCheck.success && (
             <div className="bg-muted p-4 rounded-lg space-y-3">
-              <h4 className="font-semibold">Status das Configurações</h4>
+              <h4 className="font-semibold flex items-center">
+                <Zap className="h-4 w-4 mr-2" />
+                Status das Configurações
+              </h4>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                 <div className="flex items-center justify-between">
                   <span className="text-sm">Webhook URL:</span>
@@ -184,8 +212,12 @@ const N8nDebugPanel: React.FC = () => {
                   </div>
                   
                   <div className="flex items-center justify-between">
-                    <span className="text-sm">Logs gerados:</span>
-                    {renderStatusBadge(testResults.hasLogs, "Sim", "Não")}
+                    <span className="text-sm">Integração N8N:</span>
+                    {renderStatusBadge(
+                      testResults.hasSuccessfulLog, 
+                      "Funcionando", 
+                      testResults.hasLogs ? "Com falhas" : "Sem logs"
+                    )}
                   </div>
                   
                   {testResults.ticket && (
@@ -196,14 +228,20 @@ const N8nDebugPanel: React.FC = () => {
                   
                   {testResults.logs && testResults.logs.length > 0 && (
                     <div className="space-y-1">
-                      <div className="text-xs font-medium">Logs encontrados:</div>
+                      <div className="text-xs font-medium">Logs de integração:</div>
                       {testResults.logs.map((log: any, index: number) => (
-                        <div key={index} className="text-xs bg-background p-2 rounded border">
-                          <div><strong>Status:</strong> {log.status}</div>
-                          <div><strong>Evento:</strong> {log.event_type}</div>
-                          {log.error_message && (
-                            <div className="text-red-600"><strong>Erro:</strong> {log.error_message}</div>
-                          )}
+                        <div key={index} className="text-xs bg-background p-2 rounded border flex items-start gap-2">
+                          {getLogStatusIcon(log.status)}
+                          <div className="flex-1">
+                            <div><strong>Status:</strong> {log.status}</div>
+                            <div><strong>Evento:</strong> {log.event_type}</div>
+                            {log.response_status && (
+                              <div><strong>HTTP Status:</strong> {log.response_status}</div>
+                            )}
+                            {log.error_message && (
+                              <div className="text-red-600"><strong>Erro:</strong> {log.error_message}</div>
+                            )}
+                          </div>
                         </div>
                       ))}
                     </div>
@@ -215,6 +253,30 @@ const N8nDebugPanel: React.FC = () => {
                   Falha no teste: {testResults.error?.message || 'Erro desconhecido'}
                 </div>
               )}
+            </div>
+          )}
+
+          {recentLogs && recentLogs.success && recentLogs.logs.length > 0 && (
+            <div className="bg-muted p-4 rounded-lg space-y-3">
+              <h4 className="font-semibold">Logs Recentes da Integração</h4>
+              <div className="space-y-2 max-h-48 overflow-y-auto">
+                {recentLogs.logs.map((log: any) => (
+                  <div key={log.id} className="text-xs bg-background p-2 rounded border flex items-start gap-2">
+                    {getLogStatusIcon(log.status)}
+                    <div className="flex-1">
+                      <div className="flex justify-between">
+                        <span><strong>{log.event_type}</strong></span>
+                        <span className="text-muted-foreground">
+                          {new Date(log.created_at).toLocaleString()}
+                        </span>
+                      </div>
+                      {log.error_message && (
+                        <div className="text-red-600 mt-1">{log.error_message}</div>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
           )}
         </CardContent>

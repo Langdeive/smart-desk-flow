@@ -23,7 +23,7 @@ export const createTestTicket = async (companyId: string, userId: string) => {
     console.log('✅ Ticket criado:', testTicket);
     
     // Aguardar um pouco para os triggers processarem
-    await new Promise(resolve => setTimeout(resolve, 2000));
+    await new Promise(resolve => setTimeout(resolve, 3000));
     
     // Verificar se foi criado log na tabela de integração
     const { data: logs, error } = await supabase
@@ -43,7 +43,8 @@ export const createTestTicket = async (companyId: string, userId: string) => {
       success: true, 
       ticket: testTicket, 
       logs: logs || [],
-      hasLogs: logs && logs.length > 0
+      hasLogs: logs && logs.length > 0,
+      hasSuccessfulLog: logs && logs.some(log => log.status === 'success')
     };
     
   } catch (error) {
@@ -112,5 +113,31 @@ export const getRecentLogs = async (companyId: string, limit: number = 10) => {
   } catch (error) {
     console.error('❌ Erro ao buscar logs recentes:', error);
     return { success: false, error };
+  }
+};
+
+/**
+ * Função para validar a extensão pg_net
+ */
+export const validatePgNetExtension = async () => {
+  try {
+    const { data, error } = await supabase
+      .rpc('get_installed_extensions');
+    
+    if (error) {
+      console.error('❌ Erro ao verificar extensões:', error);
+      return { success: false, error };
+    }
+    
+    const hasHttp = data?.some((ext: any) => ext.name === 'http' || ext.name === 'pg_net');
+    
+    return {
+      success: true,
+      hasHttpExtension: hasHttp,
+      extensions: data || []
+    };
+  } catch (error) {
+    console.error('❌ Erro ao validar extensões:', error);
+    return { success: false, error: 'Unable to check extensions' };
   }
 };
