@@ -1,5 +1,9 @@
+
 import { supabase } from '@/integrations/supabase/client';
 import { createTicket } from '@/services/ticketService';
+
+// Constante para a chave anônima do Supabase
+const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpxdHV6YmxkcmVnd2dsZXZsaHJ3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDE5MTI5NjIsImV4cCI6MjA1NzQ4ODk2Mn0.bhd499qbEtWuRUSqVW5nXoguZaB3EuFop5ucVhXkmhQ";
 
 /**
  * Função para testar a criação de tickets e validar integração n8n
@@ -139,26 +143,26 @@ export const getRecentLogs = async (companyId: string, limit: number = 10) => {
  */
 export const testEdgeFunctionDirectly = async (companyId: string) => {
   try {
-    console.log('🔧 Testando Edge Function n8n-webhook v2 com correções JWT/CORS...');
+    console.log('🔧 Testando Edge Function n8n-webhook v2.1 com JWT desabilitado...');
     
     const testPayload = {
       webhookUrl: 'https://httpbin.org/post',
       payload: {
-        eventType: 'test.edge_function_v2_fixed',
+        eventType: 'test.edge_function_v2_1_fixed',
         timestamp: new Date().toISOString(),
-        source: 'debug-panel-corrected',
-        message: 'Teste da Edge Function v2 com JWT desabilitado e CORS corrigido',
-        architecture: 'edge_function_v2_fixed'
+        source: 'debug-panel-v2-1',
+        message: 'Teste da Edge Function v2.1 com JWT desabilitado e CORS corrigido',
+        architecture: 'edge_function_v2_1_fixed'
       },
-      logId: 'test-log-v2-fixed-' + Date.now(),
+      logId: 'test-log-v2-1-fixed-' + Date.now(),
       companyId: companyId,
-      eventType: 'test.edge_function_v2_fixed'
+      eventType: 'test.edge_function_v2_1_fixed'
     };
     
-    console.log('📤 Enviando para Edge Function v2 (JWT desabilitado):', testPayload);
+    console.log('📤 Enviando para Edge Function v2.1 (JWT desabilitado):', testPayload);
     
     try {
-      // Primeira tentativa: usando supabase.functions.invoke com headers corretos
+      // Primeira tentativa: usando supabase.functions.invoke sem headers de autenticação
       const { data, error } = await supabase.functions.invoke('n8n-webhook', {
         body: testPayload,
       });
@@ -168,14 +172,14 @@ export const testEdgeFunctionDirectly = async (companyId: string) => {
         throw error;
       }
       
-      console.log('✅ Edge Function v2 respondeu via invoke:', data);
+      console.log('✅ Edge Function v2.1 respondeu via invoke:', data);
       
       return {
         success: true,
         response: data,
         method: 'supabase_invoke',
-        message: 'Edge Function v2 funcionando perfeitamente via invoke - JWT desabilitado!',
-        architecture: 'edge_function_v2_fixed'
+        message: 'Edge Function v2.1 funcionando perfeitamente via invoke - JWT desabilitado!',
+        architecture: 'edge_function_v2_1_fixed'
       };
     } catch (invokeError) {
       console.warn('⚠️ Falha na chamada via invoke, tentando HTTP direto:', invokeError);
@@ -187,8 +191,8 @@ export const testEdgeFunctionDirectly = async (companyId: string) => {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${supabase.supabaseKey}`,
-          'apikey': supabase.supabaseKey,
+          'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+          'apikey': SUPABASE_ANON_KEY,
         },
         body: JSON.stringify(testPayload),
       });
@@ -199,24 +203,24 @@ export const testEdgeFunctionDirectly = async (companyId: string) => {
       }
       
       const responseData = await response.json();
-      console.log('✅ Edge Function v2 respondeu via HTTP direto:', responseData);
+      console.log('✅ Edge Function v2.1 respondeu via HTTP direto:', responseData);
       
       return {
         success: true,
         response: responseData,
         method: 'direct_http',
-        message: 'Edge Function v2 funcionando via HTTP direto - JWT/CORS corrigidos!',
-        architecture: 'edge_function_v2_fixed',
+        message: 'Edge Function v2.1 funcionando via HTTP direto - JWT/CORS corrigidos!',
+        architecture: 'edge_function_v2_1_fixed',
         fallbackUsed: true
       };
     }
   } catch (error) {
-    console.error('❌ Erro completo ao testar Edge Function v2:', error);
+    console.error('❌ Erro completo ao testar Edge Function v2.1:', error);
     return { 
       success: false, 
       error: error instanceof Error ? error.message : 'Erro desconhecido',
-      architecture: 'edge_function_v2_fixed',
-      troubleshooting: 'Verificar se Edge Function foi deployada e config.toml está correto',
+      architecture: 'edge_function_v2_1_fixed',
+      troubleshooting: 'Verificar se Edge Function foi deployada e config.toml está correto com verify_jwt = false',
       details: error
     };
   }
@@ -233,7 +237,7 @@ export const testWebhookDirectly = async (webhookUrl: string) => {
       eventType: 'test.connection',
       timestamp: new Date().toISOString(),
       source: 'debug-panel',
-      message: 'Teste direto após correção Edge Function v2'
+      message: 'Teste direto após correção Edge Function v2.1'
     };
     
     const response = await fetch(webhookUrl, {
@@ -264,29 +268,30 @@ export const testWebhookDirectly = async (webhookUrl: string) => {
 };
 
 /**
- * Função CORRIGIDA para verificar status da Edge Function v2
+ * Função CORRIGIDA para verificar status da Edge Function v2.1
  */
 export const checkEdgeFunctionMigration = async () => {
   try {
-    console.log('🔍 Verificando status da Edge Function v2 corrigida...');
+    console.log('🔍 Verificando status da Edge Function v2.1 corrigida...');
     
-    // Testa se a Edge Function v2 está disponível com JWT desabilitado
+    // Testa se a Edge Function v2.1 está disponível com JWT desabilitado
     const testResult = await testEdgeFunctionDirectly('test');
     
     return {
       success: testResult.success,
       edgeFunctionAvailable: testResult.success,
-      isV2FixedArchitecture: testResult.success,
+      isV2_1FixedArchitecture: testResult.success,
       response: testResult.response,
       method: testResult.method || 'unknown',
       error: testResult.error,
-      migrationStatus: testResult.success ? 'completed_v2_fixed' : 'needs_debugging',
+      migrationStatus: testResult.success ? 'completed_v2_1_fixed' : 'needs_debugging',
       features: testResult.success ? [
-        'JWT desabilitado para testes',
+        'JWT desabilitado (verify_jwt = false)',
         'CORS corrigido definitivamente',
         'Timeouts robustos', 
         'Logging detalhado',
-        'Fallback HTTP direto'
+        'Fallback HTTP direto',
+        'Configuração config.toml corrigida'
       ] : [],
       troubleshooting: testResult.troubleshooting
     };
@@ -294,7 +299,7 @@ export const checkEdgeFunctionMigration = async () => {
     return {
       success: false,
       edgeFunctionAvailable: false,
-      isV2FixedArchitecture: false,
+      isV2_1FixedArchitecture: false,
       error: error instanceof Error ? error.message : 'Erro desconhecido',
       migrationStatus: 'failed_needs_review'
     };
