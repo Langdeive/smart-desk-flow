@@ -1,4 +1,3 @@
-
 import { supabase } from "@/integrations/supabase/client";
 import { Json } from "@/integrations/supabase/types";
 import { logDeveloperAction } from "./developerAuditService";
@@ -146,15 +145,38 @@ export const saveGlobalSystemSetting = async <T>(
   try {
     const oldValue = await getGlobalSystemSetting(key);
     
-    const { error } = await supabase
+    // Primeira tentativa: verificar se já existe um registro global para esta chave
+    const { data: existingSetting } = await supabase
       .from('system_settings')
-      .upsert(
-        { company_id: null, key, value: value as unknown as Json },
-        { onConflict: 'company_id,key' }
-      );
+      .select('id')
+      .is('company_id', null)
+      .eq('key', key)
+      .maybeSingle();
 
-    if (error) {
-      console.error('Error saving global system setting:', error);
+    let result;
+    
+    if (existingSetting) {
+      // Se existe, fazer UPDATE
+      result = await supabase
+        .from('system_settings')
+        .update({ 
+          value: value as unknown as Json,
+          updated_at: new Date().toISOString()
+        })
+        .eq('id', existingSetting.id);
+    } else {
+      // Se não existe, fazer INSERT
+      result = await supabase
+        .from('system_settings')
+        .insert({ 
+          company_id: null, 
+          key, 
+          value: value as unknown as Json 
+        });
+    }
+
+    if (result.error) {
+      console.error('Error saving global system setting:', result.error);
       return false;
     }
 
