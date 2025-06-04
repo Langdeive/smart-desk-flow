@@ -17,6 +17,35 @@ interface WebhookRequest {
   eventType: string;
 }
 
+// Função para sanitizar e validar URL
+function sanitizeWebhookUrl(url: string): string {
+  if (!url) {
+    throw new Error('URL is empty or null');
+  }
+  
+  // Remove aspas extras que podem vir do parsing JSON
+  let cleanUrl = url.toString().trim();
+  
+  // Remove aspas duplas no início e fim se existirem
+  if (cleanUrl.startsWith('"') && cleanUrl.endsWith('"')) {
+    cleanUrl = cleanUrl.slice(1, -1);
+  }
+  
+  // Remove aspas simples no início e fim se existirem  
+  if (cleanUrl.startsWith("'") && cleanUrl.endsWith("'")) {
+    cleanUrl = cleanUrl.slice(1, -1);
+  }
+  
+  // Valida se é uma URL válida
+  try {
+    new URL(cleanUrl);
+  } catch (error) {
+    throw new Error(`Invalid URL format after sanitization: ${cleanUrl}`);
+  }
+  
+  return cleanUrl;
+}
+
 Deno.serve(async (req) => {
   // Handle CORS preflight requests com headers melhorados
   if (req.method === 'OPTIONS') {
@@ -61,16 +90,34 @@ Deno.serve(async (req) => {
       });
     }
 
-    const { webhookUrl, payload, logId, companyId, eventType } = requestData;
+    const { webhookUrl: rawWebhookUrl, payload, logId, companyId, eventType } = requestData;
 
     console.log(`📡 Processing request for company ${companyId}, event ${eventType}`);
-    console.log(`🎯 Webhook URL: ${webhookUrl}`);
+    console.log(`🎯 Raw Webhook URL received: ${JSON.stringify(rawWebhookUrl)}`);
+
+    // Sanitizar e validar a URL do webhook
+    let cleanWebhookUrl: string;
+    try {
+      cleanWebhookUrl = sanitizeWebhookUrl(rawWebhookUrl);
+      console.log(`✅ Sanitized Webhook URL: ${cleanWebhookUrl}`);
+    } catch (urlError) {
+      console.error('❌ URL sanitization failed:', urlError.message);
+      return new Response(JSON.stringify({ 
+        error: 'Invalid webhook URL',
+        details: urlError.message,
+        originalUrl: rawWebhookUrl
+      }), {
+        status: 400,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+      });
+    }
+
     console.log(`📋 Log ID: ${logId}`);
 
     // Validate required fields com mensagens mais claras
-    if (!webhookUrl || !payload || !logId) {
+    if (!cleanWebhookUrl || !payload || !logId) {
       const missingFields = [];
-      if (!webhookUrl) missingFields.push('webhookUrl');
+      if (!cleanWebhookUrl) missingFields.push('webhookUrl');
       if (!payload) missingFields.push('payload');
       if (!logId) missingFields.push('logId');
       
@@ -78,7 +125,7 @@ Deno.serve(async (req) => {
       return new Response(JSON.stringify({ 
         error: 'Missing required fields',
         missingFields,
-        received: { webhookUrl: !!webhookUrl, payload: !!payload, logId: !!logId }
+        received: { webhookUrl: !!cleanWebhookUrl, payload: !!payload, logId: !!logId }
       }), {
         status: 400,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' }
@@ -95,7 +142,7 @@ Deno.serve(async (req) => {
     try {
       console.log(`📤 Sending payload to n8n:`, JSON.stringify(payload, null, 2));
       
-      const webhookResponse = await fetch(webhookUrl, {
+      const webhookResponse = await fetch(cleanWebhookUrl, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -141,7 +188,8 @@ Deno.serve(async (req) => {
         response: responseText,
         logId: logId,
         timestamp: new Date().toISOString(),
-        architecture: 'edge_function_v2'
+        architecture: 'edge_function_v2_fixed',
+        sanitizedUrl: cleanWebhookUrl
       }), {
         status: 200,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' }
@@ -186,7 +234,8 @@ Deno.serve(async (req) => {
         errorType,
         logId: logId,
         timestamp: new Date().toISOString(),
-        architecture: 'edge_function_v2'
+        architecture: 'edge_function_v2_fixed',
+        sanitizedUrl: cleanWebhookUrl
       }), {
         status: 500,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' }
@@ -201,7 +250,7 @@ Deno.serve(async (req) => {
       success: false,
       error: errorMessage,
       timestamp: new Date().toISOString(),
-      architecture: 'edge_function_v2'
+      architecture: 'edge_function_v2_fixed'
     }), {
       status: 500,
       headers: { ...corsHeaders, 'Content-Type': 'application/json' }
