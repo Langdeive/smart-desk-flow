@@ -35,14 +35,13 @@ export const processTicketWithAi = async (ticket: Ticket): Promise<boolean> => {
     const needsHumanReview = confidenceScore < 0.8;
     
     // Update the ticket with AI classification
-    await updateTicketAIStatus(ticket.id, {
-      aiProcessed: true,
+    await updateTicketAIStatus(
+      ticket.id, 
+      true, // aiProcessed
+      needsHumanReview, // needsHumanReview
       aiClassification,
-      suggestedPriority,
-      needsAdditionalInfo,
-      confidenceScore,
-      needsHumanReview
-    });
+      suggestedPriority
+    );
     
     // Generate AI suggested response (70% chance)
     if (Math.random() < 0.7) {

@@ -29,14 +29,13 @@ export const processTicketWithAI = async (ticket: Ticket): Promise<boolean> => {
     const aiResult: AIProcessingResult = await simulateAIAnalysis(ticket);
     
     // Atualizar o status de IA do ticket
-    await updateTicketAIStatus(ticket.id, {
-      aiProcessed: true,
-      aiClassification: aiResult.aiClassification,
-      suggestedPriority: aiResult.suggestedPriority,
-      needsAdditionalInfo: aiResult.needsAdditionalInfo,
-      confidenceScore: aiResult.confidenceScore,
-      needsHumanReview: aiResult.confidenceScore < 0.8 // Requer revisão humana se a confiança for baixa
-    });
+    await updateTicketAIStatus(
+      ticket.id,
+      true, // aiProcessed
+      aiResult.confidenceScore < 0.8, // needsHumanReview
+      aiResult.aiClassification,
+      aiResult.suggestedPriority
+    );
     
     // Criar sugestões de resposta
     if (aiResult.suggestedResponses.length > 0) {
@@ -171,9 +170,11 @@ export const reprocessTicket = async (ticketId: string): Promise<boolean> => {
     const ticket = await response.json();
     
     // Marca como não processado
-    await updateTicketAIStatus(ticketId, {
-      aiProcessed: false
-    });
+    await updateTicketAIStatus(
+      ticketId,
+      false, // aiProcessed
+      true   // needsHumanReview
+    );
     
     // Processa novamente
     return await processTicketWithAI(ticket);

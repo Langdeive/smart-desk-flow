@@ -89,12 +89,16 @@ const TicketDetail = () => {
     if (!id || !ticket) return;
     
     try {
-      const updatedTicket = await updateTicketStatus(id, status as any);
-      setTicket(updatedTicket);
-      toast({
-        title: "Status atualizado",
-        description: `O status do ticket foi alterado para ${statusLabels[status as any]}.`,
-      });
+      const success = await updateTicketStatus(id, status as any);
+      if (success) {
+        // Ticket será atualizado via realtime subscription
+        toast({
+          title: "Status atualizado",
+          description: `O status do ticket foi alterado para ${statusLabels[status as any]}.`,
+        });
+      } else {
+        throw new Error('Falha ao atualizar status');
+      }
     } catch (err) {
       console.error("Error updating status:", err);
       toast({
@@ -109,12 +113,16 @@ const TicketDetail = () => {
     if (!id || !ticket) return;
     
     try {
-      const updatedTicket = await updateTicketPriority(id, priority as any);
-      setTicket(updatedTicket);
-      toast({
-        title: "Prioridade atualizada",
-        description: `A prioridade do ticket foi alterada para ${priorityLabels[priority as any]}.`,
-      });
+      const success = await updateTicketPriority(id, priority as any);
+      if (success) {
+        // Ticket será atualizado via realtime subscription
+        toast({
+          title: "Prioridade atualizada",
+          description: `A prioridade do ticket foi alterada para ${priorityLabels[priority as any]}.`,
+        });
+      } else {
+        throw new Error('Falha ao atualizar prioridade');
+      }
     } catch (err) {
       console.error("Error updating priority:", err);
       toast({
