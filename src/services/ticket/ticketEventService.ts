@@ -86,6 +86,12 @@ const checkExistingWebhookLog = async (
 export const sendTicketCreatedEvent = async (ticket: DbTicket): Promise<void> => {
   const eventType = 'ticket.created';
   
+  // Verifica se o ticket tem ID
+  if (!ticket.id) {
+    console.error('❌ Ticket sem ID - não é possível enviar webhook');
+    return;
+  }
+  
   // Verificação 1: Cooldown em memória
   if (isWebhookRecentlySent(ticket.id, eventType)) {
     console.log(`⏱️ Webhook bloqueado por cooldown: ${ticket.id}-${eventType}`);
@@ -145,6 +151,12 @@ export const sendTicketUpdatedEvent = async (
   ticket: DbTicket, 
   oldTicket?: DbTicket
 ): Promise<void> => {
+  // Verifica se o ticket tem ID
+  if (!ticket.id) {
+    console.error('❌ Ticket sem ID - não é possível enviar webhook');
+    return;
+  }
+  
   // Determina o tipo de evento baseado nas mudanças
   let eventType = 'ticket.updated';
   if (oldTicket && oldTicket.agent_id !== ticket.agent_id && ticket.agent_id) {
