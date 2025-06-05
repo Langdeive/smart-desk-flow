@@ -486,7 +486,7 @@ export default function Index() {
             <div className="flex flex-col md:flex-row justify-between items-center">
               <div className="mb-6 md:mb-0">
                 <Logo glow={true} />
-                <p className="text-sm text-muted-foreground mt-2">
+                <p className="text-sm text-purple-intense mt-2">
                   Criado pela Orbitus • © 2025
                 </p>
               </div>

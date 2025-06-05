@@ -185,10 +185,10 @@
 
 @keyframes pulse-glow {
   0%, 100% { 
-    box-shadow: 0 0 20px rgba(6, 182, 212, 0.3);
+    box-shadow: 0 0 20px rgba(124, 58, 237, 0.3);
   }
   50% { 
-    box-shadow: 0 0 40px rgba(6, 182, 212, 0.6);
+    box-shadow: 0 0 40px rgba(124, 58, 237, 0.6);
   }
 }
 
@@ -250,7 +250,7 @@
 
 .modern-button:hover {
   transform: translateY(-2px);
-  box-shadow: 0 10px 25px rgba(6, 182, 212, 0.3);
+  box-shadow: 0 10px 25px rgba(124, 58, 237, 0.3);
 }
 
 .modern-button::before {
@@ -275,7 +275,7 @@
 
 .modern-card:hover {
   transform: translateY(-4px);
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 20px 40px rgba(124, 58, 237, 0.1);
   border-color: hsl(var(--secondary));
 }
 
@@ -345,4 +345,14 @@
     linear-gradient(rgba(6, 182, 212, 0.1) 1px, transparent 1px),
     linear-gradient(90deg, rgba(6, 182, 212, 0.1) 1px, transparent 1px);
   background-size: 40px 40px;
+}
+
+/* Sombra roxa customizada */
+.shadow-glow {
+  box-shadow: 0 0 20px rgba(124, 58, 237, 0.3);
+}
+
+/* Sombra moderna com tom roxo */
+.shadow-modern-lg {
+  box-shadow: 0 20px 40px rgba(124, 58, 237, 0.1);
 }
