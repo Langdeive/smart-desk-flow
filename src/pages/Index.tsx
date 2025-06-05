@@ -1,4 +1,3 @@
-
 import React, { useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
@@ -440,9 +439,9 @@ export default function Index() {
         </Section>
 
         {/* FAQ */}
-        <Section id="faq" className="py-16 section-spacing section-white">
+        <Section id="faq" className="py-16 section-spacing bg-gradient-to-br from-turquoise-vibrant/5 to-blue-deep/5">
           <div className="max-w-3xl mx-auto">
-            <h2 className="text-2xl md:text-3xl font-bold font-manrope text-center mb-12">Perguntas frequentes</h2>
+            <h2 className="text-2xl md:text-3xl font-bold font-outfit text-center mb-12 text-gray-dark">Perguntas frequentes</h2>
             
             <Accordion type="single" collapsible className="space-y-4 scroll-reveal">
               <FaqItem question="Como funciona a Base Viva e posso editar os artigos gerados?">
@@ -469,13 +468,13 @@ export default function Index() {
         </Section>
 
         {/* CTA Final */}
-        <Section className="py-12 section-spacing-sm section-alt">
-          <div className="p-8 bg-card rounded-2xl shadow-lg border border-border/50 backdrop-blur-sm max-w-3xl mx-auto text-center scroll-reveal">
-            <h2 className="text-2xl md:text-3xl font-bold mb-4">Pronto para transformar seu atendimento?</h2>
-            <p className="text-lg text-[#4B5563] mb-8 readable-width mx-auto">
+        <Section className="py-16 section-spacing-sm bg-gradient-to-r from-blue-deep to-turquoise-vibrant">
+          <div className="p-8 bg-white/10 backdrop-blur-sm rounded-2xl shadow-glow border border-white/20 max-w-3xl mx-auto text-center scroll-reveal">
+            <h2 className="text-2xl md:text-3xl font-bold font-outfit mb-4 text-white">Pronto para transformar seu atendimento?</h2>
+            <p className="text-lg text-white/90 mb-8 readable-width mx-auto">
               Experimente gratuitamente por 14 dias e veja a diferença que a IA pode fazer para sua equipe.
             </p>
-            <Button asChild size="lg" className="bg-blue-deep hover:bg-blue-deep/90 transition-colors shadow-md hover:shadow-lg px-8 py-3">
+            <Button asChild size="lg" className="bg-white text-blue-deep hover:bg-white/90 hover:scale-105 transition-all duration-300 shadow-md hover:shadow-lg px-8 py-3 font-medium">
               <Link to="/register">Começar agora</Link>
             </Button>
           </div>
@@ -604,11 +603,11 @@ function PlanFeature({ children }: { children: React.ReactNode }) {
 
 function FaqItem({ question, children }: { question: string; children: React.ReactNode }) {
   return (
-    <AccordionItem value={question} className="border border-border/50 rounded-lg px-4">
-      <AccordionTrigger className="text-left font-semibold hover:no-underline">
+    <AccordionItem value={question} className="border border-white/20 rounded-lg px-4 bg-white/60 backdrop-blur-sm">
+      <AccordionTrigger className="text-left font-medium text-base text-gray-dark hover:no-underline hover:text-turquoise-vibrant transition-colors">
         {question}
       </AccordionTrigger>
-      <AccordionContent className="text-muted-foreground pt-2">
+      <AccordionContent className="text-gray-medium pt-2 text-sm leading-relaxed">
         {children}
       </AccordionContent>
     </AccordionItem>
