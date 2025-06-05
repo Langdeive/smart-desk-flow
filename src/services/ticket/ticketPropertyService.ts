@@ -1,103 +1,222 @@
+import { supabase } from '@/integrations/supabase/client';
+import { TicketStatus, TicketPriority } from '@/types';
+import { sendTicketUpdatedEvent } from './ticketEventService';
+import { DbTicket } from './mappers';
 
-import { supabase } from "@/integrations/supabase/client";
-import { Ticket, TicketStatus, TicketPriority } from "@/types";
-import { mapDbTicketToAppTicket } from "./mappers";
+// No interfaces or utility functions in this file
 
-// Update ticket status
-export const updateTicketStatus = async (id: string, status: TicketStatus): Promise<Ticket> => {
-  const { data, error } = await supabase
-    .from('tickets')
-    .update({ status, updated_at: new Date().toISOString() })
-    .eq('id', id)
-    .select();
-  
-  if (error) {
-    console.error('Error updating ticket status:', error);
-    throw error;
+/**
+ * Updates ticket status with anti-duplication webhook protection
+ */
+export const updateTicketStatus = async (
+  ticketId: string, 
+  status: TicketStatus
+): Promise<boolean> => {
+  try {
+    console.log(`🔄 Atualizando status do ticket ${ticketId} para: ${status}`);
+    
+    // Busca dados atuais antes da atualização
+    const { data: currentTicket } = await supabase
+      .from('tickets')
+      .select('*')
+      .eq('id', ticketId)
+      .single();
+    
+    const { error } = await supabase
+      .from('tickets')
+      .update({ 
+        status,
+        updated_at: new Date().toISOString()
+      })
+      .eq('id', ticketId);
+
+    if (error) {
+      console.error('❌ Erro ao atualizar status:', error);
+      return false;
+    }
+    
+    // Busca dados atualizados
+    const { data: updatedTicket } = await supabase
+      .from('tickets')
+      .select('*')
+      .eq('id', ticketId)
+      .single();
+    
+    if (updatedTicket && currentTicket) {
+      // Envia evento com proteção contra duplicação (sem aguardar)
+      sendTicketUpdatedEvent(
+        updatedTicket as DbTicket, 
+        currentTicket as DbTicket
+      ).catch(error => {
+        console.error('❌ Erro ao enviar evento de atualização:', error);
+      });
+    }
+
+    console.log(`✅ Status atualizado: ${ticketId} -> ${status}`);
+    return true;
+  } catch (error) {
+    console.error('❌ Erro ao atualizar status:', error);
+    return false;
   }
-  
-  // Status update automatically triggers n8n integration via database trigger
-  console.log('Ticket status updated, n8n integration triggered automatically:', id);
-  
-  return mapDbTicketToAppTicket(data[0]);
 };
 
-// Update ticket priority
-export const updateTicketPriority = async (id: string, priority: TicketPriority): Promise<Ticket> => {
-  const { data, error } = await supabase
-    .from('tickets')
-    .update({ priority, updated_at: new Date().toISOString() })
-    .eq('id', id)
-    .select();
-  
-  if (error) {
-    console.error('Error updating ticket priority:', error);
-    throw error;
+/**
+ * Updates ticket priority with anti-duplication webhook protection
+ */
+export const updateTicketPriority = async (
+  ticketId: string, 
+  priority: TicketPriority
+): Promise<boolean> => {
+  try {
+    console.log(`📊 Atualizando prioridade do ticket ${ticketId} para: ${priority}`);
+    
+    // Busca dados atuais antes da atualização
+    const { data: currentTicket } = await supabase
+      .from('tickets')
+      .select('*')
+      .eq('id', ticketId)
+      .single();
+    
+    const { error } = await supabase
+      .from('tickets')
+      .update({ 
+        priority,
+        updated_at: new Date().toISOString()
+      })
+      .eq('id', ticketId);
+
+    if (error) {
+      console.error('❌ Erro ao atualizar prioridade:', error);
+      return false;
+    }
+    
+    // Busca dados atualizados
+    const { data: updatedTicket } = await supabase
+      .from('tickets')
+      .select('*')
+      .eq('id', ticketId)
+      .single();
+    
+    if (updatedTicket && currentTicket) {
+      // Envia evento com proteção contra duplicação (sem aguardar)
+      sendTicketUpdatedEvent(
+        updatedTicket as DbTicket, 
+        currentTicket as DbTicket
+      ).catch(error => {
+        console.error('❌ Erro ao enviar evento de atualização:', error);
+      });
+    }
+
+    console.log(`✅ Prioridade atualizada: ${ticketId} -> ${priority}`);
+    return true;
+  } catch (error) {
+    console.error('❌ Erro ao atualizar prioridade:', error);
+    return false;
   }
-  
-  // Priority update automatically triggers n8n integration via database trigger
-  console.log('Ticket priority updated, n8n integration triggered automatically:', id);
-  
-  return mapDbTicketToAppTicket(data[0]);
 };
 
-// Update ticket assigned agent
-export const updateTicketAgent = async (id: string, agentId: string | null): Promise<Ticket> => {
-  const { data, error } = await supabase
-    .from('tickets')
-    .update({ 
-      agent_id: agentId, 
-      updated_at: new Date().toISOString() 
-    })
-    .eq('id', id)
-    .select();
-  
-  if (error) {
-    console.error('Error updating ticket agent:', error);
-    throw error;
+/**
+ * Updates ticket agent assignment with anti-duplication webhook protection
+ */
+export const updateTicketAgent = async (
+  ticketId: string, 
+  agentId: string | null
+): Promise<boolean> => {
+  try {
+    console.log(`👤 Atribuindo ticket ${ticketId} ao agente: ${agentId || 'nenhum'}`);
+    
+    // Busca dados atuais antes da atualização
+    const { data: currentTicket } = await supabase
+      .from('tickets')
+      .select('*')
+      .eq('id', ticketId)
+      .single();
+    
+    const { error } = await supabase
+      .from('tickets')
+      .update({ 
+        agent_id: agentId,
+        updated_at: new Date().toISOString()
+      })
+      .eq('id', ticketId);
+
+    if (error) {
+      console.error('❌ Erro ao atribuir agente:', error);
+      return false;
+    }
+    
+    // Busca dados atualizados
+    const { data: updatedTicket } = await supabase
+      .from('tickets')
+      .select('*')
+      .eq('id', ticketId)
+      .single();
+    
+    if (updatedTicket && currentTicket) {
+      // Envia evento com proteção contra duplicação (sem aguardar)
+      sendTicketUpdatedEvent(
+        updatedTicket as DbTicket, 
+        currentTicket as DbTicket
+      ).catch(error => {
+        console.error('❌ Erro ao enviar evento de atualização:', error);
+      });
+    }
+
+    console.log(`✅ Agente atribuído: ${ticketId} -> ${agentId || 'nenhum'}`);
+    return true;
+  } catch (error) {
+    console.error('❌ Erro ao atribuir agente:', error);
+    return false;
   }
-  
-  const updatedTicket = mapDbTicketToAppTicket(data[0]);
-  
-  // Agent assignment automatically triggers n8n integration via database trigger
-  console.log('Ticket agent assigned, n8n integration triggered automatically:', id);
-  
-  return updatedTicket;
 };
 
-// Update ticket AI processing status
+/**
+ * Updates the AI processing status of a ticket.
+ */
 export const updateTicketAIStatus = async (
-  id: string,
-  aiData: {
-    aiProcessed?: boolean;
-    aiClassification?: string;
-    suggestedPriority?: TicketPriority;
-    needsAdditionalInfo?: boolean;
-    confidenceScore?: number;
-    needsHumanReview?: boolean;
+  ticketId: string,
+  aiProcessed: boolean,
+  needsHumanReview: boolean,
+  aiClassification?: string,
+  suggestedPriority?: TicketPriority,
+): Promise<boolean> => {
+  try {
+    console.log(`🤖 Atualizando status de IA do ticket ${ticketId}: processado=${aiProcessed}, revisão=${needsHumanReview}`);
+
+    const updates: {
+      ai_processed: boolean;
+      needs_human_review: boolean;
+      ai_classification?: string;
+      suggested_priority?: TicketPriority;
+      updated_at: string;
+    } = {
+      ai_processed: aiProcessed,
+      needs_human_review: needsHumanReview,
+      updated_at: new Date().toISOString(),
+    };
+
+    if (aiClassification) {
+      updates.ai_classification = aiClassification;
+    }
+
+    if (suggestedPriority) {
+      updates.suggested_priority = suggestedPriority;
+    }
+
+    const { error } = await supabase
+      .from('tickets')
+      .update(updates)
+      .eq('id', ticketId);
+
+    if (error) {
+      console.error('❌ Erro ao atualizar status de IA:', error);
+      return false;
+    }
+
+    console.log(`✅ Status de IA atualizado: ${ticketId} -> processado=${aiProcessed}, revisão=${needsHumanReview}`);
+    return true;
+  } catch (error) {
+    console.error('❌ Erro ao atualizar status de IA:', error);
+    return false;
   }
-): Promise<Ticket> => {
-  const { data, error } = await supabase
-    .from('tickets')
-    .update({
-      ai_processed: aiData.aiProcessed,
-      ai_classification: aiData.aiClassification,
-      suggested_priority: aiData.suggestedPriority,
-      needs_additional_info: aiData.needsAdditionalInfo,
-      confidence_score: aiData.confidenceScore,
-      needs_human_review: aiData.needsHumanReview,
-      updated_at: new Date().toISOString()
-    })
-    .eq('id', id)
-    .select();
-  
-  if (error) {
-    console.error('Error updating ticket AI status:', error);
-    throw error;
-  }
-  
-  // AI status update automatically triggers n8n integration via database trigger
-  console.log('Ticket AI status updated, n8n integration triggered automatically:', id);
-  
-  return mapDbTicketToAppTicket(data[0]);
 };

@@ -36,6 +36,12 @@ export {
   updateTicketSLA,
 } from './ticket/ticketSlaService';
 
+// Export ticket event services (NEW)
+export {
+  sendTicketCreatedEvent,
+  sendTicketUpdatedEvent,
+} from './ticket/ticketEventService';
+
 // Export mapper utilities for testing or advanced use cases
 export {
   mapDbTicketToAppTicket,

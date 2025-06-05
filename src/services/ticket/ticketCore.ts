@@ -1,7 +1,11 @@
-
-import { supabase } from "@/integrations/supabase/client";
-import { Ticket } from "@/types";
-import { mapDbTicketToAppTicket, mapAppTicketToDbTicket } from "./mappers";
+import { supabase } from '@/integrations/supabase/client';
+import { Ticket, TicketStatus, TicketPriority, TicketCategory } from '@/types';
+import { 
+  mapDbTicketToAppTicket, 
+  mapAppTicketToDbTicket, 
+  DbTicket 
+} from './mappers';
+import { sendTicketCreatedEvent } from './ticketEventService';
 
 // Get all tickets
 export const getAllTickets = async (): Promise<Ticket[]> => {
@@ -33,25 +37,81 @@ export const getTicketById = async (id: string): Promise<Ticket> => {
   return mapDbTicketToAppTicket(data);
 };
 
-export const createTicket = async (ticket: Partial<Ticket>): Promise<Ticket> => {
-  const dbTicket = mapAppTicketToDbTicket(ticket);
-  
-  const { data, error } = await supabase
-    .from('tickets')
-    .insert(dbTicket)
-    .select();
-  
-  if (error) {
-    console.error('Error creating ticket:', error);
+export interface CreateTicketParams {
+  title: string;
+  description: string;
+  status?: TicketStatus;
+  priority: TicketPriority;
+  category: TicketCategory;
+  userId: string;
+  companyId: string;
+  source?: string;
+  contactId?: string;
+}
+
+/**
+ * Creates a new ticket with anti-duplication webhook protection
+ */
+export const createTicket = async (params: CreateTicketParams): Promise<Ticket> => {
+  const {
+    title,
+    description,
+    status = 'new',
+    priority,
+    category,
+    userId,
+    companyId,
+    source = 'web',
+    contactId
+  } = params;
+
+  try {
+    console.log('🎫 Criando ticket com proteção anti-duplicação...');
+    
+    const ticketData = {
+      title,
+      description,
+      status,
+      priority,
+      category,
+      user_id: userId,
+      company_id: companyId,
+      source,
+      contact_id: contactId,
+      ai_processed: false,
+      needs_human_review: true,
+    };
+
+    const { data, error } = await supabase
+      .from('tickets')
+      .insert(ticketData)
+      .select()
+      .single();
+
+    if (error) {
+      console.error('❌ Erro ao criar ticket:', error);
+      throw error;
+    }
+
+    if (!data) {
+      throw new Error('Ticket criado mas dados não retornados');
+    }
+
+    console.log('✅ Ticket criado no banco:', data.id);
+    
+    // Converte para formato da aplicação
+    const ticket = mapDbTicketToAppTicket(data as DbTicket);
+    
+    // Envia evento com proteção contra duplicação (sem aguardar)
+    sendTicketCreatedEvent(data as DbTicket).catch(error => {
+      console.error('❌ Erro ao enviar evento de criação:', error);
+    });
+    
+    return ticket;
+  } catch (error) {
+    console.error('❌ Erro ao criar ticket:', error);
     throw error;
   }
-  
-  const createdTicket = mapDbTicketToAppTicket(data[0]);
-  
-  // Ticket creation automatically triggers n8n integration via database trigger
-  console.log('Ticket created, n8n integration triggered automatically:', createdTicket.id);
-  
-  return createdTicket;
 };
 
 export const updateTicket = async (id: string, ticketData: Partial<Ticket>): Promise<Ticket> => {
