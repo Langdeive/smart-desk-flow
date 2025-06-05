@@ -1,3 +1,4 @@
+
 import React, { useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
@@ -314,7 +315,7 @@ export default function Index() {
               <CardContent className="pt-6">
                 <div className="flex flex-col items-center mb-6">
                   <Avatar className="h-16 w-16 mb-4">
-                    <AvatarFallback className="bg-gradient-to-br from-primary-a-50 to-primary-b-50 text-xl font-bold text-primary-b">
+                    <AvatarFallback className="bg-gradient-primary text-white text-xl font-bold">
                       A
                     </AvatarFallback>
                   </Avatar>
@@ -330,7 +331,7 @@ export default function Index() {
               <CardContent className="pt-6">
                 <div className="flex flex-col items-center mb-6">
                   <Avatar className="h-16 w-16 mb-4">
-                    <AvatarFallback className="bg-gradient-to-br from-primary-b-50 to-primary-a-50 text-xl font-bold text-primary-b">
+                    <AvatarFallback className="bg-gradient-primary text-white text-xl font-bold">
                       R
                     </AvatarFallback>
                   </Avatar>
@@ -346,7 +347,7 @@ export default function Index() {
               <CardContent className="pt-6">
                 <div className="flex flex-col items-center mb-6">
                   <Avatar className="h-16 w-16 mb-4">
-                    <AvatarFallback className="bg-gradient-to-br from-primary-a-50 to-primary-b-50 text-xl font-bold text-primary-b">
+                    <AvatarFallback className="bg-gradient-primary text-white text-xl font-bold">
                       M
                     </AvatarFallback>
                   </Avatar>
@@ -368,7 +369,7 @@ export default function Index() {
           </p>
           
           <div className="flex justify-center mb-4">
-            <span className="bg-primary-b/10 text-primary-b px-4 py-1 rounded-full font-medium text-sm">
+            <span className="bg-turquoise-vibrant/10 text-turquoise-vibrant px-4 py-1 rounded-full font-medium text-sm">
               Trial gratuito por 14 dias
             </span>
           </div>
@@ -377,7 +378,7 @@ export default function Index() {
             <Card className="shadow-md hover-card border border-[#E9D8FF]">
               <CardContent className="pt-6">
                 <h3 className="text-xl font-semibold text-center mb-2">Trial</h3>
-                <div className="text-3xl font-bold text-center mb-4 text-[#7B3DDB]">Grátis<span className="text-base font-normal text-muted-foreground"> • 14 dias</span></div>
+                <div className="text-3xl font-bold text-center mb-4 text-blue-deep">Grátis<span className="text-base font-normal text-muted-foreground"> • 14 dias</span></div>
                 <ul className="space-y-2 mb-6">
                   <PlanFeature>50 tickets para testar</PlanFeature>
                   <PlanFeature>1 agente</PlanFeature>
@@ -386,7 +387,7 @@ export default function Index() {
                   <PlanFeature>Base Viva e relatórios básicos</PlanFeature>
                 </ul>
                 <p className="text-xs text-muted-foreground text-center mt-4">Ao atingir 50 tickets: basta escolher um plano pago.</p>
-                <Button asChild className="w-full mt-4 bg-primary-b hover:bg-[#7B3DDB] transition-colors">
+                <Button asChild className="w-full mt-4 bg-blue-deep hover:bg-blue-deep/90 transition-colors">
                   <Link to="/register">Começar agora</Link>
                 </Button>
               </CardContent>
@@ -395,7 +396,7 @@ export default function Index() {
             <Card className="shadow-md hover-card border border-[#E9D8FF]">
               <CardContent className="pt-6">
                 <h3 className="text-xl font-semibold text-center mb-2">Basic</h3>
-                <div className="text-3xl font-bold text-center mb-4 text-[#7B3DDB]">R$ 99<span className="text-base font-normal text-muted-foreground">/mês</span></div>
+                <div className="text-3xl font-bold text-center mb-4 text-blue-deep">R$ 99<span className="text-base font-normal text-muted-foreground">/mês</span></div>
                 <ul className="space-y-2 mb-6">
                   <PlanFeature>100 tickets por mês</PlanFeature>
                   <PlanFeature>1 agente incluído</PlanFeature>
@@ -404,19 +405,19 @@ export default function Index() {
                   <PlanFeature>Suporte por e-mail</PlanFeature>
                 </ul>
                 <p className="text-xs text-muted-foreground text-center mt-4">R$ 0,90 por ticket extra</p>
-                <Button asChild className="w-full mt-4 bg-primary-b hover:bg-[#7B3DDB] transition-colors">
+                <Button asChild className="w-full mt-4 bg-blue-deep hover:bg-blue-deep/90 transition-colors">
                   <Link to="/selecionar-plano">Escolher plano</Link>
                 </Button>
               </CardContent>
             </Card>
             
-            <Card className="shadow-md hover-card border-2 border-primary-b relative">
-              <div className="absolute -top-3 right-0 left-0 mx-auto w-fit px-3 py-1 bg-primary-b text-white text-xs font-semibold rounded-full">
+            <Card className="shadow-md hover-card border-2 border-turquoise-vibrant relative">
+              <div className="absolute -top-3 right-0 left-0 mx-auto w-fit px-3 py-1 bg-turquoise-vibrant text-white text-xs font-semibold rounded-full">
                 Mais popular
               </div>
               <CardContent className="pt-6">
                 <h3 className="text-xl font-semibold text-center mb-2">Pro</h3>
-                <div className="text-3xl font-bold text-center mb-4 text-[#7B3DDB]">R$ 199<span className="text-base font-normal text-muted-foreground">/mês</span></div>
+                <div className="text-3xl font-bold text-center mb-4 text-blue-deep">R$ 199<span className="text-base font-normal text-muted-foreground">/mês</span></div>
                 <ul className="space-y-2 mb-6">
                   <PlanFeature>1 000 tickets por mês</PlanFeature>
                   <PlanFeature>Até 5 agentes</PlanFeature>
@@ -426,7 +427,7 @@ export default function Index() {
                   <PlanFeature>Suporte prioritário</PlanFeature>
                 </ul>
                 <p className="text-xs text-muted-foreground text-center mt-4">R$ 0,50 por ticket extra</p>
-                <Button asChild className="w-full mt-4 bg-primary-b hover:bg-[#7B3DDB] transition-colors">
+                <Button asChild className="w-full mt-4 bg-blue-deep hover:bg-blue-deep/90 transition-colors">
                   <Link to="/selecionar-plano">Escolher plano</Link>
                 </Button>
               </CardContent>
@@ -474,7 +475,7 @@ export default function Index() {
             <p className="text-lg text-[#4B5563] mb-8 readable-width mx-auto">
               Experimente gratuitamente por 14 dias e veja a diferença que a IA pode fazer para sua equipe.
             </p>
-            <Button asChild size="lg" className="bg-primary-b hover:bg-[#7B3DDB] transition-colors shadow-md hover:shadow-lg px-8 py-3">
+            <Button asChild size="lg" className="bg-blue-deep hover:bg-blue-deep/90 transition-colors shadow-md hover:shadow-lg px-8 py-3">
               <Link to="/register">Começar agora</Link>
             </Button>
           </div>
@@ -592,22 +593,24 @@ function FeatureHighlight({ icon, title, description, stats }: { icon: React.Rea
   );
 }
 
-function TestimonialCard({ initial, name, company, testimonial, metric }: { initial: string; name: string; company: string; testimonial: string; metric: string }) {
+function PlanFeature({ children }: { children: React.ReactNode }) {
   return (
-    <div className="modern-card bg-white p-8 text-center">
-      <Avatar className="h-16 w-16 mb-4 mx-auto">
-        <AvatarFallback className="bg-gradient-primary text-white text-xl font-bold">
-          {initial}
-        </AvatarFallback>
-      </Avatar>
-      <div className="mb-4">
-        <h3 className="font-outfit font-semibold text-lg text-gray-dark">{name}</h3>
-        <p className="text-turquoise-vibrant font-medium">{company}</p>
-      </div>
-      <p className="text-gray-medium mb-4 italic">"{testimonial}"</p>
-      <div className="inline-flex items-center px-4 py-2 rounded-full bg-green-success/10 text-green-success text-sm font-bold">
-        {metric}
-      </div>
-    </div>
+    <li className="flex items-center gap-2">
+      <Check className="h-4 w-4 text-green-success flex-shrink-0" />
+      <span className="text-sm">{children}</span>
+    </li>
+  );
+}
+
+function FaqItem({ question, children }: { question: string; children: React.ReactNode }) {
+  return (
+    <AccordionItem value={question} className="border border-border/50 rounded-lg px-4">
+      <AccordionTrigger className="text-left font-semibold hover:no-underline">
+        {question}
+      </AccordionTrigger>
+      <AccordionContent className="text-muted-foreground pt-2">
+        {children}
+      </AccordionContent>
+    </AccordionItem>
   );
 }
