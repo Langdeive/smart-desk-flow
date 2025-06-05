@@ -1,14 +1,13 @@
 import React, { useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { ArrowRight, Check, Clock, CheckCircle, BarChart, MessageCircle, Mail, Search, PanelLeft } from 'lucide-react';
+import { ArrowRight, Check, Clock, CheckCircle, BarChart, MessageCircle, Mail, Search, PanelLeft, Sparkles, Zap, Shield, TrendingUp } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import Logo from '@/components/ui/logo';
 import { Navbar } from '@/components/layout/Navbar';
 import { Section } from '@/components/common/Section';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
-import { FeatureCard } from '@/components/common/FeatureCard';
 
 export default function Index() {
   // Scroll reveal effect
@@ -20,235 +19,289 @@ export default function Index() {
         }
       });
     }, {
-      threshold: 0.1
+      threshold: 0.1,
+      rootMargin: '0px 0px -50px 0px'
     });
+    
     const scrollElements = document.querySelectorAll('.scroll-reveal');
     scrollElements.forEach(el => {
       observer.observe(el);
     });
+    
     return () => {
       scrollElements.forEach(el => {
         observer.unobserve(el);
       });
     };
   }, []);
-  return <div className="min-h-screen w-full">
+
+  return (
+    <div className="min-h-screen w-full bg-gradient-to-br from-gray-light via-white to-gray-light">
       <Navbar />
       <div className="pt-20 w-full">
-        {/* Hero Section - Modificado para alinhar à esquerda com imagem à direita */}
-        <section className="w-full py-16 hero-gradient">
-          <div className="container mx-auto px-4">
-            <div className="flex flex-col md:flex-row items-center gap-8">
-              <div className="space-y-6 text-left md:w-1/2">
-                <div>
-                  <h1 className="text-3xl md:text-4xl font-bold font-manrope tracking-tight mb-4">Chamados resolvidos antes mesmo de chegarem ao seu time</h1>
-                  <p className="text-lg text-muted-foreground">SolveFlow fecha o ciclo completo de suporte: classifica o ticket, propõe a resposta e transforma a solução em conhecimento, tudo com IA.</p>
+        
+        {/* Hero Section Modernizado */}
+        <section className="w-full py-20 section-modern overflow-hidden">
+          <div className="decorative-dots absolute inset-0 opacity-30"></div>
+          <div className="container mx-auto px-4 relative z-10">
+            <div className="flex flex-col lg:flex-row items-center gap-12">
+              <div className="lg:w-1/2 space-y-8 animate-slide-in-up">
+                <div className="inline-flex items-center px-4 py-2 rounded-full bg-gradient-secondary text-white text-sm font-medium animate-pulse-glow">
+                  <Sparkles className="h-4 w-4 mr-2" />
+                  Powered by AI
                 </div>
+                
+                <div>
+                  <h1 className="text-4xl lg:text-6xl font-outfit font-bold mb-6 leading-tight">
+                    Tickets resolvidos antes mesmo de chegarem ao seu 
+                    <span className="gradient-text block mt-2">time</span>
+                  </h1>
+                  <p className="text-xl text-gray-medium leading-relaxed max-w-xl">
+                    SolveFlow transforma seu suporte com IA que classifica, resolve e aprende automaticamente, 
+                    escalando sua operação sem aumentar custos.
+                  </p>
+                </div>
+                
                 <div className="flex flex-col sm:flex-row gap-4">
-                  <Button asChild size="lg" className="bg-gradient-to-r from-primary-b to-primary-b-600 shadow-md hover:shadow-lg transition-all">
-                    <Link to="/register" className="px-6 py-3">
-                      Teste grátis por 14 dias <ArrowRight className="ml-2 h-4 w-4" />
+                  <Button 
+                    asChild 
+                    size="lg" 
+                    className="modern-button bg-gradient-primary text-white shadow-glow px-8 py-4 text-lg font-medium"
+                  >
+                    <Link to="/register" className="flex items-center">
+                      Teste grátis por 14 dias 
+                      <ArrowRight className="ml-2 h-5 w-5" />
                     </Link>
                   </Button>
-                  <Button asChild variant="outline" size="lg" className="border-primary-a text-primary-a hover:bg-primary-a-50 shadow-sm hover:shadow transition-all">
-                    <Link to="/selecionar-plano" className="px-6 py-3">Ver planos</Link>
+                  <Button 
+                    asChild 
+                    variant="outline" 
+                    size="lg" 
+                    className="modern-button border-2 border-turquoise-vibrant text-turquoise-vibrant hover:bg-turquoise-vibrant hover:text-white px-8 py-4 text-lg font-medium"
+                  >
+                    <Link to="/selecionar-plano">Ver demonstração</Link>
                   </Button>
                 </div>
+                
+                <div className="flex items-center gap-6 pt-4">
+                  <div className="text-center">
+                    <div className="text-2xl font-outfit font-bold gradient-text">3K+</div>
+                    <div className="text-sm text-gray-medium">Tickets resolvidos</div>
+                  </div>
+                  <div className="text-center">
+                    <div className="text-2xl font-outfit font-bold gradient-text">90%</div>
+                    <div className="text-sm text-gray-medium">Automação</div>
+                  </div>
+                  <div className="text-center">
+                    <div className="text-2xl font-outfit font-bold gradient-text">24h</div>
+                    <div className="text-sm text-gray-medium">Setup</div>
+                  </div>
+                </div>
               </div>
-              <div className="md:w-1/2 flex justify-center md:justify-end">
-                <img src="/lovable-uploads/a9745599-7fd2-4a87-a7bf-e46917dec514.png" alt="Profissional de TI" className="max-w-80 md:max-w-md h-auto" />
+              
+              <div className="lg:w-1/2 relative animate-float">
+                <div className="relative">
+                  <div className="absolute inset-0 bg-gradient-primary rounded-2xl opacity-20 blur-xl"></div>
+                  <img 
+                    src="/lovable-uploads/a9745599-7fd2-4a87-a7bf-e46917dec514.png" 
+                    alt="Dashboard SolveFlow" 
+                    className="relative z-10 w-full max-w-lg mx-auto rounded-2xl shadow-modern-lg"
+                  />
+                </div>
               </div>
             </div>
           </div>
         </section>
 
-        {/* Prova Social */}
-        <Section className="py-8 section-spacing-sm section-white">
-          <div className="flex flex-col items-center text-center">
-            <div className="flex items-center gap-2 mb-4">
-              <span className="bg-primary-b/10 text-primary-b px-4 py-1 rounded-full font-medium text-sm">
-                +3 000 tickets resolvidos
-              </span>
+        {/* Prova Social Modernizada */}
+        <section className="py-12 bg-white">
+          <div className="container mx-auto px-4">
+            <div className="flex flex-col items-center text-center scroll-reveal">
+              <div className="flex items-center gap-4 mb-6">
+                <div className="flex -space-x-2">
+                  {[1,2,3,4,5].map(i => (
+                    <div key={i} className="w-8 h-8 rounded-full bg-gradient-primary border-2 border-white flex items-center justify-center text-white text-xs font-bold">
+                      {i}
+                    </div>
+                  ))}
+                </div>
+                <span className="bg-green-success/10 text-green-success px-4 py-2 rounded-full font-medium text-sm border border-green-success/20">
+                  +500 empresas confiam na SolveFlow
+                </span>
+              </div>
+              <p className="text-lg text-gray-medium">
+                Reduzindo tempo de resposta em <span className="font-semibold text-turquoise-vibrant">60%</span> para equipes de TI no Brasil.
+              </p>
             </div>
-            <p className="text-lg text-muted-foreground mb-6">
-              Equipes de TI no Brasil já confiam na SolveFlow.
-            </p>
           </div>
-        </Section>
+        </section>
 
-        {/* Problema → Solução */}
-        <Section id="features" className="py-16 section-spacing section-alt">
-          <h2 className="text-2xl md:text-3xl font-bold font-manrope text-center mb-12">Transforme problemas em soluções</h2>
-          
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
-            <Card className="problem-card shadow-md hover-card">
-              <CardContent className="pt-6">
-                <div className="mb-4 p-2 bg-error/10 rounded-full w-10 h-10 flex items-center justify-center">
-                  <Mail className="text-error h-5 w-5" />
-                </div>
-                <h3 className="text-xl font-semibold mb-2">Volume crescente de tickets sem equipe suficiente</h3>
-                <p className="text-muted-foreground">O time de suporte gasta horas classificando, priorizando e roteando solicitações.</p>
-              </CardContent>
-            </Card>
+        {/* Problema → Solução Modernizado */}
+        <Section id="features" className="py-20 section-accent">
+          <div className="container mx-auto px-4">
+            <div className="text-center mb-16 scroll-reveal">
+              <h2 className="text-4xl lg:text-5xl font-outfit font-bold mb-6 gradient-text">
+                Da sobrecarga à automação
+              </h2>
+              <p className="text-xl text-gray-medium max-w-3xl mx-auto">
+                Transformamos os maiores desafios do suporte em vantagens competitivas
+              </p>
+            </div>
             
-            <Card className="problem-card shadow-md hover-card">
-              <CardContent className="pt-6">
-                <div className="mb-4 p-2 bg-error/10 rounded-full w-10 h-10 flex items-center justify-center">
-                  <MessageCircle className="text-error h-5 w-5" />
-                </div>
-                <h3 className="text-xl font-semibold mb-2">Respostas lentas e inconsistentes</h3>
-                <p className="text-muted-foreground">Clientes ficam esperando enquanto agentes procuram informações dispersas.</p>
-              </CardContent>
-            </Card>
-            
-            <Card className="problem-card shadow-md hover-card">
-              <CardContent className="pt-6">
-                <div className="mb-4 p-2 bg-error/10 rounded-full w-10 h-10 flex items-center justify-center">
-                  <Clock className="text-error h-5 w-5" />
-                </div>
-                <h3 className="text-xl font-semibold mb-2">Conhecimento “preso” na cabeça dos agentes</h3>
-                <p className="text-muted-foreground">Artigos não são atualizados, erros se repetem.</p>
-              </CardContent>
-            </Card>
-          </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <Card className="solution-card shadow-md hover-card">
-              <CardContent className="pt-6">
-                <div className="mb-4 p-2 bg-success/10 rounded-full w-10 h-10 flex items-center justify-center">
-                  <Search className="h-5 w-5 text-success" />
-                </div>
-                <h3 className="text-xl font-semibold mb-2">Triagem Inteligente</h3>
-                <p className="text-muted-foreground">IA analisa cada ticket em segundos, define prioridade e envia ao agente ou fluxo correto, liberando até 60 % do tempo da equipe.</p>
-              </CardContent>
-            </Card>
-            
-            <Card className="solution-card shadow-md hover-card">
-              <CardContent className="pt-6">
-                <div className="mb-4 p-2 bg-success/10 rounded-full w-10 h-10 flex items-center justify-center">
-                  <PanelLeft className="h-5 w-5 text-success" />
-                </div>
-                <h3 className="text-xl font-semibold mb-2">Solução Automática</h3>
-                <p className="text-muted-foreground">Um modelo LLM cruza o ticket com a base de conhecimento, gera uma resposta pronta e sugere ao agente (ou envia direto em casos de alta confiança).</p>
-              </CardContent>
-            </Card>
-            
-            <Card className="solution-card shadow-md hover-card">
-              <CardContent className="pt-6">
-                <div className="mb-4 p-2 bg-success/10 rounded-full w-10 h-10 flex items-center justify-center">
-                  <Check className="h-5 w-5 text-success" />
-                </div>
-                <h3 className="text-xl font-semibold mb-2">IA que escreve artigos</h3>
-                <p className="text-muted-foreground">Quando um ticket é resolvido, a SolveFlow cria e publica um artigo, enriquecendo constantemente a base e aumentando a taxa de autosserviço.</p>
-              </CardContent>
-            </Card>
-          </div>
-        </Section>
-
-        {/* Funcionalidades - Redesenhado para uma apresentação mais visual */}
-        <Section className="py-16 section-spacing section-white overflow-hidden">
-          <div className="container mx-auto">
-            <h2 className="text-2xl md:text-3xl font-bold font-manrope text-center mb-4">Funcionalidades</h2>
-            <p className="text-lg text-muted-foreground text-center max-w-2xl mx-auto mb-12 readable-width">
-              Ferramentas poderosas que transformam seu atendimento
-            </p>
-            
-            <div className="features-container relative">
-              {/* Imagem dos agentes com efeito de sobreposição e gradiente */}
-              <div className="hidden lg:block absolute right-0 top-1/2 transform -translate-y-1/2 w-1/2 h-full z-10">
-                <div className="relative h-full w-full">
-                  <div className="absolute -left-24 top-0 bottom-0 w-48 bg-gradient-to-r from-white to-transparent z-20"></div>
-                  <img src="/lovable-uploads/f8c16f45-5bec-4d68-b002-42962d124d55.png" alt="Equipe de IA - Laura, Ricardo e Helena" className="h-auto max-h-[500px] object-contain ml-auto absolute right-0 top-1/2 transform -translate-y-1/2" />
-                </div>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center mb-20">
+              {/* Problemas */}
+              <div className="space-y-6 scroll-reveal">
+                <h3 className="text-2xl font-outfit font-semibold text-red-alert mb-8 flex items-center">
+                  <Clock className="h-6 w-6 mr-3" />
+                  Problemas atuais
+                </h3>
+                
+                <ProblemCard 
+                  icon={<Mail className="h-6 w-6" />}
+                  title="Volume crescente sem controle"
+                  description="Tickets se acumulam mais rápido que a equipe consegue resolver"
+                />
+                
+                <ProblemCard 
+                  icon={<MessageCircle className="h-6 w-6" />}
+                  title="Respostas lentas e inconsistentes"
+                  description="Clientes esperam enquanto agentes procuram informações dispersas"
+                />
+                
+                <ProblemCard 
+                  icon={<Search className="h-6 w-6" />}
+                  title="Conhecimento desperdiçado"
+                  description="Soluções ficam na cabeça dos agentes sem virar processo"
+                />
               </div>
               
-              {/* Grid de funcionalidades */}
-              <div className="grid grid-cols-1 lg:grid-cols-1 lg:w-3/5 gap-6 scroll-reveal relative z-30">
-                <FeatureItem 
-                  icon={<Search className="h-5 w-5" />} 
-                  title="Triagem Inteligente" 
-                  description="A SolveFlow lê cada chamado, entende do que se trata e o encaminha para o lugar certo em segundos, sem você precisar tocar em nada." />
+              {/* Soluções */}
+              <div className="space-y-6 scroll-reveal">
+                <h3 className="text-2xl font-outfit font-semibold text-green-success mb-8 flex items-center">
+                  <Zap className="h-6 w-6 mr-3" />
+                  Nossa solução
+                </h3>
                 
-                <FeatureItem 
-                  icon={<MessageCircle className="h-5 w-5" />} 
-                  title="Solução Automática" 
-                  description="A IA encontra a resposta na base de conhecimento e já entrega uma mensagem prontinha, reduzindo o tempo de espera do cliente para quase zero." />
+                <SolutionCard 
+                  icon={<Sparkles className="h-6 w-6" />}
+                  title="Triagem inteligente em segundos"
+                  description="IA classifica e direciona cada ticket automaticamente, liberando 60% do tempo da equipe"
+                />
                 
-                <FeatureItem 
-                  icon={<CheckCircle className="h-5 w-5" />} 
-                  title="Base de Conhecimento Viva" 
-                  description="Quando um ticket é resolvido, o sistema transforma a solução em um novo artigo, mantendo tudo atualizado sem trabalho extra da equipe." />
+                <SolutionCard 
+                  icon={<PanelLeft className="h-6 w-6" />}
+                  title="Respostas instantâneas e precisas"
+                  description="Sistema consulta a base de conhecimento e gera respostas contextualizadas na hora"
+                />
                 
-                <FeatureItem 
-                  icon={<BarChart className="h-5 w-5" />} 
-                  title="Dashboards & Insights" 
-                  description="Gráficos claros mostram quanto tempo você está economizando, quais problemas mais aparecem e como melhorar o suporte antes que os clientes reclamem." />
-              </div>
-              
-              {/* Versão móvel da imagem - aparece apenas em telas pequenas */}
-              <div className="lg:hidden w-full mt-8">
-                <img src="/lovable-uploads/f8c16f45-5bec-4d68-b002-42962d124d55.png" alt="Equipe de IA - Laura, Ricardo e Helena" className="w-full max-w-md mx-auto h-auto rounded-xl" />
+                <SolutionCard 
+                  icon={<TrendingUp className="h-6 w-6" />}
+                  title="Conhecimento que evolui sozinho"
+                  description="Cada solução vira artigo automaticamente, enriquecendo a base continuamente"
+                />
               </div>
             </div>
           </div>
         </Section>
 
-        {/* Como Funciona */}
-        <Section className="py-16 section-spacing-sm section-alt">
-          <h2 className="text-2xl md:text-3xl font-bold font-manrope text-center mb-10">Como Funciona</h2>
-          
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 scroll-reveal">
-            <div className="flex flex-row md:flex-col items-center md:text-center">
-              <div className="mr-4 md:mb-4 p-2 bg-gradient-to-br from-[#6EE7B7] to-[#93C5FD] rounded-full w-8 h-8 flex items-center justify-center flex-shrink-0">
-                <span className="text-white text-sm font-bold">1</span>
-              </div>
-              <div>
-                <h3 className="text-lg font-semibold mb-1">O cliente abre o ticket.</h3>
-                <p className="text-sm text-muted-foreground">
-                  E-mail ou portal; nada para instalar.
-                </p>
-              </div>
+        {/* Como Funciona Modernizado */}
+        <Section className="py-20 bg-white">
+          <div className="container mx-auto px-4">
+            <div className="text-center mb-16 scroll-reveal">
+              <h2 className="text-4xl lg:text-5xl font-outfit font-bold mb-6">
+                Como funciona na <span className="gradient-text">prática</span>
+              </h2>
+              <p className="text-xl text-gray-medium max-w-2xl mx-auto">
+                4 passos simples para transformar seu suporte
+              </p>
             </div>
             
-            <div className="flex flex-row md:flex-col items-center md:text-center">
-              <div className="mr-4 md:mb-4 p-2 bg-gradient-to-br from-[#6EE7B7] to-[#93C5FD] rounded-full w-8 h-8 flex items-center justify-center flex-shrink-0">
-                <span className="text-white text-sm font-bold">2</span>
-              </div>
-              <div>
-                <h3 className="text-lg font-semibold mb-1">Laura organiza e classifica.</h3>
-                <p className="text-sm text-muted-foreground">
-                  Identifica prioridade e coleta o que estiver faltando.
-                </p>
-              </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 scroll-reveal">
+              <ProcessStep 
+                number="1"
+                title="Cliente abre o ticket"
+                description="Via email, WhatsApp ou portal - sem instalar nada"
+                icon={<Mail className="h-8 w-8" />}
+              />
+              
+              <ProcessStep 
+                number="2"
+                title="Laura analisa e organiza"
+                description="IA identifica o problema e coleta informações necessárias"
+                icon={<Search className="h-8 w-8" />}
+              />
+              
+              <ProcessStep 
+                number="3"
+                title="Ricardo sugere a solução"
+                description="Busca na base viva e prepara resposta personalizada"
+                icon={<Sparkles className="h-8 w-8" />}
+              />
+              
+              <ProcessStep 
+                number="4"
+                title="Helena documenta tudo"
+                description="Transforma a solução em conhecimento permanente"
+                icon={<Shield className="h-8 w-8" />}
+              />
             </div>
             
-            <div className="flex flex-row md:flex-col items-center md:text-center">
-              <div className="mr-4 md:mb-4 p-2 bg-gradient-to-br from-[#6EE7B7] to-[#93C5FD] rounded-full w-8 h-8 flex items-center justify-center flex-shrink-0">
-                <span className="text-white text-sm font-bold">3</span>
-              </div>
-              <div>
-                <h3 className="text-lg font-semibold mb-1">Ricardo sugere a solução.</h3>
-                <p className="text-sm text-muted-foreground">
-                  Busca na base viva e entrega a resposta pronta.
-                </p>
-              </div>
-            </div>
-            
-            <div className="flex flex-row md:flex-col items-center md:text-center">
-              <div className="mr-4 md:mb-4 p-2 bg-gradient-to-br from-[#6EE7B7] to-[#93C5FD] rounded-full w-8 h-8 flex items-center justify-center flex-shrink-0">
-                <span className="text-white text-sm font-bold">4</span>
-              </div>
-              <div>
-                <h3 className="text-lg font-semibold mb-1">Agente aprova, Helena aprende.</h3>
-                <p className="text-sm text-muted-foreground">
-                  Ticket resolvido; a solução vira conhecimento permanente.
-                </p>
+            <div className="text-center mt-16 scroll-reveal">
+              <div className="inline-flex items-center px-6 py-3 rounded-full bg-gradient-primary text-white font-medium">
+                <TrendingUp className="h-5 w-5 mr-2" />
+                Resultado: 90% menos trabalho manual, respostas 10x mais rápidas
               </div>
             </div>
           </div>
-          
-          <div className="text-center mt-12 readable-width mx-auto scroll-reveal">
-            <p className="text-xl font-semibold font-manrope text-[#4B5563]">Menos tickets manuais, respostas mais rápidas e clientes mais satisfeitos, tudo com uma operação de suporte enxuta e escalável.</p>
+        </Section>
+
+        {/* Funcionalidades Visuais */}
+        <Section className="py-20 section-accent overflow-hidden">
+          <div className="container mx-auto px-4">
+            <div className="text-center mb-16 scroll-reveal">
+              <h2 className="text-4xl lg:text-5xl font-outfit font-bold mb-6 gradient-text">
+                Funcionalidades que fazem a diferença
+              </h2>
+              <p className="text-xl text-gray-medium max-w-2xl mx-auto">
+                Tecnologia de ponta pensada para equipes que querem escalar
+              </p>
+            </div>
+            
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+              <div className="space-y-8 scroll-reveal">
+                <FeatureHighlight 
+                  icon={<Sparkles className="h-6 w-6" />}
+                  title="Triagem Inteligente"
+                  description="Laura entende o contexto de cada chamado em segundos, classificando automaticamente por tipo, urgência e complexidade."
+                  stats="60% redução no tempo de triagem"
+                />
+                
+                <FeatureHighlight 
+                  icon={<MessageCircle className="h-6 w-6" />}
+                  title="Respostas Automáticas"
+                  description="Ricardo consulta toda a base de conhecimento e gera respostas personalizadas, mantendo o tom da sua empresa."
+                  stats="Precisão de 90% nas sugestões"
+                />
+                
+                <FeatureHighlight 
+                  icon={<TrendingUp className="h-6 w-6" />}
+                  title="Base de Conhecimento Viva"
+                  description="Helena transforma cada solução em artigo estruturado, criando uma biblioteca que cresce automaticamente."
+                  stats="+200 artigos criados por mês"
+                />
+              </div>
+              
+              <div className="relative animate-float">
+                <div className="relative">
+                  <div className="absolute inset-0 bg-gradient-secondary rounded-2xl opacity-20 blur-xl"></div>
+                  <img 
+                    src="/lovable-uploads/f8c16f45-5bec-4d68-b002-42962d124d55.png" 
+                    alt="Equipe de IA trabalhando" 
+                    className="relative z-10 w-full rounded-2xl shadow-modern-lg"
+                  />
+                </div>
+              </div>
+            </div>
           </div>
         </Section>
 
@@ -467,62 +520,94 @@ export default function Index() {
           </div>
         </section>
       </div>
-    </div>;
+    </div>
+  );
 }
 
-// Feature item component with improved visual design
-function FeatureItem({
-  icon,
-  title,
-  description
-}: {
-  icon: React.ReactNode;
-  title: string;
-  description: string;
-}) {
-  return <div className="feature-item bg-white p-6 rounded-xl border border-border/30 shadow-sm hover:shadow-md transition-all">
+// Componentes modernizados
+function ProblemCard({ icon, title, description }: { icon: React.ReactNode; title: string; description: string }) {
+  return (
+    <div className="modern-card border-l-4 border-red-alert bg-red-alert/5 p-6">
       <div className="flex items-start gap-4">
-        <div className="feature-icon-container flex-shrink-0">
-          <div className="w-10 h-10 rounded-full bg-gradient-to-br from-primary-a/20 to-primary-b/20 flex items-center justify-center">
-            <div className="text-primary-b">
-              {icon}
-            </div>
-          </div>
+        <div className="flex-shrink-0 w-12 h-12 rounded-xl bg-red-alert/10 flex items-center justify-center text-red-alert">
+          {icon}
         </div>
         <div>
-          <h3 className="text-xl font-semibold mb-2">{title}</h3>
-          <p className="text-muted-foreground">
-            {description}
-          </p>
+          <h3 className="font-outfit font-semibold text-lg mb-2 text-gray-dark">{title}</h3>
+          <p className="text-gray-medium">{description}</p>
         </div>
       </div>
-    </div>;
+    </div>
+  );
 }
 
-// Keep plan feature component
-function PlanFeature({
-  children
-}: {
-  children: React.ReactNode;
-}) {
-  return <li className="flex items-center">
-      <Check className="h-5 w-5 mr-2 text-primary-a flex-shrink-0" />
-      <span>{children}</span>
-    </li>;
+function SolutionCard({ icon, title, description }: { icon: React.ReactNode; title: string; description: string }) {
+  return (
+    <div className="modern-card border-l-4 border-green-success bg-green-success/5 p-6">
+      <div className="flex items-start gap-4">
+        <div className="flex-shrink-0 w-12 h-12 rounded-xl bg-green-success/10 flex items-center justify-center text-green-success">
+          {icon}
+        </div>
+        <div>
+          <h3 className="font-outfit font-semibold text-lg mb-2 text-gray-dark">{title}</h3>
+          <p className="text-gray-medium">{description}</p>
+        </div>
+      </div>
+    </div>
+  );
 }
 
-// Keep FAQ item component
-function FaqItem({
-  question,
-  children
-}: {
-  question: string;
-  children: React.ReactNode;
-}) {
-  return <AccordionItem value={question.replace(/\s/g, '-').toLowerCase()} className="border rounded-lg px-4">
-      <AccordionTrigger className="text-left font-semibold py-4">{question}</AccordionTrigger>
-      <AccordionContent className="pb-4 text-[#4B5563]">
-        {children}
-      </AccordionContent>
-    </AccordionItem>;
+function ProcessStep({ number, title, description, icon }: { number: string; title: string; description: string; icon: React.ReactNode }) {
+  return (
+    <div className="text-center space-y-4">
+      <div className="relative mx-auto w-20 h-20 bg-gradient-primary rounded-2xl flex items-center justify-center text-white shadow-glow">
+        {icon}
+        <div className="absolute -top-2 -right-2 w-8 h-8 bg-gradient-secondary rounded-full flex items-center justify-center text-white text-sm font-bold">
+          {number}
+        </div>
+      </div>
+      <h3 className="font-outfit font-semibold text-lg text-gray-dark">{title}</h3>
+      <p className="text-gray-medium text-sm">{description}</p>
+    </div>
+  );
+}
+
+function FeatureHighlight({ icon, title, description, stats }: { icon: React.ReactNode; title: string; description: string; stats: string }) {
+  return (
+    <div className="modern-card bg-white/60 backdrop-blur-sm p-6">
+      <div className="flex items-start gap-4">
+        <div className="flex-shrink-0 w-14 h-14 rounded-xl bg-gradient-primary flex items-center justify-center text-white shadow-glow">
+          {icon}
+        </div>
+        <div className="flex-1">
+          <h3 className="font-outfit font-semibold text-xl mb-3 text-gray-dark">{title}</h3>
+          <p className="text-gray-medium mb-4">{description}</p>
+          <div className="inline-flex items-center px-3 py-1 rounded-full bg-turquoise-vibrant/10 text-turquoise-vibrant text-sm font-medium">
+            <TrendingUp className="h-4 w-4 mr-1" />
+            {stats}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function TestimonialCard({ initial, name, company, testimonial, metric }: { initial: string; name: string; company: string; testimonial: string; metric: string }) {
+  return (
+    <div className="modern-card bg-white p-8 text-center">
+      <Avatar className="h-16 w-16 mb-4 mx-auto">
+        <AvatarFallback className="bg-gradient-primary text-white text-xl font-bold">
+          {initial}
+        </AvatarFallback>
+      </Avatar>
+      <div className="mb-4">
+        <h3 className="font-outfit font-semibold text-lg text-gray-dark">{name}</h3>
+        <p className="text-turquoise-vibrant font-medium">{company}</p>
+      </div>
+      <p className="text-gray-medium mb-4 italic">"{testimonial}"</p>
+      <div className="inline-flex items-center px-4 py-2 rounded-full bg-green-success/10 text-green-success text-sm font-bold">
+        {metric}
+      </div>
+    </div>
+  );
 }
