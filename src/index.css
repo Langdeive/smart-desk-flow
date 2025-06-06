@@ -1,3 +1,4 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -141,7 +142,7 @@
   }
 }
 
-/* Gradientes modernos - removendo yellow/amarelo */
+/* Gradientes modernos - 100% livre de yellow */
 .gradient-primary {
   background: linear-gradient(135deg, #1E3A8A 0%, #06B6D4 100%);
 }
@@ -169,11 +170,151 @@
   background-clip: text;
 }
 
-/* Efeitos de glassmorphism */
-.glass-effect {
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+/* ... keep existing code (efeitos, animações, microinterações, etc.) */
+
+/* ELIMINAÇÃO TOTAL DE YELLOW - REGRAS ANTI-YELLOW REFORÇADAS */
+/* Sobrescrever qualquer classe yellow com !important */
+.text-yellow-100,
+.text-yellow-200,
+.text-yellow-300,
+.text-yellow-400,
+.text-yellow-500,
+.text-yellow-600,
+.text-yellow-700,
+.text-yellow-800,
+.text-yellow-900 {
+  color: #f59e0b !important; /* Força amber */
+}
+
+.bg-yellow-50,
+.bg-yellow-100,
+.bg-yellow-200,
+.bg-yellow-300,
+.bg-yellow-400,
+.bg-yellow-500,
+.bg-yellow-600,
+.bg-yellow-700,
+.bg-yellow-800,
+.bg-yellow-900 {
+  background-color: #fef3c7 !important; /* Força amber/orange backgrounds */
+}
+
+.border-yellow-100,
+.border-yellow-200,
+.border-yellow-300,
+.border-yellow-400,
+.border-yellow-500,
+.border-yellow-600,
+.border-yellow-700,
+.border-yellow-800,
+.border-yellow-900 {
+  border-color: #fde68a !important; /* Força amber borders */
+}
+
+/* Regras específicas para elementos que possam herdar yellow */
+[class*="yellow"] {
+  color: #f59e0b !important;
+  background-color: transparent !important;
+  border-color: #fde68a !important;
+}
+
+/* Elementos com cores hexadecimais yellow */
+[style*="#ffff00"],
+[style*="#ffff"],
+[style*="rgb(255, 255, 0)"],
+[style*="yellow"] {
+  color: #f59e0b !important;
+  background-color: #fef3c7 !important;
+}
+
+/* Badge específico para status "Em Risco" */
+.badge-warning,
+.bg-yellow-500 {
+  background-color: #f59e0b !important;
+  color: white !important;
+  border-color: #d97706 !important;
+}
+
+/* Override para qualquer yellow que apareça em badges */
+.inline-flex.items-center.rounded-full[class*="yellow"] {
+  background-color: #f59e0b !important;
+  color: white !important;
+}
+
+/* Seções modernas - garantir que não usem yellow */
+.section-modern {
+  position: relative;
+  overflow: hidden;
+}
+
+.section-modern::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(248, 250, 252, 0.9) 0%, rgba(226, 232, 240, 0.9) 100%);
+  z-index: -1;
+}
+
+.section-accent {
+  position: relative;
+  background: linear-gradient(135deg, #F8FAFC 0%, #E2E8F0 100%);
+}
+
+.section-accent::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: 
+    radial-gradient(circle at 20% 80%, rgba(6, 182, 212, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, rgba(124, 58, 237, 0.1) 0%, transparent 50%);
+  z-index: -1;
+}
+
+/* Garantir que progress bars usem a paleta correta */
+.progress-bar {
+  background: linear-gradient(90deg, #1E3A8A 0%, #06B6D4 100%);
+}
+
+/* Tabs customizadas */
+.custom-tabs [data-state="active"] {
+  background: linear-gradient(135deg, #1E3A8A 0%, #06B6D4 100%);
+  color: white;
+}
+
+/* Classes modernas para cards */
+.modern-card {
+  @apply bg-white rounded-xl border border-border/50 shadow-sm;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.modern-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 40px rgba(124, 58, 237, 0.1);
+  border-color: hsl(var(--secondary));
+}
+
+/* Sombra moderna com tom roxo/turquesa */
+.shadow-modern-lg {
+  box-shadow: 0 20px 40px rgba(124, 58, 237, 0.1);
+}
+
+/* Elementos decorativos */
+.decorative-dots {
+  background-image: radial-gradient(circle, rgba(6, 182, 212, 0.2) 1px, transparent 1px);
+  background-size: 20px 20px;
+}
+
+.decorative-grid {
+  background-image: 
+    linear-gradient(rgba(6, 182, 212, 0.1) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(6, 182, 212, 0.1) 1px, transparent 1px);
+  background-size: 40px 40px;
 }
 
 /* Animações modernas */
@@ -241,6 +382,12 @@
   animation: scale-in 0.4s ease-out;
 }
 
+/* Backgrounds específicos para diferentes páginas */
+.dashboard-container {
+  background: linear-gradient(135deg, #F8FAFC 0%, rgba(30, 58, 138, 0.02) 50%, rgba(6, 182, 212, 0.02) 100%);
+  min-height: 100vh;
+}
+
 /* Microinterações modernas */
 .modern-button {
   @apply relative overflow-hidden;
@@ -267,18 +414,20 @@
   left: 100%;
 }
 
-.modern-card {
-  @apply bg-white rounded-xl border border-border/50 shadow-sm;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+/* Estilos específicos do dashboard com gradientes modernos */
+.dashboard-container {
+  background: linear-gradient(135deg, #F8FAFC 0%, rgba(30, 58, 138, 0.02) 50%, rgba(6, 182, 212, 0.02) 100%);
+  min-height: 100vh;
 }
 
-.modern-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 20px 40px rgba(124, 58, 237, 0.1);
-  border-color: hsl(var(--secondary));
+/* Efeitos de glassmorphism */
+.glass-effect {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
-/* Efeitos de scroll reveal */
+/* Scroll reveal */
 .scroll-reveal {
   opacity: 0;
   transform: translateY(30px);
@@ -298,101 +447,7 @@
   background-size: cover;
 }
 
-/* Seções modernas - removendo tons amarelos */
-.section-modern {
-  position: relative;
-  overflow: hidden;
-}
-
-.section-modern::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: linear-gradient(135deg, rgba(248, 250, 252, 0.9) 0%, rgba(226, 232, 240, 0.9) 100%);
-  z-index: -1;
-}
-
-.section-accent {
-  position: relative;
-  background: linear-gradient(135deg, #F8FAFC 0%, #E2E8F0 100%);
-}
-
-.section-accent::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: 
-    radial-gradient(circle at 20% 80%, rgba(6, 182, 212, 0.1) 0%, transparent 50%),
-    radial-gradient(circle at 80% 20%, rgba(124, 58, 237, 0.1) 0%, transparent 50%);
-  z-index: -1;
-}
-
-/* Elementos decorativos */
-.decorative-dots {
-  background-image: radial-gradient(circle, rgba(6, 182, 212, 0.2) 1px, transparent 1px);
-  background-size: 20px 20px;
-}
-
-.decorative-grid {
-  background-image: 
-    linear-gradient(rgba(6, 182, 212, 0.1) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(6, 182, 212, 0.1) 1px, transparent 1px);
-  background-size: 40px 40px;
-}
-
-/* Sombra roxa customizada */
-.shadow-glow {
-  box-shadow: 0 0 20px rgba(124, 58, 237, 0.3);
-}
-
-/* Sombra moderna com tom roxo */
-.shadow-modern-lg {
-  box-shadow: 0 20px 40px rgba(124, 58, 237, 0.1);
-}
-
-/* Estilos específicos do dashboard - removendo amarelo */
-.dashboard-container {
-  background: linear-gradient(135deg, #F8FAFC 0%, rgba(30, 58, 138, 0.02) 50%, rgba(6, 182, 212, 0.02) 100%);
-  min-height: 100vh;
-}
-
-/* Progress bar customizada */
-.progress-bar {
-  background: linear-gradient(90deg, #1E3A8A 0%, #06B6D4 100%);
-}
-
-/* Tabs customizadas */
-.custom-tabs [data-state="active"] {
-  background: linear-gradient(135deg, #1E3A8A 0%, #06B6D4 100%);
-  color: white;
-}
-
-/* Classes utilitárias para remoção completa do amarelo */
-.text-amber-600 { color: #d97706 !important; }
-.text-amber-700 { color: #b45309 !important; }
-.text-amber-800 { color: #92400e !important; }
-.bg-amber-50 { background-color: #fffbeb !important; }
-.bg-amber-100 { background-color: #fef3c7 !important; }
-.border-amber-200 { border-color: #fde68a !important; }
-.border-amber-300 { border-color: #fcd34d !important; }
-.bg-amber-500 { background-color: #f59e0b !important; }
-
-/* Remove qualquer yellow que possa aparecer */
-.text-yellow-600,
-.text-yellow-700,
-.text-yellow-800,
-.bg-yellow-50,
-.bg-yellow-100,
-.border-yellow-200,
-.border-yellow-300,
-.bg-yellow-500 {
-  color: #d97706 !important;
-  background-color: #fef3c7 !important;
-  border-color: #fde68a !important;
+/* Hero gradient moderno */
+.hero-gradient {
+  background: linear-gradient(to right, rgba(213, 246, 243, 1) 0%, rgba(255, 255, 255, 0) 100%);
 }

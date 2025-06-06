@@ -206,7 +206,7 @@ const N8nDebugPanel: React.FC = () => {
       case 'failed':
         return <AlertCircle className="h-3 w-3 text-red-500" />;
       case 'pending':
-        return <RefreshCw className="h-3 w-3 text-yellow-500 animate-spin" />;
+        return <RefreshCw className="h-3 w-3 text-amber-500 animate-spin" />;
       default:
         return <AlertCircle className="h-3 w-3 text-gray-500" />;
     }
@@ -244,15 +244,15 @@ const N8nDebugPanel: React.FC = () => {
 
           {/* Status da migração v2 corrigida */}
           {migrationStatus && (
-            <div className={`p-3 rounded-lg border ${migrationStatus.success ? 'bg-emerald-50 border-emerald-300' : 'bg-yellow-50 border-yellow-300'}`}>
+            <div className={`p-3 rounded-lg border ${migrationStatus.success ? 'bg-emerald-50 border-emerald-300' : 'bg-amber-50 border-amber-300'}`}>
               <div className="flex items-center justify-between">
                 <div className="flex items-center">
                   {migrationStatus.success ? (
                     <CheckCircle2 className="h-4 w-4 text-emerald-600 mr-2" />
                   ) : (
-                    <AlertCircle className="h-4 w-4 text-yellow-600 mr-2" />
+                    <AlertCircle className="h-4 w-4 text-amber-600 mr-2" />
                   )}
-                  <span className={`text-sm font-medium ${migrationStatus.success ? 'text-emerald-800' : 'text-yellow-800'}`}>
+                  <span className={`text-sm font-medium ${migrationStatus.success ? 'text-emerald-800' : 'text-amber-800'}`}>
                     Edge Function v2.1: {migrationStatus.migrationStatus === 'completed_v2_fixed' ? 'FUNCIONANDO PERFEITAMENTE' : 'Verificando...'}
                   </span>
                 </div>
@@ -342,7 +342,7 @@ const N8nDebugPanel: React.FC = () => {
                   </div>
                 )}
                 {edgeFunctionTest.troubleshooting && (
-                  <div className="text-xs text-yellow-700">
+                  <div className="text-xs text-amber-700">
                     <strong>🔍 Diagnóstico:</strong> {edgeFunctionTest.troubleshooting}
                   </div>
                 )}
@@ -418,7 +418,7 @@ const N8nDebugPanel: React.FC = () => {
                   <div className="text-xs text-muted-foreground">Falhas</div>
                 </div>
                 <div className="text-center">
-                  <div className="text-2xl font-bold text-yellow-600">{recentLogs.stats.pending}</div>
+                  <div className="text-2xl font-bold text-amber-600">{recentLogs.stats.pending}</div>
                   <div className="text-xs text-muted-foreground">Pendentes</div>
                 </div>
                 <div className="text-center">

@@ -1,4 +1,3 @@
-
 import React, { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -53,24 +52,26 @@ interface CategoryDialogProps {
   category?: Category | null;
 }
 
+// Paleta sem yellow - substituído por cores da identidade visual
 const DEFAULT_COLORS = [
   '#ef4444', // red
   '#f97316', // orange
-  '#f59e0b', // amber
-  '#eab308', // yellow
+  '#f59e0b', // amber (substituindo yellow)
   '#84cc16', // lime
   '#22c55e', // green
   '#10b981', // emerald
   '#14b8a6', // teal
-  '#06b6d4', // cyan
+  '#06b6d4', // cyan (turquesa vibrante)
   '#0ea5e9', // sky
   '#3b82f6', // blue
+  '#1e3a8a', // blue-deep (azul profundo)
   '#6366f1', // indigo
   '#8b5cf6', // violet
-  '#a855f7', // purple
+  '#7c3aed', // purple (roxo intenso)
+  '#a855f7', // purple-2
   '#d946ef', // fuchsia
   '#ec4899', // pink
-  '#f43f5e', // rose
+  '#db2777', // pink-accent (rosa de destaque)
   '#6b7280', // gray
 ];
 
@@ -88,7 +89,7 @@ export const CategoryDialog: React.FC<CategoryDialogProps> = ({
       key: '',
       name: '',
       description: '',
-      color: '#6b7280',
+      color: '#06b6d4', // Turquesa vibrante como padrão
     },
   });
 
@@ -105,7 +106,7 @@ export const CategoryDialog: React.FC<CategoryDialogProps> = ({
         key: '',
         name: '',
         description: '',
-        color: '#6b7280',
+        color: '#06b6d4', // Turquesa vibrante
       });
     }
   }, [category, form]);
