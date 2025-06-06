@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -93,46 +92,48 @@ const TicketDashboard = () => {
   };
 
   return (
-    <div className="container mx-auto py-8 px-4">
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
-        <div>
-          <h1 className="text-3xl font-bold">Tickets</h1>
-          <p className="text-muted-foreground">Gerencie e visualize todos os chamados</p>
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50/30">
+      <div className="container mx-auto py-8 px-4">
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
+          <div>
+            <h1 className="text-3xl font-bold gradient-text">Tickets</h1>
+            <p className="text-muted-foreground">Gerencie e visualize todos os chamados</p>
+          </div>
+          <Button onClick={handleCreateTicket} className="bg-gradient-to-r from-blue-600 to-cyan-500 hover:from-blue-700 hover:to-cyan-600">
+            <Plus className="mr-2 h-4 w-4" />
+            Novo Ticket
+          </Button>
         </div>
-        <Button onClick={handleCreateTicket}>
-          <Plus className="mr-2 h-4 w-4" />
-          Novo Ticket
-        </Button>
+
+        <TicketStats tickets={tickets} />
+
+        <Card className="modern-card">
+          <CardHeader>
+            <CardTitle>Lista de Tickets</CardTitle>
+            <CardDescription>
+              Visualize e gerencie todos os chamados da sua empresa
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <TicketFilters 
+              searchTerm={searchTerm}
+              setSearchTerm={setSearchTerm}
+              statusFilter={statusFilter}
+              setStatusFilter={setStatusFilter}
+              handleRefresh={handleRefresh}
+              loading={loading}
+            />
+
+            <TicketList tickets={paginatedTickets} loading={loading} />
+            
+            <TicketPagination 
+              currentPage={currentPage}
+              totalPages={totalPages}
+              onPageChange={handlePageChange}
+            />
+          </CardContent>
+        </Card>
       </div>
-
-      <TicketStats tickets={tickets} />
-
-      <Card>
-        <CardHeader>
-          <CardTitle>Lista de Tickets</CardTitle>
-          <CardDescription>
-            Visualize e gerencie todos os chamados da sua empresa
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <TicketFilters 
-            searchTerm={searchTerm}
-            setSearchTerm={setSearchTerm}
-            statusFilter={statusFilter}
-            setStatusFilter={setStatusFilter}
-            handleRefresh={handleRefresh}
-            loading={loading}
-          />
-
-          <TicketList tickets={paginatedTickets} loading={loading} />
-          
-          <TicketPagination 
-            currentPage={currentPage}
-            totalPages={totalPages}
-            onPageChange={handlePageChange}
-          />
-        </CardContent>
-      </Card>
     </div>
   );
 };

@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -32,17 +31,17 @@ const AIAnalysisPanel: React.FC<AIAnalysisPanelProps> = ({
   // Formatar a pontuação de confiança para porcentagem
   const formattedScore = confidenceScore ? `${Math.round(confidenceScore * 100)}%` : 'N/A';
   
-  // Definir cores com base na pontuação
+  // Definir cores com base na pontuação - substituindo yellow por amber
   const getScoreColor = (score: number) => {
     if (score >= 0.8) return "text-green-700";
-    if (score >= 0.6) return "text-yellow-700";
+    if (score >= 0.6) return "text-amber-700"; // Changed from yellow-700
     return "text-red-700";
   };
   
-  // Calcular a cor da barra de progresso
+  // Calcular a cor da barra de progresso - substituindo yellow por amber
   const getProgressColor = (score: number) => {
     if (score >= 0.8) return "bg-green-500";
-    if (score >= 0.6) return "bg-yellow-500";
+    if (score >= 0.6) return "bg-amber-500"; // Changed from yellow-500
     return "bg-red-500";
   };
   

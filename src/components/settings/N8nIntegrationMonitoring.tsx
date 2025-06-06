@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -56,7 +55,7 @@ const N8nIntegrationMonitoring: React.FC = () => {
       case 'failed':
         return <XCircle className="h-4 w-4 text-red-500" />;
       case 'pending':
-        return <Clock className="h-4 w-4 text-yellow-500" />;
+        return <Clock className="h-4 w-4 text-amber-500" />;
       case 'max_retries_reached':
         return <AlertCircle className="h-4 w-4 text-red-700" />;
       default:

@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
@@ -104,10 +103,10 @@ const GlobalSettingsPanel: React.FC = () => {
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
-        <div className="bg-yellow-50 border border-yellow-200 rounded-md p-4">
+        <div className="bg-orange-50 border border-orange-200 rounded-md p-4">
           <div className="flex items-center gap-2">
-            <AlertTriangle className="h-4 w-4 text-yellow-600" />
-            <p className="text-sm text-yellow-800">
+            <AlertTriangle className="h-4 w-4 text-orange-600" />
+            <p className="text-sm text-orange-800">
               <strong>Atenção:</strong> Estas configurações afetam todas as empresas que não possuem configurações específicas.
             </p>
           </div>
