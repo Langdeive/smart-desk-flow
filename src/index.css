@@ -356,3 +356,20 @@
 .shadow-modern-lg {
   box-shadow: 0 20px 40px rgba(124, 58, 237, 0.1);
 }
+
+/* Estilos específicos do dashboard para evitar amarelo */
+.dashboard-container {
+  background: linear-gradient(135deg, #F8FAFC 0%, rgba(30, 58, 138, 0.02) 50%, rgba(6, 182, 212, 0.02) 100%);
+  min-height: 100vh;
+}
+
+/* Progress bar customizada */
+.progress-bar {
+  background: linear-gradient(90deg, #1E3A8A 0%, #06B6D4 100%);
+}
+
+/* Tabs customizadas */
+.custom-tabs [data-state="active"] {
+  background: linear-gradient(135deg, #1E3A8A 0%, #06B6D4 100%);
+  color: white;
+}
