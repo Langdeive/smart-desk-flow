@@ -1,4 +1,3 @@
-
 import { useState, useCallback } from 'react';
 import { useClients } from '@/hooks/useClients';
 import { 
@@ -87,42 +86,44 @@ export default function ClientManagement() {
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
         <div className="flex gap-2 w-full md:w-auto">
           <div className="relative flex-1">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-blue-deep/60 h-4 w-4" />
             <Input
               placeholder="Buscar por nome ou ID externo"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="pl-9 w-full md:w-[300px]"
+              className="pl-9 w-full md:w-[300px] border-turquoise-vibrant/20 focus:border-turquoise-vibrant focus:ring-turquoise-vibrant"
             />
           </div>
           <Select
             value={status}
             onValueChange={(value) => setStatus(value as 'all' | 'active' | 'inactive')}
           >
-            <SelectTrigger className="w-[120px]">
+            <SelectTrigger className="w-[120px] border-turquoise-vibrant/20 focus:border-turquoise-vibrant focus:ring-turquoise-vibrant text-blue-deep">
               <SelectValue placeholder="Status" />
             </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">Todos</SelectItem>
-              <SelectItem value="active">Ativos</SelectItem>
-              <SelectItem value="inactive">Inativos</SelectItem>
+            <SelectContent className="bg-white border-turquoise-vibrant/20">
+              <SelectItem value="all" className="text-blue-deep hover:bg-turquoise-vibrant/10">Todos</SelectItem>
+              <SelectItem value="active" className="text-blue-deep hover:bg-turquoise-vibrant/10">Ativos</SelectItem>
+              <SelectItem value="inactive" className="text-blue-deep hover:bg-turquoise-vibrant/10">Inativos</SelectItem>
             </SelectContent>
           </Select>
         </div>
 
         <div className="flex gap-2 w-full md:w-auto justify-end">
-          <ActionButton
+          <Button
             variant="outline"
-            iconLeft={<FileText className="h-4 w-4" />}
+            className="flex items-center gap-2"
           >
+            <FileText className="h-4 w-4" />
             Exportar CSV
-          </ActionButton>
-          <ActionButton 
+          </Button>
+          <Button 
             onClick={handleDialogOpen}
-            iconLeft={<Plus className="h-4 w-4" />}
+            className="flex items-center gap-2"
           >
+            <Plus className="h-4 w-4" />
             Novo Cliente
-          </ActionButton>
+          </Button>
         </div>
 
         {/* Renderiza ClientDialog apenas quando está aberto */}
@@ -140,26 +141,26 @@ export default function ClientManagement() {
       </div>
 
       {error ? (
-        <div className="border rounded-lg p-6 mb-6 bg-destructive/10 text-destructive">
+        <div className="border border-red-alert/20 rounded-lg p-6 mb-6 bg-red-alert/10 text-red-alert">
           <h3 className="text-lg font-medium mb-2">Erro ao carregar clientes</h3>
           <p>{error instanceof Error ? error.message : 'Ocorreu um erro ao carregar os clientes. Tente novamente mais tarde.'}</p>
         </div>
       ) : (
-        <div className="border rounded-lg overflow-hidden">
+        <div className="border border-turquoise-vibrant/20 rounded-lg overflow-hidden bg-white shadow-modern">
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Nome</TableHead>
-                <TableHead>ID Externo</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead>Criado em</TableHead>
-                <TableHead className="text-right">Ações</TableHead>
+                <TableHead className="font-semibold text-blue-deep">Nome</TableHead>
+                <TableHead className="font-semibold text-blue-deep">ID Externo</TableHead>
+                <TableHead className="font-semibold text-blue-deep">Status</TableHead>
+                <TableHead className="font-semibold text-blue-deep">Criado em</TableHead>
+                <TableHead className="text-right font-semibold text-blue-deep">Ações</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {isLoading ? (
                 <TableRow>
-                  <TableCell colSpan={5} className="text-center py-4">
+                  <TableCell colSpan={5} className="text-center py-4 text-blue-deep/70">
                     Carregando clientes...
                   </TableCell>
                 </TableRow>
@@ -167,8 +168,8 @@ export default function ClientManagement() {
                 <TableRow>
                   <TableCell colSpan={5} className="text-center py-8">
                     <div className="flex flex-col items-center justify-center">
-                      <p className="text-muted-foreground mb-2">Nenhum cliente encontrado</p>
-                      <p className="text-sm text-muted-foreground">
+                      <p className="text-blue-deep/70 mb-2">Nenhum cliente encontrado</p>
+                      <p className="text-sm text-blue-deep/50">
                         {search ? 'Tente ajustar sua busca' : 'Clique em "Novo Cliente" para começar'}
                       </p>
                     </div>
@@ -176,20 +177,20 @@ export default function ClientManagement() {
                 </TableRow>
               ) : (
                 filteredClients.map((client) => (
-                  <TableRow key={client.id} className="hover:bg-muted/50">
+                  <TableRow key={client.id}>
                     <TableCell>
                       <div className="flex items-center gap-2">
                         <ClientAvatar name={client.name} />
-                        <span className="font-medium">{client.name}</span>
+                        <span className="font-medium text-blue-deep">{client.name}</span>
                       </div>
                     </TableCell>
-                    <TableCell>{client.external_id || '-'}</TableCell>
+                    <TableCell className="text-blue-deep/80">{client.external_id || '-'}</TableCell>
                     <TableCell>
                       <Badge variant={client.is_active ? 'success' : 'secondary'}>
                         {client.is_active ? 'Ativo' : 'Inativo'}
                       </Badge>
                     </TableCell>
-                    <TableCell>
+                    <TableCell className="text-blue-deep/80">
                       {client.created_at ? format(new Date(client.created_at), 'dd/MM/yyyy') : '-'}
                     </TableCell>
                     <TableCell className="text-right">
@@ -207,7 +208,7 @@ export default function ClientManagement() {
                             <Button
                               variant="outline"
                               size="sm"
-                              className="text-destructive"
+                              className="text-red-alert border-red-alert/20 hover:bg-red-alert hover:text-white hover:border-red-alert"
                             >
                               Excluir
                             </Button>
@@ -224,7 +225,7 @@ export default function ClientManagement() {
                               <AlertDialogCancel>Cancelar</AlertDialogCancel>
                               <AlertDialogAction 
                                 onClick={() => handleDelete(client.id)}
-                                className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                                className="bg-red-alert text-white hover:bg-red-alert/90"
                               >
                                 Excluir
                               </AlertDialogAction>
@@ -243,19 +244,19 @@ export default function ClientManagement() {
 
       {filteredClients.length > 0 && (
         <div className="flex items-center justify-between mt-4">
-          <div className="flex items-center gap-2 text-sm text-muted-foreground">
+          <div className="flex items-center gap-2 text-sm text-blue-deep/70">
             <span>Itens por página:</span>
             <Select
               value={itemsPerPage.toString()}
               onValueChange={(value) => setItemsPerPage(Number(value))}
             >
-              <SelectTrigger className="w-[80px] h-8">
+              <SelectTrigger className="w-[80px] h-8 border-turquoise-vibrant/20 focus:border-turquoise-vibrant">
                 <SelectValue />
               </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="10">10</SelectItem>
-                <SelectItem value="25">25</SelectItem>
-                <SelectItem value="50">50</SelectItem>
+              <SelectContent className="bg-white border-turquoise-vibrant/20">
+                <SelectItem value="10" className="text-blue-deep hover:bg-turquoise-vibrant/10">10</SelectItem>
+                <SelectItem value="25" className="text-blue-deep hover:bg-turquoise-vibrant/10">25</SelectItem>
+                <SelectItem value="50" className="text-blue-deep hover:bg-turquoise-vibrant/10">50</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -263,9 +264,8 @@ export default function ClientManagement() {
           <Pagination>
             <PaginationContent>
               <PaginationItem>
-                <PaginationLink>1</PaginationLink>
+                <PaginationLink className="bg-gradient-to-r from-blue-deep to-turquoise-vibrant text-white border-0">1</PaginationLink>
               </PaginationItem>
-              {/* Add proper pagination here */}
             </PaginationContent>
           </Pagination>
         </div>
