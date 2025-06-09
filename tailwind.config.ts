@@ -20,7 +20,7 @@ export default {
 		},
 		extend: {
 			colors: {
-				// Nova paleta moderna
+				// Nova paleta moderna SolveFlow - cores principais
 				"blue-deep": "#1E3A8A", // Azul Profundo
 				"turquoise-vibrant": "#06B6D4", // Turquesa Vibrante  
 				"purple-intense": "#7C3AED", // Roxo Intenso
@@ -33,7 +33,7 @@ export default {
 				"green-success": "#10B981", // Verde Success
 				"red-alert": "#EF4444", // Vermelho Alerta
 				
-				// Sistema de cores atualizado
+				// Sistema de cores atualizado - CORRIGIDO
 				border: "hsl(var(--border))",
 				input: "hsl(var(--input))",
 				ring: "hsl(var(--ring))",
@@ -99,14 +99,14 @@ export default {
 				'tight': '-0.01em',
 			},
 			borderRadius: {
-				lg: '12px', // Cantos arredondados modernos
+				lg: '12px',
 				md: '10px',
 				sm: '8px',
 				pill: '9999px',
 			},
 			boxShadow: {
-				'modern': '0 10px 25px rgba(0, 0, 0, 0.1)',
-				'modern-lg': '0 20px 40px rgba(0, 0, 0, 0.1)',
+				'modern': '0 10px 25px rgba(6, 182, 212, 0.1)',
+				'modern-lg': '0 20px 40px rgba(6, 182, 212, 0.1)',
 				'glow': '0 0 20px rgba(6, 182, 212, 0.3)',
 				'glow-intense': '0 0 40px rgba(6, 182, 212, 0.6)',
 			},
@@ -114,7 +114,7 @@ export default {
 				'default': '300ms',
 			},
 			spacing: {
-				'section': '6rem', // 96px para espaçamento entre seções
+				'section': '6rem',
 			},
 			keyframes: {
 				'float': {

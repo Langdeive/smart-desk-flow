@@ -12,7 +12,12 @@ export function KpiCards() {
         icon={<TicketCheck className="h-5 w-5" />}
         href="/tickets"
         ariaLabel="Ver todos os tickets"
-        className="bg-gradient-to-br from-white to-turquoise-vibrant/5 border-turquoise-vibrant/20 hover:shadow-glow"
+        className="modern-card"
+        style={{
+          background: 'linear-gradient(135deg, #ffffff 0%, rgba(6, 182, 212, 0.05) 100%)',
+          borderColor: 'rgba(6, 182, 212, 0.2)',
+          border: '1px solid rgba(6, 182, 212, 0.2)'
+        }}
       />
       
       <KpiCard
@@ -22,7 +27,12 @@ export function KpiCards() {
         icon={<CheckCircle className="h-5 w-5" />}
         href="/tickets?status=resolved"
         ariaLabel="Ver tickets resolvidos"
-        className="bg-gradient-to-br from-white to-blue-deep/5 border-blue-deep/20 hover:shadow-glow"
+        className="modern-card"
+        style={{
+          background: 'linear-gradient(135deg, #ffffff 0%, rgba(30, 58, 138, 0.05) 100%)',
+          borderColor: 'rgba(30, 58, 138, 0.2)',
+          border: '1px solid rgba(30, 58, 138, 0.2)'
+        }}
       />
       
       <KpiCard
@@ -32,7 +42,12 @@ export function KpiCards() {
         icon={<Clock className="h-5 w-5" />}
         href="/tickets?sort=firstResponseTime"
         ariaLabel="Ver tickets ordenados por tempo de resposta"
-        className="bg-gradient-to-br from-white to-purple-intense/5 border-purple-intense/20 hover:shadow-glow"
+        className="modern-card"
+        style={{
+          background: 'linear-gradient(135deg, #ffffff 0%, rgba(124, 58, 237, 0.05) 100%)',
+          borderColor: 'rgba(124, 58, 237, 0.2)',
+          border: '1px solid rgba(124, 58, 237, 0.2)'
+        }}
       />
       
       <KpiCard
@@ -42,7 +57,12 @@ export function KpiCards() {
         icon={<Bot className="h-5 w-5" />}
         href="/tickets?ai_handled=true"
         ariaLabel="Ver tickets resolvidos por IA"
-        className="bg-gradient-to-br from-white to-turquoise-vibrant/5 border-turquoise-vibrant/20 hover:shadow-glow"
+        className="modern-card"
+        style={{
+          background: 'linear-gradient(135deg, #ffffff 0%, rgba(6, 182, 212, 0.05) 100%)',
+          borderColor: 'rgba(6, 182, 212, 0.2)',
+          border: '1px solid rgba(6, 182, 212, 0.2)'
+        }}
       />
     </div>
   );

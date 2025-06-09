@@ -8,10 +8,10 @@ import { ArrowRight, ArrowUp, ArrowDown, Brain, MessageSquare, Users, BarChart2 
 
 // Dados mockados para o dashboard
 const pieData = [
-  { name: "Resolvidos", value: 540, color: "#16a34a" },
+  { name: "Resolvidos", value: 540, color: "#10B981" },
   { name: "Em Progresso", value: 210, color: "#06B6D4" },
   { name: "Aguardando", value: 150, color: "#6366f1" },
-  { name: "Novos", value: 100, color: "#3b82f6" },
+  { name: "Novos", value: 100, color: "#1E3A8A" },
 ];
 
 const barData = [
@@ -32,51 +32,83 @@ const aiStats = {
 
 const Dashboard = () => {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50/30">
+    <div 
+      className="min-h-screen"
+      style={{
+        background: 'linear-gradient(135deg, #F8FAFC 0%, rgba(30, 58, 138, 0.02) 50%, rgba(6, 182, 212, 0.02) 100%)',
+        minHeight: '100vh'
+      }}
+    >
       <div className="container mx-auto py-8 px-4">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
           <div>
             <h1 className="text-3xl font-bold gradient-text">Dashboard</h1>
-            <p className="text-muted-foreground">
+            <p className="text-gray-medium mt-2">
               Visão geral da sua plataforma de helpdesk
             </p>
           </div>
           <div className="flex gap-2">
-            <Button variant="outline" className="border-turquoise-vibrant text-turquoise-vibrant hover:bg-turquoise-vibrant hover:text-white">Este Mês</Button>
-            <Button variant="outline" className="border-blue-deep text-blue-deep hover:bg-blue-deep hover:text-white">Exportar</Button>
+            <Button 
+              variant="outline" 
+              className="border-turquoise-vibrant text-turquoise-vibrant hover:bg-turquoise-vibrant hover:text-white"
+              style={{ borderColor: '#06B6D4', color: '#06B6D4' }}
+            >
+              Este Mês
+            </Button>
+            <Button 
+              variant="outline" 
+              className="border-blue-deep text-blue-deep hover:bg-blue-deep hover:text-white"
+              style={{ borderColor: '#1E3A8A', color: '#1E3A8A' }}
+            >
+              Exportar
+            </Button>
           </div>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-          <Card className="modern-card bg-gradient-to-br from-white to-turquoise-vibrant/5 border-turquoise-vibrant/20">
+          <Card 
+            className="modern-card"
+            style={{
+              background: 'linear-gradient(135deg, #ffffff 0%, rgba(6, 182, 212, 0.02) 100%)',
+              borderColor: 'rgba(6, 182, 212, 0.2)',
+              border: '1px solid rgba(6, 182, 212, 0.2)'
+            }}
+          >
             <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium text-muted-foreground">
+              <CardTitle className="text-sm font-medium" style={{ color: '#475569' }}>
                 Total de Tickets
               </CardTitle>
             </CardHeader>
             <CardContent>
               <div className="flex items-center justify-between">
-                <div className="text-2xl font-bold text-blue-deep">1,024</div>
+                <div className="text-2xl font-bold" style={{ color: '#1E3A8A' }}>1,024</div>
                 <div className="flex items-center text-sm text-green-600">
                   <ArrowUp className="mr-1 h-4 w-4" />
                   12%
                 </div>
               </div>
-              <p className="text-xs text-muted-foreground mt-1">
+              <p className="text-xs mt-1" style={{ color: '#64748B' }}>
                 +120 desde o último mês
               </p>
             </CardContent>
           </Card>
           
-          <Card className="modern-card bg-gradient-to-br from-white to-blue-deep/5 border-blue-deep/20">
+          <Card 
+            className="modern-card"
+            style={{
+              background: 'linear-gradient(135deg, #ffffff 0%, rgba(30, 58, 138, 0.02) 100%)',
+              borderColor: 'rgba(30, 58, 138, 0.2)',
+              border: '1px solid rgba(30, 58, 138, 0.2)'
+            }}
+          >
             <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium text-muted-foreground">
+              <CardTitle className="text-sm font-medium" style={{ color: '#475569' }}>
                 Taxa de Resolução
               </CardTitle>
             </CardHeader>
             <CardContent>
               <div className="flex items-center justify-between">
-                <div className="text-2xl font-bold text-blue-deep">87%</div>
+                <div className="text-2xl font-bold" style={{ color: '#1E3A8A' }}>87%</div>
                 <div className="flex items-center text-sm text-green-600">
                   <ArrowUp className="mr-1 h-4 w-4" />
                   4%
@@ -86,35 +118,49 @@ const Dashboard = () => {
             </CardContent>
           </Card>
           
-          <Card className="modern-card bg-gradient-to-br from-white to-purple-intense/5 border-purple-intense/20">
+          <Card 
+            className="modern-card"
+            style={{
+              background: 'linear-gradient(135deg, #ffffff 0%, rgba(124, 58, 237, 0.02) 100%)',
+              borderColor: 'rgba(124, 58, 237, 0.2)',
+              border: '1px solid rgba(124, 58, 237, 0.2)'
+            }}
+          >
             <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium text-muted-foreground">
+              <CardTitle className="text-sm font-medium" style={{ color: '#475569' }}>
                 Tempo Médio de Resposta
               </CardTitle>
             </CardHeader>
             <CardContent>
               <div className="flex items-center justify-between">
-                <div className="text-2xl font-bold text-blue-deep">2.4h</div>
+                <div className="text-2xl font-bold" style={{ color: '#1E3A8A' }}>2.4h</div>
                 <div className="flex items-center text-sm text-red-600">
                   <ArrowDown className="mr-1 h-4 w-4" />
                   5%
                 </div>
               </div>
-              <p className="text-xs text-muted-foreground mt-1">
+              <p className="text-xs mt-1" style={{ color: '#64748B' }}>
                 -18min desde o último mês
               </p>
             </CardContent>
           </Card>
           
-          <Card className="modern-card bg-gradient-to-br from-white to-turquoise-vibrant/5 border-turquoise-vibrant/20">
+          <Card 
+            className="modern-card"
+            style={{
+              background: 'linear-gradient(135deg, #ffffff 0%, rgba(6, 182, 212, 0.02) 100%)',
+              borderColor: 'rgba(6, 182, 212, 0.2)',
+              border: '1px solid rgba(6, 182, 212, 0.2)'
+            }}
+          >
             <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium text-muted-foreground">
+              <CardTitle className="text-sm font-medium" style={{ color: '#475569' }}>
                 Resolvidos por IA
               </CardTitle>
             </CardHeader>
             <CardContent>
               <div className="flex items-center justify-between">
-                <div className="text-2xl font-bold text-blue-deep">62%</div>
+                <div className="text-2xl font-bold" style={{ color: '#1E3A8A' }}>62%</div>
                 <div className="flex items-center text-sm text-green-600">
                   <ArrowUp className="mr-1 h-4 w-4" />
                   8%
@@ -126,18 +172,30 @@ const Dashboard = () => {
         </div>
 
         <Tabs defaultValue="overview" className="mb-8">
-          <TabsList className="mb-4 bg-gradient-to-r from-gray-light to-white border border-turquoise-vibrant/20">
-            <TabsTrigger value="overview" className="data-[state=active]:bg-gradient-primary data-[state=active]:text-white">Visão Geral</TabsTrigger>
-            <TabsTrigger value="tickets" className="data-[state=active]:bg-gradient-primary data-[state=active]:text-white">Tickets</TabsTrigger>
-            <TabsTrigger value="ai" className="data-[state=active]:bg-gradient-primary data-[state=active]:text-white">Análise IA</TabsTrigger>
+          <TabsList 
+            className="mb-4"
+            style={{
+              background: 'linear-gradient(135deg, #F1F5F9 0%, #ffffff 100%)',
+              border: '1px solid rgba(6, 182, 212, 0.2)'
+            }}
+          >
+            <TabsTrigger value="overview">Visão Geral</TabsTrigger>
+            <TabsTrigger value="tickets">Tickets</TabsTrigger>
+            <TabsTrigger value="ai">Análise IA</TabsTrigger>
           </TabsList>
           
           <TabsContent value="overview">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
-              <Card className="modern-card bg-gradient-to-br from-white to-gray-light border-blue-deep/10">
+              <Card 
+                className="modern-card"
+                style={{
+                  background: 'linear-gradient(135deg, #ffffff 0%, #F1F5F9 100%)',
+                  border: '1px solid rgba(30, 58, 138, 0.1)'
+                }}
+              >
                 <CardHeader>
                   <CardTitle className="gradient-text">Distribuição de Tickets</CardTitle>
-                  <CardDescription>
+                  <CardDescription style={{ color: '#64748B' }}>
                     Status atual de todos os tickets
                   </CardDescription>
                 </CardHeader>
@@ -167,10 +225,16 @@ const Dashboard = () => {
                 </CardContent>
               </Card>
               
-              <Card className="modern-card bg-gradient-to-br from-white to-gray-light border-turquoise-vibrant/10">
+              <Card 
+                className="modern-card"
+                style={{
+                  background: 'linear-gradient(135deg, #ffffff 0%, #F1F5F9 100%)',
+                  border: '1px solid rgba(6, 182, 212, 0.1)'
+                }}
+              >
                 <CardHeader>
                   <CardTitle className="gradient-text">Histórico de Tickets</CardTitle>
-                  <CardDescription>
+                  <CardDescription style={{ color: '#64748B' }}>
                     Tickets criados vs. resolvidos nos últimos 6 meses
                   </CardDescription>
                 </CardHeader>
@@ -191,9 +255,15 @@ const Dashboard = () => {
               </Card>
             </div>
             
-            
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <Card className="modern-card bg-gradient-to-br from-white to-turquoise-vibrant/5 border-turquoise-vibrant/20">
+              <Card 
+                className="modern-card"
+                style={{
+                  background: 'linear-gradient(135deg, #ffffff 0%, rgba(6, 182, 212, 0.02) 100%)',
+                  borderColor: 'rgba(6, 182, 212, 0.2)',
+                  border: '1px solid rgba(6, 182, 212, 0.2)'
+                }}
+              >
                 <CardHeader className="pb-2">
                   <div className="flex items-center justify-between">
                     <CardTitle className="text-base">Clientes Ativos</CardTitle>
@@ -213,7 +283,14 @@ const Dashboard = () => {
                 </CardContent>
               </Card>
               
-              <Card className="modern-card bg-gradient-to-br from-white to-blue-deep/5 border-blue-deep/20">
+              <Card 
+                className="modern-card"
+                style={{
+                  background: 'linear-gradient(135deg, #ffffff 0%, rgba(30, 58, 138, 0.02) 100%)',
+                  borderColor: 'rgba(30, 58, 138, 0.2)',
+                  border: '1px solid rgba(30, 58, 138, 0.2)'
+                }}
+              >
                 <CardHeader className="pb-2">
                   <div className="flex items-center justify-between">
                     <CardTitle className="text-base">Total de Mensagens</CardTitle>
@@ -233,7 +310,14 @@ const Dashboard = () => {
                 </CardContent>
               </Card>
               
-              <Card className="modern-card bg-gradient-to-br from-white to-purple-intense/5 border-purple-intense/20">
+              <Card 
+                className="modern-card"
+                style={{
+                  background: 'linear-gradient(135deg, #ffffff 0%, rgba(124, 58, 237, 0.02) 100%)',
+                  borderColor: 'rgba(124, 58, 237, 0.2)',
+                  border: '1px solid rgba(124, 58, 237, 0.2)'
+                }}
+              >
                 <CardHeader className="pb-2">
                   <div className="flex items-center justify-between">
                     <CardTitle className="text-base">Satisfação do Cliente</CardTitle>
@@ -257,7 +341,14 @@ const Dashboard = () => {
           
           <TabsContent value="tickets">
             <div className="flex flex-col gap-6">
-              <Card className="modern-card bg-gradient-to-br from-white to-gray-light border-blue-deep/10">
+              <Card 
+                className="modern-card"
+                style={{
+                  background: 'linear-gradient(135deg, #ffffff 0%, rgba(6, 182, 212, 0.02) 100%)',
+                  borderColor: 'rgba(6, 182, 212, 0.2)',
+                  border: '1px solid rgba(6, 182, 212, 0.2)'
+                }}
+              >
                 <CardHeader>
                   <CardTitle className="gradient-text">Tickets por Categoria</CardTitle>
                   <CardDescription>
@@ -289,7 +380,14 @@ const Dashboard = () => {
               </Card>
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <Card className="modern-card bg-gradient-to-br from-white to-turquoise-vibrant/5 border-turquoise-vibrant/20">
+                <Card 
+                  className="modern-card"
+                  style={{
+                    background: 'linear-gradient(135deg, #ffffff 0%, rgba(6, 182, 212, 0.02) 100%)',
+                    borderColor: 'rgba(6, 182, 212, 0.2)',
+                    border: '1px solid rgba(6, 182, 212, 0.2)'
+                  }}
+                >
                   <CardHeader>
                     <CardTitle className="gradient-text">Tickets por Prioridade</CardTitle>
                   </CardHeader>
@@ -327,7 +425,14 @@ const Dashboard = () => {
                   </CardContent>
                 </Card>
                 
-                <Card className="modern-card bg-gradient-to-br from-white to-purple-intense/5 border-purple-intense/20">
+                <Card 
+                  className="modern-card"
+                  style={{
+                    background: 'linear-gradient(135deg, #ffffff 0%, rgba(124, 58, 237, 0.02) 100%)',
+                    borderColor: 'rgba(124, 58, 237, 0.2)',
+                    border: '1px solid rgba(124, 58, 237, 0.2)'
+                  }}
+                >
                   <CardHeader>
                     <CardTitle className="gradient-text">Performance da IA</CardTitle>
                   </CardHeader>
@@ -359,7 +464,14 @@ const Dashboard = () => {
           
           <TabsContent value="ai">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              <Card className="modern-card bg-gradient-to-br from-white to-purple-intense/5 border-purple-intense/20">
+              <Card 
+                className="modern-card"
+                style={{
+                  background: 'linear-gradient(135deg, #ffffff 0%, rgba(6, 182, 212, 0.02) 100%)',
+                  borderColor: 'rgba(6, 182, 212, 0.2)',
+                  border: '1px solid rgba(6, 182, 212, 0.2)'
+                }}
+              >
                 <CardHeader>
                   <CardTitle className="gradient-text flex items-center">
                     <Brain className="h-5 w-5 mr-2" />
@@ -401,7 +513,14 @@ const Dashboard = () => {
                 </CardContent>
               </Card>
               
-              <Card className="modern-card bg-gradient-to-br from-white to-turquoise-vibrant/5 border-turquoise-vibrant/20">
+              <Card 
+                className="modern-card"
+                style={{
+                  background: 'linear-gradient(135deg, #ffffff 0%, rgba(124, 58, 237, 0.02) 100%)',
+                  borderColor: 'rgba(124, 58, 237, 0.2)',
+                  border: '1px solid rgba(124, 58, 237, 0.2)'
+                }}
+              >
                 <CardHeader>
                   <CardTitle className="gradient-text">Base de Conhecimento</CardTitle>
                   <CardDescription>

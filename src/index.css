@@ -5,7 +5,7 @@
 
 @layer base {
   :root {
-    /* Nova paleta de cores moderna */
+    /* Paleta de cores SolveFlow - CORRIGIDA */
     --background: 248 250 252; /* #F8FAFC */
     --foreground: 30 41 59; /* #1E293B */
 
@@ -15,7 +15,7 @@
     --popover: 255 255 255; /* #FFFFFF */
     --popover-foreground: 30 41 59; /* #1E293B */
 
-    /* Cores principais modernizadas */
+    /* Cores principais SolveFlow */
     --primary: 30 58 138; /* #1E3A8A - Azul Profundo */
     --primary-foreground: 255 255 255; /* #FFFFFF */
 
@@ -26,7 +26,7 @@
     --accent-foreground: 255 255 255; /* #FFFFFF */
 
     --muted: 241 245 249; /* #F1F5F9 */
-    --muted-foreground: 100 116 139; /* #64748B */
+    --muted-foreground: 71 85 105; /* #475569 - CORRIGIDO: contraste melhor */
 
     --destructive: 239 68 68; /* #EF4444 */
     --destructive-foreground: 255 255 255; /* #FFFFFF */
@@ -34,18 +34,19 @@
     --success: 16 185 129; /* #10B981 */
     --success-foreground: 255 255 255; /* #FFFFFF */
 
-    --border: 226 232 240; /* #E2E8F0 */
+    --border: 226 232 240; /* #E2E8F0 - CORRIGIDO: sem amarelo */
     --input: 226 232 240; /* #E2E8F0 */
-    --ring: 6 182 212; /* #06B6D4 */
+    --ring: 6 182 212; /* #06B6D4 - CORRIGIDO: turquesa */
 
-    --radius: 12px; /* Cantos arredondados modernos */
+    --radius: 12px;
 
+    /* Sidebar SolveFlow */
     --sidebar-background: 255 255 255; /* #FFFFFF */
     --sidebar-foreground: 30 41 59; /* #1E293B */
     --sidebar-primary: 6 182 212; /* #06B6D4 */
     --sidebar-primary-foreground: 255 255 255; /* #FFFFFF */
     --sidebar-accent: 241 245 249; /* #F1F5F9 */
-    --sidebar-accent-foreground: 6 182 212; /* #06B6D4 */
+    --sidebar-accent-foreground: 30 58 138; /* #1E3A8A - CORRIGIDO: azul legível */
     --sidebar-border: 226 232 240; /* #E2E8F0 */
     --sidebar-ring: 6 182 212; /* #06B6D4 */
   }
@@ -78,7 +79,7 @@
     --success: 16 185 129; /* #10B981 */
     --success-foreground: 255 255 255; /* #FFFFFF */
 
-    --border: 51 65 85;
+    --border: 71 85 105; /* CORRIGIDO: sem amarelo */
     --input: 51 65 85;
     --ring: 6 182 212; /* #06B6D4 */
 
@@ -88,7 +89,7 @@
     --sidebar-primary-foreground: 255 255 255; /* #FFFFFF */
     --sidebar-accent: 51 65 85;
     --sidebar-accent-foreground: 6 182 212; /* #06B6D4 */
-    --sidebar-border: 51 65 85;
+    --sidebar-border: 71 85 105;
     --sidebar-ring: 6 182 212; /* #06B6D4 */
   }
 }
@@ -115,12 +116,14 @@
     font-weight: 400;
     background: linear-gradient(135deg, #F8FAFC 0%, #E2E8F0 100%) !important;
     min-height: 100vh !important;
+    color: rgb(30 41 59) !important; /* CORRIGIDO: texto escuro legível */
   }
   
   h1, h2, h3, h4, h5, h6 {
     font-family: 'Outfit', sans-serif;
     font-weight: 700;
     letter-spacing: -0.02em;
+    color: rgb(30 41 59) !important; /* CORRIGIDO: títulos legíveis */
   }
   
   h1 {
@@ -143,15 +146,22 @@
   
   p {
     @apply text-body;
+    color: rgb(71 85 105) !important; /* CORRIGIDO: texto legível */
   }
   
   small {
     @apply text-small;
     font-weight: 300;
+    color: rgb(100 116 139) !important; /* CORRIGIDO: texto pequeno legível */
   }
 }
 
 /* =================== ELIMINAÇÃO TOTAL DE YELLOW - ULTRA-ESPECÍFICO =================== */
+
+/* FORÇA ESPECÍFICA CONTRA BORDAS AMARELAS */
+*, *::before, *::after {
+  border-color: rgb(226 232 240) !important; /* Força cinza claro em todas as bordas */
+}
 
 /* FORÇA ORANGE SOBRE QUALQUER TENTATIVA DE YELLOW/AMBER ESPECÍFICA */
 .text-yellow-100, .text-yellow-200, .text-yellow-300, .text-yellow-400, .text-yellow-500,
@@ -173,50 +183,59 @@
 .border-yellow-900, .border-amber-100, .border-amber-200, .border-amber-300,
 .border-amber-400, .border-amber-500, .border-amber-600, .border-amber-700,
 .border-amber-800, .border-amber-900 {
-  border-color: #fdba74 !important; /* Força orange-300 */
+  border-color: rgb(226 232 240) !important; /* Força cinza */
 }
 
-/* FORÇA ESPECÍFICA PARA BADGES E COMPONENTES UI */
-[class*="yellow"], [class*="amber"] {
-  color: #ea580c !important;
-  background-color: #fed7aa !important;
-  border-color: #fdba74 !important;
-}
+/* CORREÇÃO ESPECÍFICA PARA PROBLEMAS VISUAIS IDENTIFICADOS */
 
-/* FORÇA PARA CORES HEXADECIMAIS YELLOW */
-[style*="#ffff00"], [style*="#fef3c7"], [style*="#f59e0b"], [style*="#d97706"],
-[style*="rgb(255, 255, 0)"], [style*="rgb(254, 243, 199)"], [style*="yellow"] {
-  color: #ea580c !important;
-  background-color: #fed7aa !important;
-  border-color: #fdba74 !important;
-}
-
-/* BADGES ESPECÍFICOS ANTI-YELLOW */
-.badge-warning, .inline-flex[class*="yellow"], .inline-flex[class*="amber"] {
-  background-color: #ea580c !important;
-  color: white !important;
-  border-color: #c2410c !important;
-}
-
-/* FORÇA PARA COMPONENTES ESPECÍFICOS */
-div[class*="amber"], span[class*="amber"], p[class*="amber"],
-div[class*="yellow"], span[class*="yellow"], p[class*="yellow"] {
-  background-color: #fed7aa !important;
-  color: #ea580c !important;
-  border-color: #fdba74 !important;
-}
-
-/* FORÇA PARA PROGRESS BARS E ELEMENTOS INTERATIVOS */
-.progress-bar[class*="yellow"], .progress-bar[class*="amber"],
-.btn[class*="yellow"], .btn[class*="amber"],
-.card[class*="yellow"], .card[class*="amber"] {
-  background: linear-gradient(90deg, #ea580c 0%, #f97316 100%) !important;
+/* Sidebar - cores consistentes */
+.sidebar-active {
+  background: linear-gradient(135deg, #06B6D4 0%, #1E3A8A 100%) !important;
   color: white !important;
 }
 
-/* FORÇA PARA CONTAINERS PRINCIPAIS */
-.min-h-screen, .container, .max-w-3xl, .max-w-md, .w-full {
-  background: linear-gradient(135deg, #F8FAFC 0%, #E2E8F0 100%) !important;
+.sidebar-item {
+  color: rgb(30 41 59) !important;
+  border-color: rgb(226 232 240) !important;
+}
+
+.sidebar-item:hover {
+  background-color: rgb(241 245 249) !important;
+  color: rgb(6 182 212) !important;
+}
+
+/* Cards - sem bordas amarelas */
+.modern-card, .card, [class*="card"] {
+  border-color: rgb(226 232 240) !important;
+  background: white !important;
+  color: rgb(30 41 59) !important;
+}
+
+/* Texto legível - eliminação do rosa claro */
+.text-muted-foreground, [class*="muted"] {
+  color: rgb(71 85 105) !important; /* Cinza mais escuro e legível */
+}
+
+/* Badges - cores corretas */
+.badge, [class*="badge"] {
+  border-color: rgb(226 232 240) !important;
+}
+
+/* Progress bars */
+.progress-bar, [class*="progress"] {
+  background: linear-gradient(90deg, #1E3A8A 0%, #06B6D4 100%) !important;
+  border-color: rgb(226 232 240) !important;
+}
+
+/* Tabs */
+.tabs-trigger, [class*="tabs"] {
+  border-color: rgb(226 232 240) !important;
+  color: rgb(30 41 59) !important;
+}
+
+.tabs-trigger[data-state="active"] {
+  background: linear-gradient(135deg, #1E3A8A 0%, #06B6D4 100%) !important;
+  color: white !important;
 }
 
 /* =================== CLASSES MODERNAS SOLVFLOW =================== */
@@ -249,76 +268,18 @@ div[class*="yellow"], span[class*="yellow"], p[class*="yellow"] {
   background-clip: text;
 }
 
-/* Seções modernas - garantir que não usem yellow */
-.section-modern {
-  position: relative;
-  overflow: hidden;
-  background: linear-gradient(135deg, #F8FAFC 0%, #E2E8F0 100%) !important;
-}
-
-.section-modern::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: linear-gradient(135deg, rgba(6, 182, 212, 0.02) 0%, rgba(124, 58, 237, 0.02) 100%);
-  z-index: -1;
-}
-
-.section-accent {
-  position: relative;
-  background: linear-gradient(135deg, #F8FAFC 0%, #E2E8F0 100%) !important;
-}
-
-.section-accent::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: 
-    radial-gradient(circle at 20% 80%, rgba(6, 182, 212, 0.1) 0%, transparent 50%),
-    radial-gradient(circle at 80% 20%, rgba(124, 58, 237, 0.1) 0%, transparent 50%);
-  z-index: -1;
-}
-
-/* Progress bars com paleta correta */
-.progress-bar {
-  background: linear-gradient(90deg, #1E3A8A 0%, #06B6D4 100%);
-}
-
-/* Classes modernas para cards */
+/* Cards com cores consistentes */
 .modern-card {
-  @apply bg-white rounded-xl border border-border/50 shadow-sm;
+  @apply bg-white rounded-xl shadow-sm;
   background: linear-gradient(135deg, #ffffff 0%, #fafbfc 100%) !important;
+  border: 1px solid rgb(226 232 240) !important;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .modern-card:hover {
   transform: translateY(-4px);
-  box-shadow: 0 20px 40px rgba(6, 182, 212, 0.1);
-  border-color: hsl(var(--secondary));
-}
-
-/* Dashboards com backgrounds consistentes */
-.dashboard-container {
-  background: linear-gradient(135deg, #F8FAFC 0%, rgba(30, 58, 138, 0.02) 50%, rgba(6, 182, 212, 0.02) 100%) !important;
-  min-height: 100vh;
-}
-
-/* Microinterações modernas */
-.modern-button {
-  @apply relative overflow-hidden;
-  background: linear-gradient(135deg, #1E3A8A 0%, #06B6D4 100%);
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.modern-button:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 10px 25px rgba(6, 182, 212, 0.3);
+  box-shadow: 0 20px 40px rgba(6, 182, 212, 0.1) !important;
+  border-color: rgb(6 182 212) !important;
 }
 
 /* Layout geral da aplicação */
@@ -327,91 +288,32 @@ div[class*="yellow"], span[class*="yellow"], p[class*="yellow"] {
   min-height: 100vh !important;
 }
 
-/* Ticket Dashboard com background moderno */
-.ticket-dashboard {
-  background: linear-gradient(135deg, #F8FAFC 0%, rgba(6, 182, 212, 0.02) 50%, rgba(124, 58, 237, 0.02) 100%) !important;
+/* Dashboard com background moderno */
+.dashboard-container {
+  background: linear-gradient(135deg, #F8FAFC 0%, rgba(30, 58, 138, 0.02) 50%, rgba(6, 182, 212, 0.02) 100%) !important;
   min-height: 100vh;
 }
 
-/* =================== ANIMAÇÕES E EFEITOS MODERNOS =================== */
+/* =================== PROTEÇÕES ANTI-REGRESSÃO =================== */
 
-@keyframes float {
-  0%, 100% { transform: translateY(0px); }
-  50% { transform: translateY(-10px); }
+/* Força containers principais */
+.min-h-screen, .container, .max-w-3xl, .max-w-md, .w-full {
+  background: linear-gradient(135deg, #F8FAFC 0%, #E2E8F0 100%) !important;
 }
 
-@keyframes pulse-glow {
-  0%, 100% { 
-    box-shadow: 0 0 20px rgba(6, 182, 212, 0.3);
-  }
-  50% { 
-    box-shadow: 0 0 40px rgba(6, 182, 212, 0.6);
-  }
+/* Força todos os elementos a usarem as cores corretas */
+div, span, p, a, button, input, textarea, select {
+  border-color: rgb(226 232 240) !important;
 }
 
-@keyframes gradient-move {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
+/* Força bordas específicas */
+.border, .border-l, .border-r, .border-t, .border-b {
+  border-color: rgb(226 232 240) !important;
 }
 
-@keyframes slide-in-up {
-  from {
-    opacity: 0;
-    transform: translateY(30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes scale-in {
-  from {
-    opacity: 0;
-    transform: scale(0.9);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
-}
-
-/* Classes de animação */
-.animate-float {
-  animation: float 6s ease-in-out infinite;
-}
-
-.animate-pulse-glow {
-  animation: pulse-glow 3s ease-in-out infinite;
-}
-
-.animate-gradient {
-  background-size: 200% 200%;
-  animation: gradient-move 4s ease infinite;
-}
-
-.animate-slide-in-up {
-  animation: slide-in-up 0.6s ease-out;
-}
-
-.animate-scale-in {
-  animation: scale-in 0.4s ease-out;
-}
-
-/* Scroll reveal */
-.scroll-reveal {
-  opacity: 0;
-  transform: translateY(30px);
-  transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.scroll-reveal.revealed {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-/* Hero gradient moderno */
-.hero-gradient {
-  background: linear-gradient(to right, rgba(213, 246, 243, 1) 0%, rgba(255, 255, 255, 0) 100%);
+/* Proteção final contra amarelo */
+[style*="yellow"], [style*="amber"], [class*="yellow"], [class*="amber"] {
+  background-color: rgb(6 182 212) !important;
+  color: white !important;
+  border-color: rgb(226 232 240) !important;
 }
