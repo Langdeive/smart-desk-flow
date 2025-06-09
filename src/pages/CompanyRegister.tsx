@@ -110,31 +110,39 @@ export default function CompanyRegister() {
   }
 
   return (
-    <div className="container max-w-3xl mx-auto py-12">
-      <div className="text-center mb-8">
-        <h1 className="text-3xl font-bold tracking-tight">Cadastro da Empresa</h1>
-        <p className="text-muted-foreground mt-3">
-          Complete o cadastro para criar sua conta e começar a usar o sistema.
-        </p>
+    <div 
+      className="min-h-screen py-12"
+      style={{
+        background: 'linear-gradient(135deg, #F8FAFC 0%, #E2E8F0 100%)',
+        minHeight: '100vh'
+      }}
+    >
+      <div className="container max-w-3xl mx-auto">
+        <div className="text-center mb-8">
+          <h1 className="text-3xl font-bold tracking-tight">Cadastro da Empresa</h1>
+          <p className="text-muted-foreground mt-3">
+            Complete o cadastro para criar sua conta e começar a usar o sistema.
+          </p>
+        </div>
+
+        <SelectedPlanCard plan={selectedPlan} />
+
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+            <CompanyFormSection control={form.control} />
+            
+            <Separator />
+            
+            <AdminFormSection control={form.control} />
+            
+            <div className="pt-4">
+              <Button type="submit" className="w-full" disabled={isSubmitting}>
+                {isSubmitting ? "Criando conta..." : "Criar conta"}
+              </Button>
+            </div>
+          </form>
+        </Form>
       </div>
-
-      <SelectedPlanCard plan={selectedPlan} />
-
-      <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-          <CompanyFormSection control={form.control} />
-          
-          <Separator />
-          
-          <AdminFormSection control={form.control} />
-          
-          <div className="pt-4">
-            <Button type="submit" className="w-full" disabled={isSubmitting}>
-              {isSubmitting ? "Criando conta..." : "Criar conta"}
-            </Button>
-          </div>
-        </form>
-      </Form>
     </div>
   );
 }

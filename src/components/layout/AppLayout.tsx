@@ -20,7 +20,13 @@ export function AppLayout() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div 
+      className="min-h-screen flex flex-col"
+      style={{
+        background: 'linear-gradient(135deg, #F8FAFC 0%, #E2E8F0 100%)',
+        minHeight: '100vh'
+      }}
+    >
       {!isLanding && <NavMenu />}
       <div className="flex flex-1">
         {/* Sidebar mobile/desktop visíveis apenas fora do landing */}

@@ -3,6 +3,8 @@
   max-width: 100%; /* Changed from 1280px to 100% */
   margin: 0 auto;
   padding: 0; /* Removed padding to allow full width */
+  background: linear-gradient(135deg, #F8FAFC 0%, #E2E8F0 100%) !important;
+  min-height: 100vh !important;
 }
 
 @keyframes logo-spin {
@@ -141,11 +143,10 @@ a:focus-visible, button:focus-visible {
 
 /* Seção alternada com fundo e gradiente */
 section.section-alt {
-  background-image: linear-gradient(to right, rgba(213, 246, 243, 1) 0%, rgba(255, 255, 255, 0) 100%);
-  background-color: #F9FAFB;
+  background: linear-gradient(135deg, #F8FAFC 0%, #E2E8F0 100%) !important;
 }
 
 /* Seção branca sem gradiente */
 section.section-white {
-  background-color: #FFFFFF;
+  background: linear-gradient(135deg, #F8FAFC 0%, #E2E8F0 100%) !important;
 }
