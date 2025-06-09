@@ -1,3 +1,4 @@
+
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -31,17 +32,17 @@ const AIAnalysisPanel: React.FC<AIAnalysisPanelProps> = ({
   // Formatar a pontuação de confiança para porcentagem
   const formattedScore = confidenceScore ? `${Math.round(confidenceScore * 100)}%` : 'N/A';
   
-  // Definir cores com base na pontuação - substituindo yellow por amber
+  // Definir cores com base na pontuação - usando laranja em vez de amarelo
   const getScoreColor = (score: number) => {
     if (score >= 0.8) return "text-green-700";
-    if (score >= 0.6) return "text-amber-700"; // Changed from yellow-700
+    if (score >= 0.6) return "text-orange-700";
     return "text-red-700";
   };
   
-  // Calcular a cor da barra de progresso - substituindo yellow por amber
+  // Calcular a cor da barra de progresso - usando laranja em vez de amarelo
   const getProgressColor = (score: number) => {
     if (score >= 0.8) return "bg-green-500";
-    if (score >= 0.6) return "bg-amber-500"; // Changed from yellow-500
+    if (score >= 0.6) return "bg-orange-500";
     return "bg-red-500";
   };
   
@@ -115,12 +116,12 @@ const AIAnalysisPanel: React.FC<AIAnalysisPanelProps> = ({
             <p className="text-sm font-medium text-muted-foreground">Necessidade de Informações</p>
             <div className="mt-1">
               {needsAdditionalInfo ? (
-                <Badge variant="outline" className="bg-amber-100 text-amber-800 border-amber-300">
+                <Badge variant="warning">
                   <AlertCircle className="h-3 w-3 mr-1" />
                   Informações insuficientes
                 </Badge>
               ) : (
-                <Badge variant="outline" className="bg-green-100 text-green-700 border-green-300">
+                <Badge variant="success">
                   <CheckCircle2 className="h-3 w-3 mr-1" />
                   Informações suficientes
                 </Badge>
@@ -154,7 +155,7 @@ const AIAnalysisPanel: React.FC<AIAnalysisPanelProps> = ({
         )}
         
         {needsAdditionalInfo && (
-          <div className="bg-amber-50 border border-amber-200 rounded-md p-3 text-sm text-amber-800">
+          <div className="bg-orange-50 border border-orange-200 rounded-md p-3 text-sm text-orange-800">
             <AlertCircle className="h-4 w-4 inline-block mr-1" />
             A IA detectou que este ticket pode não conter informações suficientes para uma resolução eficaz.
             Considere solicitar mais detalhes ao cliente.

@@ -26,7 +26,7 @@ export const getStatusColor = (status: TicketStatus): string => {
     case "open":
       return "bg-cyan-100 text-cyan-800 border-cyan-300";
     case "waiting_for_client":
-      return "bg-amber-100 text-amber-800 border-amber-300";
+      return "bg-orange-100 text-orange-800 border-orange-300";
     case "waiting_for_agent":
       return "bg-purple-100 text-purple-800 border-purple-300";
     case "in_progress":
@@ -47,11 +47,11 @@ export const getPriorityColor = (priority: TicketPriority): string => {
     case "low":
       return "bg-blue-100 text-blue-800 border-blue-300";
     case "medium":
-      return "bg-amber-100 text-amber-800 border-amber-300";
-    case "high":
       return "bg-orange-100 text-orange-800 border-orange-300";
-    case "critical":
+    case "high":
       return "bg-red-100 text-red-800 border-red-300";
+    case "critical":
+      return "bg-red-200 text-red-900 border-red-400";
     default:
       return "bg-gray-100 text-gray-800 border-gray-300";
   }
@@ -72,7 +72,7 @@ export const formatDate = (date: Date | string): string => {
 export const statusColors: Record<TicketStatus, string> = {
   new: "bg-blue-500",
   open: "bg-cyan-500",
-  waiting_for_client: "bg-amber-500",
+  waiting_for_client: "bg-orange-500",
   waiting_for_agent: "bg-purple-500",
   in_progress: "bg-indigo-500",
   resolved: "bg-green-500",

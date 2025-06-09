@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -92,14 +93,14 @@ const TicketDashboard = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50/30">
+    <div className="ticket-dashboard">
       <div className="container mx-auto py-8 px-4">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
           <div>
             <h1 className="text-3xl font-bold gradient-text">Tickets</h1>
             <p className="text-muted-foreground">Gerencie e visualize todos os chamados</p>
           </div>
-          <Button onClick={handleCreateTicket} className="bg-gradient-to-r from-blue-600 to-cyan-500 hover:from-blue-700 hover:to-cyan-600">
+          <Button onClick={handleCreateTicket} className="modern-button">
             <Plus className="mr-2 h-4 w-4" />
             Novo Ticket
           </Button>

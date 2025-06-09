@@ -170,81 +170,76 @@
   background-clip: text;
 }
 
-/* ... keep existing code (efeitos, animações, microinterações, etc.) */
+/* =================== ELIMINAÇÃO TOTAL DE YELLOW - ULTRA-ESPECÍFICO =================== */
 
-/* ELIMINAÇÃO TOTAL DE YELLOW - REGRAS ANTI-YELLOW REFORÇADAS */
-/* Sobrescrever qualquer classe yellow com !important */
-.text-yellow-100,
-.text-yellow-200,
-.text-yellow-300,
-.text-yellow-400,
-.text-yellow-500,
-.text-yellow-600,
-.text-yellow-700,
-.text-yellow-800,
-.text-yellow-900 {
-  color: #f59e0b !important; /* Força amber */
+/* FORÇA ORANGE SOBRE QUALQUER TENTATIVA DE YELLOW/AMBER ESPECÍFICA */
+.text-yellow-100, .text-yellow-200, .text-yellow-300, .text-yellow-400, .text-yellow-500,
+.text-yellow-600, .text-yellow-700, .text-yellow-800, .text-yellow-900,
+.text-amber-100, .text-amber-200, .text-amber-300, .text-amber-400, .text-amber-500,
+.text-amber-600, .text-amber-700, .text-amber-800, .text-amber-900 {
+  color: #ea580c !important; /* Força orange-600 */
 }
 
-.bg-yellow-50,
-.bg-yellow-100,
-.bg-yellow-200,
-.bg-yellow-300,
-.bg-yellow-400,
-.bg-yellow-500,
-.bg-yellow-600,
-.bg-yellow-700,
-.bg-yellow-800,
-.bg-yellow-900 {
-  background-color: #fef3c7 !important; /* Força amber/orange backgrounds */
+.bg-yellow-50, .bg-yellow-100, .bg-yellow-200, .bg-yellow-300, .bg-yellow-400,
+.bg-yellow-500, .bg-yellow-600, .bg-yellow-700, .bg-yellow-800, .bg-yellow-900,
+.bg-amber-50, .bg-amber-100, .bg-amber-200, .bg-amber-300, .bg-amber-400,
+.bg-amber-500, .bg-amber-600, .bg-amber-700, .bg-amber-800, .bg-amber-900 {
+  background-color: #fed7aa !important; /* Força orange-200 */
 }
 
-.border-yellow-100,
-.border-yellow-200,
-.border-yellow-300,
-.border-yellow-400,
-.border-yellow-500,
-.border-yellow-600,
-.border-yellow-700,
-.border-yellow-800,
-.border-yellow-900 {
-  border-color: #fde68a !important; /* Força amber borders */
+.border-yellow-100, .border-yellow-200, .border-yellow-300, .border-yellow-400,
+.border-yellow-500, .border-yellow-600, .border-yellow-700, .border-yellow-800,
+.border-yellow-900, .border-amber-100, .border-amber-200, .border-amber-300,
+.border-amber-400, .border-amber-500, .border-amber-600, .border-amber-700,
+.border-amber-800, .border-amber-900 {
+  border-color: #fdba74 !important; /* Força orange-300 */
 }
 
-/* Regras específicas para elementos que possam herdar yellow */
-[class*="yellow"] {
-  color: #f59e0b !important;
-  background-color: transparent !important;
-  border-color: #fde68a !important;
+/* FORÇA ESPECÍFICA PARA BADGES E COMPONENTES UI */
+[class*="yellow"], [class*="amber"] {
+  color: #ea580c !important;
+  background-color: #fed7aa !important;
+  border-color: #fdba74 !important;
 }
 
-/* Elementos com cores hexadecimais yellow */
-[style*="#ffff00"],
-[style*="#ffff"],
-[style*="rgb(255, 255, 0)"],
-[style*="yellow"] {
-  color: #f59e0b !important;
-  background-color: #fef3c7 !important;
+/* FORÇA PARA CORES HEXADECIMAIS YELLOW */
+[style*="#ffff00"], [style*="#fef3c7"], [style*="#f59e0b"], [style*="#d97706"],
+[style*="rgb(255, 255, 0)"], [style*="rgb(254, 243, 199)"], [style*="yellow"] {
+  color: #ea580c !important;
+  background-color: #fed7aa !important;
+  border-color: #fdba74 !important;
 }
 
-/* Badge específico para status "Em Risco" */
-.badge-warning,
-.bg-yellow-500 {
-  background-color: #f59e0b !important;
+/* BADGES ESPECÍFICOS ANTI-YELLOW */
+.badge-warning, .inline-flex[class*="yellow"], .inline-flex[class*="amber"] {
+  background-color: #ea580c !important;
   color: white !important;
-  border-color: #d97706 !important;
+  border-color: #c2410c !important;
 }
 
-/* Override para qualquer yellow que apareça em badges */
-.inline-flex.items-center.rounded-full[class*="yellow"] {
-  background-color: #f59e0b !important;
+/* FORÇA PARA COMPONENTES ESPECÍFICOS */
+div[class*="amber"], span[class*="amber"], p[class*="amber"],
+div[class*="yellow"], span[class*="yellow"], p[class*="yellow"] {
+  background-color: #fed7aa !important;
+  color: #ea580c !important;
+  border-color: #fdba74 !important;
+}
+
+/* FORÇA PARA PROGRESS BARS E ELEMENTOS INTERATIVOS */
+.progress-bar[class*="yellow"], .progress-bar[class*="amber"],
+.btn[class*="yellow"], .btn[class*="amber"],
+.card[class*="yellow"], .card[class*="amber"] {
+  background: linear-gradient(90deg, #ea580c 0%, #f97316 100%) !important;
   color: white !important;
 }
+
+/* =================== CLASSES MODERNAS SOLVFLOW =================== */
 
 /* Seções modernas - garantir que não usem yellow */
 .section-modern {
   position: relative;
   overflow: hidden;
+  background: linear-gradient(135deg, #F8FAFC 0%, #E2E8F0 100%);
 }
 
 .section-modern::before {
@@ -254,7 +249,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: linear-gradient(135deg, rgba(248, 250, 252, 0.9) 0%, rgba(226, 232, 240, 0.9) 100%);
+  background: linear-gradient(135deg, rgba(6, 182, 212, 0.02) 0%, rgba(124, 58, 237, 0.02) 100%);
   z-index: -1;
 }
 
@@ -276,48 +271,44 @@
   z-index: -1;
 }
 
-/* Garantir que progress bars usem a paleta correta */
+/* Progress bars com paleta correta */
 .progress-bar {
   background: linear-gradient(90deg, #1E3A8A 0%, #06B6D4 100%);
-}
-
-/* Tabs customizadas */
-.custom-tabs [data-state="active"] {
-  background: linear-gradient(135deg, #1E3A8A 0%, #06B6D4 100%);
-  color: white;
 }
 
 /* Classes modernas para cards */
 .modern-card {
   @apply bg-white rounded-xl border border-border/50 shadow-sm;
+  background: linear-gradient(135deg, #ffffff 0%, #fafbfc 100%);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .modern-card:hover {
   transform: translateY(-4px);
-  box-shadow: 0 20px 40px rgba(124, 58, 237, 0.1);
+  box-shadow: 0 20px 40px rgba(6, 182, 212, 0.1);
   border-color: hsl(var(--secondary));
 }
 
-/* Sombra moderna com tom roxo/turquesa */
-.shadow-modern-lg {
-  box-shadow: 0 20px 40px rgba(124, 58, 237, 0.1);
+/* Dashboards com backgrounds consistentes */
+.dashboard-container {
+  background: linear-gradient(135deg, #F8FAFC 0%, rgba(30, 58, 138, 0.02) 50%, rgba(6, 182, 212, 0.02) 100%);
+  min-height: 100vh;
 }
 
-/* Elementos decorativos */
-.decorative-dots {
-  background-image: radial-gradient(circle, rgba(6, 182, 212, 0.2) 1px, transparent 1px);
-  background-size: 20px 20px;
+/* Microinterações modernas */
+.modern-button {
+  @apply relative overflow-hidden;
+  background: linear-gradient(135deg, #1E3A8A 0%, #06B6D4 100%);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.decorative-grid {
-  background-image: 
-    linear-gradient(rgba(6, 182, 212, 0.1) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(6, 182, 212, 0.1) 1px, transparent 1px);
-  background-size: 40px 40px;
+.modern-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(6, 182, 212, 0.3);
 }
 
-/* Animações modernas */
+/* =================== ANIMAÇÕES E EFEITOS MODERNOS =================== */
+
 @keyframes float {
   0%, 100% { transform: translateY(0px); }
   50% { transform: translateY(-10px); }
@@ -325,10 +316,10 @@
 
 @keyframes pulse-glow {
   0%, 100% { 
-    box-shadow: 0 0 20px rgba(124, 58, 237, 0.3);
+    box-shadow: 0 0 20px rgba(6, 182, 212, 0.3);
   }
   50% { 
-    box-shadow: 0 0 40px rgba(124, 58, 237, 0.6);
+    box-shadow: 0 0 40px rgba(6, 182, 212, 0.6);
   }
 }
 
@@ -382,49 +373,17 @@
   animation: scale-in 0.4s ease-out;
 }
 
-/* Backgrounds específicos para diferentes páginas */
-.dashboard-container {
-  background: linear-gradient(135deg, #F8FAFC 0%, rgba(30, 58, 138, 0.02) 50%, rgba(6, 182, 212, 0.02) 100%);
+/* =================== LAYOUTS E PÁGINAS ESPECÍFICAS =================== */
+
+/* Ticket Dashboard com background moderno */
+.ticket-dashboard {
+  background: linear-gradient(135deg, #F8FAFC 0%, rgba(6, 182, 212, 0.02) 50%, rgba(124, 58, 237, 0.02) 100%);
   min-height: 100vh;
 }
 
-/* Microinterações modernas */
-.modern-button {
-  @apply relative overflow-hidden;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.modern-button:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 10px 25px rgba(124, 58, 237, 0.3);
-}
-
-.modern-button::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-  transition: left 0.5s;
-}
-
-.modern-button:hover::before {
-  left: 100%;
-}
-
-/* Estilos específicos do dashboard com gradientes modernos */
-.dashboard-container {
-  background: linear-gradient(135deg, #F8FAFC 0%, rgba(30, 58, 138, 0.02) 50%, rgba(6, 182, 212, 0.02) 100%);
-  min-height: 100vh;
-}
-
-/* Efeitos de glassmorphism */
-.glass-effect {
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+/* Layout geral da aplicação */
+.app-layout {
+  background: linear-gradient(135deg, #F8FAFC 0%, #E2E8F0 100%);
 }
 
 /* Scroll reveal */
@@ -437,14 +396,6 @@
 .scroll-reveal.revealed {
   opacity: 1;
   transform: translateY(0);
-}
-
-/* Parallax backgrounds */
-.parallax-bg {
-  background-attachment: fixed;
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: cover;
 }
 
 /* Hero gradient moderno */

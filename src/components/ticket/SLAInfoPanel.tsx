@@ -1,3 +1,4 @@
+
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -62,7 +63,7 @@ const SLAInfoPanel: React.FC<SLAInfoPanelProps> = ({ ticket, formatDate }) => {
     if (minutesRemaining < 60) {
       return <Badge variant="destructive">Crítico</Badge>;
     } else if (minutesRemaining < 180) {
-      return <Badge className="bg-amber-500 text-white border-amber-600 hover:bg-amber-600">Em Risco</Badge>;
+      return <Badge variant="warning">Em Risco</Badge>;
     } else {
       return <Badge variant="success">No Prazo</Badge>;
     }
