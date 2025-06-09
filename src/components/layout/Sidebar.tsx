@@ -64,7 +64,6 @@ export function Sidebar({ className }: SidebarProps) {
     },
   ];
   
-  // Toggle sidebar function that directly sets the state
   const toggleSidebar = () => {
     setIsOpen(!isOpen);
   };
@@ -74,31 +73,31 @@ export function Sidebar({ className }: SidebarProps) {
       <Button 
         variant="outline" 
         size="icon" 
-        className="fixed top-4 left-4 z-50 lg:hidden"
+        className="fixed top-4 left-4 z-50 lg:hidden border-turquoise-vibrant text-blue-deep hover:bg-turquoise-vibrant/10"
         onClick={toggleSidebar}
       >
-        {isOpen ? <X className="h-5 w-5 text-neutral-700" /> : <Menu className="h-5 w-5 text-neutral-700" />}
+        {isOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
       </Button>
       
       <div className={cn(
-        "fixed inset-y-0 left-0 z-40 flex flex-col w-64 bg-white dark:bg-neutral-900 border-r transition-transform duration-default ease-in-out shadow-sm",
+        "fixed inset-y-0 left-0 z-40 flex flex-col w-64 bg-white border-r border-turquoise-vibrant/20 transition-transform duration-default ease-in-out shadow-modern",
         isOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0",
         className
       )}>
-        <div className="p-4 border-b">
+        <div className="p-4 border-b border-turquoise-vibrant/20 bg-gradient-to-r from-blue-deep/5 to-turquoise-vibrant/5">
           <Link to="/dashboard" className="flex items-center gap-2">
             <Logo />
           </Link>
         </div>
         
-        <div className="flex-1 overflow-auto py-4">
+        <div className="flex-1 overflow-auto py-4 bg-gradient-to-b from-transparent to-purple-intense/5">
           <Link
             to="/dashboard"
             className={cn(
-              "flex items-center mx-3 px-3 py-2 rounded-lg text-sm transition-colors duration-default",
+              "flex items-center mx-3 px-3 py-2 rounded-lg text-sm transition-all duration-default font-medium",
               isActive("/dashboard") 
-                ? "bg-primary-a text-white" 
-                : "text-neutral-700 hover:bg-neutral-100"
+                ? "bg-gradient-to-r from-blue-deep to-turquoise-vibrant text-white shadow-modern transform scale-[1.02]" 
+                : "text-blue-deep hover:bg-gradient-to-r hover:from-turquoise-vibrant/10 hover:to-purple-intense/10 hover:text-turquoise-vibrant"
             )}
           >
             <Home className="mr-2 h-5 w-5" />
@@ -110,8 +109,8 @@ export function Sidebar({ className }: SidebarProps) {
               <AccordionItem key={index} value={`item-${index}`} className="border-b-0">
                 <AccordionTrigger 
                   className={cn(
-                    "px-3 py-2 text-sm hover:bg-neutral-100 rounded-lg mx-3 text-neutral-700",
-                    isGroupActive(group.items.map(item => item.href)) && "font-medium text-neutral-900"
+                    "px-3 py-2 text-sm hover:bg-gradient-to-r hover:from-purple-intense/10 hover:to-turquoise-vibrant/10 rounded-lg mx-3 text-blue-deep font-outfit transition-all duration-default",
+                    isGroupActive(group.items.map(item => item.href)) && "font-semibold text-purple-intense bg-gradient-to-r from-purple-intense/5 to-turquoise-vibrant/5"
                   )}
                 >
                   {group.title}
@@ -123,16 +122,16 @@ export function Sidebar({ className }: SidebarProps) {
                         key={i}
                         to={item.href}
                         className={cn(
-                          "flex items-center rounded-lg px-3 py-2 text-sm transition-colors duration-default",
+                          "flex items-center rounded-lg px-3 py-2 text-sm transition-all duration-default font-medium",
                           isActive(item.href) 
-                            ? "bg-primary-a-50 text-primary-a font-medium" 
-                            : "text-neutral-700 hover:bg-neutral-100"
+                            ? "bg-gradient-to-r from-turquoise-vibrant/20 to-purple-intense/20 text-purple-intense border-l-2 border-turquoise-vibrant transform scale-[1.02]" 
+                            : "text-blue-deep hover:bg-gradient-to-r hover:from-turquoise-vibrant/10 hover:to-purple-intense/5 hover:text-turquoise-vibrant"
                         )}
                       >
                         <item.icon className="mr-2 h-5 w-5" />
                         <span>{item.label}</span>
                         {isActive(item.href) && (
-                          <ChevronRight className="ml-auto h-4 w-4" />
+                          <ChevronRight className="ml-auto h-4 w-4 text-turquoise-vibrant" />
                         )}
                       </Link>
                     ))}
@@ -144,8 +143,12 @@ export function Sidebar({ className }: SidebarProps) {
         </div>
         
         {isOpen && (
-          <div className="p-4 border-t lg:hidden">
-            <Button variant="outline" className="w-full" onClick={() => setIsOpen(false)}>
+          <div className="p-4 border-t border-turquoise-vibrant/20 lg:hidden bg-gradient-to-r from-blue-deep/5 to-turquesa-vibrant/5">
+            <Button 
+              variant="outline" 
+              className="w-full border-turquoise-vibrant text-blue-deep hover:bg-turquoise-vibrant hover:text-white" 
+              onClick={() => setIsOpen(false)}
+            >
               <X className="mr-2 h-4 w-4" />
               Fechar Menu
             </Button>

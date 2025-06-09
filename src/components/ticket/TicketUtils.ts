@@ -68,14 +68,14 @@ export const formatDate = (date: Date | string): string => {
   });
 };
 
-// Create statusColors for backward compatibility
+// Create statusColors for backward compatibility with SolveFlow palette
 export const statusColors: Record<TicketStatus, string> = {
-  new: "bg-blue-500",
-  open: "bg-cyan-500",
+  new: "bg-blue-deep",
+  open: "bg-turquoise-vibrant",
   waiting_for_client: "bg-orange-500",
-  waiting_for_agent: "bg-purple-500",
-  in_progress: "bg-indigo-500",
-  resolved: "bg-green-500",
-  closed: "bg-gray-500",
-  triaged: "bg-teal-500",
+  waiting_for_agent: "bg-purple-intense",
+  in_progress: "bg-blue-600",
+  resolved: "bg-green-success",
+  closed: "bg-gray-medium",
+  triaged: "bg-turquoise-vibrant",
 };

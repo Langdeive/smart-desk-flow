@@ -156,91 +156,58 @@
   }
 }
 
-/* =================== ELIMINAÇÃO TOTAL DE YELLOW - ULTRA-ESPECÍFICO =================== */
+/* =================== CLASSES ESPECÍFICAS SOLVFLOW KPI CARDS =================== */
 
-/* FORÇA ESPECÍFICA CONTRA BORDAS AMARELAS */
-*, *::before, *::after {
-  border-color: rgb(226 232 240) !important; /* Força cinza claro em todas as bordas */
+.kpi-card-primary {
+  background: linear-gradient(135deg, #ffffff 0%, rgba(6, 182, 212, 0.05) 100%) !important;
+  border: 1px solid rgba(6, 182, 212, 0.2) !important;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* FORÇA ORANGE SOBRE QUALQUER TENTATIVA DE YELLOW/AMBER ESPECÍFICA */
-.text-yellow-100, .text-yellow-200, .text-yellow-300, .text-yellow-400, .text-yellow-500,
-.text-yellow-600, .text-yellow-700, .text-yellow-800, .text-yellow-900,
-.text-amber-100, .text-amber-200, .text-amber-300, .text-amber-400, .text-amber-500,
-.text-amber-600, .text-amber-700, .text-amber-800, .text-amber-900 {
-  color: #ea580c !important; /* Força orange-600 */
+.kpi-card-primary:hover {
+  background: linear-gradient(135deg, #ffffff 0%, rgba(6, 182, 212, 0.1) 100%) !important;
+  border-color: rgb(6 182 212) !important;
+  box-shadow: 0 10px 25px rgba(6, 182, 212, 0.15) !important;
 }
 
-.bg-yellow-50, .bg-yellow-100, .bg-yellow-200, .bg-yellow-300, .bg-yellow-400,
-.bg-yellow-500, .bg-yellow-600, .bg-yellow-700, .bg-yellow-800, .bg-yellow-900,
-.bg-amber-50, .bg-amber-100, .bg-amber-200, .bg-amber-300, .bg-amber-400,
-.bg-amber-500, .bg-amber-600, .bg-amber-700, .bg-amber-800, .bg-amber-900 {
-  background-color: #fed7aa !important; /* Força orange-200 */
+.kpi-card-secondary {
+  background: linear-gradient(135deg, #ffffff 0%, rgba(30, 58, 138, 0.05) 100%) !important;
+  border: 1px solid rgba(30, 58, 138, 0.2) !important;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.border-yellow-100, .border-yellow-200, .border-yellow-300, .border-yellow-400,
-.border-yellow-500, .border-yellow-600, .border-yellow-700, .border-yellow-800,
-.border-yellow-900, .border-amber-100, .border-amber-200, .border-amber-300,
-.border-amber-400, .border-amber-500, .border-amber-600, .border-amber-700,
-.border-amber-800, .border-amber-900 {
-  border-color: rgb(226 232 240) !important; /* Força cinza */
+.kpi-card-secondary:hover {
+  background: linear-gradient(135deg, #ffffff 0%, rgba(30, 58, 138, 0.1) 100%) !important;
+  border-color: rgb(30 58 138) !important;
+  box-shadow: 0 10px 25px rgba(30, 58, 138, 0.15) !important;
 }
 
-/* CORREÇÃO ESPECÍFICA PARA PROBLEMAS VISUAIS IDENTIFICADOS */
-
-/* Sidebar - cores consistentes */
-.sidebar-active {
-  background: linear-gradient(135deg, #06B6D4 0%, #1E3A8A 100%) !important;
-  color: white !important;
+.kpi-card-accent {
+  background: linear-gradient(135deg, #ffffff 0%, rgba(124, 58, 237, 0.05) 100%) !important;
+  border: 1px solid rgba(124, 58, 237, 0.2) !important;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.sidebar-item {
-  color: rgb(30 41 59) !important;
-  border-color: rgb(226 232 240) !important;
+.kpi-card-accent:hover {
+  background: linear-gradient(135deg, #ffffff 0%, rgba(124, 58, 237, 0.1) 100%) !important;
+  border-color: rgb(124 58 237) !important;
+  box-shadow: 0 10px 25px rgba(124, 58, 237, 0.15) !important;
 }
 
-.sidebar-item:hover {
-  background-color: rgb(241 245 249) !important;
-  color: rgb(6 182 212) !important;
+.kpi-card-ai {
+  background: linear-gradient(135deg, #ffffff 0%, rgba(219, 39, 119, 0.05) 100%) !important;
+  border: 1px solid rgba(219, 39, 119, 0.2) !important;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Cards - sem bordas amarelas */
-.modern-card, .card, [class*="card"] {
-  border-color: rgb(226 232 240) !important;
-  background: white !important;
-  color: rgb(30 41 59) !important;
+.kpi-card-ai:hover {
+  background: linear-gradient(135deg, #ffffff 0%, rgba(219, 39, 119, 0.1) 100%) !important;
+  border-color: rgb(219 39 119) !important;
+  box-shadow: 0 10px 25px rgba(219, 39, 119, 0.15) !important;
 }
 
-/* Texto legível - eliminação do rosa claro */
-.text-muted-foreground, [class*="muted"] {
-  color: rgb(71 85 105) !important; /* Cinza mais escuro e legível */
-}
+/* =================== GRADIENTES MODERNOS SOLVFLOW =================== */
 
-/* Badges - cores corretas */
-.badge, [class*="badge"] {
-  border-color: rgb(226 232 240) !important;
-}
-
-/* Progress bars */
-.progress-bar, [class*="progress"] {
-  background: linear-gradient(90deg, #1E3A8A 0%, #06B6D4 100%) !important;
-  border-color: rgb(226 232 240) !important;
-}
-
-/* Tabs */
-.tabs-trigger, [class*="tabs"] {
-  border-color: rgb(226 232 240) !important;
-  color: rgb(30 41 59) !important;
-}
-
-.tabs-trigger[data-state="active"] {
-  background: linear-gradient(135deg, #1E3A8A 0%, #06B6D4 100%) !important;
-  color: white !important;
-}
-
-/* =================== CLASSES MODERNAS SOLVFLOW =================== */
-
-/* Gradientes modernos - 100% livre de yellow */
 .gradient-primary {
   background: linear-gradient(135deg, #1E3A8A 0%, #06B6D4 100%);
 }
@@ -282,18 +249,6 @@
   border-color: rgb(6 182 212) !important;
 }
 
-/* Layout geral da aplicação */
-.app-layout {
-  background: linear-gradient(135deg, #F8FAFC 0%, #E2E8F0 100%) !important;
-  min-height: 100vh !important;
-}
-
-/* Dashboard com background moderno */
-.dashboard-container {
-  background: linear-gradient(135deg, #F8FAFC 0%, rgba(30, 58, 138, 0.02) 50%, rgba(6, 182, 212, 0.02) 100%) !important;
-  min-height: 100vh;
-}
-
 /* =================== PROTEÇÕES ANTI-REGRESSÃO =================== */
 
 /* Força containers principais */
@@ -311,9 +266,50 @@ div, span, p, a, button, input, textarea, select {
   border-color: rgb(226 232 240) !important;
 }
 
-/* Proteção final contra amarelo */
+/* Proteção final contra amarelo/amber */
 [style*="yellow"], [style*="amber"], [class*="yellow"], [class*="amber"] {
   background-color: rgb(6 182 212) !important;
   color: white !important;
   border-color: rgb(226 232 240) !important;
+}
+
+/* Força classes amarelas específicas para cores SolveFlow */
+.text-yellow-500, .text-amber-500, .bg-yellow-500, .bg-amber-500 {
+  color: rgb(6 182 212) !important;
+  background-color: rgba(6, 182, 212, 0.1) !important;
+}
+
+.border-yellow-500, .border-amber-500 {
+  border-color: rgb(6 182 212) !important;
+}
+
+/* Tabs personalizados SolveFlow */
+.tabs-trigger-solvflow {
+  background: linear-gradient(135deg, rgba(6, 182, 212, 0.1) 0%, rgba(124, 58, 237, 0.1) 100%);
+  border: 1px solid rgba(6, 182, 212, 0.2);
+  color: rgb(30, 58, 138);
+  transition: all 0.3s ease;
+}
+
+.tabs-trigger-solvflow[data-state="active"] {
+  background: linear-gradient(135deg, #1E3A8A 0%, #06B6D4 100%);
+  color: white;
+  border-color: transparent;
+  box-shadow: 0 4px 12px rgba(6, 182, 212, 0.3);
+}
+
+/* Sidebar consistente */
+.sidebar-item-solvflow {
+  color: rgb(30, 58, 138) !important;
+  transition: all 0.3s ease;
+}
+
+.sidebar-item-solvflow:hover {
+  background: linear-gradient(135deg, rgba(6, 182, 212, 0.1) 0%, rgba(124, 58, 237, 0.05) 100%) !important;
+  color: rgb(6, 182, 212) !important;
+}
+
+.sidebar-item-solvflow.active {
+  background: linear-gradient(135deg, #1E3A8A 0%, #06B6D4 100%) !important;
+  color: white !important;
 }
