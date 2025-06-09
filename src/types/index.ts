@@ -18,11 +18,13 @@ export type Company = {
 
 export type TicketStatus = 
   | "new" 
+  | "open"
   | "waiting_for_client" 
   | "waiting_for_agent" 
   | "in_progress" 
   | "resolved" 
-  | "closed";
+  | "closed"
+  | "triaged";
 
 export type TicketPriority = "low" | "medium" | "high" | "critical";
 
