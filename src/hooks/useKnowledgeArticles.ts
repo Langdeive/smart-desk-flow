@@ -11,7 +11,6 @@ export interface KnowledgeArticleInput {
   content: string;
   keywords: string[];
   isPublic: boolean;
-  ticketId?: string;
 }
 
 export const useKnowledgeArticles = (searchTerm?: string) => {
