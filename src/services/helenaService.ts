@@ -1,3 +1,4 @@
+
 import { supabase } from '@/integrations/supabase/client';
 import { PendingArticle, ArticleGenerationLog, ApproveArticleData } from '@/types/helena';
 
@@ -22,12 +23,27 @@ export const helenaService = {
       throw error;
     }
 
-    // Transform the data to ensure similar_articles_found is properly typed
+    // Transform the data to ensure proper typing
     return (data || []).map(article => ({
-      ...article,
+      id: article.id,
+      company_id: article.company_id,
+      ticket_id: article.ticket_id,
+      title: article.title,
+      content: article.content,
+      keywords: article.keywords || [],
+      confidence_score: Number(article.confidence_score),
+      analysis_summary: article.analysis_summary || undefined,
       similar_articles_found: Array.isArray(article.similar_articles_found) 
         ? article.similar_articles_found 
-        : []
+        : [],
+      status: article.status as 'pending' | 'approved' | 'rejected' | 'editing',
+      created_at: article.created_at,
+      approved_at: article.approved_at || undefined,
+      approved_by: article.approved_by || undefined,
+      rejected_at: article.rejected_at || undefined,
+      rejected_by: article.rejected_by || undefined,
+      rejection_reason: article.rejection_reason || undefined,
+      published_article_id: article.published_article_id || undefined,
     }));
   },
 
@@ -49,12 +65,27 @@ export const helenaService = {
       throw error;
     }
 
-    // Transform the data to ensure similar_articles_found is properly typed
+    // Transform the data to ensure proper typing
     return {
-      ...data,
+      id: data.id,
+      company_id: data.company_id,
+      ticket_id: data.ticket_id,
+      title: data.title,
+      content: data.content,
+      keywords: data.keywords || [],
+      confidence_score: Number(data.confidence_score),
+      analysis_summary: data.analysis_summary || undefined,
       similar_articles_found: Array.isArray(data.similar_articles_found) 
         ? data.similar_articles_found 
-        : []
+        : [],
+      status: data.status as 'pending' | 'approved' | 'rejected' | 'editing',
+      created_at: data.created_at,
+      approved_at: data.approved_at || undefined,
+      approved_by: data.approved_by || undefined,
+      rejected_at: data.rejected_at || undefined,
+      rejected_by: data.rejected_by || undefined,
+      rejection_reason: data.rejection_reason || undefined,
+      published_article_id: data.published_article_id || undefined,
     };
   },
 
