@@ -5,64 +5,30 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Search, Plus, Lightbulb, Edit, Book, ArrowUpRight } from "lucide-react";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/dialog";
+import { Search, Plus, Lightbulb, Edit, Book, ArrowUpRight, Trash2 } from "lucide-react";
+import { useKnowledgeArticles } from "@/hooks/useKnowledgeArticles";
+import { ArticleDialog } from "@/components/knowledge/ArticleDialog";
+import { useDebounce } from "@/hooks/useDebounce";
 import { KnowledgeArticle } from "@/types";
-
-// Dados mockados para demonstração - serão substituídos pela integração com Supabase
-const getMockArticles = (): KnowledgeArticle[] => {
-  return [
-    {
-      id: "1",
-      title: "Como resetar sua senha",
-      content: "Para resetar sua senha, siga os passos abaixo:\n\n1. Acesse a página de login\n2. Clique em 'Esqueci minha senha'\n3. Informe seu e-mail cadastrado\n4. Siga as instruções enviadas para seu e-mail",
-      keywords: ["senha", "reset", "login", "acesso"],
-      companyId: "company1",
-      createdAt: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000),
-      updatedAt: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000),
-      isPublic: true,
-    },
-    {
-      id: "2",
-      title: "Erro ao exportar relatórios",
-      content: "Se você está enfrentando problemas ao exportar relatórios, verifique:\n\n1. Se você tem permissões para exportar\n2. Se o relatório contém dados válidos\n3. Se você está usando um navegador atualizado\n\nSe o problema persistir, tente limpar o cache do navegador e tentar novamente.",
-      keywords: ["exportar", "relatório", "erro", "permissões"],
-      companyId: "company1",
-      createdAt: new Date(Date.now() - 14 * 24 * 60 * 60 * 1000),
-      updatedAt: new Date(Date.now() - 10 * 24 * 60 * 60 * 1000),
-      isPublic: true,
-      ticketId: "123",
-    },
-    {
-      id: "3",
-      title: "Como configurar integrações com APIs externas",
-      content: "Para configurar integrações com APIs externas, você precisará:\n\n1. Obter as credenciais de API do serviço externo\n2. Acessar a seção de Integrações nas configurações\n3. Adicionar uma nova integração\n4. Inserir as credenciais e configurar os endpoints\n5. Testar a conexão antes de ativar\n\nCertifique-se de que os IPs do nosso serviço estão na whitelist do provedor da API.",
-      keywords: ["api", "integração", "configuração", "externos", "credenciais"],
-      companyId: "company1",
-      createdAt: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000),
-      updatedAt: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000),
-      isPublic: false,
-    },
-  ];
-};
+import { toast } from "sonner";
 
 const KnowledgeBase = () => {
-  const [articles, setArticles] = useState<KnowledgeArticle[]>(getMockArticles());
   const [searchTerm, setSearchTerm] = useState("");
   const [viewType, setViewType] = useState<"all" | "public" | "internal">("all");
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [selectedArticle, setSelectedArticle] = useState<KnowledgeArticle | null>(null);
+
+  const debouncedSearch = useDebounce(searchTerm, 300);
+  const { articles, isLoading, error, createArticle, updateArticle, deleteArticle } = useKnowledgeArticles(debouncedSearch);
 
   const filteredArticles = articles.filter((article) => {
-    const matchesSearch =
-      article.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      article.content.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      article.keywords.some((keyword) => keyword.toLowerCase().includes(searchTerm.toLowerCase()));
-    
     const matchesView =
       viewType === "all" ||
       (viewType === "public" && article.isPublic) ||
       (viewType === "internal" && !article.isPublic);
     
-    return matchesSearch && matchesView;
+    return matchesView;
   });
 
   const formatDate = (date: Date) => {
@@ -73,83 +39,73 @@ const KnowledgeBase = () => {
     }).format(date);
   };
 
+  const handleCreateArticle = () => {
+    setSelectedArticle(null);
+    setDialogOpen(true);
+  };
+
+  const handleEditArticle = (article: KnowledgeArticle) => {
+    setSelectedArticle(article);
+    setDialogOpen(true);
+  };
+
+  const handleSaveArticle = async (data: any) => {
+    try {
+      if (selectedArticle) {
+        await updateArticle.mutateAsync({ id: selectedArticle.id, ...data });
+        toast.success("Artigo atualizado com sucesso!");
+      } else {
+        await createArticle.mutateAsync(data);
+        toast.success("Artigo criado com sucesso!");
+      }
+    } catch (error) {
+      toast.error("Erro ao salvar artigo. Tente novamente.");
+      throw error;
+    }
+  };
+
+  const handleDeleteArticle = async (id: string) => {
+    try {
+      await deleteArticle.mutateAsync(id);
+      toast.success("Artigo excluído com sucesso!");
+    } catch (error) {
+      toast.error("Erro ao excluir artigo. Tente novamente.");
+    }
+  };
+
+  if (error) {
+    return (
+      <div className="container mx-auto py-8 px-4">
+        <div className="border border-red-alert/20 rounded-lg p-6 bg-red-alert/10 text-red-alert">
+          <h3 className="text-lg font-medium mb-2">Erro ao carregar artigos</h3>
+          <p>Ocorreu um erro ao carregar os artigos. Tente novamente mais tarde.</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="container mx-auto py-8 px-4">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
         <div>
-          <h1 className="text-3xl font-bold">Base de Conhecimento</h1>
-          <p className="text-muted-foreground">
+          <h1 className="text-3xl font-bold text-blue-deep">Base de Conhecimento</h1>
+          <p className="text-blue-deep/70">
             Gerencie sua base de conhecimento para atendimento automatizado
           </p>
         </div>
         
-        <Dialog>
-          <DialogTrigger asChild>
-            <Button>
-              <Plus className="mr-2 h-4 w-4" />
-              Novo Artigo
-            </Button>
-          </DialogTrigger>
-          <DialogContent className="sm:max-w-[600px]">
-            <DialogHeader>
-              <DialogTitle>Criar Novo Artigo</DialogTitle>
-              <DialogDescription>
-                Adicione um novo artigo à base de conhecimento.
-              </DialogDescription>
-            </DialogHeader>
-            <div className="space-y-4 py-4">
-              <div className="space-y-2">
-                <label htmlFor="title" className="text-sm font-medium">
-                  Título
-                </label>
-                <Input
-                  id="title"
-                  placeholder="Insira um título claro e descritivo"
-                />
-              </div>
-              <div className="space-y-2">
-                <label htmlFor="content" className="text-sm font-medium">
-                  Conteúdo
-                </label>
-                <textarea
-                  id="content"
-                  className="flex min-h-[200px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                  placeholder="Descreva o problema e a solução em detalhes. Use formatação markdown se necessário."
-                />
-              </div>
-              <div className="space-y-2">
-                <label htmlFor="keywords" className="text-sm font-medium">
-                  Palavras-chave
-                </label>
-                <Input
-                  id="keywords"
-                  placeholder="Adicione palavras-chave separadas por vírgula"
-                />
-              </div>
-              <div className="flex items-center space-x-2">
-                <input
-                  type="checkbox"
-                  id="public"
-                  className="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary"
-                />
-                <label htmlFor="public" className="text-sm font-medium">
-                  Disponível publicamente
-                </label>
-              </div>
-            </div>
-            <DialogFooter>
-              <Button type="submit">Salvar Artigo</Button>
-            </DialogFooter>
-          </DialogContent>
-        </Dialog>
+        <Button onClick={handleCreateArticle}>
+          <Plus className="mr-2 h-4 w-4" />
+          Novo Artigo
+        </Button>
       </div>
 
       <div className="mb-8">
         <div className="relative">
-          <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+          <Search className="absolute left-3 top-3 h-4 w-4 text-blue-deep/60" />
           <Input
-            placeholder="Buscar artigos..."
-            className="pl-9"
+            placeholder="Buscar artigos por título, conteúdo ou palavras-chave..."
+            className="pl-9 border-turquoise-vibrant/20 focus:border-turquoise-vibrant"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
@@ -157,62 +113,89 @@ const KnowledgeBase = () => {
       </div>
 
       <Tabs defaultValue="all" className="mb-6">
-        <TabsList>
-          <TabsTrigger value="all" onClick={() => setViewType("all")}>
-            Todos os Artigos
+        <TabsList className="bg-gradient-to-r from-turquoise-vibrant/10 to-purple-intense/10 border border-turquoise-vibrant/20">
+          <TabsTrigger 
+            value="all" 
+            onClick={() => setViewType("all")}
+            className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-turquoise-vibrant data-[state=active]:to-purple-intense data-[state=active]:text-white"
+          >
+            Todos os Artigos ({articles.length})
           </TabsTrigger>
-          <TabsTrigger value="public" onClick={() => setViewType("public")}>
-            Artigos Públicos
+          <TabsTrigger 
+            value="public" 
+            onClick={() => setViewType("public")}
+            className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-turquoise-vibrant data-[state=active]:to-purple-intense data-[state=active]:text-white"
+          >
+            Artigos Públicos ({articles.filter(a => a.isPublic).length})
           </TabsTrigger>
-          <TabsTrigger value="internal" onClick={() => setViewType("internal")}>
-            Artigos Internos
+          <TabsTrigger 
+            value="internal" 
+            onClick={() => setViewType("internal")}
+            className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-turquoise-vibrant data-[state=active]:to-purple-intense data-[state=active]:text-white"
+          >
+            Artigos Internos ({articles.filter(a => !a.isPublic).length})
           </TabsTrigger>
         </TabsList>
       </Tabs>
 
-      {filteredArticles.length === 0 ? (
+      {isLoading ? (
         <div className="text-center py-12">
-          <Lightbulb className="mx-auto h-12 w-12 text-muted-foreground opacity-50" />
-          <h3 className="mt-4 text-lg font-medium">Nenhum artigo encontrado</h3>
-          <p className="text-muted-foreground mt-2">
-            Tente ajustar sua busca ou criar um novo artigo.
+          <div className="inline-flex items-center px-4 py-2 font-semibold leading-6 text-sm shadow rounded-md text-blue-deep bg-gradient-to-r from-turquoise-vibrant/10 to-purple-intense/10">
+            <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-turquoise-vibrant" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+            Carregando artigos...
+          </div>
+        </div>
+      ) : filteredArticles.length === 0 ? (
+        <div className="text-center py-12">
+          <Lightbulb className="mx-auto h-12 w-12 text-blue-deep/50 opacity-50" />
+          <h3 className="mt-4 text-lg font-medium text-blue-deep">Nenhum artigo encontrado</h3>
+          <p className="text-blue-deep/70 mt-2">
+            {searchTerm ? 'Tente ajustar sua busca ou criar um novo artigo.' : 'Comece criando seu primeiro artigo.'}
           </p>
+          {!searchTerm && (
+            <Button onClick={handleCreateArticle} className="mt-4">
+              <Plus className="mr-2 h-4 w-4" />
+              Criar Primeiro Artigo
+            </Button>
+          )}
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredArticles.map((article) => (
-            <Card key={article.id} className="h-full flex flex-col">
+            <Card key={article.id} className="h-full flex flex-col border-turquoise-vibrant/20 shadow-modern hover:shadow-modern-lg transition-all duration-200">
               <CardHeader className="pb-2">
                 <div className="flex justify-between items-start">
-                  <div>
-                    <CardTitle className="text-lg">{article.title}</CardTitle>
-                    <CardDescription className="mt-1">
+                  <div className="flex-1">
+                    <CardTitle className="text-lg text-blue-deep line-clamp-2">{article.title}</CardTitle>
+                    <CardDescription className="mt-1 text-blue-deep/60">
                       Atualizado em {formatDate(article.updatedAt)}
                     </CardDescription>
                   </div>
-                  {article.isPublic ? (
-                    <Badge variant="secondary" className="ml-2">
-                      Público
-                    </Badge>
-                  ) : (
-                    <Badge variant="outline" className="ml-2">
-                      Interno
-                    </Badge>
-                  )}
+                  <Badge variant={article.isPublic ? "default" : "secondary"} className="ml-2 shrink-0">
+                    {article.isPublic ? "Público" : "Interno"}
+                  </Badge>
                 </div>
               </CardHeader>
               <CardContent className="py-2 flex-grow">
-                <p className="text-sm text-muted-foreground line-clamp-3">
+                <p className="text-sm text-blue-deep/80 line-clamp-3">
                   {article.content.split("\n\n")[0]}
                 </p>
                 
                 {article.keywords.length > 0 && (
                   <div className="mt-4 flex flex-wrap gap-2">
-                    {article.keywords.map((keyword) => (
-                      <Badge key={keyword} variant="outline" className="bg-muted">
+                    {article.keywords.slice(0, 3).map((keyword) => (
+                      <Badge key={keyword} variant="outline" className="bg-turquoise-vibrant/5 border-turquoise-vibrant/20 text-blue-deep text-xs">
                         {keyword}
                       </Badge>
                     ))}
+                    {article.keywords.length > 3 && (
+                      <Badge variant="outline" className="bg-turquoise-vibrant/5 border-turquoise-vibrant/20 text-blue-deep text-xs">
+                        +{article.keywords.length - 3}
+                      </Badge>
+                    )}
                   </div>
                 )}
                 
@@ -227,20 +210,59 @@ const KnowledgeBase = () => {
               </CardContent>
               <CardFooter className="pt-2">
                 <div className="flex gap-2 w-full">
-                  <Button variant="outline" className="flex-1">
+                  <Button 
+                    variant="outline" 
+                    size="sm"
+                    onClick={() => handleEditArticle(article)}
+                    className="flex-1"
+                  >
                     <Edit className="mr-2 h-4 w-4" />
                     Editar
                   </Button>
-                  <Button className="flex-1">
-                    <ArrowUpRight className="mr-2 h-4 w-4" />
-                    Ver
-                  </Button>
+                  
+                  <AlertDialog>
+                    <AlertDialogTrigger asChild>
+                      <Button 
+                        variant="outline" 
+                        size="sm"
+                        className="text-red-alert border-red-alert/20 hover:bg-red-alert hover:text-white hover:border-red-alert"
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
+                    </AlertDialogTrigger>
+                    <AlertDialogContent>
+                      <AlertDialogHeader>
+                        <AlertDialogTitle>Excluir artigo</AlertDialogTitle>
+                        <AlertDialogDescription>
+                          Tem certeza que deseja excluir o artigo "{article.title}"? 
+                          Esta ação não poderá ser desfeita.
+                        </AlertDialogDescription>
+                      </AlertDialogHeader>
+                      <AlertDialogFooter>
+                        <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                        <AlertDialogAction 
+                          onClick={() => handleDeleteArticle(article.id)}
+                          className="bg-red-alert text-white hover:bg-red-alert/90"
+                        >
+                          Excluir
+                        </AlertDialogAction>
+                      </AlertDialogFooter>
+                    </AlertDialogContent>
+                  </AlertDialog>
                 </div>
               </CardFooter>
             </Card>
           ))}
         </div>
       )}
+
+      <ArticleDialog
+        open={dialogOpen}
+        onOpenChange={setDialogOpen}
+        article={selectedArticle}
+        onSave={handleSaveArticle}
+        isPending={createArticle.isPending || updateArticle.isPending}
+      />
     </div>
   );
 };
