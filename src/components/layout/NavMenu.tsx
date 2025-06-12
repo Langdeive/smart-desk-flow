@@ -1,73 +1,88 @@
 
-import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Button } from "@/components/ui/button";
-import { Plus } from "lucide-react";
-import { NewTicketModal } from "@/components/ticket/NewTicketModal";
-import { MainNav } from "./MainNav";
-import { UserMenu } from "./UserMenu";
-import { ThemeToggle } from "./ThemeToggle";
+import { cn } from "@/lib/utils";
+import { 
+  Home, 
+  TicketCheck, 
+  Users, 
+  BookOpen, 
+  Settings, 
+  UserPlus,
+  Bot
+} from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
-import Logo from "@/components/ui/logo";
+
+const menuItems = [
+  {
+    name: "Dashboard",
+    href: "/dashboard",
+    icon: Home,
+    roles: ["admin", "agent", "owner"]
+  },
+  {
+    name: "Tickets",
+    href: "/tickets",
+    icon: TicketCheck,
+    roles: ["admin", "agent", "owner"]
+  },
+  {
+    name: "Clientes",
+    href: "/clients",
+    icon: Users,
+    roles: ["admin", "agent", "owner"]
+  },
+  {
+    name: "Base de Conhecimento",
+    href: "/knowledge-base",
+    icon: BookOpen,
+    roles: ["admin", "agent", "owner"]
+  },
+  {
+    name: "Helena - IA",
+    href: "/helena",
+    icon: Bot,
+    roles: ["admin", "owner"]
+  },
+  {
+    name: "Agentes",
+    href: "/agents",
+    icon: UserPlus,
+    roles: ["admin", "owner"]
+  },
+  {
+    name: "Configurações",
+    href: "/settings",
+    icon: Settings,
+    roles: ["admin", "owner"]
+  },
+];
 
 export function NavMenu() {
-  const { user, isAuthenticated, loading, signOut } = useAuth();
-  const [showNewTicketModal, setShowNewTicketModal] = useState(false);
   const location = useLocation();
+  const { role } = useAuth();
 
-  const showOnlyAuth = location.pathname === '/';
+  // Filter menu items based on user role
+  const visibleMenuItems = menuItems.filter(item => 
+    !item.roles || item.roles.includes(role || "")
+  );
 
   return (
-    <div className="border-b mb-4 bg-white dark:bg-neutral-900 shadow-sm">
-      <div className="container flex items-center justify-between py-4">
-        <div className="flex items-center gap-2">
-          <Logo />
-        </div>
-        {/* Exibe MainNav apenas se não autenticado e não está na tela de dashboard */}
-        {!isAuthenticated && (!showOnlyAuth) && <MainNav />}
-        <div className="flex items-center gap-4">
-          {!isAuthenticated ? (
-            <>
-              <Link 
-                to="/login"
-                className="text-sm font-medium text-primary-a hover:text-primary-a/80 transition-colors duration-default"
-              >
-                Login
-              </Link>
-              <Link 
-                to="/register"
-                className="text-sm font-medium bg-primary-b text-white px-4 py-2 rounded-lg hover:bg-primary-b-600 transition-colors duration-default"
-              >
-                Cadastrar
-              </Link>
-            </>
-          ) : (
-            <>
-              <Button 
-                variant="default" 
-                onClick={() => setShowNewTicketModal(true)}
-                className="mr-2 bg-primary-b hover:bg-primary-b-600 text-white"
-              >
-                <Plus className="w-5 h-5 mr-2" />
-                Novo Ticket
-              </Button>
-              <ThemeToggle />
-              {user && (
-                <UserMenu 
-                  user={{ 
-                    name: user.user_metadata?.company_name || user.email?.split('@')[0] || "Usuário", 
-                    email: user.email || "" 
-                  }} 
-                  onSignOut={signOut} 
-                />
-              )}
-            </>
+    <nav className="space-y-1">
+      {visibleMenuItems.map((item) => (
+        <Link
+          key={item.name}
+          to={item.href}
+          className={cn(
+            "flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-all hover:bg-accent hover:text-accent-foreground",
+            location.pathname === item.href
+              ? "bg-accent text-accent-foreground"
+              : "text-muted-foreground"
           )}
-        </div>
-      </div>
-      {showNewTicketModal && (
-        <NewTicketModal open={showNewTicketModal} onClose={() => setShowNewTicketModal(false)} />
-      )}
-    </div>
+        >
+          <item.icon className="h-4 w-4" />
+          {item.name}
+        </Link>
+      ))}
+    </nav>
   );
 }

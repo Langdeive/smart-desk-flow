@@ -71,6 +71,39 @@ export type Database = {
         }
         Relationships: []
       }
+      article_generation_logs: {
+        Row: {
+          company_id: string
+          created_at: string
+          details: Json | null
+          event_type: string
+          helena_version: string | null
+          id: string
+          processing_time_ms: number | null
+          ticket_id: string
+        }
+        Insert: {
+          company_id: string
+          created_at?: string
+          details?: Json | null
+          event_type: string
+          helena_version?: string | null
+          id?: string
+          processing_time_ms?: number | null
+          ticket_id: string
+        }
+        Update: {
+          company_id?: string
+          created_at?: string
+          details?: Json | null
+          event_type?: string
+          helena_version?: string | null
+          id?: string
+          processing_time_ms?: number | null
+          ticket_id?: string
+        }
+        Relationships: []
+      }
       attachments: {
         Row: {
           created_at: string
@@ -548,6 +581,66 @@ export type Database = {
         }
         Relationships: []
       }
+      pending_articles: {
+        Row: {
+          analysis_summary: string | null
+          approved_at: string | null
+          approved_by: string | null
+          company_id: string
+          confidence_score: number
+          content: string
+          created_at: string
+          id: string
+          keywords: string[] | null
+          published_article_id: string | null
+          rejected_at: string | null
+          rejected_by: string | null
+          rejection_reason: string | null
+          similar_articles_found: Json | null
+          status: string
+          ticket_id: string
+          title: string
+        }
+        Insert: {
+          analysis_summary?: string | null
+          approved_at?: string | null
+          approved_by?: string | null
+          company_id: string
+          confidence_score?: number
+          content: string
+          created_at?: string
+          id?: string
+          keywords?: string[] | null
+          published_article_id?: string | null
+          rejected_at?: string | null
+          rejected_by?: string | null
+          rejection_reason?: string | null
+          similar_articles_found?: Json | null
+          status?: string
+          ticket_id: string
+          title: string
+        }
+        Update: {
+          analysis_summary?: string | null
+          approved_at?: string | null
+          approved_by?: string | null
+          company_id?: string
+          confidence_score?: number
+          content?: string
+          created_at?: string
+          id?: string
+          keywords?: string[] | null
+          published_article_id?: string | null
+          rejected_at?: string | null
+          rejected_by?: string | null
+          rejection_reason?: string | null
+          similar_articles_found?: Json | null
+          status?: string
+          ticket_id?: string
+          title?: string
+        }
+        Relationships: []
+      }
       planos: {
         Row: {
           criado_em: string | null
@@ -880,6 +973,17 @@ export type Database = {
       }
     }
     Functions: {
+      approve_pending_article: {
+        Args: {
+          p_pending_article_id: string
+          p_agent_id: string
+          p_final_title?: string
+          p_final_content?: string
+          p_final_keywords?: string[]
+          p_is_public?: boolean
+        }
+        Returns: string
+      }
       belongs_to_company: {
         Args: { company_id: string }
         Returns: boolean
@@ -985,6 +1089,14 @@ export type Database = {
           funcao?: string
         }
         Returns: Json
+      }
+      reject_pending_article: {
+        Args: {
+          p_pending_article_id: string
+          p_agent_id: string
+          p_rejection_reason: string
+        }
+        Returns: undefined
       }
       retry_failed_n8n_requests: {
         Args: Record<PropertyKey, never>

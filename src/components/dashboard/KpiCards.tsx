@@ -1,8 +1,11 @@
 
 import { KpiCard } from "./KpiCard";
 import { Clock, CheckCircle, TicketCheck, Bot } from "lucide-react";
+import { useHelenaArticles } from "@/hooks/useHelenaArticles";
 
 export function KpiCards() {
+  const { helenaStats } = useHelenaArticles();
+
   return (
     <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
       <KpiCard
@@ -36,12 +39,12 @@ export function KpiCards() {
       />
       
       <KpiCard
-        title="Resolvidos por IA"
-        value="43"
-        description="Sem intervenção humana"
+        title="Helena - Artigos Pendentes"
+        value={helenaStats?.total_pending || 0}
+        description="Aguardando aprovação"
         icon={<Bot className="h-5 w-5" />}
-        href="/tickets?ai_handled=true"
-        ariaLabel="Ver tickets resolvidos por IA"
+        href="/helena"
+        ariaLabel="Ver artigos pendentes da Helena"
         className="kpi-card-ai"
       />
     </div>
