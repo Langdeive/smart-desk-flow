@@ -4,6 +4,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { KnowledgeArticle } from '@/types';
 import { useAuth } from './useAuth';
+import { useSemanticSearch } from './useSemanticSearch';
 
 export interface KnowledgeArticleInput {
   title: string;
@@ -16,6 +17,7 @@ export interface KnowledgeArticleInput {
 export const useKnowledgeArticles = (searchTerm?: string) => {
   const { user } = useAuth();
   const queryClient = useQueryClient();
+  const { generateEmbedding } = useSemanticSearch();
 
   // Fetch articles with optional search
   const {
@@ -56,7 +58,7 @@ export const useKnowledgeArticles = (searchTerm?: string) => {
     enabled: !!user?.companyId,
   });
 
-  // Create article mutation
+  // Create article mutation with embedding generation
   const createArticle = useMutation({
     mutationFn: async (articleData: KnowledgeArticleInput) => {
       if (!user?.companyId) throw new Error('Company ID not found');
@@ -74,6 +76,16 @@ export const useKnowledgeArticles = (searchTerm?: string) => {
         .single();
 
       if (error) throw error;
+
+      // Generate embedding for the new article
+      try {
+        await generateEmbedding(data.id, articleData.title, articleData.content);
+        console.log('✅ Embedding generated for new article:', data.id);
+      } catch (embeddingError) {
+        console.warn('⚠️ Failed to generate embedding for article:', data.id, embeddingError);
+        // Don't fail the whole operation if embedding generation fails
+      }
+
       return data;
     },
     onSuccess: () => {
@@ -81,7 +93,7 @@ export const useKnowledgeArticles = (searchTerm?: string) => {
     },
   });
 
-  // Update article mutation
+  // Update article mutation with embedding regeneration
   const updateArticle = useMutation({
     mutationFn: async ({ id, ...articleData }: KnowledgeArticleInput & { id: string }) => {
       const { data, error } = await supabase
@@ -98,6 +110,16 @@ export const useKnowledgeArticles = (searchTerm?: string) => {
         .single();
 
       if (error) throw error;
+
+      // Regenerate embedding for the updated article
+      try {
+        await generateEmbedding(id, articleData.title, articleData.content);
+        console.log('✅ Embedding regenerated for updated article:', id);
+      } catch (embeddingError) {
+        console.warn('⚠️ Failed to regenerate embedding for article:', id, embeddingError);
+        // Don't fail the whole operation if embedding generation fails
+      }
+
       return data;
     },
     onSuccess: () => {
@@ -108,6 +130,18 @@ export const useKnowledgeArticles = (searchTerm?: string) => {
   // Delete article mutation
   const deleteArticle = useMutation({
     mutationFn: async (id: string) => {
+      // Delete from documents table first (for embeddings)
+      const { error: docError } = await supabase
+        .from('documents')
+        .delete()
+        .eq('id', id);
+
+      if (docError) {
+        console.warn('⚠️ Failed to delete document embedding:', docError);
+        // Continue with article deletion even if document deletion fails
+      }
+
+      // Delete the article
       const { error } = await supabase
         .from('knowledge_articles')
         .delete()
@@ -132,8 +166,6 @@ export const useKnowledgeArticles = (searchTerm?: string) => {
 
 // Hook for fetching a single article
 export const useKnowledgeArticle = (id: string) => {
-  const { user } = useAuth();
-
   return useQuery({
     queryKey: ['knowledge-article', id],
     queryFn: async () => {
