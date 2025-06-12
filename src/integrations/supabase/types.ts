@@ -892,6 +892,10 @@ export type Database = {
         Args: Record<PropertyKey, never>
         Returns: number
       }
+      delete_documents_by_article_id: {
+        Args: { article_id: string }
+        Returns: undefined
+      }
       fix_inconsistent_user_companies: {
         Args: Record<PropertyKey, never>
         Returns: undefined
