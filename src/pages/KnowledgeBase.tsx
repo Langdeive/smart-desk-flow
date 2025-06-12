@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
-import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/dialog";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import { Search, Plus, Lightbulb, Edit, Book, ArrowUpRight, Trash2 } from "lucide-react";
 import { useKnowledgeArticles } from "@/hooks/useKnowledgeArticles";
 import { ArticleDialog } from "@/components/knowledge/ArticleDialog";
@@ -196,15 +196,6 @@ const KnowledgeBase = () => {
                         +{article.keywords.length - 3}
                       </Badge>
                     )}
-                  </div>
-                )}
-                
-                {article.ticketId && (
-                  <div className="mt-4">
-                    <Badge variant="secondary" className="bg-green-100 text-green-800 border-green-200">
-                      <Book className="mr-1 h-3 w-3" />
-                      Gerado de ticket
-                    </Badge>
                   </div>
                 )}
               </CardContent>

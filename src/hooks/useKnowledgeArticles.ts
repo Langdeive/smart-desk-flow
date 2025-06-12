@@ -156,7 +156,6 @@ export const useKnowledgeArticle = (id: string) => {
         createdAt: new Date(data.created_at),
         updatedAt: new Date(data.updated_at),
         isPublic: data.is_public,
-        ticketId: data.ticket_id,
       } as KnowledgeArticle;
     },
     enabled: !!id,
