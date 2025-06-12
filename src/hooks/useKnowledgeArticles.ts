@@ -129,11 +129,9 @@ export const useKnowledgeArticles = (searchTerm?: string) => {
   // Delete article mutation
   const deleteArticle = useMutation({
     mutationFn: async (id: string) => {
-      // Delete from documents table first (for embeddings) - use metadata to find the right document
+      // Delete from documents table first (for embeddings) using RPC function
       const { error: docError } = await supabase
-        .from('documents')
-        .delete()
-        .eq('metadata->article_id', id);
+        .rpc('delete_documents_by_article_id', { article_id: id });
 
       if (docError) {
         console.warn('⚠️ Failed to delete document embedding:', docError);
