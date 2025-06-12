@@ -1,4 +1,3 @@
-
 import { supabase } from '@/integrations/supabase/client';
 import { PendingArticle, ArticleGenerationLog, ApproveArticleData } from '@/types/helena';
 
@@ -23,7 +22,13 @@ export const helenaService = {
       throw error;
     }
 
-    return data || [];
+    // Transform the data to ensure similar_articles_found is properly typed
+    return (data || []).map(article => ({
+      ...article,
+      similar_articles_found: Array.isArray(article.similar_articles_found) 
+        ? article.similar_articles_found 
+        : []
+    }));
   },
 
   /**
@@ -44,7 +49,13 @@ export const helenaService = {
       throw error;
     }
 
-    return data;
+    // Transform the data to ensure similar_articles_found is properly typed
+    return {
+      ...data,
+      similar_articles_found: Array.isArray(data.similar_articles_found) 
+        ? data.similar_articles_found 
+        : []
+    };
   },
 
   /**

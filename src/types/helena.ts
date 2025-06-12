@@ -8,7 +8,7 @@ export interface PendingArticle {
   keywords: string[];
   confidence_score: number;
   analysis_summary?: string;
-  similar_articles_found: any[];
+  similar_articles_found: any[]; // Explicitly typed as array
   status: 'pending' | 'approved' | 'rejected' | 'editing';
   created_at: string;
   approved_at?: string;
