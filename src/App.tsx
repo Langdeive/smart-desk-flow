@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { RequireAuth } from "@/components/auth/RequireAuth";
+import { AppLayout } from "@/components/layout/AppLayout";
 import Index from "./pages/Index";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
@@ -32,65 +33,83 @@ function App() {
         <BrowserRouter>
           <AuthProvider>
             <Routes>
-              {/* Public routes */}
+              {/* Public routes without AppLayout */}
               <Route path="/" element={<Index />} />
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
               <Route path="/company-register" element={<CompanyRegister />} />
               <Route path="/selecionar-plano" element={<PlanSelect />} />
               
-              {/* Protected routes */}
+              {/* Protected routes with AppLayout */}
               <Route path="/dashboard" element={
                 <RequireAuth>
-                  <Dashboard />
+                  <AppLayout>
+                    <Dashboard />
+                  </AppLayout>
                 </RequireAuth>
               } />
               
               <Route path="/tickets" element={
                 <RequireAuth>
-                  <TicketDashboard />
+                  <AppLayout>
+                    <TicketDashboard />
+                  </AppLayout>
                 </RequireAuth>
               } />
               
               <Route path="/tickets/:id" element={
                 <RequireAuth>
-                  <TicketDetail />
+                  <AppLayout>
+                    <TicketDetail />
+                  </AppLayout>
                 </RequireAuth>
               } />
               
               <Route path="/create-ticket" element={
                 <RequireAuth>
-                  <CreateTicket />
+                  <AppLayout>
+                    <CreateTicket />
+                  </AppLayout>
                 </RequireAuth>
               } />
               
               <Route path="/clients" element={
                 <RequireAuth>
-                  <ClientManagement />
+                  <AppLayout>
+                    <ClientManagement />
+                  </AppLayout>
                 </RequireAuth>
               } />
               
               <Route path="/agents" element={
                 <RequireAuth allowedRoles={['admin', 'owner']}>
-                  <AgentManagement />
+                  <AppLayout>
+                    <AgentManagement />
+                  </AppLayout>
                 </RequireAuth>
               } />
               
               <Route path="/knowledge-base" element={
                 <RequireAuth>
-                  <KnowledgeBase />
+                  <AppLayout>
+                    <KnowledgeBase />
+                  </AppLayout>
                 </RequireAuth>
               } />
               
               <Route path="/helena" element={
                 <RequireAuth allowedRoles={['admin', 'owner']}>
-                  <HelenaArticles />
+                  <AppLayout>
+                    <HelenaArticles />
+                  </AppLayout>
                 </RequireAuth>
               } />
               
               <Route path="/settings" element={
                 <RequireAuth allowedRoles={['admin', 'owner']}>
-                  <Settings />
+                  <AppLayout>
+                    <Settings />
+                  </AppLayout>
                 </RequireAuth>
               } />
               
