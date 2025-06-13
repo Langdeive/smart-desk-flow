@@ -9,3 +9,5 @@ export const useAuth = () => {
   }
   return context;
 };
+
+export type { SignInData } from '@/contexts/AuthContext';
