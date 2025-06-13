@@ -1,6 +1,7 @@
 
 import { NavMenu } from "./NavMenu";
 import { Sidebar } from "./Sidebar";
+import { TopBar } from "./TopBar";
 import { Toaster } from "@/components/ui/toaster";
 
 interface AppLayoutProps {
@@ -16,10 +17,10 @@ export function AppLayout({ children }: AppLayoutProps) {
         minHeight: '100vh'
       }}
     >
-      <NavMenu />
+      <TopBar />
       <div className="flex flex-1">
         <Sidebar />
-        <main className="flex-1 lg:ml-64">
+        <main className="flex-1 lg:ml-64 pt-4">
           {children}
         </main>
       </div>
