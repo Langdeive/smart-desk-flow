@@ -14,7 +14,7 @@ export interface KnowledgeArticleInput {
 }
 
 export const useKnowledgeArticles = (searchTerm?: string) => {
-  const { user } = useAuth();
+  const { companyId } = useAuth();
   const queryClient = useQueryClient();
   const { generateEmbedding } = useSemanticSearch();
 
@@ -24,14 +24,14 @@ export const useKnowledgeArticles = (searchTerm?: string) => {
     isLoading,
     error,
   } = useQuery({
-    queryKey: ['knowledge-articles', user?.companyId, searchTerm],
+    queryKey: ['knowledge-articles', companyId, searchTerm],
     queryFn: async () => {
-      if (!user?.companyId) return [];
+      if (!companyId) return [];
 
       let query = supabase
         .from('knowledge_articles')
         .select('*')
-        .eq('company_id', user.companyId)
+        .eq('company_id', companyId)
         .order('updated_at', { ascending: false });
 
       // Add search functionality
@@ -54,13 +54,13 @@ export const useKnowledgeArticles = (searchTerm?: string) => {
         isPublic: article.is_public,
       })) || [];
     },
-    enabled: !!user?.companyId,
+    enabled: !!companyId,
   });
 
   // Create article mutation with embedding generation
   const createArticle = useMutation({
     mutationFn: async (articleData: KnowledgeArticleInput) => {
-      if (!user?.companyId) throw new Error('Company ID not found');
+      if (!companyId) throw new Error('Company ID not found');
 
       const { data, error } = await supabase
         .from('knowledge_articles')
@@ -68,7 +68,7 @@ export const useKnowledgeArticles = (searchTerm?: string) => {
           title: articleData.title,
           content: articleData.content,
           keywords: articleData.keywords,
-          company_id: user.companyId,
+          company_id: companyId,
           is_public: articleData.isPublic,
         })
         .select()

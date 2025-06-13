@@ -20,7 +20,7 @@ interface SemanticSearchResponse {
 }
 
 export const useSemanticSearch = () => {
-  const { user } = useAuth();
+  const { companyId } = useAuth();
   const [isSearching, setIsSearching] = useState(false);
   const [searchResults, setSearchResults] = useState<SemanticSearchResult[]>([]);
   const [lastQuery, setLastQuery] = useState<string>('');
@@ -32,7 +32,7 @@ export const useSemanticSearch = () => {
       similarityThreshold?: number;
     } = {}
   ): Promise<SemanticSearchResult[]> => {
-    if (!user?.companyId || !query.trim()) {
+    if (!companyId || !query.trim()) {
       return [];
     }
 
@@ -45,7 +45,7 @@ export const useSemanticSearch = () => {
       const { data, error } = await supabase.functions.invoke('search-knowledge', {
         body: {
           query: query.trim(),
-          companyId: user.companyId,
+          companyId: companyId,
           limit: options.limit || 5,
           similarityThreshold: options.similarityThreshold || 0.7
         }
