@@ -23,15 +23,22 @@ import Forbidden from "./pages/Forbidden";
 import CompanyRegister from "./pages/CompanyRegister";
 import PlanSelect from "./pages/PlanSelect";
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: 1,
+      refetchOnWindowFocus: false,
+    },
+  },
+});
 
 function App() {
   return (
-    <QueryClientProvider client={queryClient}>
-      <TooltipProvider>
-        <Toaster />
-        <BrowserRouter>
-          <AuthProvider>
+    <BrowserRouter>
+      <QueryClientProvider client={queryClient}>
+        <AuthProvider>
+          <TooltipProvider>
+            <Toaster />
             <Routes>
               {/* Public routes without AppLayout */}
               <Route path="/" element={<Index />} />
@@ -117,10 +124,10 @@ function App() {
               <Route path="/403" element={<Forbidden />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
-          </AuthProvider>
-        </BrowserRouter>
-      </TooltipProvider>
-    </QueryClientProvider>
+          </TooltipProvider>
+        </AuthProvider>
+      </QueryClientProvider>
+    </BrowserRouter>
   );
 }
 
