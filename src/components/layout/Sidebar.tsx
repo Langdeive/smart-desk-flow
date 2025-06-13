@@ -46,14 +46,14 @@ export function Sidebar({ className }: SidebarProps) {
     {
       title: "Cadastros",
       items: [
-        { label: "Clientes", href: "/configuracoes/clientes", icon: Users },
-        { label: "Agentes", href: "/configuracoes/agentes", icon: UserCircle },
+        { label: "Clientes", href: "/clients", icon: Users },
+        { label: "Agentes", href: "/agents", icon: UserCircle },
       ],
     },
     {
       title: "Base de Conhecimento",
       items: [
-        { label: "Artigos", href: "/knowledge", icon: BookOpen },
+        { label: "Artigos", href: "/knowledge-base", icon: BookOpen },
       ],
     },
     {
