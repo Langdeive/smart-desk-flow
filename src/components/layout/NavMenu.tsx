@@ -17,43 +17,43 @@ const menuItems = [
     name: "Dashboard",
     href: "/dashboard",
     icon: Home,
-    roles: ["admin", "agent", "owner"]
+    roles: ["admin", "agent", "owner", "developer"]
   },
   {
     name: "Tickets",
     href: "/tickets",
     icon: TicketCheck,
-    roles: ["admin", "agent", "owner"]
+    roles: ["admin", "agent", "owner", "developer"]
   },
   {
     name: "Clientes",
     href: "/clients",
     icon: Users,
-    roles: ["admin", "agent", "owner"]
+    roles: ["admin", "agent", "owner", "developer"]
   },
   {
     name: "Base de Conhecimento",
     href: "/knowledge-base",
     icon: BookOpen,
-    roles: ["admin", "agent", "owner"]
+    roles: ["admin", "agent", "owner", "developer"]
   },
   {
     name: "Helena - IA",
     href: "/helena",
     icon: Bot,
-    roles: ["admin", "owner"]
+    roles: ["admin", "owner", "developer"]
   },
   {
     name: "Agentes",
     href: "/agents",
     icon: UserPlus,
-    roles: ["admin", "owner"]
+    roles: ["admin", "owner", "developer"]
   },
   {
     name: "Configurações",
     href: "/settings",
     icon: Settings,
-    roles: ["admin", "owner"]
+    roles: ["admin", "owner", "developer"]
   },
 ];
 

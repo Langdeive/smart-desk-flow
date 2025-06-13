@@ -133,8 +133,8 @@ export default function AgentManagement() {
     );
   }
 
-  // Check if user has the right permissions (owner or admin)
-  const canManageAgents = role === 'owner' || role === 'admin';
+  // Check if user has the right permissions (owner, admin, or developer)
+  const canManageAgents = role === 'owner' || role === 'admin' || role === 'developer';
 
   return (
     <div className="container mx-auto p-4">

@@ -29,6 +29,67 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [userRole, setUserRole] = useState<string | null>(null);
+  const [userCompanyId, setUserCompanyId] = useState<string | null>(null);
+
+  // Função para buscar role da tabela user_companies
+  const fetchUserCompanyRole = async (userId: string) => {
+    try {
+      const { data, error } = await supabase
+        .from('user_companies')
+        .select('role, company_id')
+        .eq('user_id', userId)
+        .single();
+      
+      if (error) {
+        console.log('No user_companies record found:', error.message);
+        return { role: null, companyId: null };
+      }
+      
+      console.log('✅ User company data found:', data);
+      return { role: data.role, companyId: data.company_id };
+    } catch (error) {
+      console.error('Error fetching user company role:', error);
+      return { role: null, companyId: null };
+    }
+  };
+
+  // Função para determinar o role com hierarquia de prioridade
+  const determineUserRole = async (user: User) => {
+    console.log('🔍 Determining user role for:', user.email);
+    
+    // 1. Primeira prioridade: user_companies (mais confiável)
+    const { role: companyRole, companyId } = await fetchUserCompanyRole(user.id);
+    
+    if (companyRole) {
+      console.log('✅ Role found in user_companies:', companyRole);
+      setUserRole(companyRole);
+      setUserCompanyId(companyId);
+      return;
+    }
+    
+    // 2. Segunda prioridade: user_metadata
+    const userMetadataRole = user.user_metadata?.role;
+    if (userMetadataRole) {
+      console.log('✅ Role found in user_metadata:', userMetadataRole);
+      setUserRole(userMetadataRole);
+      setUserCompanyId(user.user_metadata?.company_id || null);
+      return;
+    }
+    
+    // 3. Terceira prioridade: app_metadata
+    const appMetadataRole = user.app_metadata?.role;
+    if (appMetadataRole) {
+      console.log('✅ Role found in app_metadata:', appMetadataRole);
+      setUserRole(appMetadataRole);
+      setUserCompanyId(user.app_metadata?.company_id || null);
+      return;
+    }
+    
+    console.log('⚠️ No role found for user, defaulting to null');
+    setUserRole(null);
+    setUserCompanyId(null);
+  };
 
   useEffect(() => {
     let mounted = true;
@@ -44,6 +105,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         if (mounted) {
           setSession(session);
           setUser(session?.user ?? null);
+          
+          if (session?.user) {
+            await determineUserRole(session.user);
+          }
+          
           setLoading(false);
         }
       } catch (error) {
@@ -65,8 +131,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         if (mounted) {
           setSession(session);
           setUser(session?.user ?? null);
-          setLoading(false);
           setError(null);
+          
+          if (session?.user) {
+            await determineUserRole(session.user);
+          } else {
+            setUserRole(null);
+            setUserCompanyId(null);
+          }
+          
+          setLoading(false);
         }
       }
     );
@@ -137,8 +211,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   // Derived values
   const isAuthenticated = !!user;
   const emailVerified = user?.email_confirmed_at != null;
-  const role = user?.app_metadata?.role || user?.user_metadata?.role || null;
-  const companyId = user?.app_metadata?.company_id || user?.user_metadata?.company_id || null;
+  
+  // Log final role information for debugging
+  useEffect(() => {
+    if (user && userRole !== null) {
+      console.log('👤 Current user role:', userRole);
+      console.log('🏢 Current company ID:', userCompanyId);
+      console.log('📧 User email:', user.email);
+    }
+  }, [user, userRole, userCompanyId]);
 
   const value: AuthContextType = {
     user,
@@ -148,8 +229,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     signOut,
     isAuthenticated,
     emailVerified,
-    role,
-    companyId,
+    role: userRole,
+    companyId: userCompanyId,
     error,
     resendVerificationEmail,
   };

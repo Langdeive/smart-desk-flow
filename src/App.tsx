@@ -89,7 +89,7 @@ function App() {
               } />
               
               <Route path="/agents" element={
-                <RequireAuth allowedRoles={['admin', 'owner']}>
+                <RequireAuth allowedRoles={['admin', 'owner', 'developer']}>
                   <AppLayout>
                     <AgentManagement />
                   </AppLayout>
@@ -105,7 +105,7 @@ function App() {
               } />
               
               <Route path="/helena" element={
-                <RequireAuth allowedRoles={['admin', 'owner']}>
+                <RequireAuth allowedRoles={['admin', 'owner', 'developer']}>
                   <AppLayout>
                     <HelenaArticles />
                   </AppLayout>
@@ -113,7 +113,7 @@ function App() {
               } />
               
               <Route path="/settings" element={
-                <RequireAuth allowedRoles={['admin', 'owner']}>
+                <RequireAuth allowedRoles={['admin', 'owner', 'developer']}>
                   <AppLayout>
                     <Settings />
                   </AppLayout>
