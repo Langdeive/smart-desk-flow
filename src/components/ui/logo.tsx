@@ -14,8 +14,8 @@ export const Logo: React.FC<LogoProps> = ({ className, variant = "full", size = 
   const showText = variant === "full";
 
   const sizeStyles = {
-    sm: { img: "h-8", text: "ml-2 text-xl" },
-    md: { img: "h-16", text: "ml-2.5 text-3xl" },
+    sm: { img: "h-10", text: "ml-2 text-xl" },
+    md: { img: "h-14", text: "ml-2.5 text-3xl" },
     lg: { img: "h-20", text: "ml-3 text-5xl" },
   };
 

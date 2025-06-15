@@ -60,16 +60,16 @@
 
 /* Glass effect for Navbar */
 #landing-page .glass-effect {
-  background-color: hsl(var(--background) / 0.8);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
+  background-color: rgba(248, 250, 252, 0.8); /* Fallback para navegadores antigos */
   border-bottom-width: 1px;
-  border-color: hsl(var(--border));
+  border-color: rgba(229, 231, 235, 0.5);
 }
 
 @supports (backdrop-filter: blur(10px)) or (-webkit-backdrop-filter: blur(10px)) {
   #landing-page .glass-effect {
-    background-color: hsl(var(--background) / 0.6);
+    background-color: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
   }
 }
 
