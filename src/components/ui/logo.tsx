@@ -4,13 +4,14 @@ import { cn } from "@/lib/utils";
 
 interface LogoProps {
   className?: string;
-  variant?: "full" | "icon" | "hero";
+  variant?: "full" | "icon" | "hero" | "navbar-large";
   spin?: boolean;
   glow?: boolean;
 }
 
 export const Logo: React.FC<LogoProps> = ({ className, variant = "full", spin = false, glow = false }) => {
   const isHero = variant === "hero";
+  const isNavbarLarge = variant === "navbar-large";
   const showText = variant === "full";
 
   return (
@@ -25,7 +26,7 @@ export const Logo: React.FC<LogoProps> = ({ className, variant = "full", spin = 
           alt="Solveflow Logo" 
           className={cn(
             "w-auto",
-            isHero ? "h-20" : "h-8"
+            isHero ? "h-20" : isNavbarLarge ? "h-10" : "h-8"
           )}
         />
       </div>

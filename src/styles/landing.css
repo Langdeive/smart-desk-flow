@@ -166,3 +166,11 @@
 #landing-page section.section-white {
   background: #fff;
 }
+
+/* Glass effect for Navbar */
+.glass-effect {
+  background-color: rgba(255, 255, 255, 0.75);
+  backdrop-filter: blur(10px) saturate(180%);
+  -webkit-backdrop-filter: blur(10px) saturate(180%);
+  border-bottom: 1px solid rgba(229, 231, 235, 0.5);
+}

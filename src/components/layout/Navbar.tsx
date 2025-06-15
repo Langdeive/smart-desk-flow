@@ -30,7 +30,7 @@ export function Navbar() {
       }`}
     >
       <div className="container mx-auto flex items-center justify-between px-4">
-        <Logo variant="full" />
+        <Logo variant="navbar-large" glow={scrolled} />
 
         <nav className="hidden md:flex items-center gap-8">
           <a 
