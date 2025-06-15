@@ -20,7 +20,7 @@ export function HelenaStatsCard({
   variant = 'pending'
 }: HelenaStatsCardProps) {
   const variantStyles = {
-    pending: 'bg-purple-50 border-purple-200 text-purple-800',
+    pending: 'bg-yellow-50 border-yellow-200 text-yellow-800',
     approved: 'bg-green-50 border-green-200 text-green-800',
     rejected: 'bg-red-50 border-red-200 text-red-800',
     confidence: 'bg-blue-50 border-blue-200 text-blue-800',

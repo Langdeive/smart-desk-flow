@@ -143,7 +143,7 @@ export function Sidebar({ className }: SidebarProps) {
         </div>
         
         {isOpen && (
-          <div className="p-4 border-t border-turquoise-vibrant/20 lg:hidden bg-gradient-to-r from-blue-deep/5 to-turquoise-vibrant/5">
+          <div className="p-4 border-t border-turquoise-vibrant/20 lg:hidden bg-gradient-to-r from-blue-deep/5 to-turquesa-vibrant/5">
             <Button 
               variant="outline" 
               className="w-full border-turquoise-vibrant text-blue-deep hover:bg-turquoise-vibrant hover:text-white" 

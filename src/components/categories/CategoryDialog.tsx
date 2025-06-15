@@ -1,4 +1,3 @@
-
 import React, { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -53,10 +52,11 @@ interface CategoryDialogProps {
   category?: Category | null;
 }
 
-// Paleta sem yellow/amber
+// Paleta sem yellow - substituído por cores da identidade visual
 const DEFAULT_COLORS = [
   '#ef4444', // red
   '#f97316', // orange
+  '#f59e0b', // amber (substituindo yellow)
   '#84cc16', // lime
   '#22c55e', // green
   '#10b981', // emerald
