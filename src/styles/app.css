@@ -1,0 +1,131 @@
+
+#app-container h1, 
+#app-container h2, 
+#app-container h3, 
+#app-container h4, 
+#app-container h5, 
+#app-container h6 {
+  font-family: 'Outfit', sans-serif;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: rgb(30 41 59);
+}
+
+#app-container h1 {
+  @apply text-h1;
+}
+
+#app-container h2 {
+  @apply text-h2;
+  font-weight: 600;
+}
+
+#app-container h3 {
+  @apply text-h3;
+  font-weight: 600;
+}
+
+#app-container p {
+  @apply text-body;
+  color: rgb(71 85 105);
+}
+
+#app-container small {
+  @apply text-small;
+  font-weight: 300;
+  color: rgb(100 116 139);
+}
+
+/* =================== CLASSES ESPECÍFICAS SOLVFLOW KPI CARDS =================== */
+#app-container .kpi-card-primary {
+  background: linear-gradient(135deg, #ffffff 0%, rgba(6, 182, 212, 0.05) 100%);
+  border: 1px solid rgba(6, 182, 212, 0.2);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+#app-container .kpi-card-primary:hover {
+  background: linear-gradient(135deg, #ffffff 0%, rgba(6, 182, 212, 0.1) 100%);
+  border-color: rgb(6 182 212);
+  box-shadow: 0 10px 25px rgba(6, 182, 212, 0.15);
+}
+
+#app-container .kpi-card-secondary {
+  background: linear-gradient(135deg, #ffffff 0%, rgba(30, 58, 138, 0.05) 100%);
+  border: 1px solid rgba(30, 58, 138, 0.2);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+#app-container .kpi-card-secondary:hover {
+  background: linear-gradient(135deg, #ffffff 0%, rgba(30, 58, 138, 0.1) 100%);
+  border-color: rgb(30 58 138);
+  box-shadow: 0 10px 25px rgba(30, 58, 138, 0.15);
+}
+
+#app-container .kpi-card-accent {
+  background: linear-gradient(135deg, #ffffff 0%, rgba(124, 58, 237, 0.05) 100%);
+  border: 1px solid rgba(124, 58, 237, 0.2);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+#app-container .kpi-card-accent:hover {
+  background: linear-gradient(135deg, #ffffff 0%, rgba(124, 58, 237, 0.1) 100%);
+  border-color: rgb(124 58 237);
+  box-shadow: 0 10px 25px rgba(124, 58, 237, 0.15);
+}
+
+#app-container .kpi-card-ai {
+  background: linear-gradient(135deg, #ffffff 0%, rgba(219, 39, 119, 0.05) 100%);
+  border: 1px solid rgba(219, 39, 119, 0.2);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+#app-container .kpi-card-ai:hover {
+  background: linear-gradient(135deg, #ffffff 0%, rgba(219, 39, 119, 0.1) 100%);
+  border-color: rgb(219 39 119);
+  box-shadow: 0 10px 25px rgba(219, 39, 119, 0.15);
+}
+
+/* Cards com cores consistentes */
+#app-container .modern-card {
+  @apply bg-white rounded-xl shadow-sm;
+  background: linear-gradient(135deg, #ffffff 0%, #fafbfc 100%);
+  border: 1px solid rgb(226 232 240);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+#app-container .modern-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 40px rgba(6, 182, 212, 0.1);
+  border-color: rgb(6 182 212);
+}
+
+/* Tabs personalizados SolveFlow */
+#app-container .tabs-trigger-solvflow {
+  background: linear-gradient(135deg, rgba(6, 182, 212, 0.1) 0%, rgba(124, 58, 237, 0.1) 100%);
+  border: 1px solid rgba(6, 182, 212, 0.2);
+  color: rgb(30, 58, 138);
+  transition: all 0.3s ease;
+}
+
+#app-container .tabs-trigger-solvflow[data-state="active"] {
+  background: linear-gradient(135deg, #1E3A8A 0%, #06B6D4 100%);
+  color: white;
+  border-color: transparent;
+  box-shadow: 0 4px 12px rgba(6, 182, 212, 0.3);
+}
+
+/* Sidebar consistente */
+#app-container .sidebar-item-solvflow {
+  color: rgb(30, 58, 138);
+  transition: all 0.3s ease;
+}
+
+#app-container .sidebar-item-solvflow:hover {
+  background: linear-gradient(135deg, rgba(6, 182, 212, 0.1) 0%, rgba(124, 58, 237, 0.05) 100%);
+  color: rgb(6, 182, 212);
+}
+
+#app-container .sidebar-item-solvflow.active {
+  background: linear-gradient(135deg, #1E3A8A 0%, #06B6D4 100%);
+  color: white;
+}

@@ -1,3 +1,4 @@
+
 import React, { useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
@@ -8,6 +9,7 @@ import Logo from '@/components/ui/logo';
 import { Navbar } from '@/components/layout/Navbar';
 import { Section } from '@/components/common/Section';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import '@/styles/landing.css';
 
 export default function Index() {
   // Scroll reveal effect
@@ -36,7 +38,7 @@ export default function Index() {
   }, []);
 
   return (
-    <div className="min-h-screen w-full bg-gradient-to-br from-gray-light via-white to-gray-light">
+    <div id="landing-page" className="min-h-screen w-full bg-gradient-to-br from-gray-light via-white to-gray-light">
       <Navbar />
       <div className="pt-20 w-full">
         

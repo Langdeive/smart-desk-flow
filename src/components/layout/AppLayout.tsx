@@ -1,8 +1,8 @@
 
-import { NavMenu } from "./NavMenu";
 import { Sidebar } from "./Sidebar";
 import { TopBar } from "./TopBar";
 import { Toaster } from "@/components/ui/toaster";
+import '@/styles/app.css';
 
 interface AppLayoutProps {
   children: React.ReactNode;
@@ -11,11 +11,8 @@ interface AppLayoutProps {
 export function AppLayout({ children }: AppLayoutProps) {
   return (
     <div 
-      className="min-h-screen flex flex-col"
-      style={{
-        background: 'linear-gradient(135deg, #F8FAFC 0%, #E2E8F0 100%)',
-        minHeight: '100vh'
-      }}
+      id="app-container"
+      className="min-h-screen flex flex-col bg-gradient-neutral"
     >
       <TopBar />
       <div className="flex flex-1">

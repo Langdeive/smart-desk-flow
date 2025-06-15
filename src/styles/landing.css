@@ -1,43 +1,61 @@
 
-#root {
-  max-width: 100%; /* Changed from 1280px to 100% */
-  margin: 0 auto;
-  padding: 0; /* Removed padding to allow full width */
-  background: linear-gradient(135deg, #F8FAFC 0%, #E2E8F0 100%) !important;
-  min-height: 100vh !important;
+#landing-page h1, 
+#landing-page h2, 
+#landing-page h3, 
+#landing-page h4, 
+#landing-page h5, 
+#landing-page h6 {
+  font-family: 'Outfit', sans-serif;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: rgb(30 41 59);
 }
 
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+#landing-page h1 {
+  @apply text-h1;
+  background: linear-gradient(135deg, #1E3A8A 0%, #06B6D4 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .logo-spin {
-    animation: logo-spin infinite 1s linear;
-  }
+#landing-page h2 {
+  @apply text-h2;
+  font-weight: 600;
+}
+
+#landing-page h3 {
+  @apply text-h3;
+  font-weight: 600;
+}
+
+#landing-page p {
+  @apply text-body;
+  color: rgb(71 85 105);
+}
+
+#landing-page small {
+  @apply text-small;
+  font-weight: 300;
+  color: rgb(100 116 139);
 }
 
 /* Custom gradient text */
-.gradient-text {
+#landing-page .gradient-text {
   @apply bg-gradient-to-r from-blue-deep to-turquoise-vibrant bg-clip-text text-transparent;
   text-shadow: 0px 2px 4px rgba(0, 0, 0, 0.05);
 }
 
 /* Additional custom styles for the landing page */
-.hero-gradient {
+#landing-page .hero-gradient {
   background: linear-gradient(to right, rgba(213, 246, 243, 1) 0%, rgba(255, 255, 255, 0) 100%);
 }
 
-.feature-icon {
+#landing-page .feature-icon {
   @apply flex items-center justify-center h-12 w-12 rounded-full bg-turquoise-vibrant/10 text-turquoise-vibrant;
 }
 
-.testimonial-avatar {
+#landing-page .testimonial-avatar {
   @apply rounded-full bg-cover bg-center;
 }
 
@@ -54,12 +72,12 @@
   }
 }
 
-.animate-logo-glow {
+#landing-page .animate-logo-glow {
   animation: logo-glow 4s infinite alternate;
 }
 
 /* Hero image size adjustment */
-.hero-dashboard-image {
+#landing-page .hero-dashboard-image {
   max-width: 90%;
   max-height: 380px;
   object-fit: contain;
@@ -67,86 +85,84 @@
 }
 
 /* Feature items styling */
-.feature-item {
+#landing-page .feature-item {
   position: relative;
   z-index: 10;
   backdrop-filter: blur(4px);
   transition: all 0.3s ease;
 }
 
-.feature-item:hover {
+#landing-page .feature-item:hover {
   transform: translateY(-4px);
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.07);
 }
 
 /* Features container with the gradient overlay */
-.features-container {
+#landing-page .features-container {
   min-height: 500px;
   position: relative;
 }
 
 /* Scroll reveal animations */
-.scroll-reveal {
+#landing-page .scroll-reveal {
   opacity: 0;
   transform: translateY(12px);
   transition: opacity 0.5s ease, transform 0.5s ease;
 }
 
-.scroll-reveal.revealed {
+#landing-page .scroll-reveal.revealed {
   opacity: 1;
   transform: translateY(0);
 }
 
 /* Card hover effects */
-.hover-card {
+#landing-page .hover-card {
   transition: all 0.15s ease-in-out;
 }
 
-.hover-card:hover {
+#landing-page .hover-card:hover {
   transform: translateY(-4px);
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
 }
 
 /* Focus states for accessibility */
-a:focus-visible, button:focus-visible {
+#landing-page a:focus-visible, #landing-page button:focus-visible {
   outline: 2px solid #C4B5FD;
   outline-offset: 2px;
 }
 
 /* Section padding adjustments */
-.section-spacing {
+#landing-page .section-spacing {
   padding: 3.5rem 0;
 }
 
-.section-spacing-sm {
+#landing-page .section-spacing-sm {
   padding: 2.5rem 0;
 }
 
 /* Text width constraint for readability */
-.readable-width {
+#landing-page .readable-width {
   max-width: 700px;
   margin-left: auto;
   margin-right: auto;
 }
 
 /* Problem cards styling */
-.problem-card {
+#landing-page .problem-card {
   border-color: #FCA5A5;
   background-color: #FEF2F2;
 }
 
 /* Solution cards styling */
-.solution-card {
+#landing-page .solution-card {
   border-color: #86EFAC;
   background-color: #F0FDF4;
 }
 
-/* Seção alternada com fundo e gradiente */
-section.section-alt {
-  background: linear-gradient(135deg, #F8FAFC 0%, #E2E8F0 100%) !important;
+#landing-page section.section-alt {
+  background: linear-gradient(135deg, #F8FAFC 0%, #E2E8F0 100%);
 }
 
-/* Seção branca sem gradiente */
-section.section-white {
-  background: linear-gradient(135deg, #F8FAFC 0%, #E2E8F0 100%) !important;
+#landing-page section.section-white {
+  background: #fff;
 }
