@@ -1,3 +1,4 @@
+
 import React, { useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
@@ -45,56 +46,71 @@ export default function Index() {
         <section className="w-full py-20 section-modern overflow-hidden">
           <div className="decorative-dots absolute inset-0 opacity-30"></div>
           <div className="container mx-auto px-4 relative z-10">
-            <div className="w-full flex flex-col items-center text-center animate-slide-in-up">
-              <div className="inline-flex items-center px-4 py-2 rounded-full bg-gradient-secondary text-white text-sm font-medium animate-pulse-glow mb-6">
-                <Sparkles className="h-4 w-4 mr-2" />
-                IA na sua empresa
-              </div>
-              
-              <div>
-                <h1 className="text-4xl lg:text-6xl font-outfit font-bold mb-6 leading-tight">
-                  Tickets resolvidos antes mesmo de chegarem ao seu 
-                  <span className="gradient-text block mt-2">time</span>
-                </h1>
-                <p className="text-xl text-gray-medium leading-relaxed max-w-3xl mx-auto">
-                  SolveFlow transforma seu suporte com IA que classifica, resolve e aprende automaticamente, 
-                  escalando sua operação sem aumentar custos.
-                </p>
-              </div>
-              
-              <div className="flex flex-col sm:flex-row gap-4 mt-8">
-                <Button 
-                  asChild 
-                  size="lg" 
-                  className="modern-button bg-gradient-primary text-white shadow-glow px-8 py-4 text-lg font-medium"
-                >
-                  <Link to="/register" className="flex items-center justify-center">
-                    Teste grátis por 14 dias 
-                    <ArrowRight className="ml-2 h-5 w-5" />
-                  </Link>
-                </Button>
-                <Button 
-                  asChild 
-                  variant="outline" 
-                  size="lg" 
-                  className="modern-button border-2 border-turquoise-vibrant text-turquoise-vibrant hover:bg-turquoise-vibrant hover:text-white px-8 py-4 text-lg font-medium"
-                >
-                  <Link to="/selecionar-plano">Ver demonstração</Link>
-                </Button>
-              </div>
-              
-              <div className="flex items-center gap-6 pt-8 justify-center w-full">
-                <div className="text-center">
-                  <div className="text-2xl font-outfit font-bold gradient-text">3K+</div>
-                  <div className="text-sm text-gray-medium">Tickets resolvidos</div>
+            <div className="flex flex-col lg:flex-row items-center gap-12">
+              <div className="lg:w-1/2 flex flex-col items-center lg:items-start text-center lg:text-left animate-slide-in-up">
+                <Logo variant="hero" glow className="mb-6" />
+                
+                <div className="inline-flex items-center px-4 py-2 rounded-full bg-gradient-secondary text-white text-sm font-medium animate-pulse-glow mb-6">
+                  <Sparkles className="h-4 w-4 mr-2" />
+                  IA na sua empresa
                 </div>
-                <div className="text-center">
-                  <div className="text-2xl font-outfit font-bold gradient-text">90%</div>
-                  <div className="text-sm text-gray-medium">Automação</div>
+                
+                <div>
+                  <h1 className="text-4xl lg:text-6xl font-outfit font-bold mb-6 leading-tight">
+                    Tickets resolvidos antes mesmo de chegarem ao seu 
+                    <span className="gradient-text block mt-2">time</span>
+                  </h1>
+                  <p className="text-xl text-gray-medium leading-relaxed max-w-xl mx-auto lg:mx-0">
+                    SolveFlow transforma seu suporte com IA que classifica, resolve e aprende automaticamente, 
+                    escalando sua operação sem aumentar custos.
+                  </p>
                 </div>
-                <div className="text-center">
-                  <div className="text-2xl font-outfit font-bold gradient-text">24h</div>
-                  <div className="text-sm text-gray-medium">Setup</div>
+                
+                <div className="flex flex-col sm:flex-row gap-4 mt-8 w-full sm:w-auto">
+                  <Button 
+                    asChild 
+                    size="lg" 
+                    className="modern-button bg-gradient-primary text-white shadow-glow px-8 py-4 text-lg font-medium"
+                  >
+                    <Link to="/register" className="flex items-center justify-center">
+                      Teste grátis por 14 dias 
+                      <ArrowRight className="ml-2 h-5 w-5" />
+                    </Link>
+                  </Button>
+                  <Button 
+                    asChild 
+                    variant="outline" 
+                    size="lg" 
+                    className="modern-button border-2 border-turquoise-vibrant text-turquoise-vibrant hover:bg-turquoise-vibrant hover:text-white px-8 py-4 text-lg font-medium"
+                  >
+                    <Link to="/selecionar-plano">Ver demonstração</Link>
+                  </Button>
+                </div>
+                
+                <div className="flex items-center gap-6 pt-8 justify-center lg:justify-start w-full">
+                  <div className="text-center">
+                    <div className="text-2xl font-outfit font-bold gradient-text">3K+</div>
+                    <div className="text-sm text-gray-medium">Tickets resolvidos</div>
+                  </div>
+                  <div className="text-center">
+                    <div className="text-2xl font-outfit font-bold gradient-text">90%</div>
+                    <div className="text-sm text-gray-medium">Automação</div>
+                  </div>
+                  <div className="text-center">
+                    <div className="text-2xl font-outfit font-bold gradient-text">24h</div>
+                    <div className="text-sm text-gray-medium">Setup</div>
+                  </div>
+                </div>
+              </div>
+              
+              <div className="lg:w-1/2 relative animate-float">
+                <div className="relative">
+                  <div className="absolute inset-0 bg-gradient-primary rounded-2xl opacity-20 blur-xl"></div>
+                  <img 
+                    src="/lovable-uploads/a9745599-7fd2-4a87-a7bf-e46917dec514.png" 
+                    alt="Dashboard SolveFlow" 
+                    className="relative z-10 w-full max-w-lg mx-auto rounded-2xl shadow-modern-lg"
+                  />
                 </div>
               </div>
             </div>
