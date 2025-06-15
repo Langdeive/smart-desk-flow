@@ -1,4 +1,3 @@
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -34,9 +33,9 @@
     --success: 16 185 129; /* #10B981 */
     --success-foreground: 255 255 255; /* #FFFFFF */
 
-    --border: 226 232 240; /* #E2E8F0 - CORRIGIDO: sem amarelo */
+    --border: 226 232 240; /* #E2E8F0 */
     --input: 226 232 240; /* #E2E8F0 */
-    --ring: 6 182 212; /* #06B6D4 - CORRIGIDO: turquesa */
+    --ring: 6 182 212; /* #06B6D4 - Turquesa Vibrante para foco */
 
     --radius: 12px;
 
@@ -79,9 +78,9 @@
     --success: 16 185 129; /* #10B981 */
     --success-foreground: 255 255 255; /* #FFFFFF */
 
-    --border: 71 85 105; /* CORRIGIDO: sem amarelo */
+    --border: 71 85 105;
     --input: 51 65 85;
-    --ring: 6 182 212; /* #06B6D4 */
+    --ring: 6 182 212; /* #06B6D4 - Turquesa Vibrante para foco */
 
     --sidebar-background: 51 65 85;
     --sidebar-foreground: 241 245 249; /* #F1F5F9 */

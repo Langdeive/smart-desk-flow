@@ -24,8 +24,8 @@ const TableHeader = React.forwardRef<
   <thead 
     ref={ref} 
     className={cn(
-      "bg-gradient-to-r from-blue-deep/10 to-turquoise-vibrant/10 border-b-2 border-turquoise-vibrant/30",
-      "[&_tr]:border-b [&_tr]:border-turquoise-vibrant/20", 
+      "bg-gradient-to-r from-blue-deep/10 to-turquoise-vibrant/10 border-b-2 border-turquoise-vibrant/50",
+      "[&_tr]:border-b [&_tr]:border-turquoise-vibrant/30", 
       className
     )} 
     {...props} 
@@ -40,7 +40,7 @@ const TableBody = React.forwardRef<
   <tbody
     ref={ref}
     className={cn(
-      "[&_tr:last-child]:border-0 [&_tr]:border-b [&_tr]:border-turquoise-vibrant/10",
+      "[&_tr:last-child]:border-0 [&_tr]:border-b [&_tr]:border-turquoise-vibrant/20",
       "[&_tr:hover]:bg-gradient-to-r [&_tr:hover]:from-turquoise-vibrant/5 [&_tr:hover]:to-purple-intense/5",
       "[&_tr:hover]:border-turquoise-vibrant/30 [&_tr]:transition-all [&_tr]:duration-200",
       className

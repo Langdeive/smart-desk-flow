@@ -40,10 +40,6 @@ function Badge({ className, variant, ...props }: BadgeProps) {
   return (
     <div 
       className={cn(badgeVariants({ variant }), className)} 
-      style={{
-        borderColor: variant === 'outline' ? 'rgb(226 232 240)' : undefined,
-        color: variant === 'outline' ? 'rgb(30 41 59)' : undefined
-      }}
       {...props} 
     />
   )
