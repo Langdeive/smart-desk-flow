@@ -41,7 +41,7 @@ export function PendingArticleCard({
   const confidenceColor = article.confidence_score >= 0.8 
     ? 'bg-green-100 text-green-800' 
     : article.confidence_score >= 0.6 
-    ? 'bg-yellow-100 text-yellow-800' 
+    ? 'bg-orange-100 text-orange-800' 
     : 'bg-red-100 text-red-800';
 
   const timeAgo = formatDistanceToNow(new Date(article.created_at), {

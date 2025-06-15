@@ -14,7 +14,7 @@ export const TicketFormHeader: React.FC<TicketFormHeaderProps> = ({ slaText, pri
   const priorityColors: Record<TicketPriority, string> = {
     low: "bg-slate-500",
     medium: "bg-blue-500",
-    high: "bg-amber-500",
+    high: "bg-orange-500",
     critical: "bg-red-500"
   };
 

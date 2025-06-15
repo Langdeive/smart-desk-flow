@@ -17,7 +17,7 @@ export const AIProcessingStatus: React.FC<AIProcessingStatusProps> = ({ ticket }
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger asChild>
-              <Badge variant="outline" className="flex items-center gap-1 bg-amber-50 text-amber-700 border-amber-200">
+              <Badge variant="outline" className="flex items-center gap-1 bg-blue-50 text-blue-700 border-blue-200">
                 <Clock className="h-3 w-3" />
                 Aguardando IA
               </Badge>

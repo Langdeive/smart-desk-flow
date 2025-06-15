@@ -56,7 +56,6 @@ interface CategoryDialogProps {
 const DEFAULT_COLORS = [
   '#ef4444', // red
   '#f97316', // orange
-  '#f59e0b', // amber (substituindo yellow)
   '#84cc16', // lime
   '#22c55e', // green
   '#10b981', // emerald

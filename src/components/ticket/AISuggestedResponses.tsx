@@ -137,7 +137,7 @@ const AISuggestedResponses: React.FC<AISuggestedResponsesProps> = ({
   const getConfidenceColor = (confidence: number) => {
     if (confidence >= 0.9) return "bg-green-500";
     if (confidence >= 0.7) return "bg-blue-500";
-    return "bg-amber-500";
+    return "bg-orange-500";
   };
 
   if (loading) {
@@ -190,7 +190,7 @@ const AISuggestedResponses: React.FC<AISuggestedResponsesProps> = ({
                     className={
                       suggestion.confidence >= 0.9 ? "bg-green-100 text-green-800 border-green-300" : 
                       suggestion.confidence >= 0.7 ? "bg-blue-100 text-blue-800 border-blue-300" :
-                      "bg-amber-100 text-amber-800 border-amber-300"
+                      "bg-orange-100 text-orange-800 border-orange-300"
                     }
                   >
                     Confiança: {Math.round(suggestion.confidence * 100)}%
