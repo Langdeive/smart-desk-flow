@@ -63,19 +63,19 @@ function App() {
                   </AppLayout>
                 </RequireAuth>
               } />
+
+              <Route path="/tickets/new" element={
+                <RequireAuth>
+                  <AppLayout>
+                    <CreateTicket />
+                  </AppLayout>
+                </RequireAuth>
+              } />
               
               <Route path="/tickets/:id" element={
                 <RequireAuth>
                   <AppLayout>
                     <TicketDetail />
-                  </AppLayout>
-                </RequireAuth>
-              } />
-              
-              <Route path="/create-ticket" element={
-                <RequireAuth>
-                  <AppLayout>
-                    <CreateTicket />
                   </AppLayout>
                 </RequireAuth>
               } />
