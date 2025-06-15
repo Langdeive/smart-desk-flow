@@ -47,10 +47,12 @@ export default function Index() {
           <div className="decorative-dots absolute inset-0 opacity-30"></div>
           <div className="container mx-auto px-4 relative z-10">
             <div className="flex flex-col lg:flex-row items-center gap-12">
-              <div className="lg:w-1/2 space-y-8 animate-slide-in-up">
-                <div className="inline-flex items-center px-4 py-2 rounded-full bg-gradient-secondary text-white text-sm font-medium animate-pulse-glow">
+              <div className="lg:w-1/2 flex flex-col items-center lg:items-start text-center lg:text-left animate-slide-in-up">
+                <Logo variant="hero" glow className="mb-6" />
+                
+                <div className="inline-flex items-center px-4 py-2 rounded-full bg-gradient-secondary text-white text-sm font-medium animate-pulse-glow mb-6">
                   <Sparkles className="h-4 w-4 mr-2" />
-                  Powered by AI
+                  IA na sua empresa
                 </div>
                 
                 <div>
@@ -58,19 +60,19 @@ export default function Index() {
                     Tickets resolvidos antes mesmo de chegarem ao seu 
                     <span className="gradient-text block mt-2">time</span>
                   </h1>
-                  <p className="text-xl text-gray-medium leading-relaxed max-w-xl">
+                  <p className="text-xl text-gray-medium leading-relaxed max-w-xl mx-auto lg:mx-0">
                     SolveFlow transforma seu suporte com IA que classifica, resolve e aprende automaticamente, 
                     escalando sua operação sem aumentar custos.
                   </p>
                 </div>
                 
-                <div className="flex flex-col sm:flex-row gap-4">
+                <div className="flex flex-col sm:flex-row gap-4 mt-8 w-full sm:w-auto">
                   <Button 
                     asChild 
                     size="lg" 
                     className="modern-button bg-gradient-primary text-white shadow-glow px-8 py-4 text-lg font-medium"
                   >
-                    <Link to="/register" className="flex items-center">
+                    <Link to="/register" className="flex items-center justify-center">
                       Teste grátis por 14 dias 
                       <ArrowRight className="ml-2 h-5 w-5" />
                     </Link>
@@ -85,7 +87,7 @@ export default function Index() {
                   </Button>
                 </div>
                 
-                <div className="flex items-center gap-6 pt-4">
+                <div className="flex items-center gap-6 pt-8 justify-center lg:justify-start w-full">
                   <div className="text-center">
                     <div className="text-2xl font-outfit font-bold gradient-text">3K+</div>
                     <div className="text-sm text-gray-medium">Tickets resolvidos</div>
