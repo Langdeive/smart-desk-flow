@@ -1,4 +1,3 @@
-
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { User, Session } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
@@ -93,53 +92,36 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     let mounted = true;
+    setLoading(true);
 
-    // Get initial session
-    const getInitialSession = async () => {
-      try {
-        const { data: { session }, error } = await supabase.auth.getSession();
-        if (error) {
-          console.error('Error getting session:', error);
-          setError(error.message);
-        }
-        if (mounted) {
-          setSession(session);
-          setUser(session?.user ?? null);
-          
-          if (session?.user) {
-            await determineUserRole(session.user);
-          }
-          
-          setLoading(false);
-        }
-      } catch (error) {
-        console.error('Error in getInitialSession:', error);
-        if (mounted) {
-          setUser(null);
-          setSession(null);
-          setLoading(false);
-        }
-      }
-    };
-
-    getInitialSession();
-
-    // Listen for auth changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      async (event, session) => {
+      (event, session) => {
+        if (!mounted) {
+          return;
+        }
+
         console.log('Auth state changed:', event);
-        if (mounted) {
-          setSession(session);
-          setUser(session?.user ?? null);
-          setError(null);
-          
-          if (session?.user) {
-            await determineUserRole(session.user);
-          } else {
-            setUserRole(null);
-            setUserCompanyId(null);
-          }
-          
+        const currentUser = session?.user ?? null;
+        setSession(session);
+        setUser(currentUser);
+        setError(null);
+
+        if (currentUser) {
+          // Deferir a busca de role para evitar deadlocks
+          // Isso está alinhado com as melhores práticas do Supabase
+          setTimeout(() => {
+            if (mounted) {
+              determineUserRole(currentUser).finally(() => {
+                if (mounted) {
+                  setLoading(false);
+                }
+              });
+            }
+          }, 0);
+        } else {
+          // Se não há usuário, limpamos os dados e paramos o loading
+          setUserRole(null);
+          setUserCompanyId(null);
           setLoading(false);
         }
       }
