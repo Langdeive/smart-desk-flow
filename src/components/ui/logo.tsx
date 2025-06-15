@@ -11,7 +11,7 @@ interface LogoProps {
 
 export const Logo: React.FC<LogoProps> = ({ className, variant = "full", spin = false, glow = false }) => {
   const isHero = variant === "hero";
-  const showText = variant === "full" || variant === "hero";
+  const showText = variant === "full";
 
   return (
     <div className={cn("flex items-center", className)}>
@@ -25,7 +25,7 @@ export const Logo: React.FC<LogoProps> = ({ className, variant = "full", spin = 
           alt="Solveflow Logo" 
           className={cn(
             "w-auto",
-            isHero ? "h-12" : "h-8"
+            isHero ? "h-20" : "h-8"
           )}
         />
       </div>
