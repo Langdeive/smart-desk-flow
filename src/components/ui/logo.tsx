@@ -4,14 +4,20 @@ import { cn } from "@/lib/utils";
 
 interface LogoProps {
   className?: string;
-  variant?: "full" | "icon" | "hero";
+  variant?: "full" | "icon";
+  size?: "sm" | "md" | "lg";
   spin?: boolean;
   glow?: boolean;
 }
 
-export const Logo: React.FC<LogoProps> = ({ className, variant = "full", spin = false, glow = false }) => {
-  const isHero = variant === "hero";
+export const Logo: React.FC<LogoProps> = ({ className, variant = "full", size = "sm", spin = false, glow = false }) => {
   const showText = variant === "full";
+
+  const sizeStyles = {
+    sm: { img: "h-8", text: "ml-2 text-xl" },
+    md: { img: "h-12", text: "ml-2.5 text-3xl" },
+    lg: { img: "h-20", text: "ml-3 text-5xl" },
+  };
 
   return (
     <div className={cn("flex items-center", className)}>
@@ -25,7 +31,7 @@ export const Logo: React.FC<LogoProps> = ({ className, variant = "full", spin = 
           alt="Solveflow Logo" 
           className={cn(
             "w-auto",
-            isHero ? "h-20" : "h-8"
+            sizeStyles[size].img
           )}
         />
       </div>
@@ -33,7 +39,7 @@ export const Logo: React.FC<LogoProps> = ({ className, variant = "full", spin = 
       {showText && (
         <div className={cn(
           "font-manrope font-semibold tracking-heading bg-gradient-to-r from-primary-a to-primary-b bg-clip-text text-transparent",
-          isHero ? "ml-3 text-5xl" : "ml-2 text-xl"
+          sizeStyles[size].text
         )}>
           Solveflow
         </div>

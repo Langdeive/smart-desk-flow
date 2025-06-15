@@ -1,4 +1,3 @@
-
 import React, { useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
@@ -48,7 +47,6 @@ export default function Index() {
           <div className="container mx-auto px-4 relative z-10">
             <div className="flex flex-col lg:flex-row items-center gap-12">
               <div className="lg:w-1/2 flex flex-col items-center lg:items-start text-center lg:text-left animate-slide-in-up">
-                <Logo variant="hero" glow className="mb-6" />
                 
                 <div className="inline-flex items-center px-4 py-2 rounded-full bg-gradient-secondary text-white text-sm font-medium animate-pulse-glow mb-6">
                   <Sparkles className="h-4 w-4 mr-2" />
