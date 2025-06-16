@@ -36,11 +36,11 @@ export function TopBar() {
   } : null;
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+    <header className="sticky top-0 z-50 w-full border-b border-gray-200 bg-white backdrop-blur supports-[backdrop-filter]:bg-white/95 force-white-header">
       <div className="container flex h-14 items-center justify-between px-4">
         <div className="flex items-center gap-4">
           <Logo variant="icon" className="lg:hidden" />
-          <h1 className="text-lg font-semibold text-foreground">
+          <h1 className="text-lg font-semibold text-gray-900">
             {pageTitle}
           </h1>
         </div>
