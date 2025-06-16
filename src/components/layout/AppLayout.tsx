@@ -12,7 +12,7 @@ export function AppLayout({ children }: AppLayoutProps) {
   return (
     <div 
       id="app-container"
-      className="min-h-screen flex flex-col bg-gradient-neutral"
+      className="min-h-screen flex flex-col bg-gray-50"
     >
       <TopBar />
       <div className="flex flex-1">

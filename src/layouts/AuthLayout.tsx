@@ -9,7 +9,7 @@ interface AuthLayoutProps {
 
 export function AuthLayout({ children }: AuthLayoutProps) {
   return (
-    <div id="app-container" className="min-h-screen bg-gradient-neutral">
+    <div id="app-container" className="min-h-screen bg-white">
       <Toaster />
       <main className="flex flex-1 justify-center items-center p-4">
         {children}

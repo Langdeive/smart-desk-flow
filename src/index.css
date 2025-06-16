@@ -22,8 +22,8 @@
     --secondary: 6 182 212; /* #06B6D4 - Turquesa Vibrante */
     --secondary-foreground: 255 255 255; /* #FFFFFF */
 
-    /* CORREÇÃO: --accent para um cinza neutro, evitando cores fortes no hover/focus */
-    --accent: 241 245 249; /* #F1F5F9 (mesmo que --muted) */
+    /* CORREÇÃO: --accent para um cinza neutro limpo */
+    --accent: 248 250 252; /* #F8FAFC - Branco acinzentado neutro */
     --accent-foreground: 30 58 138; /* #1E3A8A - Azul para contraste */
 
     --muted: 241 245 249; /* #F1F5F9 */
@@ -46,7 +46,7 @@
     --sidebar-foreground: 30 41 59; /* #1E293B */
     --sidebar-primary: 6 182 212; /* #06B6D4 */
     --sidebar-primary-foreground: 255 255 255; /* #FFFFFF */
-    --sidebar-accent: 241 245 249; /* #F1F5F9 */
+    --sidebar-accent: 248 250 252; /* #F8FAFC - Neutro limpo */
     --sidebar-accent-foreground: 30 58 138; /* #1E3A8A - CORRIGIDO: azul legível */
     --sidebar-border: 226 232 240; /* #E2E8F0 */
     --sidebar-ring: 6 182 212; /* #06B6D4 */
@@ -114,7 +114,7 @@
   }
 }
 
-/* =================== GRADIENTES GLOBAIS =================== */
+/* =================== GRADIENTES GLOBAIS CORRIGIDOS =================== */
 .gradient-primary {
   background: linear-gradient(135deg, #1E3A8A 0%, #06B6D4 100%);
 }
@@ -124,7 +124,7 @@
 }
 
 .gradient-neutral {
-  background: linear-gradient(135deg, #F8FAFC 0%, #E2E8F0 100%);
+  background: linear-gradient(135deg, #FFFFFF 0%, #F8FAFC 100%);
 }
 
 .gradient-text-secondary {
