@@ -5,14 +5,14 @@
 
 @layer base {
   :root {
-    /* Paleta de cores SolveFlow - LIMPA E NEUTRA */
-    --background: 255 255 255; /* #FFFFFF - Branco puro */
+    /* Paleta de cores SolveFlow - TOTALMENTE LIMPA E NEUTRA */
+    --background: 255 255 255; /* #FFFFFF - Branco puro absoluto */
     --foreground: 17 24 39; /* #111827 - Cinza escuro */
 
-    --card: 255 255 255; /* #FFFFFF - Branco puro */
+    --card: 255 255 255; /* #FFFFFF - Branco puro absoluto */
     --card-foreground: 17 24 39; /* #111827 - Cinza escuro */
 
-    --popover: 255 255 255; /* #FFFFFF - Branco puro */
+    --popover: 255 255 255; /* #FFFFFF - Branco puro absoluto */
     --popover-foreground: 17 24 39; /* #111827 - Cinza escuro */
 
     /* Cores principais SolveFlow */
@@ -22,11 +22,11 @@
     --secondary: 6 182 212; /* #06B6D4 - Turquesa Vibrante */
     --secondary-foreground: 255 255 255; /* #FFFFFF */
 
-    /* Accent limpo sem amarelo */
-    --accent: 249 250 251; /* #F9FAFB - Cinza neutro claríssimo */
+    /* Accent totalmente neutro - SEM AMARELO */
+    --accent: 255 255 255; /* #FFFFFF - Branco puro */
     --accent-foreground: 17 24 39; /* #111827 - Cinza escuro para contraste */
 
-    --muted: 249 250 251; /* #F9FAFB - Cinza neutro */
+    --muted: 249 250 251; /* #F9FAFB - Cinza neutro claríssimo */
     --muted-foreground: 107 114 128; /* #6B7280 - Cinza médio */
 
     --destructive: 239 68 68; /* #EF4444 */
@@ -35,18 +35,18 @@
     --success: 16 185 129; /* #10B981 */
     --success-foreground: 255 255 255; /* #FFFFFF */
 
-    --border: 229 231 235; /* #E5E7EB - Cinza claro */
-    --input: 229 231 235; /* #E5E7EB - Cinza claro */
+    --border: 229 231 235; /* #E5E7EB - Cinza claro neutro */
+    --input: 255 255 255; /* #FFFFFF - Branco puro para inputs */
     --ring: 6 182 212; /* #06B6D4 - Turquesa para foco */
 
     --radius: 12px;
 
-    /* Sidebar limpa */
+    /* Sidebar totalmente limpa */
     --sidebar-background: 255 255 255; /* #FFFFFF - Branco puro */
     --sidebar-foreground: 17 24 39; /* #111827 - Cinza escuro */
     --sidebar-primary: 6 182 212; /* #06B6D4 */
     --sidebar-primary-foreground: 255 255 255; /* #FFFFFF */
-    --sidebar-accent: 249 250 251; /* #F9FAFB - Cinza neutro */
+    --sidebar-accent: 255 255 255; /* #FFFFFF - Branco puro */
     --sidebar-accent-foreground: 17 24 39; /* #111827 - Cinza escuro */
     --sidebar-border: 229 231 235; /* #E5E7EB - Cinza claro */
     --sidebar-ring: 6 182 212; /* #06B6D4 */
@@ -112,7 +112,7 @@
   }
 }
 
-/* =================== CLASSES DE FORÇA PARA ELIMINAR AMARELO =================== */
+/* =================== CLASSES DE FORÇA TOTAL PARA ELIMINAR AMARELO =================== */
 .force-white-header {
   background-color: #ffffff !important;
   border-color: #e5e7eb !important;
@@ -143,7 +143,33 @@
 }
 
 .force-white-table td {
-  border-color: #f3f4f6 !important;
+  border-color: #e5e7eb !important;
+}
+
+/* =================== FORÇA MODAL/DIALOG BRANCO =================== */
+.force-dialog-white {
+  background-color: #ffffff !important;
+  border-color: #e5e7eb !important;
+}
+
+.force-select-white {
+  background-color: #ffffff !important;
+  border-color: #d1d5db !important;
+}
+
+.force-popover-white {
+  background-color: #ffffff !important;
+  border-color: #e5e7eb !important;
+}
+
+.force-textarea-white {
+  background-color: #ffffff !important;
+  border-color: #d1d5db !important;
+}
+
+.force-textarea-white:focus {
+  border-color: #06b6d4 !important;
+  ring-color: #06b6d4 !important;
 }
 
 /* =================== GRADIENTES LIMPOS SEM AMARELO =================== */
@@ -166,7 +192,7 @@
   background-clip: text;
 }
 
-/* Cache buster para forçar atualização */
-.cache-buster-v2024 {
-  content: "updated";
+/* Cache buster para forçar atualização - v2024.2 */
+.cache-buster-v2024-final {
+  content: "updated-final";
 }
