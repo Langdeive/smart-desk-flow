@@ -1,3 +1,4 @@
+
 import React from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -5,32 +6,24 @@ import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { ResponsiveContainer, PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, Tooltip, Legend } from "recharts";
 import { ArrowRight, ArrowUp, ArrowDown, Brain, MessageSquare, Users, BarChart2 } from "lucide-react";
-
-// Dados mockados para o dashboard
-const pieData = [
-  { name: "Resolvidos", value: 540, color: "#10B981" },
-  { name: "Em Progresso", value: 210, color: "#06B6D4" },
-  { name: "Aguardando", value: 150, color: "#6366f1" },
-  { name: "Novos", value: 100, color: "#1E3A8A" },
-];
-
-const barData = [
-  { name: "Jan", tickets: 65, resolved: 40 },
-  { name: "Fev", tickets: 80, resolved: 55 },
-  { name: "Mar", tickets: 95, resolved: 70 },
-  { name: "Abr", tickets: 120, resolved: 90 },
-  { name: "Mai", tickets: 150, resolved: 110 },
-  { name: "Jun", tickets: 130, resolved: 105 },
-];
-
-const aiStats = {
-  processedTickets: 870,
-  autoResolved: 540,
-  timeAverage: "4.2 min",
-  successRate: 78,
-};
+import { useDashboardData } from "@/hooks/useDashboardData";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const Dashboard = () => {
+  const { kpis, chartData, isLoading, error } = useDashboardData();
+
+  if (error) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <Card className="p-6">
+          <CardContent>
+            <p className="text-red-600">Erro ao carregar dados do dashboard: {error.message}</p>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
   return (
     <div 
       className="min-h-screen"
@@ -66,109 +59,125 @@ const Dashboard = () => {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-          <Card 
-            className="modern-card"
-            style={{
-              background: 'linear-gradient(135deg, #ffffff 0%, rgba(6, 182, 212, 0.02) 100%)',
-              borderColor: 'rgba(6, 182, 212, 0.2)',
-              border: '1px solid rgba(6, 182, 212, 0.2)'
-            }}
-          >
-            <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium" style={{ color: '#475569' }}>
-                Total de Tickets
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="flex items-center justify-between">
-                <div className="text-2xl font-bold" style={{ color: '#1E3A8A' }}>1,024</div>
-                <div className="flex items-center text-sm text-green-600">
-                  <ArrowUp className="mr-1 h-4 w-4" />
-                  12%
-                </div>
-              </div>
-              <p className="text-xs mt-1" style={{ color: '#64748B' }}>
-                +120 desde o último mês
-              </p>
-            </CardContent>
-          </Card>
-          
-          <Card 
-            className="modern-card"
-            style={{
-              background: 'linear-gradient(135deg, #ffffff 0%, rgba(30, 58, 138, 0.02) 100%)',
-              borderColor: 'rgba(30, 58, 138, 0.2)',
-              border: '1px solid rgba(30, 58, 138, 0.2)'
-            }}
-          >
-            <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium" style={{ color: '#475569' }}>
-                Taxa de Resolução
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="flex items-center justify-between">
-                <div className="text-2xl font-bold" style={{ color: '#1E3A8A' }}>87%</div>
-                <div className="flex items-center text-sm text-green-600">
-                  <ArrowUp className="mr-1 h-4 w-4" />
-                  4%
-                </div>
-              </div>
-              <Progress value={87} className="h-2 mt-2" />
-            </CardContent>
-          </Card>
-          
-          <Card 
-            className="modern-card"
-            style={{
-              background: 'linear-gradient(135deg, #ffffff 0%, rgba(124, 58, 237, 0.02) 100%)',
-              borderColor: 'rgba(124, 58, 237, 0.2)',
-              border: '1px solid rgba(124, 58, 237, 0.2)'
-            }}
-          >
-            <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium" style={{ color: '#475569' }}>
-                Tempo Médio de Resposta
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="flex items-center justify-between">
-                <div className="text-2xl font-bold" style={{ color: '#1E3A8A' }}>2.4h</div>
-                <div className="flex items-center text-sm text-red-600">
-                  <ArrowDown className="mr-1 h-4 w-4" />
-                  5%
-                </div>
-              </div>
-              <p className="text-xs mt-1" style={{ color: '#64748B' }}>
-                -18min desde o último mês
-              </p>
-            </CardContent>
-          </Card>
-          
-          <Card 
-            className="modern-card"
-            style={{
-              background: 'linear-gradient(135deg, #ffffff 0%, rgba(6, 182, 212, 0.02) 100%)',
-              borderColor: 'rgba(6, 182, 212, 0.2)',
-              border: '1px solid rgba(6, 182, 212, 0.2)'
-            }}
-          >
-            <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium" style={{ color: '#475569' }}>
-                Resolvidos por IA
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="flex items-center justify-between">
-                <div className="text-2xl font-bold" style={{ color: '#1E3A8A' }}>62%</div>
-                <div className="flex items-center text-sm text-green-600">
-                  <ArrowUp className="mr-1 h-4 w-4" />
-                  8%
-                </div>
-              </div>
-              <Progress value={62} className="h-2 mt-2" />
-            </CardContent>
-          </Card>
+          {isLoading ? (
+            [...Array(4)].map((_, i) => (
+              <Skeleton key={i} className="h-32" />
+            ))
+          ) : (
+            <>
+              <Card 
+                className="modern-card"
+                style={{
+                  background: 'linear-gradient(135deg, #ffffff 0%, rgba(6, 182, 212, 0.02) 100%)',
+                  borderColor: 'rgba(6, 182, 212, 0.2)',
+                  border: '1px solid rgba(6, 182, 212, 0.2)'
+                }}
+              >
+                <CardHeader className="pb-2">
+                  <CardTitle className="text-sm font-medium" style={{ color: '#475569' }}>
+                    Total de Tickets
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="flex items-center justify-between">
+                    <div className="text-2xl font-bold" style={{ color: '#1E3A8A' }}>
+                      {kpis?.totalTickets.current || 0}
+                    </div>
+                    <div className={`flex items-center text-sm ${kpis?.totalTickets.percentageChange >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                      {kpis?.totalTickets.percentageChange >= 0 ? <ArrowUp className="mr-1 h-4 w-4" /> : <ArrowDown className="mr-1 h-4 w-4" />}
+                      {Math.abs(kpis?.totalTickets.percentageChange || 0).toFixed(1)}%
+                    </div>
+                  </div>
+                  <p className="text-xs mt-1" style={{ color: '#64748B' }}>
+                    {kpis?.totalTickets.percentageChange >= 0 ? '+' : ''}{kpis?.totalTickets.current - kpis?.totalTickets.previousMonth} desde o último mês
+                  </p>
+                </CardContent>
+              </Card>
+              
+              <Card 
+                className="modern-card"
+                style={{
+                  background: 'linear-gradient(135deg, #ffffff 0%, rgba(30, 58, 138, 0.02) 100%)',
+                  borderColor: 'rgba(30, 58, 138, 0.2)',
+                  border: '1px solid rgba(30, 58, 138, 0.2)'
+                }}
+              >
+                <CardHeader className="pb-2">
+                  <CardTitle className="text-sm font-medium" style={{ color: '#475569' }}>
+                    Taxa de Resolução
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="flex items-center justify-between">
+                    <div className="text-2xl font-bold" style={{ color: '#1E3A8A' }}>
+                      {kpis?.resolutionRate.current || 0}%
+                    </div>
+                    <div className={`flex items-center text-sm ${kpis?.resolutionRate.percentageChange >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                      {kpis?.resolutionRate.percentageChange >= 0 ? <ArrowUp className="mr-1 h-4 w-4" /> : <ArrowDown className="mr-1 h-4 w-4" />}
+                      {Math.abs(kpis?.resolutionRate.percentageChange || 0).toFixed(1)}%
+                    </div>
+                  </div>
+                  <Progress value={kpis?.resolutionRate.current || 0} className="h-2 mt-2" />
+                </CardContent>
+              </Card>
+              
+              <Card 
+                className="modern-card"
+                style={{
+                  background: 'linear-gradient(135deg, #ffffff 0%, rgba(124, 58, 237, 0.02) 100%)',
+                  borderColor: 'rgba(124, 58, 237, 0.2)',
+                  border: '1px solid rgba(124, 58, 237, 0.2)'
+                }}
+              >
+                <CardHeader className="pb-2">
+                  <CardTitle className="text-sm font-medium" style={{ color: '#475569' }}>
+                    Tempo Médio de Resposta
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="flex items-center justify-between">
+                    <div className="text-2xl font-bold" style={{ color: '#1E3A8A' }}>
+                      {kpis?.avgResponseTime.formatted || "0h"}
+                    </div>
+                    <div className={`flex items-center text-sm ${kpis?.avgResponseTime.percentageChange <= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                      {kpis?.avgResponseTime.percentageChange <= 0 ? <ArrowDown className="mr-1 h-4 w-4" /> : <ArrowUp className="mr-1 h-4 w-4" />}
+                      {Math.abs(kpis?.avgResponseTime.percentageChange || 0).toFixed(1)}%
+                    </div>
+                  </div>
+                  <p className="text-xs mt-1" style={{ color: '#64748B' }}>
+                    Primeira resposta
+                  </p>
+                </CardContent>
+              </Card>
+              
+              <Card 
+                className="modern-card"
+                style={{
+                  background: 'linear-gradient(135deg, #ffffff 0%, rgba(6, 182, 212, 0.02) 100%)',
+                  borderColor: 'rgba(6, 182, 212, 0.2)',
+                  border: '1px solid rgba(6, 182, 212, 0.2)'
+                }}
+              >
+                <CardHeader className="pb-2">
+                  <CardTitle className="text-sm font-medium" style={{ color: '#475569' }}>
+                    Resolvidos por IA
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="flex items-center justify-between">
+                    <div className="text-2xl font-bold" style={{ color: '#1E3A8A' }}>
+                      {kpis?.aiResolvedTickets.percentage || 0}%
+                    </div>
+                    <div className={`flex items-center text-sm ${kpis?.aiResolvedTickets.percentageChange >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                      {kpis?.aiResolvedTickets.percentageChange >= 0 ? <ArrowUp className="mr-1 h-4 w-4" /> : <ArrowDown className="mr-1 h-4 w-4" />}
+                      {Math.abs(kpis?.aiResolvedTickets.percentageChange || 0).toFixed(1)}%
+                    </div>
+                  </div>
+                  <Progress value={kpis?.aiResolvedTickets.percentage || 0} className="h-2 mt-2" />
+                </CardContent>
+              </Card>
+            </>
+          )}
         </div>
 
         <Tabs defaultValue="overview" className="mb-8">
@@ -200,28 +209,32 @@ const Dashboard = () => {
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <div className="h-80">
-                    <ResponsiveContainer width="100%" height="100%">
-                      <PieChart>
-                        <Pie
-                          data={pieData}
-                          cx="50%"
-                          cy="50%"
-                          innerRadius={60}
-                          outerRadius={120}
-                          paddingAngle={3}
-                          dataKey="value"
-                          label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
-                          labelLine={false}
-                        >
-                          {pieData.map((entry, index) => (
-                            <Cell key={`cell-${index}`} fill={entry.color} />
-                          ))}
-                        </Pie>
-                        <Tooltip />
-                      </PieChart>
-                    </ResponsiveContainer>
-                  </div>
+                  {isLoading ? (
+                    <Skeleton className="h-80" />
+                  ) : (
+                    <div className="h-80">
+                      <ResponsiveContainer width="100%" height="100%">
+                        <PieChart>
+                          <Pie
+                            data={chartData?.statusDistribution || []}
+                            cx="50%"
+                            cy="50%"
+                            innerRadius={60}
+                            outerRadius={120}
+                            paddingAngle={3}
+                            dataKey="value"
+                            label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+                            labelLine={false}
+                          >
+                            {(chartData?.statusDistribution || []).map((entry, index) => (
+                              <Cell key={`cell-${index}`} fill={entry.color} />
+                            ))}
+                          </Pie>
+                          <Tooltip />
+                        </PieChart>
+                      </ResponsiveContainer>
+                    </div>
+                  )}
                 </CardContent>
               </Card>
               
@@ -239,18 +252,22 @@ const Dashboard = () => {
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <div className="h-80">
-                    <ResponsiveContainer width="100%" height="100%">
-                      <BarChart data={barData}>
-                        <XAxis dataKey="name" />
-                        <YAxis />
-                        <Tooltip />
-                        <Legend />
-                        <Bar dataKey="tickets" name="Tickets Criados" fill="#1E3A8A" />
-                        <Bar dataKey="resolved" name="Tickets Resolvidos" fill="#06B6D4" />
-                      </BarChart>
-                    </ResponsiveContainer>
-                  </div>
+                  {isLoading ? (
+                    <Skeleton className="h-80" />
+                  ) : (
+                    <div className="h-80">
+                      <ResponsiveContainer width="100%" height="100%">
+                        <BarChart data={chartData?.historicalData || []}>
+                          <XAxis dataKey="name" />
+                          <YAxis />
+                          <Tooltip />
+                          <Legend />
+                          <Bar dataKey="tickets" name="Tickets Criados" fill="#1E3A8A" />
+                          <Bar dataKey="resolved" name="Tickets Resolvidos" fill="#06B6D4" />
+                        </BarChart>
+                      </ResponsiveContainer>
+                    </div>
+                  )}
                 </CardContent>
               </Card>
             </div>
@@ -356,26 +373,24 @@ const Dashboard = () => {
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <div className="h-96">
-                    <ResponsiveContainer width="100%" height="100%">
-                      <BarChart
-                        layout="vertical"
-                        data={[
-                          { name: "Problema Técnico", value: 450 },
-                          { name: "Dúvida", value: 280 },
-                          { name: "Solicitação de Recurso", value: 180 },
-                          { name: "Faturamento", value: 90 },
-                          { name: "Outro", value: 60 },
-                        ]}
-                        margin={{ top: 20, right: 30, left: 100, bottom: 5 }}
-                      >
-                        <XAxis type="number" />
-                        <YAxis type="category" dataKey="name" />
-                        <Tooltip />
-                        <Bar dataKey="value" fill="#1E3A8A" radius={[0, 4, 4, 0]} />
-                      </BarChart>
-                    </ResponsiveContainer>
-                  </div>
+                  {isLoading ? (
+                    <Skeleton className="h-96" />
+                  ) : (
+                    <div className="h-96">
+                      <ResponsiveContainer width="100%" height="100%">
+                        <BarChart
+                          layout="vertical"
+                          data={chartData?.categoryData || []}
+                          margin={{ top: 20, right: 30, left: 100, bottom: 5 }}
+                        >
+                          <XAxis type="number" />
+                          <YAxis type="category" dataKey="name" />
+                          <Tooltip />
+                          <Bar dataKey="value" fill="#1E3A8A" radius={[0, 4, 4, 0]} />
+                        </BarChart>
+                      </ResponsiveContainer>
+                    </div>
+                  )}
                 </CardContent>
               </Card>
               
@@ -437,25 +452,33 @@ const Dashboard = () => {
                     <CardTitle className="gradient-text">Performance da IA</CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <div className="space-y-4">
-                      <div className="flex justify-between items-center">
-                        <span className="text-sm font-medium">Tickets Processados</span>
-                        <span className="text-lg font-bold text-purple-intense">{aiStats.processedTickets}</span>
+                    {isLoading ? (
+                      <div className="space-y-4">
+                        {[...Array(4)].map((_, i) => (
+                          <Skeleton key={i} className="h-6" />
+                        ))}
                       </div>
-                      <div className="flex justify-between items-center">
-                        <span className="text-sm font-medium">Auto-resolvidos</span>
-                        <span className="text-lg font-bold text-green-600">{aiStats.autoResolved}</span>
+                    ) : (
+                      <div className="space-y-4">
+                        <div className="flex justify-between items-center">
+                          <span className="text-sm font-medium">Tickets Processados</span>
+                          <span className="text-lg font-bold text-purple-intense">{kpis?.totalTickets.current || 0}</span>
+                        </div>
+                        <div className="flex justify-between items-center">
+                          <span className="text-sm font-medium">Auto-resolvidos</span>
+                          <span className="text-lg font-bold text-green-600">{kpis?.aiResolvedTickets.current || 0}</span>
+                        </div>
+                        <div className="flex justify-between items-center">
+                          <span className="text-sm font-medium">Tempo Médio</span>
+                          <span className="text-lg font-bold text-blue-deep">{chartData?.aiMetrics.avgProcessingTime || 0}min</span>
+                        </div>
+                        <div className="flex justify-between items-center">
+                          <span className="text-sm font-medium">Taxa de Sucesso</span>
+                          <span className="text-lg font-bold text-turquoise-vibrant">{chartData?.aiMetrics.classificationAccuracy || 0}%</span>
+                        </div>
+                        <Progress value={chartData?.aiMetrics.classificationAccuracy || 0} className="h-3" />
                       </div>
-                      <div className="flex justify-between items-center">
-                        <span className="text-sm font-medium">Tempo Médio</span>
-                        <span className="text-lg font-bold text-blue-deep">{aiStats.timeAverage}</span>
-                      </div>
-                      <div className="flex justify-between items-center">
-                        <span className="text-sm font-medium">Taxa de Sucesso</span>
-                        <span className="text-lg font-bold text-turquoise-vibrant">{aiStats.successRate}%</span>
-                      </div>
-                      <Progress value={aiStats.successRate} className="h-3" />
-                    </div>
+                    )}
                   </CardContent>
                 </Card>
               </div>
@@ -482,34 +505,46 @@ const Dashboard = () => {
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <div className="space-y-6">
-                    <div className="space-y-2">
-                      <div className="flex justify-between items-center">
-                        <span className="text-sm font-medium">Classificação Automática</span>
-                        <span className="text-2xl font-bold text-purple-intense">94%</span>
-                      </div>
-                      <Progress value={94} className="h-2" />
-                      <p className="text-xs text-muted-foreground">Precisão na categorização de tickets</p>
+                  {isLoading ? (
+                    <div className="space-y-6">
+                      {[...Array(3)].map((_, i) => (
+                        <div key={i} className="space-y-2">
+                          <Skeleton className="h-4" />
+                          <Skeleton className="h-2" />
+                          <Skeleton className="h-3" />
+                        </div>
+                      ))}
                     </div>
-                    
-                    <div className="space-y-2">
-                      <div className="flex justify-between items-center">
-                        <span className="text-sm font-medium">Detecção de Urgência</span>
-                        <span className="text-2xl font-bold text-turquoise-vibrant">88%</span>
+                  ) : (
+                    <div className="space-y-6">
+                      <div className="space-y-2">
+                        <div className="flex justify-between items-center">
+                          <span className="text-sm font-medium">Classificação Automática</span>
+                          <span className="text-2xl font-bold text-purple-intense">{chartData?.aiMetrics.classificationAccuracy || 0}%</span>
+                        </div>
+                        <Progress value={chartData?.aiMetrics.classificationAccuracy || 0} className="h-2" />
+                        <p className="text-xs text-muted-foreground">Precisão na categorização de tickets</p>
                       </div>
-                      <Progress value={88} className="h-2" />
-                      <p className="text-xs text-muted-foreground">Acerto na priorização automática</p>
-                    </div>
-                    
-                    <div className="space-y-2">
-                      <div className="flex justify-between items-center">
-                        <span className="text-sm font-medium">Respostas Sugeridas</span>
-                        <span className="text-2xl font-bold text-blue-deep">76%</span>
+                      
+                      <div className="space-y-2">
+                        <div className="flex justify-between items-center">
+                          <span className="text-sm font-medium">Detecção de Urgência</span>
+                          <span className="text-2xl font-bold text-turquoise-vibrant">88%</span>
+                        </div>
+                        <Progress value={88} className="h-2" />
+                        <p className="text-xs text-muted-foreground">Acerto na priorização automática</p>
                       </div>
-                      <Progress value={76} className="h-2" />
-                      <p className="text-xs text-muted-foreground">Taxa de aprovação das sugestões</p>
+                      
+                      <div className="space-y-2">
+                        <div className="flex justify-between items-center">
+                          <span className="text-sm font-medium">Respostas Sugeridas</span>
+                          <span className="text-2xl font-bold text-blue-deep">{chartData?.aiMetrics.suggestedResponseAccuracy || 0}%</span>
+                        </div>
+                        <Progress value={chartData?.aiMetrics.suggestedResponseAccuracy || 0} className="h-2" />
+                        <p className="text-xs text-muted-foreground">Taxa de aprovação das sugestões</p>
+                      </div>
                     </div>
-                  </div>
+                  )}
                 </CardContent>
               </Card>
               
