@@ -2,16 +2,28 @@
 import { KpiCard } from "./KpiCard";
 import { Clock, CheckCircle, TicketCheck, Bot } from "lucide-react";
 import { useHelenaArticles } from "@/hooks/useHelenaArticles";
+import { useDashboardData } from "@/hooks/useDashboardData";
 
 export function KpiCards() {
   const { helenaStats } = useHelenaArticles();
+  const { kpis, isLoading } = useDashboardData();
+
+  if (isLoading) {
+    return (
+      <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
+        {[...Array(4)].map((_, i) => (
+          <div key={i} className="h-32 bg-gray-100 animate-pulse rounded-lg" />
+        ))}
+      </div>
+    );
+  }
 
   return (
     <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
       <KpiCard
         title="Total de Tickets"
-        value="127"
-        description="Todos os chamados ativos"
+        value={kpis?.totalTickets.current || 0}
+        description={`${kpis?.totalTickets.percentageChange >= 0 ? '+' : ''}${kpis?.totalTickets.percentageChange.toFixed(1)}% vs mês anterior`}
         icon={<TicketCheck className="h-5 w-5" />}
         href="/tickets"
         ariaLabel="Ver todos os tickets"
@@ -20,8 +32,8 @@ export function KpiCards() {
       
       <KpiCard
         title="Taxa de Resolução"
-        value="87%"
-        description="Chamados resolvidos"
+        value={`${kpis?.resolutionRate.current || 0}%`}
+        description={`${kpis?.resolutionRate.percentageChange >= 0 ? '+' : ''}${kpis?.resolutionRate.percentageChange.toFixed(1)}% vs mês anterior`}
         icon={<CheckCircle className="h-5 w-5" />}
         href="/tickets?status=resolved"
         ariaLabel="Ver tickets resolvidos"
@@ -30,7 +42,7 @@ export function KpiCards() {
       
       <KpiCard
         title="Tempo Médio de Resposta"
-        value="1.8h"
+        value={kpis?.avgResponseTime.formatted || "0h"}
         description="Primeira resposta"
         icon={<Clock className="h-5 w-5" />}
         href="/tickets?sort=firstResponseTime"
