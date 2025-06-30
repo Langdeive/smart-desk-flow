@@ -10,7 +10,7 @@ const Table = React.forwardRef<
   <div className="relative w-full overflow-auto">
     <table
       ref={ref}
-      className={cn("w-full caption-bottom text-sm border-collapse force-white-table border border-gray-200", className)}
+      className={cn("w-full caption-bottom text-sm border-collapse force-white-table border border-turquoise-vibrant", className)}
       {...props}
     />
   </div>
@@ -57,7 +57,7 @@ const TableFooter = React.forwardRef<
   <tfoot
     ref={ref}
     className={cn(
-      "border-t border-gray-200 bg-gray-50 font-medium [&>tr]:last:border-b-0",
+      "border-t border-turquoise-vibrant bg-gray-50 font-medium [&>tr]:last:border-b-0",
       className
     )}
     {...props}
@@ -87,7 +87,7 @@ const TableHead = React.forwardRef<
   <th
     ref={ref}
     className={cn(
-      "h-12 px-4 text-left align-middle font-semibold text-gray-900 bg-gray-50 [&:has([role=checkbox])]:pr-0",
+      "h-12 px-4 text-left align-middle font-semibold text-gray-900 bg-gray-50 border-turquoise-vibrant [&:has([role=checkbox])]:pr-0",
       className
     )}
     {...props}

@@ -20,35 +20,35 @@ const TicketList: React.FC<TicketListProps> = ({ tickets, loading }) => {
   };
 
   return (
-    <div className="rounded-md border">
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead>ID</TableHead>
-            <TableHead>Título</TableHead>
-            <TableHead>Status</TableHead>
-            <TableHead>Prioridade</TableHead>
-            <TableHead>Criado em</TableHead>
-            <TableHead>Fonte</TableHead>
-            <TableHead>Ações</TableHead>
+    <div className="rounded-md border-turquoise-vibrant border-2 force-white-table">
+      <Table className="force-white-table border-turquoise-vibrant">
+        <TableHeader className="bg-gray-50 border-b-2 border-turquoise-vibrant">
+          <TableRow className="border-b border-turquoise-vibrant">
+            <TableHead className="border-turquoise-vibrant">ID</TableHead>
+            <TableHead className="border-turquoise-vibrant">Título</TableHead>
+            <TableHead className="border-turquoise-vibrant">Status</TableHead>
+            <TableHead className="border-turquoise-vibrant">Prioridade</TableHead>
+            <TableHead className="border-turquoise-vibrant">Criado em</TableHead>
+            <TableHead className="border-turquoise-vibrant">Fonte</TableHead>
+            <TableHead className="border-turquoise-vibrant">Ações</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {loading ? (
-            <TableRow>
+            <TableRow className="border-b border-gray-200 hover:bg-cyan-50 hover:border-turquoise-vibrant">
               <TableCell colSpan={7} className="text-center py-8">
                 Carregando tickets...
               </TableCell>
             </TableRow>
           ) : tickets.length === 0 ? (
-            <TableRow>
+            <TableRow className="border-b border-gray-200 hover:bg-cyan-50 hover:border-turquoise-vibrant">
               <TableCell colSpan={7} className="text-center py-8">
                 Nenhum ticket encontrado
               </TableCell>
             </TableRow>
           ) : (
             tickets.map((ticket) => (
-              <TableRow key={ticket.id}>
+              <TableRow key={ticket.id} className="border-b border-gray-200 hover:bg-cyan-50 hover:border-turquoise-vibrant transition-all duration-200">
                 <TableCell className="font-medium">#{ticket.id.substring(0, 8)}</TableCell>
                 <TableCell>{ticket.title}</TableCell>
                 <TableCell>

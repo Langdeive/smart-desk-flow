@@ -35,7 +35,8 @@
     --success: 16 185 129; /* #10B981 */
     --success-foreground: 255 255 255; /* #FFFFFF */
 
-    --border: 229 231 235; /* #E5E7EB - Cinza claro neutro */
+    /* CORREÇÃO CRÍTICA: Border sempre turquesa */
+    --border: 6 182 212; /* #06B6D4 - Turquesa para todas as bordas */
     --input: 255 255 255; /* #FFFFFF - Branco puro para inputs */
     --ring: 6 182 212; /* #06B6D4 - Turquesa para foco */
 
@@ -48,7 +49,7 @@
     --sidebar-primary-foreground: 255 255 255; /* #FFFFFF */
     --sidebar-accent: 255 255 255; /* #FFFFFF - Branco puro */
     --sidebar-accent-foreground: 17 24 39; /* #111827 - Cinza escuro */
-    --sidebar-border: 229 231 235; /* #E5E7EB - Cinza claro */
+    --sidebar-border: 6 182 212; /* #06B6D4 - Turquesa */
     --sidebar-ring: 6 182 212; /* #06B6D4 */
   }
 
@@ -80,7 +81,8 @@
     --success: 16 185 129; /* #10B981 */
     --success-foreground: 255 255 255; /* #FFFFFF */
 
-    --border: 75 85 99; /* #4B5563 */
+    /* CORREÇÃO CRÍTICA: Border sempre turquesa mesmo no dark mode */
+    --border: 6 182 212; /* #06B6D4 - Turquesa */
     --input: 31 41 55; /* #1F2937 */
     --ring: 6 182 212; /* #06B6D4 */
 
@@ -90,14 +92,14 @@
     --sidebar-primary-foreground: 255 255 255; /* #FFFFFF */
     --sidebar-accent: 31 41 55; /* #1F2937 */
     --sidebar-accent-foreground: 6 182 212; /* #06B6D4 */
-    --sidebar-border: 75 85 99; /* #4B5563 */
+    --sidebar-border: 6 182 212; /* #06B6D4 - Turquesa */
     --sidebar-ring: 6 182 212; /* #06B6D4 */
   }
 }
 
 @layer base {
   * {
-    @apply border-border;
+    @apply border-turquoise-vibrant; /* FORÇA TURQUESA EM TUDO */
   }
   
   html {
@@ -110,6 +112,84 @@
     font-weight: 400;
     min-height: 100vh;
   }
+}
+
+/* =================== CORREÇÃO DEFINITIVA - TABELAS TURQUESA =================== */
+.force-white-table {
+  background-color: #ffffff !important;
+  border-color: #06b6d4 !important;
+  border-width: 1px !important;
+  border-style: solid !important;
+}
+
+.force-white-table thead {
+  background-color: #f9fafb !important;
+  border-bottom: 2px solid #06b6d4 !important;
+}
+
+.force-white-table thead th {
+  background-color: #f9fafb !important;
+  border-color: #06b6d4 !important;
+  border-bottom: 2px solid #06b6d4 !important;
+}
+
+.force-white-table tbody tr {
+  border-bottom: 1px solid #e5e7eb !important;
+  transition: all 0.2s ease !important;
+}
+
+.force-white-table tbody tr:hover {
+  background-color: #ecfeff !important;
+  border-color: #06b6d4 !important;
+  border-bottom: 1px solid #06b6d4 !important;
+}
+
+.force-white-table td {
+  border-color: #e5e7eb !important;
+}
+
+/* =================== FORÇA GLOBAL ANTI-AMARELO =================== */
+table {
+  border-color: #06b6d4 !important;
+}
+
+table thead {
+  border-bottom-color: #06b6d4 !important;
+}
+
+table thead th {
+  border-color: #06b6d4 !important;
+}
+
+table tbody tr {
+  border-color: #e5e7eb !important;
+}
+
+table tbody tr:hover {
+  background-color: #ecfeff !important;
+  border-color: #06b6d4 !important;
+}
+
+/* =================== FORÇA ESPECÍFICA TICKET DASHBOARD =================== */
+.ticket-dashboard table {
+  border: 1px solid #06b6d4 !important;
+}
+
+.ticket-dashboard table thead {
+  border-bottom: 2px solid #06b6d4 !important;
+}
+
+.ticket-dashboard table thead th {
+  border-color: #06b6d4 !important;
+}
+
+.ticket-dashboard table tbody tr {
+  border-bottom: 1px solid #e5e7eb !important;
+}
+
+.ticket-dashboard table tbody tr:hover {
+  background-color: #ecfeff !important;
+  border-color: #06b6d4 !important;
 }
 
 /* =================== CLASSES DE FORÇA TOTAL PARA ELIMINAR AMARELO =================== */
@@ -131,25 +211,6 @@
 .force-white-input:focus {
   border-color: #06b6d4 !important;
   ring-color: #06b6d4 !important;
-}
-
-.force-white-table {
-  background-color: #ffffff !important;
-  border-color: #06b6d4 !important;
-}
-
-.force-white-table th {
-  background-color: #f9fafb !important;
-  border-color: #06b6d4 !important;
-}
-
-.force-white-table td {
-  border-color: #e5e7eb !important;
-}
-
-.force-white-table tr:hover {
-  background-color: #ecfeff !important;
-  border-color: #06b6d4 !important;
 }
 
 /* =================== FORÇA MODAL/DIALOG BRANCO =================== */
@@ -207,42 +268,6 @@ button[data-state="open"] {
   border-color: #06b6d4 !important;
 }
 
-/* =================== FORÇA ESPECÍFICA PARA TABELAS - ELIMINAR AMARELO =================== */
-.ticket-dashboard table {
-  border-color: #06b6d4 !important;
-}
-
-.ticket-dashboard table thead {
-  border-bottom-color: #06b6d4 !important;
-}
-
-.ticket-dashboard table thead th {
-  border-color: #06b6d4 !important;
-}
-
-.ticket-dashboard table tbody tr {
-  border-color: #e5e7eb !important;
-}
-
-.ticket-dashboard table tbody tr:hover {
-  background-color: #ecfeff !important;
-  border-color: #06b6d4 !important;
-}
-
-/* Força global anti-amarelo para tabelas */
-table, thead, tbody, tr, th, td {
-  border-color: #e5e7eb !important;
-}
-
-table thead {
-  border-bottom-color: #06b6d4 !important;
-}
-
-table tbody tr:hover {
-  background-color: #ecfeff !important;
-  border-color: #06b6d4 !important;
-}
-
 /* =================== GRADIENTES LIMPOS SEM AMARELO =================== */
 .gradient-primary {
   background: linear-gradient(135deg, #1E3A8A 0%, #06B6D4 100%);
@@ -263,7 +288,7 @@ table tbody tr:hover {
   background-clip: text;
 }
 
-/* Cache buster para forçar atualização - v2024.4 */
-.cache-buster-v2024-final-table {
-  content: "updated-table-final";
+/* Cache buster para forçar atualização - v2025.1 */
+.cache-buster-v2025-final-table-fix {
+  content: "table-borders-fixed-turquoise";
 }
