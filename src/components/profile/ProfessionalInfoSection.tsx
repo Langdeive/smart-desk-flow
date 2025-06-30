@@ -4,6 +4,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Skeleton } from "@/components/ui/skeleton";
 import { useAuth } from '@/hooks/useAuth';
 import { useUserStatistics } from '@/hooks/useUserStatistics';
 import { Building2, Calendar, User, Briefcase } from 'lucide-react';
@@ -110,10 +111,7 @@ export function ProfessionalInfoSection({ department, onDepartmentChange }: Prof
           {isLoading ? (
             <div className="grid gap-4 md:grid-cols-3">
               {[1, 2, 3].map((i) => (
-                <div key={i} className="text-center p-3 bg-gray-50 rounded-lg animate-pulse">
-                  <div className="h-6 bg-gray-300 rounded mb-2"></div>
-                  <div className="h-4 bg-gray-300 rounded"></div>
-                </div>
+                <Skeleton key={i} className="h-16 rounded-lg" />
               ))}
             </div>
           ) : statistics ? (

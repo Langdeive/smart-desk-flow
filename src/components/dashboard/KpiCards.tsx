@@ -3,6 +3,7 @@ import { KpiCard } from "./KpiCard";
 import { Clock, CheckCircle, TicketCheck, Bot } from "lucide-react";
 import { useHelenaArticles } from "@/hooks/useHelenaArticles";
 import { useDashboardData } from "@/hooks/useDashboardData";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export function KpiCards() {
   const { helenaStats } = useHelenaArticles();
@@ -12,7 +13,7 @@ export function KpiCards() {
     return (
       <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
         {[...Array(4)].map((_, i) => (
-          <div key={i} className="h-32 bg-gray-100 animate-pulse rounded-lg" />
+          <Skeleton key={i} className="h-32 rounded-lg" />
         ))}
       </div>
     );

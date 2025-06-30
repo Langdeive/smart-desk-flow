@@ -130,11 +130,11 @@ export function RoleStatisticsSection() {
             <div className="text-sm text-gray-600">Taxa de Resposta</div>
           </div>
           
-          <div className="text-center p-4 bg-yellow-50 rounded-lg">
+          <div className="text-center p-4 bg-turquoise-vibrant/5 rounded-lg">
             <div className="flex items-center justify-center mb-2">
-              <Award className="h-6 w-6 text-yellow-600" />
+              <Award className="h-6 w-6 text-turquoise-vibrant" />
             </div>
-            <div className="text-2xl font-bold text-yellow-600">
+            <div className="text-2xl font-bold text-turquoise-vibrant">
               {statistics.satisfaction_score.toFixed(1)}
             </div>
             <div className="text-sm text-gray-600">Satisfação</div>

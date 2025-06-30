@@ -33,7 +33,19 @@ export function useUserActivityLogs(limit = 10) {
 
         if (error) throw error;
 
-        setLogs(data || []);
+        // Transformar dados para match da interface ActivityLog
+        const transformedLogs: ActivityLog[] = (data || []).map(log => ({
+          id: log.id,
+          action: log.action,
+          resource_type: log.resource_type || undefined,
+          resource_id: log.resource_id || undefined,
+          details: log.details || undefined,
+          ip_address: log.ip_address ? String(log.ip_address) : undefined,
+          user_agent: log.user_agent || undefined,
+          created_at: log.created_at
+        }));
+
+        setLogs(transformedLogs);
       } catch (error: any) {
         console.error('Erro ao carregar logs de atividade:', error);
         setLogs([]);
