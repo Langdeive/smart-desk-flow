@@ -151,53 +151,31 @@ const WorkspacePanel: React.FC<WorkspacePanelProps> = ({
     );
   }
 
-  // Desktop layout - Simplified
+  // Desktop layout - Remove duplicated header, start directly with content
   return (
     <div className="h-full flex flex-col bg-white">
-      {/* Compact Header */}
-      <div className="border-b px-4 py-2 flex-shrink-0">
-        <div className="flex items-start justify-between">
-          <div className="flex-1 min-w-0">
-            <div className="flex items-center gap-2 mb-1">
-              <h2 className="text-base font-semibold text-gray-900">
-                #{ticket.id.slice(-6)}
-              </h2>
-              <Button variant="ghost" size="sm" onClick={onClose}>
-                <X className="h-4 w-4" />
-              </Button>
-            </div>
-            <h3 className="text-sm text-gray-900 font-medium mb-1">
-              {ticket.title}
-            </h3>
-            <div className="flex items-center gap-3 text-xs text-gray-500">
-              <div className="flex items-center gap-1">
-                <User className="h-3 w-3" />
-                <span>Cliente: {getClientName()}</span>
-              </div>
-              <div className="flex items-center gap-1">
-                <Clock className="h-3 w-3" />
-                <span>Criado: {new Date(ticket.createdAt).toLocaleDateString()}</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Content */}
+      {/* Content starts directly with tabs - no header duplication */}
       <div className="flex-1 flex overflow-hidden">
         {/* Main Content */}
         <div className="flex-1 flex flex-col min-w-0">
           <Tabs value={activeTab} onValueChange={setActiveTab} className="flex-1 flex flex-col">
-            <TabsList className="w-full justify-start px-4 py-1 flex-shrink-0 h-9">
-              <TabsTrigger value="conversation" className="flex items-center gap-2 text-sm">
-                <MessageSquare className="h-4 w-4" />
-                Conversa
-              </TabsTrigger>
-              <TabsTrigger value="details" className="flex items-center gap-2 text-sm">
-                <FileText className="h-4 w-4" />
-                Detalhes
-              </TabsTrigger>
-            </TabsList>
+            {/* Tab navigation with close button */}
+            <div className="flex items-center justify-between border-b px-4 py-2 flex-shrink-0">
+              <TabsList className="h-9">
+                <TabsTrigger value="conversation" className="flex items-center gap-2 text-sm">
+                  <MessageSquare className="h-4 w-4" />
+                  Conversa
+                </TabsTrigger>
+                <TabsTrigger value="details" className="flex items-center gap-2 text-sm">
+                  <FileText className="h-4 w-4" />
+                  Detalhes
+                </TabsTrigger>
+              </TabsList>
+              
+              <Button variant="ghost" size="sm" onClick={onClose}>
+                <X className="h-4 w-4" />
+              </Button>
+            </div>
 
             <div className="flex-1 overflow-hidden">
               <TabsContent value="conversation" className="h-full m-0">
