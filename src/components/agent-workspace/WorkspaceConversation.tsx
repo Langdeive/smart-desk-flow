@@ -1,5 +1,5 @@
 
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, forwardRef, useImperativeHandle } from 'react';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
@@ -16,22 +16,32 @@ interface WorkspaceConversationProps {
   messages: Message[];
   attachments: Attachment[];
   onTicketUpdate: () => void;
-  onTemplateContent?: (content: string) => void;
 }
 
-const WorkspaceConversation: React.FC<WorkspaceConversationProps> = ({
+export interface WorkspaceConversationRef {
+  addTemplateContent: (content: string) => void;
+}
+
+const WorkspaceConversation = forwardRef<WorkspaceConversationRef, WorkspaceConversationProps>(({
   ticket,
   messages,
   attachments,
-  onTicketUpdate,
-  onTemplateContent
-}) => {
+  onTicketUpdate
+}, ref) => {
   const { toast } = useToast();
   const { user } = useAuth();
   const [newMessage, setNewMessage] = useState('');
   const [newFiles, setNewFiles] = useState<File[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+  // Expose methods to parent component through ref
+  useImperativeHandle(ref, () => ({
+    addTemplateContent: (content: string) => {
+      setNewMessage(prev => prev ? `${prev}\n\n${content}` : content);
+      textareaRef.current?.focus();
+    }
+  }));
 
   // Auto-save draft to localStorage
   useEffect(() => {
@@ -51,16 +61,6 @@ const WorkspaceConversation: React.FC<WorkspaceConversationProps> = ({
       localStorage.removeItem(draftKey);
     }
   }, [newMessage, ticket.id]);
-
-  // Handle template content from parent
-  useEffect(() => {
-    if (onTemplateContent) {
-      onTemplateContent = (content: string) => {
-        setNewMessage(prev => prev ? `${prev}\n\n${content}` : content);
-        textareaRef.current?.focus();
-      };
-    }
-  }, [onTemplateContent]);
 
   const handleSendMessage = async () => {
     if (!newMessage.trim() && newFiles.length === 0) return;
@@ -198,6 +198,8 @@ const WorkspaceConversation: React.FC<WorkspaceConversationProps> = ({
       </div>
     </div>
   );
-};
+});
+
+WorkspaceConversation.displayName = 'WorkspaceConversation';
 
 export default WorkspaceConversation;

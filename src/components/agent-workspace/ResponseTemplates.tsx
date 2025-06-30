@@ -190,7 +190,7 @@ const ResponseTemplates: React.FC<ResponseTemplatesProps> = ({
                     {template.title}
                   </h4>
                   {template.variables && (
-                    <Wand2 className="h-3 w-3 text-blue-500" title="Template com variáveis" />
+                    <Wand2 className="h-3 w-3 text-blue-500" />
                   )}
                 </div>
                 

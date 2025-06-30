@@ -7,7 +7,7 @@ import { Ticket, Message, Attachment } from '@/types';
 import { X, MessageSquare, FileText, Clock, User } from 'lucide-react';
 import { getMessagesForTicket, getAttachmentsForTicket } from '@/services/ticketService';
 import { useQuery } from '@tanstack/react-query';
-import WorkspaceConversation from './WorkspaceConversation';
+import WorkspaceConversation, { WorkspaceConversationRef } from './WorkspaceConversation';
 import WorkspaceDetails from './WorkspaceDetails';
 import WorkspaceActions from './WorkspaceActions';
 import ResponseTemplates from './ResponseTemplates';
@@ -24,7 +24,7 @@ const WorkspacePanel: React.FC<WorkspacePanelProps> = ({
   onClose
 }) => {
   const [activeTab, setActiveTab] = useState('conversation');
-  const conversationRef = useRef<{ addTemplateContent: (content: string) => void }>();
+  const conversationRef = useRef<WorkspaceConversationRef>(null);
 
   const { data: messages = [], refetch: refetchMessages } = useQuery({
     queryKey: ['ticket-messages', ticket.id],
