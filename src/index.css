@@ -135,15 +135,21 @@
 
 .force-white-table {
   background-color: #ffffff !important;
+  border-color: #06b6d4 !important;
 }
 
 .force-white-table th {
   background-color: #f9fafb !important;
-  border-color: #e5e7eb !important;
+  border-color: #06b6d4 !important;
 }
 
 .force-white-table td {
   border-color: #e5e7eb !important;
+}
+
+.force-white-table tr:hover {
+  background-color: #ecfeff !important;
+  border-color: #06b6d4 !important;
 }
 
 /* =================== FORÇA MODAL/DIALOG BRANCO =================== */
@@ -201,6 +207,42 @@ button[data-state="open"] {
   border-color: #06b6d4 !important;
 }
 
+/* =================== FORÇA ESPECÍFICA PARA TABELAS - ELIMINAR AMARELO =================== */
+.ticket-dashboard table {
+  border-color: #06b6d4 !important;
+}
+
+.ticket-dashboard table thead {
+  border-bottom-color: #06b6d4 !important;
+}
+
+.ticket-dashboard table thead th {
+  border-color: #06b6d4 !important;
+}
+
+.ticket-dashboard table tbody tr {
+  border-color: #e5e7eb !important;
+}
+
+.ticket-dashboard table tbody tr:hover {
+  background-color: #ecfeff !important;
+  border-color: #06b6d4 !important;
+}
+
+/* Força global anti-amarelo para tabelas */
+table, thead, tbody, tr, th, td {
+  border-color: #e5e7eb !important;
+}
+
+table thead {
+  border-bottom-color: #06b6d4 !important;
+}
+
+table tbody tr:hover {
+  background-color: #ecfeff !important;
+  border-color: #06b6d4 !important;
+}
+
 /* =================== GRADIENTES LIMPOS SEM AMARELO =================== */
 .gradient-primary {
   background: linear-gradient(135deg, #1E3A8A 0%, #06B6D4 100%);
@@ -221,7 +263,7 @@ button[data-state="open"] {
   background-clip: text;
 }
 
-/* Cache buster para forçar atualização - v2024.3 */
-.cache-buster-v2024-final-usermenu {
-  content: "updated-usermenu-final";
+/* Cache buster para forçar atualização - v2024.4 */
+.cache-buster-v2024-final-table {
+  content: "updated-table-final";
 }
