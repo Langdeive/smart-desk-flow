@@ -9,7 +9,6 @@ import EmptyWorkspaceState from '@/components/agent-workspace/EmptyWorkspaceStat
 import { Ticket } from '@/types';
 import { Loader2 } from 'lucide-react';
 import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from '@/components/ui/resizable';
-import { AppLayout } from '@/components/layout/AppLayout';
 
 const AgentWorkspace = () => {
   const { user } = useAuth();
@@ -97,77 +96,73 @@ const AgentWorkspace = () => {
 
   if (isLoading) {
     return (
-      <AppLayout>
-        <div className="flex items-center justify-center h-64">
-          <Loader2 className="h-8 w-8 animate-spin mr-2" />
-          <span>Carregando workspace...</span>
-        </div>
-      </AppLayout>
+      <div className="flex items-center justify-center h-64">
+        <Loader2 className="h-8 w-8 animate-spin mr-2" />
+        <span>Carregando workspace...</span>
+      </div>
     );
   }
 
   return (
-    <AppLayout>
-      <div className="h-[calc(100vh-4rem)] flex flex-col bg-gray-50 -mt-4">
-        <div className="border-b bg-white px-6 py-4 flex-shrink-0">
-          <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-2xl font-bold text-gray-900">Central de Atendimento</h1>
-              <p className="text-gray-600">
-                {prioritizedTickets.length} tickets aguardando atendimento
-              </p>
+    <div className="h-screen flex flex-col bg-gray-50">
+      <div className="border-b bg-white px-6 py-4 flex-shrink-0">
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-2xl font-bold text-gray-900">Central de Atendimento</h1>
+            <p className="text-gray-600">
+              {prioritizedTickets.length} tickets aguardando atendimento
+            </p>
+          </div>
+          <div className="flex items-center gap-4">
+            <div className="text-sm">
+              <span className="font-medium text-green-600">
+                Agente: {getUserDisplayName()}
+              </span>
             </div>
-            <div className="flex items-center gap-4">
-              <div className="text-sm">
-                <span className="font-medium text-green-600">
-                  Agente: {getUserDisplayName()}
-                </span>
-              </div>
-              <div className="text-xs text-gray-500">
-                <kbd className="px-1 py-0.5 bg-gray-100 rounded">J</kbd>/<kbd className="px-1 py-0.5 bg-gray-100 rounded">K</kbd> navegar • 
-                <kbd className="px-1 py-0.5 bg-gray-100 rounded ml-1">Esc</kbd> fechar
-              </div>
+            <div className="text-xs text-gray-500">
+              <kbd className="px-1 py-0.5 bg-gray-100 rounded">J</kbd>/<kbd className="px-1 py-0.5 bg-gray-100 rounded">K</kbd> navegar • 
+              <kbd className="px-1 py-0.5 bg-gray-100 rounded ml-1">Esc</kbd> fechar
             </div>
           </div>
         </div>
-
-        <div className="flex-1 overflow-hidden">
-          <ResizablePanelGroup direction="horizontal" className="h-full">
-            {/* Ticket Queue Panel */}
-            <ResizablePanel defaultSize={35} minSize={25} maxSize={50}>
-              <TicketQueue
-                tickets={prioritizedTickets}
-                selectedTicket={selectedTicket}
-                onTicketSelect={handleTicketSelect}
-                onTicketUpdate={handleTicketUpdate}
-              />
-            </ResizablePanel>
-
-            <ResizableHandle withHandle />
-
-            {/* Workspace Panel */}
-            <ResizablePanel defaultSize={65} minSize={50}>
-              {selectedTicket ? (
-                <WorkspacePanel
-                  ticket={selectedTicket}
-                  onTicketUpdate={handleTicketUpdate}
-                  onClose={() => setSelectedTicket(null)}
-                />
-              ) : (
-                <EmptyWorkspaceState
-                  ticketCount={prioritizedTickets.length}
-                  onSelectFirstTicket={() => {
-                    if (prioritizedTickets.length > 0) {
-                      setSelectedTicket(prioritizedTickets[0]);
-                    }
-                  }}
-                />
-              )}
-            </ResizablePanel>
-          </ResizablePanelGroup>
-        </div>
       </div>
-    </AppLayout>
+
+      <div className="flex-1 overflow-hidden">
+        <ResizablePanelGroup direction="horizontal" className="h-full">
+          {/* Ticket Queue Panel */}
+          <ResizablePanel defaultSize={35} minSize={25} maxSize={50}>
+            <TicketQueue
+              tickets={prioritizedTickets}
+              selectedTicket={selectedTicket}
+              onTicketSelect={handleTicketSelect}
+              onTicketUpdate={handleTicketUpdate}
+            />
+          </ResizablePanel>
+
+          <ResizableHandle withHandle />
+
+          {/* Workspace Panel */}
+          <ResizablePanel defaultSize={65} minSize={50}>
+            {selectedTicket ? (
+              <WorkspacePanel
+                ticket={selectedTicket}
+                onTicketUpdate={handleTicketUpdate}
+                onClose={() => setSelectedTicket(null)}
+              />
+            ) : (
+              <EmptyWorkspaceState
+                ticketCount={prioritizedTickets.length}
+                onSelectFirstTicket={() => {
+                  if (prioritizedTickets.length > 0) {
+                    setSelectedTicket(prioritizedTickets[0]);
+                  }
+                }}
+              />
+            )}
+          </ResizablePanel>
+        </ResizablePanelGroup>
+      </div>
+    </div>
   );
 };
 
