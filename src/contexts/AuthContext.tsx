@@ -1,6 +1,10 @@
+
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { User, Session } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
+import { SessionManager } from '@/utils/sessionSecurity';
+import { SecureLogger } from '@/utils/secureLogger';
+import { toast } from 'sonner';
 
 export interface SignInData {
   email: string;
@@ -31,6 +35,38 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [userRole, setUserRole] = useState<string | null>(null);
   const [userCompanyId, setUserCompanyId] = useState<string | null>(null);
 
+  // Inicializar SessionManager
+  const sessionManager = SessionManager.getInstance();
+
+  // Configurar SessionManager com callbacks
+  useEffect(() => {
+    sessionManager.setCallbacks(
+      // onWarning
+      () => {
+        toast.warning('Sessão expirando', {
+          description: 'Sua sessão expirará em 15 minutos. Clique aqui para estender.',
+          action: {
+            label: 'Estender',
+            onClick: () => sessionManager.extendSession()
+          }
+        });
+      },
+      // onTimeout
+      () => {
+        toast.error('Sessão expirada', {
+          description: 'Sua sessão expirou por motivos de segurança. Faça login novamente.'
+        });
+      }
+    );
+
+    // Configurar timeout de sessão baseado nas preferências do usuário
+    sessionManager.configure({
+      timeoutMinutes: 480, // 8 horas padrão
+      warningMinutes: 15,
+      maxInactivityMinutes: 30
+    });
+  }, []);
+
   // Função para buscar role da tabela user_companies
   const fetchUserCompanyRole = async (userId: string) => {
     try {
@@ -41,27 +77,34 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         .single();
       
       if (error) {
-        console.log('No user_companies record found:', error.message);
+        SecureLogger.warn('No user_companies record found', { userId: userId.substring(0, 8) });
         return { role: null, companyId: null };
       }
       
-      console.log('✅ User company data found:', data);
+      SecureLogger.info('User company data found', { 
+        userId: userId.substring(0, 8),
+        role: data.role,
+        companyId: data.company_id?.substring(0, 8)
+      });
       return { role: data.role, companyId: data.company_id };
     } catch (error) {
-      console.error('Error fetching user company role:', error);
+      SecureLogger.error('Error fetching user company role', { userId: userId.substring(0, 8) }, error);
       return { role: null, companyId: null };
     }
   };
 
   // Função para determinar o role com hierarquia de prioridade
   const determineUserRole = async (user: User) => {
-    console.log('🔍 Determining user role for:', user.email);
+    SecureLogger.info('Determining user role', { 
+      userId: user.id.substring(0, 8),
+      email: user.email?.replace(/(.{2}).*(@.*)/, '$1***$2')
+    });
     
     // 1. Primeira prioridade: user_companies (mais confiável)
     const { role: companyRole, companyId } = await fetchUserCompanyRole(user.id);
     
     if (companyRole) {
-      console.log('✅ Role found in user_companies:', companyRole);
+      SecureLogger.info('Role found in user_companies', { role: companyRole });
       setUserRole(companyRole);
       setUserCompanyId(companyId);
       return;
@@ -70,7 +113,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     // 2. Segunda prioridade: user_metadata
     const userMetadataRole = user.user_metadata?.role;
     if (userMetadataRole) {
-      console.log('✅ Role found in user_metadata:', userMetadataRole);
+      SecureLogger.info('Role found in user_metadata', { role: userMetadataRole });
       setUserRole(userMetadataRole);
       setUserCompanyId(user.user_metadata?.company_id || null);
       return;
@@ -79,13 +122,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     // 3. Terceira prioridade: app_metadata
     const appMetadataRole = user.app_metadata?.role;
     if (appMetadataRole) {
-      console.log('✅ Role found in app_metadata:', appMetadataRole);
+      SecureLogger.info('Role found in app_metadata', { role: appMetadataRole });
       setUserRole(appMetadataRole);
       setUserCompanyId(user.app_metadata?.company_id || null);
       return;
     }
     
-    console.log('⚠️ No role found for user, defaulting to null');
+    SecureLogger.warn('No role found for user, defaulting to null');
     setUserRole(null);
     setUserCompanyId(null);
   };
@@ -100,15 +143,29 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           return;
         }
 
-        console.log('Auth state changed:', event);
+        SecureLogger.info('Auth state changed', { 
+          event,
+          hasSession: !!session,
+          hasUser: !!session?.user
+        });
+        
         const currentUser = session?.user ?? null;
         setSession(session);
         setUser(currentUser);
         setError(null);
 
-        if (currentUser) {
+        if (currentUser && session) {
+          // Iniciar gerenciamento de sessão
+          sessionManager.startSession();
+          
+          // Registrar login seguro
+          SecureLogger.info('User authenticated', {
+            userId: currentUser.id.substring(0, 8),
+            email: currentUser.email?.replace(/(.{2}).*(@.*)/, '$1***$2'),
+            lastSignIn: currentUser.last_sign_in_at
+          });
+
           // Deferir a busca de role para evitar deadlocks
-          // Isso está alinhado com as melhores práticas do Supabase
           setTimeout(() => {
             if (mounted) {
               determineUserRole(currentUser).finally(() => {
@@ -123,6 +180,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           setUserRole(null);
           setUserCompanyId(null);
           setLoading(false);
+          
+          if (event === 'SIGNED_OUT') {
+            SecureLogger.info('User signed out');
+          }
         }
       }
     );
@@ -136,17 +197,28 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const signIn = async (data: SignInData) => {
     try {
       setError(null);
+      
+      SecureLogger.info('Sign in attempt', {
+        email: data.email.replace(/(.{2}).*(@.*)/, '$1***$2')
+      });
+
       const { error } = await supabase.auth.signInWithPassword({
         email: data.email,
         password: data.password,
       });
       
       if (error) {
+        SecureLogger.warn('Sign in failed', { 
+          error: error.message,
+          email: data.email.replace(/(.{2}).*(@.*)/, '$1***$2')
+        });
         setError(error.message);
         throw error;
       }
+      
+      SecureLogger.info('Sign in successful');
     } catch (error: any) {
-      console.error('Error signing in:', error);
+      SecureLogger.error('Sign in exception', undefined, error);
       setError(error.message);
       throw error;
     }
@@ -155,14 +227,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const signOut = async () => {
     try {
       setError(null);
-      const { error } = await supabase.auth.signOut();
-      if (error) {
-        console.error('Error signing out:', error);
-        setError(error.message);
-        throw error;
-      }
+      
+      SecureLogger.info('Sign out initiated');
+      
+      // Usar o SessionManager para logout seguro
+      await sessionManager.endSession();
+      
     } catch (error: any) {
-      console.error('Error in signOut:', error);
+      SecureLogger.error('Sign out error', undefined, error);
       setError(error.message);
       throw error;
     }
@@ -171,6 +243,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const resendVerificationEmail = async (email: string) => {
     try {
       setError(null);
+      
+      SecureLogger.info('Resend verification email', {
+        email: email.replace(/(.{2}).*(@.*)/, '$1***$2')
+      });
+
       const { error } = await supabase.auth.resend({
         type: 'signup',
         email: email,
@@ -180,11 +257,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       });
       
       if (error) {
+        SecureLogger.warn('Resend verification failed', { error: error.message });
         setError(error.message);
         throw error;
       }
+      
+      SecureLogger.info('Verification email sent successfully');
     } catch (error: any) {
-      console.error('Error resending verification email:', error);
+      SecureLogger.error('Resend verification exception', undefined, error);
       setError(error.message);
       throw error;
     }
@@ -194,12 +274,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const isAuthenticated = !!user;
   const emailVerified = user?.email_confirmed_at != null;
   
-  // Log final role information for debugging
+  // Log final role information for debugging (apenas em desenvolvimento)
   useEffect(() => {
-    if (user && userRole !== null) {
-      console.log('👤 Current user role:', userRole);
-      console.log('🏢 Current company ID:', userCompanyId);
-      console.log('📧 User email:', user.email);
+    if (!import.meta.env.PROD && user && userRole !== null) {
+      SecureLogger.debug('Current user context', {
+        role: userRole,
+        companyId: userCompanyId?.substring(0, 8),
+        email: user.email?.replace(/(.{2}).*(@.*)/, '$1***$2')
+      });
     }
   }, [user, userRole, userCompanyId]);
 
