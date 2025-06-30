@@ -9,7 +9,6 @@ import EmptyWorkspaceState from '@/components/agent-workspace/EmptyWorkspaceStat
 import { Ticket } from '@/types';
 import { Loader2 } from 'lucide-react';
 import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from '@/components/ui/resizable';
-import { AppLayout } from '@/components/layout/AppLayout';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useIsMobile } from '@/hooks/use-mobile';
 
@@ -91,122 +90,116 @@ const AgentWorkspace = () => {
 
   if (isLoading) {
     return (
-      <AppLayout>
-        <div className="flex items-center justify-center h-64">
-          <Loader2 className="h-8 w-8 animate-spin mr-2" />
-          <span>Carregando workspace...</span>
-        </div>
-      </AppLayout>
+      <div className="flex items-center justify-center h-64">
+        <Loader2 className="h-8 w-8 animate-spin mr-2" />
+        <span>Carregando workspace...</span>
+      </div>
     );
   }
 
   // Mobile Layout with Tabs
   if (isMobile) {
     return (
-      <AppLayout>
-        <div className="flex flex-col h-full">
-          {/* Mobile Tabs */}
-          <Tabs value={activeTab} onValueChange={setActiveTab} className="flex-1 flex flex-col">
-            <TabsList className="grid w-full grid-cols-3 mx-2 mt-2 h-8">
-              <TabsTrigger value="queue" className="text-xs">
-                Fila ({prioritizedTickets.length})
-              </TabsTrigger>
-              <TabsTrigger value="ticket" disabled={!selectedTicket} className="text-xs">
-                Ticket
-              </TabsTrigger>
-              <TabsTrigger value="actions" disabled={!selectedTicket} className="text-xs">
-                Ações
-              </TabsTrigger>
-            </TabsList>
+      <div className="flex flex-col h-full">
+        {/* Mobile Tabs */}
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="flex-1 flex flex-col">
+          <TabsList className="grid w-full grid-cols-3 mx-2 mt-2 h-8">
+            <TabsTrigger value="queue" className="text-xs">
+              Fila ({prioritizedTickets.length})
+            </TabsTrigger>
+            <TabsTrigger value="ticket" disabled={!selectedTicket} className="text-xs">
+              Ticket
+            </TabsTrigger>
+            <TabsTrigger value="actions" disabled={!selectedTicket} className="text-xs">
+              Ações
+            </TabsTrigger>
+          </TabsList>
 
-            <div className="flex-1 overflow-hidden">
-              <TabsContent value="queue" className="h-full m-0">
-                <TicketQueue
-                  tickets={prioritizedTickets}
-                  selectedTicket={selectedTicket}
-                  onTicketSelect={handleTicketSelect}
+          <div className="flex-1 overflow-hidden">
+            <TabsContent value="queue" className="h-full m-0">
+              <TicketQueue
+                tickets={prioritizedTickets}
+                selectedTicket={selectedTicket}
+                onTicketSelect={handleTicketSelect}
+                onTicketUpdate={handleTicketUpdate}
+              />
+            </TabsContent>
+
+            <TabsContent value="ticket" className="h-full m-0">
+              {selectedTicket ? (
+                <WorkspacePanel
+                  ticket={selectedTicket}
                   onTicketUpdate={handleTicketUpdate}
+                  onClose={() => {
+                    setSelectedTicket(null);
+                    setActiveTab('queue');
+                  }}
+                  isMobile={true}
                 />
-              </TabsContent>
+              ) : (
+                <EmptyWorkspaceState
+                  ticketCount={prioritizedTickets.length}
+                  onSelectFirstTicket={() => {
+                    if (prioritizedTickets.length > 0) {
+                      setSelectedTicket(prioritizedTickets[0]);
+                    }
+                  }}
+                />
+              )}
+            </TabsContent>
 
-              <TabsContent value="ticket" className="h-full m-0">
-                {selectedTicket ? (
-                  <WorkspacePanel
-                    ticket={selectedTicket}
-                    onTicketUpdate={handleTicketUpdate}
-                    onClose={() => {
-                      setSelectedTicket(null);
-                      setActiveTab('queue');
-                    }}
-                    isMobile={true}
-                  />
-                ) : (
-                  <EmptyWorkspaceState
-                    ticketCount={prioritizedTickets.length}
-                    onSelectFirstTicket={() => {
-                      if (prioritizedTickets.length > 0) {
-                        setSelectedTicket(prioritizedTickets[0]);
-                      }
-                    }}
-                  />
-                )}
-              </TabsContent>
-
-              <TabsContent value="actions" className="h-full m-0">
-                {selectedTicket && (
-                  <div className="p-3">
-                    <h3 className="font-semibold mb-3 text-sm">Ações Rápidas</h3>
-                    {/* Actions content will be moved here */}
-                  </div>
-                )}
-              </TabsContent>
-            </div>
-          </Tabs>
-        </div>
-      </AppLayout>
+            <TabsContent value="actions" className="h-full m-0">
+              {selectedTicket && (
+                <div className="p-3">
+                  <h3 className="font-semibold mb-3 text-sm">Ações Rápidas</h3>
+                  {/* Actions content will be moved here */}
+                </div>
+              )}
+            </TabsContent>
+          </div>
+        </Tabs>
+      </div>
     );
   }
 
   // Desktop Layout - Fixed positioning and spacing
   return (
-    <AppLayout>
-      <div className="flex-1 h-full">
-        <ResizablePanelGroup direction="horizontal" className="h-full">
-          {/* Ticket Queue Panel */}
-          <ResizablePanel defaultSize={30} minSize={25} maxSize={45}>
-            <TicketQueue
-              tickets={prioritizedTickets}
-              selectedTicket={selectedTicket}
-              onTicketSelect={handleTicketSelect}
+    <div className="flex-1 h-full">
+      <ResizablePanelGroup direction="horizontal" className="h-full">
+        {/* Ticket Queue Panel */}
+        <ResizablePanel defaultSize={30} minSize={25} maxSize={45}>
+          <TicketQueue
+            tickets={prioritizedTickets}
+            selectedTicket={selectedTicket}
+            onTicketSelect={handleTicketSelect}
+            onTicketUpdate={handleTicketUpdate}
+          />
+        </ResizablePanel>
+
+        <ResizableHandle withHandle />
+
+        {/* Workspace Panel */}
+        <ResizablePanel defaultSize={70} minSize={55}>
+          {selectedTicket ? (
+            <WorkspacePanel
+              ticket={selectedTicket}
               onTicketUpdate={handleTicketUpdate}
+              onClose={() => setSelectedTicket(null)}
+              isMobile={false}
             />
-          </ResizablePanel>
-
-          <ResizableHandle withHandle />
-
-          {/* Workspace Panel */}
-          <ResizablePanel defaultSize={70} minSize={55}>
-            {selectedTicket ? (
-              <WorkspacePanel
-                ticket={selectedTicket}
-                onTicketUpdate={handleTicketUpdate}
-                onClose={() => setSelectedTicket(null)}
-                isMobile={false}
-              />
-            ) : (
-              <EmptyWorkspaceState
-                ticketCount={prioritizedTickets.length}
-                onSelectFirstTicket={() => {
-                  if (prioritizedTickets.length > 0) {
-                    setSelectedTicket(prioritizedTickets[0]);
-                  }
-                }}
-              />
-            )}
-          </ResizablePanel>
-        </ResizablePanelGroup>
-      </div>
-    </AppLayout>
+          ) : (
+            <EmptyWorkspaceState
+              ticketCount={prioritizedTickets.length}
+              onSelectFirstTicket={() => {
+                if (prioritizedTickets.length > 0) {
+                  setSelectedTicket(prioritizedTickets[0]);
+                }
+              }}
+            />
+          )}
+        </ResizablePanel>
+      </ResizablePanelGroup>
+    </div>
   );
 };
 
