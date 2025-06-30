@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -64,23 +64,24 @@ const TicketQueue: React.FC<TicketQueueProps> = ({
 
   return (
     <div className="h-full flex flex-col bg-gray-50">
-      {/* Search and Filters */}
-      <div className="p-4 bg-white border-b space-y-3">
+      {/* Compact Search and Filters */}
+      <div className="p-3 bg-white border-b space-y-2">
         <div className="relative">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+          <Search className="absolute left-2.5 top-1/2 transform -translate-y-1/2 h-3.5 w-3.5 text-gray-400" />
           <Input
             placeholder="Buscar tickets..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="pl-10"
+            className="pl-8 py-1.5 text-sm h-8"
           />
         </div>
 
-        <div className="flex flex-wrap gap-2">
+        <div className="flex flex-wrap gap-1.5">
           <Button
             variant={filterStatus === 'all' ? 'default' : 'outline'}
             size="sm"
             onClick={() => setFilterStatus('all')}
+            className="h-7 px-2.5 text-xs"
           >
             Todos ({tickets.length})
           </Button>
@@ -88,6 +89,7 @@ const TicketQueue: React.FC<TicketQueueProps> = ({
             variant={filterStatus === 'new' ? 'default' : 'outline'}
             size="sm"
             onClick={() => setFilterStatus('new')}
+            className="h-7 px-2.5 text-xs"
           >
             Novos ({tickets.filter(t => t.status === 'new').length})
           </Button>
@@ -95,77 +97,78 @@ const TicketQueue: React.FC<TicketQueueProps> = ({
             variant={filterStatus === 'waiting_for_agent' ? 'default' : 'outline'}
             size="sm"
             onClick={() => setFilterStatus('waiting_for_agent')}
+            className="h-7 px-2.5 text-xs"
           >
             Aguardando ({tickets.filter(t => t.status === 'waiting_for_agent').length})
           </Button>
         </div>
       </div>
 
-      {/* Ticket List */}
+      {/* Compact Ticket List */}
       <div className="flex-1 overflow-y-auto">
         {filteredTickets.length === 0 ? (
-          <div className="p-6 text-center text-gray-500">
-            <AlertCircle className="h-12 w-12 mx-auto mb-3 text-gray-300" />
-            <p className="text-sm">Nenhum ticket encontrado</p>
+          <div className="p-4 text-center text-gray-500">
+            <AlertCircle className="h-8 w-8 mx-auto mb-2 text-gray-300" />
+            <p className="text-xs">Nenhum ticket encontrado</p>
             {searchTerm && (
               <Button 
                 variant="link" 
                 size="sm" 
                 onClick={() => setSearchTerm('')}
-                className="mt-2"
+                className="mt-1 text-xs"
               >
                 Limpar busca
               </Button>
             )}
           </div>
         ) : (
-          <div className="p-2 space-y-2">
+          <div className="p-1.5 space-y-1.5">
             {filteredTickets.map((ticket) => (
               <Card
                 key={ticket.id}
                 className={cn(
-                  "cursor-pointer transition-all duration-200 hover:shadow-md",
+                  "cursor-pointer transition-all duration-200 hover:shadow-sm border-l-2",
                   selectedTicket?.id === ticket.id 
-                    ? "ring-2 ring-blue-500 bg-blue-50" 
-                    : "hover:bg-gray-50"
+                    ? "ring-1 ring-blue-500 bg-blue-50 border-l-blue-500" 
+                    : "hover:bg-gray-50 border-l-transparent"
                 )}
                 onClick={() => onTicketSelect(ticket)}
               >
-                <CardContent className="p-3">
-                  <div className="space-y-2">
-                    {/* Header */}
+                <CardContent className="p-2.5">
+                  <div className="space-y-1.5">
+                    {/* Compact Header */}
                     <div className="flex items-start justify-between gap-2">
                       <div className="flex-1 min-w-0">
-                        <div className="flex items-center gap-2 mb-1">
-                          <span className="text-xs font-mono text-gray-500">
+                        <div className="flex items-center gap-1.5 mb-0.5">
+                          <span className="text-xs font-mono text-gray-500 bg-gray-100 px-1.5 py-0.5 rounded">
                             #{ticket.id.slice(-6)}
                           </span>
-                          <Badge className={cn("text-xs px-1.5 py-0.5", getPriorityColor(ticket.priority))}>
+                          <Badge className={cn("text-xs px-1 py-0", getPriorityColor(ticket.priority))}>
                             {ticket.priority}
                           </Badge>
                         </div>
-                        <h3 className="font-medium text-sm text-gray-900 line-clamp-2 leading-tight">
+                        <h3 className="font-medium text-xs text-gray-900 line-clamp-1 leading-tight">
                           {ticket.title}
                         </h3>
                       </div>
                     </div>
 
-                    {/* Description */}
-                    <p className="text-xs text-gray-600 line-clamp-2">
+                    {/* Compact Description */}
+                    <p className="text-xs text-gray-600 line-clamp-1">
                       {ticket.description}
                     </p>
 
-                    {/* Footer */}
+                    {/* Compact Footer */}
                     <div className="flex items-center justify-between text-xs text-gray-500">
-                      <div className="flex items-center gap-3">
+                      <div className="flex items-center gap-2">
                         <div className="flex items-center gap-1">
                           <User className="h-3 w-3" />
-                          <span className="truncate max-w-20">
+                          <span className="truncate max-w-16">
                             {ticket.userId || 'Cliente'}
                           </span>
                         </div>
-                        <Badge className={cn("text-xs px-1.5 py-0.5", getStatusColor(ticket.status))}>
-                          <div className="flex items-center gap-1">
+                        <Badge className={cn("text-xs px-1 py-0", getStatusColor(ticket.status))}>
+                          <div className="flex items-center gap-0.5">
                             {getStatusIcon(ticket.status)}
                             <span className="hidden sm:inline">
                               {ticket.status === 'new' ? 'Novo' :
@@ -176,7 +179,7 @@ const TicketQueue: React.FC<TicketQueueProps> = ({
                           </div>
                         </Badge>
                       </div>
-                      <span className="whitespace-nowrap">
+                      <span className="whitespace-nowrap text-xs">
                         {formatDistanceToNow(new Date(ticket.createdAt), { 
                           addSuffix: true, 
                           locale: ptBR 

@@ -122,12 +122,12 @@ const AgentWorkspace = () => {
     return (
       <AppLayout>
         <div className="flex flex-col h-full">
-          {/* Header */}
-          <div className="border-b bg-white px-4 py-3 flex-shrink-0">
+          {/* Compact Mobile Header */}
+          <div className="border-b bg-white px-3 py-2 flex-shrink-0">
             <div className="flex items-center justify-between">
               <div>
-                <h1 className="text-lg font-bold text-gray-900">Central de Atendimento</h1>
-                <p className="text-sm text-gray-600">
+                <h1 className="text-base font-bold text-gray-900">Central de Atendimento</h1>
+                <p className="text-xs text-gray-600">
                   {prioritizedTickets.length} tickets aguardando
                 </p>
               </div>
@@ -139,14 +139,14 @@ const AgentWorkspace = () => {
 
           {/* Mobile Tabs */}
           <Tabs value={activeTab} onValueChange={setActiveTab} className="flex-1 flex flex-col">
-            <TabsList className="grid w-full grid-cols-3 mx-4 mt-2">
-              <TabsTrigger value="queue">
+            <TabsList className="grid w-full grid-cols-3 mx-3 mt-2 h-8">
+              <TabsTrigger value="queue" className="text-xs">
                 Fila ({prioritizedTickets.length})
               </TabsTrigger>
-              <TabsTrigger value="ticket" disabled={!selectedTicket}>
+              <TabsTrigger value="ticket" disabled={!selectedTicket} className="text-xs">
                 Ticket
               </TabsTrigger>
-              <TabsTrigger value="actions" disabled={!selectedTicket}>
+              <TabsTrigger value="actions" disabled={!selectedTicket} className="text-xs">
                 Ações
               </TabsTrigger>
             </TabsList>
@@ -186,8 +186,8 @@ const AgentWorkspace = () => {
 
               <TabsContent value="actions" className="h-full m-0">
                 {selectedTicket && (
-                  <div className="p-4">
-                    <h3 className="font-semibold mb-4">Ações Rápidas</h3>
+                  <div className="p-3">
+                    <h3 className="font-semibold mb-3 text-sm">Ações Rápidas</h3>
                     {/* Actions content will be moved here */}
                   </div>
                 )}
@@ -199,38 +199,38 @@ const AgentWorkspace = () => {
     );
   }
 
-  // Desktop Layout
+  // Desktop Layout - More Compact
   return (
     <AppLayout>
-      <div className="flex flex-col h-full">
-        {/* Header */}
-        <div className="border-b bg-white px-6 py-4 flex-shrink-0">
+      <div className="flex flex-col h-[calc(100vh-4rem)]">
+        {/* Compact Header */}
+        <div className="border-b bg-white px-4 py-2.5 flex-shrink-0">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-2xl font-bold text-gray-900">Central de Atendimento</h1>
-              <p className="text-gray-600">
+              <h1 className="text-xl font-bold text-gray-900">Central de Atendimento</h1>
+              <p className="text-sm text-gray-600">
                 {prioritizedTickets.length} tickets aguardando atendimento
               </p>
             </div>
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-3">
               <div className="text-sm">
                 <span className="font-medium text-green-600">
                   Agente: {getUserDisplayName()}
                 </span>
               </div>
               <div className="text-xs text-gray-500">
-                <kbd className="px-1 py-0.5 bg-gray-100 rounded">J</kbd>/<kbd className="px-1 py-0.5 bg-gray-100 rounded">K</kbd> navegar • 
-                <kbd className="px-1 py-0.5 bg-gray-100 rounded ml-1">Esc</kbd> fechar
+                <kbd className="px-1 py-0.5 bg-gray-100 rounded text-xs">J</kbd>/<kbd className="px-1 py-0.5 bg-gray-100 rounded text-xs">K</kbd> navegar • 
+                <kbd className="px-1 py-0.5 bg-gray-100 rounded ml-1 text-xs">Esc</kbd> fechar
               </div>
             </div>
           </div>
         </div>
 
-        {/* Desktop Content */}
+        {/* Desktop Content - Optimized Proportions */}
         <div className="flex-1 overflow-hidden">
           <ResizablePanelGroup direction="horizontal" className="h-full">
-            {/* Ticket Queue Panel */}
-            <ResizablePanel defaultSize={35} minSize={25} maxSize={50}>
+            {/* Ticket Queue Panel - Smaller default size */}
+            <ResizablePanel defaultSize={30} minSize={25} maxSize={45}>
               <TicketQueue
                 tickets={prioritizedTickets}
                 selectedTicket={selectedTicket}
@@ -241,8 +241,8 @@ const AgentWorkspace = () => {
 
             <ResizableHandle withHandle />
 
-            {/* Workspace Panel */}
-            <ResizablePanel defaultSize={65} minSize={50}>
+            {/* Workspace Panel - Larger default size */}
+            <ResizablePanel defaultSize={70} minSize={55}>
               {selectedTicket ? (
                 <WorkspacePanel
                   ticket={selectedTicket}
