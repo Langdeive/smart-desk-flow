@@ -39,6 +39,23 @@ const AgentWorkspace = () => {
     refetch();
   };
 
+  // Get user display name from user metadata or email
+  const getUserDisplayName = () => {
+    if (!user) return 'Usuário';
+    
+    // Try to get name from user_metadata first
+    if (user.user_metadata?.full_name) {
+      return user.user_metadata.full_name;
+    }
+    
+    // Fallback to first part of email
+    if (user.email) {
+      return user.email.split('@')[0];
+    }
+    
+    return 'Usuário';
+  };
+
   if (isLoading) {
     return (
       <div className="flex items-center justify-center h-64">
@@ -61,7 +78,7 @@ const AgentWorkspace = () => {
           <div className="flex items-center gap-4">
             <div className="text-sm">
               <span className="font-medium text-green-600">
-                Agente: {user?.name}
+                Agente: {getUserDisplayName()}
               </span>
             </div>
           </div>
