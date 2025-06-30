@@ -5,10 +5,26 @@ import { ThemeToggle } from "./ThemeToggle";
 import Logo from "@/components/ui/logo";
 import { useLocation } from "react-router-dom";
 import { Badge } from "@/components/ui/badge";
+import { useEffect } from "react";
 
-export function TopBar() {
+interface TopBarProps {
+  'data-testid'?: string;
+  'data-instance-id'?: string;
+  'data-route'?: string;
+}
+
+export function TopBar(props: TopBarProps) {
   const { user, signOut } = useAuth();
   const location = useLocation();
+
+  // Debug logging
+  useEffect(() => {
+    console.log('🔍 TopBar renderizado:', {
+      instanceId: props['data-instance-id'],
+      route: props['data-route'] || location.pathname,
+      timestamp: new Date().toISOString(),
+    });
+  }, [props, location.pathname]);
 
   const userData = user ? {
     name: user.user_metadata?.full_name || user.email?.split('@')[0] || 'Usuário',
@@ -19,7 +35,10 @@ export function TopBar() {
   const isWorkspacePage = location.pathname === '/workspace';
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-gray-200 bg-white backdrop-blur supports-[backdrop-filter]:bg-white/95 force-white-header">
+    <header 
+      className="sticky top-0 z-50 w-full border-b border-gray-200 bg-white backdrop-blur supports-[backdrop-filter]:bg-white/95 force-white-header"
+      {...props}
+    >
       <div className="container flex h-14 items-center justify-between px-4">
         <div className="flex items-center gap-4">
           <Logo variant="full" size="sm" />

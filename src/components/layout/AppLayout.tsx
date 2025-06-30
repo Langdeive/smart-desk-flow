@@ -1,6 +1,6 @@
 
 import { Sidebar } from "./Sidebar";
-import { TopBar } from "./TopBar";
+import { HeaderManager } from "./HeaderManager";
 import { Toaster } from "@/components/ui/toaster";
 import '@/styles/app.css';
 
@@ -15,7 +15,7 @@ export function AppLayout({ children, fullScreen = false }: AppLayoutProps) {
       id="app-container"
       className="min-h-screen flex flex-col bg-gray-50"
     >
-      <TopBar />
+      <HeaderManager />
       <div className="flex flex-1 overflow-hidden">
         <Sidebar />
         <main className={`flex-1 lg:ml-64 ${fullScreen ? 'h-[calc(100vh-3.5rem)]' : 'pt-4'} overflow-hidden`}>
