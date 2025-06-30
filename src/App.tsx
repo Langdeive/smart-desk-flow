@@ -1,9 +1,11 @@
+
 import React from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Toaster } from 'sonner';
 import { AuthProvider } from '@/contexts/AuthContext';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { SecureCspHeaders } from "@/components/security/SecureCspHeaders";
+import { AppLayout } from '@/components/layout/AppLayout';
 import Login from '@/pages/Login';
 import Register from '@/pages/Register';
 import Dashboard from '@/pages/Dashboard';
@@ -37,15 +39,7 @@ function App() {
               <Route path="/company-register" element={<CompanyRegister />} />
               <Route path="/plan-select" element={<PlanSelect />} />
               
-              {/* Rotas protegidas (com AppLayout) */}
-              <Route 
-                path="/dashboard" 
-                element={
-                  <ProtectedRoute>
-                    <Dashboard />
-                  </ProtectedRoute>
-                } 
-              />
+              {/* Workspace tem seu próprio layout */}
               <Route 
                 path="/workspace" 
                 element={
@@ -54,11 +48,25 @@ function App() {
                   </ProtectedRoute>
                 } 
               />
+              
+              {/* Rotas protegidas (com AppLayout) */}
+              <Route 
+                path="/dashboard" 
+                element={
+                  <ProtectedRoute>
+                    <AppLayout>
+                      <Dashboard />
+                    </AppLayout>
+                  </ProtectedRoute>
+                } 
+              />
               <Route 
                 path="/agents" 
                 element={
                   <ProtectedRoute allowedRoles={['admin', 'owner', 'developer']}>
-                    <AgentManagement />
+                    <AppLayout>
+                      <AgentManagement />
+                    </AppLayout>
                   </ProtectedRoute>
                 } 
               />
@@ -66,7 +74,9 @@ function App() {
                 path="/clients" 
                 element={
                   <ProtectedRoute>
-                    <ClientManagement />
+                    <AppLayout>
+                      <ClientManagement />
+                    </AppLayout>
                   </ProtectedRoute>
                 } 
               />
@@ -74,7 +84,9 @@ function App() {
                 path="/tickets" 
                 element={
                   <ProtectedRoute>
-                    <TicketDashboard />
+                    <AppLayout>
+                      <TicketDashboard />
+                    </AppLayout>
                   </ProtectedRoute>
                 } 
               />
@@ -82,7 +94,9 @@ function App() {
                 path="/tickets/:id" 
                 element={
                   <ProtectedRoute>
-                    <TicketDetail />
+                    <AppLayout>
+                      <TicketDetail />
+                    </AppLayout>
                   </ProtectedRoute>
                 } 
               />
@@ -90,7 +104,9 @@ function App() {
                 path="/create-ticket" 
                 element={
                   <ProtectedRoute>
-                    <CreateTicket />
+                    <AppLayout>
+                      <CreateTicket />
+                    </AppLayout>
                   </ProtectedRoute>
                 } 
               />
@@ -98,7 +114,9 @@ function App() {
                 path="/knowledge-base" 
                 element={
                   <ProtectedRoute>
-                    <KnowledgeBase />
+                    <AppLayout>
+                      <KnowledgeBase />
+                    </AppLayout>
                   </ProtectedRoute>
                 } 
               />
@@ -106,7 +124,9 @@ function App() {
                 path="/helena" 
                 element={
                   <ProtectedRoute allowedRoles={['admin', 'owner', 'developer']}>
-                    <HelenaArticles />
+                    <AppLayout>
+                      <HelenaArticles />
+                    </AppLayout>
                   </ProtectedRoute>
                 } 
               />
@@ -114,7 +134,9 @@ function App() {
                 path="/settings" 
                 element={
                   <ProtectedRoute allowedRoles={['admin', 'owner', 'developer']}>
-                    <Settings />
+                    <AppLayout>
+                      <Settings />
+                    </AppLayout>
                   </ProtectedRoute>
                 } 
               />
@@ -122,7 +144,9 @@ function App() {
                 path="/profile" 
                 element={
                   <ProtectedRoute>
-                    <Profile />
+                    <AppLayout>
+                      <Profile />
+                    </AppLayout>
                   </ProtectedRoute>
                 } 
               />
