@@ -19,6 +19,7 @@ import AgentManagement from "./pages/AgentManagement";
 import KnowledgeBase from "./pages/KnowledgeBase";
 import HelenaArticles from "./pages/HelenaArticles";
 import Settings from "./pages/Settings";
+import Profile from "./pages/Profile";
 import NotFound from "./pages/NotFound";
 import Forbidden from "./pages/Forbidden";
 import CompanyRegister from "./pages/CompanyRegister";
@@ -116,6 +117,14 @@ function App() {
                 <RequireAuth allowedRoles={['admin', 'owner', 'developer']}>
                   <AppLayout>
                     <Settings />
+                  </AppLayout>
+                </RequireAuth>
+              } />
+              
+              <Route path="/profile" element={
+                <RequireAuth>
+                  <AppLayout>
+                    <Profile />
                   </AppLayout>
                 </RequireAuth>
               } />
