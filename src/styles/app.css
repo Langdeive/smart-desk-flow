@@ -115,6 +115,30 @@
   overflow: hidden;
 }
 
+/* Workspace layout controls */
+.workspace-layout {
+  height: calc(100vh - 3.5rem);
+  overflow: hidden;
+}
+
+/* Ensure proper height inheritance for workspace components */
+.workspace-layout .h-full {
+  height: 100% !important;
+}
+
+.workspace-layout .overflow-hidden {
+  overflow: hidden !important;
+}
+
+/* Specific fixes for resizable panels in workspace */
+.workspace-layout [data-panel-group-direction="horizontal"] {
+  height: 100%;
+}
+
+.workspace-layout [data-panel-group-direction="horizontal"] > div {
+  height: 100%;
+}
+
 @media (min-width: 1024px) {
   .workspace-layout {
     height: calc(100vh - 3.5rem);

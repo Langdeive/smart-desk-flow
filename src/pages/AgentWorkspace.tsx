@@ -90,7 +90,7 @@ const AgentWorkspace = () => {
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center h-64">
+      <div className="flex items-center justify-center h-full">
         <Loader2 className="h-8 w-8 animate-spin mr-2" />
         <span>Carregando workspace...</span>
       </div>
@@ -100,10 +100,10 @@ const AgentWorkspace = () => {
   // Mobile Layout with Tabs
   if (isMobile) {
     return (
-      <div className="flex flex-col h-full">
+      <div className="flex flex-col h-full overflow-hidden">
         {/* Mobile Tabs */}
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="flex-1 flex flex-col">
-          <TabsList className="grid w-full grid-cols-3 mx-2 mt-2 h-8">
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="flex-1 flex flex-col h-full">
+          <TabsList className="grid w-full grid-cols-3 mx-2 mt-2 h-8 flex-shrink-0">
             <TabsTrigger value="queue" className="text-xs">
               Fila ({prioritizedTickets.length})
             </TabsTrigger>
@@ -162,9 +162,9 @@ const AgentWorkspace = () => {
     );
   }
 
-  // Desktop Layout - Fixed positioning and spacing
+  // Desktop Layout - Controlled height with overflow management
   return (
-    <div className="flex-1 h-full">
+    <div className="h-full overflow-hidden">
       <ResizablePanelGroup direction="horizontal" className="h-full">
         {/* Ticket Queue Panel */}
         <ResizablePanel defaultSize={30} minSize={25} maxSize={45}>

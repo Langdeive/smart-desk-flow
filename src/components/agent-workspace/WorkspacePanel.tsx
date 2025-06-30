@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useRef } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -62,10 +61,10 @@ const WorkspacePanel: React.FC<WorkspacePanelProps> = ({
     return ticket.userId || 'Cliente';
   };
 
-  // Mobile layout
+  // Mobile layout with controlled height
   if (isMobile) {
     return (
-      <div className="h-full flex flex-col bg-white">
+      <div className="h-full flex flex-col bg-white overflow-hidden">
         {/* Compact Mobile Header */}
         <div className="border-b px-3 py-2 flex-shrink-0">
           <div className="flex items-start justify-between">
@@ -95,8 +94,8 @@ const WorkspacePanel: React.FC<WorkspacePanelProps> = ({
           </div>
         </div>
 
-        {/* Mobile Content */}
-        <div className="flex-1 overflow-hidden">
+        {/* Mobile Content with controlled overflow */}
+        <div className="flex-1 overflow-hidden min-h-0">
           <Tabs value={activeTab} onValueChange={setActiveTab} className="h-full flex flex-col">
             <TabsList className="w-full justify-start px-3 py-1 flex-shrink-0 h-8">
               <TabsTrigger value="conversation" className="flex items-center gap-1 text-xs px-2">
@@ -113,7 +112,7 @@ const WorkspacePanel: React.FC<WorkspacePanelProps> = ({
               </TabsTrigger>
             </TabsList>
 
-            <div className="flex-1 overflow-hidden">
+            <div className="flex-1 overflow-hidden min-h-0">
               <TabsContent value="conversation" className="h-full m-0">
                 <WorkspaceConversation
                   ref={conversationRef}
@@ -124,25 +123,29 @@ const WorkspacePanel: React.FC<WorkspacePanelProps> = ({
                 />
               </TabsContent>
 
-              <TabsContent value="details" className="h-full m-0 p-3 overflow-y-auto">
-                <WorkspaceDetails
-                  ticket={ticket}
-                  onTicketUpdate={handleTicketUpdate}
-                />
+              <TabsContent value="details" className="h-full m-0 overflow-y-auto">
+                <div className="p-3">
+                  <WorkspaceDetails
+                    ticket={ticket}
+                    onTicketUpdate={handleTicketUpdate}
+                  />
+                </div>
               </TabsContent>
 
-              <TabsContent value="actions" className="h-full m-0 p-3 overflow-y-auto space-y-3">
-                <WorkspaceActions
-                  ticket={ticket}
-                  onTicketUpdate={handleTicketUpdate}
-                />
-                
-                <ResponseTemplates
-                  ticketCategory={ticket.category}
-                  clientName={getClientName()}
-                  ticketId={ticket.id}
-                  onTemplateSelect={handleTemplateSelect}
-                />
+              <TabsContent value="actions" className="h-full m-0 overflow-y-auto">
+                <div className="p-3 space-y-3">
+                  <WorkspaceActions
+                    ticket={ticket}
+                    onTicketUpdate={handleTicketUpdate}
+                  />
+                  
+                  <ResponseTemplates
+                    ticketCategory={ticket.category}
+                    clientName={getClientName()}
+                    ticketId={ticket.id}
+                    onTemplateSelect={handleTemplateSelect}
+                  />
+                </div>
               </TabsContent>
             </div>
           </Tabs>
@@ -151,14 +154,14 @@ const WorkspacePanel: React.FC<WorkspacePanelProps> = ({
     );
   }
 
-  // Desktop layout - Remove duplicated header, start directly with content
+  // Desktop layout with controlled height and overflow
   return (
-    <div className="h-full flex flex-col bg-white">
-      {/* Content starts directly with tabs - no header duplication */}
-      <div className="flex-1 flex overflow-hidden">
+    <div className="h-full flex flex-col bg-white overflow-hidden">
+      {/* Content starts directly with tabs - controlled height */}
+      <div className="flex-1 flex overflow-hidden min-h-0">
         {/* Main Content */}
-        <div className="flex-1 flex flex-col min-w-0">
-          <Tabs value={activeTab} onValueChange={setActiveTab} className="flex-1 flex flex-col">
+        <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
+          <Tabs value={activeTab} onValueChange={setActiveTab} className="flex-1 flex flex-col overflow-hidden">
             {/* Tab navigation with close button */}
             <div className="flex items-center justify-between border-b px-4 py-2 flex-shrink-0">
               <TabsList className="h-9">
@@ -177,7 +180,7 @@ const WorkspacePanel: React.FC<WorkspacePanelProps> = ({
               </Button>
             </div>
 
-            <div className="flex-1 overflow-hidden">
+            <div className="flex-1 overflow-hidden min-h-0">
               <TabsContent value="conversation" className="h-full m-0">
                 <WorkspaceConversation
                   ref={conversationRef}
@@ -188,17 +191,19 @@ const WorkspacePanel: React.FC<WorkspacePanelProps> = ({
                 />
               </TabsContent>
 
-              <TabsContent value="details" className="h-full m-0 p-4 overflow-y-auto">
-                <WorkspaceDetails
-                  ticket={ticket}
-                  onTicketUpdate={handleTicketUpdate}
-                />
+              <TabsContent value="details" className="h-full m-0 overflow-y-auto">
+                <div className="p-4">
+                  <WorkspaceDetails
+                    ticket={ticket}
+                    onTicketUpdate={handleTicketUpdate}
+                  />
+                </div>
               </TabsContent>
             </div>
           </Tabs>
         </div>
 
-        {/* Compact Right Sidebar */}
+        {/* Compact Right Sidebar with controlled height */}
         <div className="hidden xl:block w-64 border-l bg-gray-50 overflow-y-auto flex-shrink-0">
           <div className="p-3 space-y-3">
             <WorkspaceActions
