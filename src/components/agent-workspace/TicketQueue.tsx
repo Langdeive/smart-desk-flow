@@ -1,15 +1,14 @@
 
 import React, { useState } from 'react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Input } from '@/components/ui/input';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Card, CardContent } from '@/components/ui/card';
-import { Ticket, TicketStatus, TicketPriority } from '@/types';
-import { Clock, User, AlertCircle, Filter, Flame, TrendingUp } from 'lucide-react';
+import { Ticket } from '@/types';
+import { Search, Filter, Clock, AlertCircle, CheckCircle, User } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
-import { statusLabels, priorityLabels, statusColors } from '@/components/ticket/TicketUtils';
+import { cn } from '@/lib/utils';
 
 interface TicketQueueProps {
   tickets: Ticket[];
@@ -25,123 +24,80 @@ const TicketQueue: React.FC<TicketQueueProps> = ({
   onTicketUpdate
 }) => {
   const [searchTerm, setSearchTerm] = useState('');
-  const [statusFilter, setStatusFilter] = useState<string>('all');
-  const [priorityFilter, setPriorityFilter] = useState<string>('all');
+  const [filterStatus, setFilterStatus] = useState('all');
 
   const filteredTickets = tickets.filter(ticket => {
     const matchesSearch = ticket.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      ticket.id.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesStatus = statusFilter === 'all' || ticket.status === statusFilter;
-    const matchesPriority = priorityFilter === 'all' || ticket.priority === priorityFilter;
-    
-    return matchesSearch && matchesStatus && matchesPriority;
+                         ticket.description.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesStatus = filterStatus === 'all' || ticket.status === filterStatus;
+    return matchesSearch && matchesStatus;
   });
 
-  const getPriorityColor = (priority: TicketPriority) => {
+  const getPriorityColor = (priority: string) => {
     switch (priority) {
-      case 'critical': return 'border-red-500 bg-red-50';
-      case 'high': return 'border-orange-500 bg-orange-50';
-      case 'medium': return 'border-yellow-500 bg-yellow-50';
-      case 'low': return 'border-blue-500 bg-blue-50';
-      default: return 'border-gray-300 bg-gray-50';
+      case 'critical': return 'bg-red-100 text-red-800 border-red-200';
+      case 'high': return 'bg-orange-100 text-orange-800 border-orange-200';
+      case 'medium': return 'bg-yellow-100 text-yellow-800 border-yellow-200';
+      case 'low': return 'bg-green-100 text-green-800 border-green-200';
+      default: return 'bg-gray-100 text-gray-800 border-gray-200';
     }
   };
 
-  const getPriorityIcon = (priority: TicketPriority) => {
-    if (priority === 'critical' || priority === 'high') {
-      return <Flame className="h-3 w-3 text-red-500" />;
+  const getStatusIcon = (status: string) => {
+    switch (status) {
+      case 'new': return <AlertCircle className="h-3 w-3" />;
+      case 'in_progress': return <Clock className="h-3 w-3" />;
+      case 'resolved': return <CheckCircle className="h-3 w-3" />;
+      default: return <Clock className="h-3 w-3" />;
     }
-    if (priority === 'medium') {
-      return <TrendingUp className="h-3 w-3 text-orange-500" />;
+  };
+
+  const getStatusColor = (status: string) => {
+    switch (status) {
+      case 'new': return 'bg-blue-100 text-blue-800';
+      case 'waiting_for_agent': return 'bg-amber-100 text-amber-800';
+      case 'in_progress': return 'bg-purple-100 text-purple-800';
+      case 'resolved': return 'bg-green-100 text-green-800';
+      default: return 'bg-gray-100 text-gray-800';
     }
-    return null;
   };
-
-  const getTimeAgo = (date: Date) => {
-    return formatDistanceToNow(date, { addSuffix: true, locale: ptBR });
-  };
-
-  const getTicketAgeColor = (createdAt: Date) => {
-    const hoursOld = (Date.now() - createdAt.getTime()) / (1000 * 60 * 60);
-    if (hoursOld > 24) return 'text-red-600';
-    if (hoursOld > 8) return 'text-orange-600';
-    return 'text-gray-500';
-  };
-
-  // Quick stats
-  const criticalCount = tickets.filter(t => t.priority === 'critical').length;
-  const highCount = tickets.filter(t => t.priority === 'high').length;
-  const oldTickets = tickets.filter(t => (Date.now() - t.createdAt.getTime()) > (24 * 60 * 60 * 1000)).length;
 
   return (
-    <div className="h-full flex flex-col bg-white border-r">
-      {/* Header with stats */}
-      <div className="p-4 border-b bg-gray-50">
-        <div className="space-y-3">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <Filter className="h-4 w-4 text-gray-500" />
-              <span className="text-sm font-medium text-gray-700">
-                {filteredTickets.length} tickets
-              </span>
-            </div>
-            
-            {/* Quick priority indicators */}
-            <div className="flex gap-1">
-              {criticalCount > 0 && (
-                <Badge variant="destructive" className="text-xs">
-                  {criticalCount} críticos
-                </Badge>
-              )}
-              {highCount > 0 && (
-                <Badge variant="secondary" className="text-xs border-orange-500 text-orange-700">
-                  {highCount} altos
-                </Badge>
-              )}
-            </div>
-          </div>
-          
+    <div className="h-full flex flex-col bg-gray-50">
+      {/* Search and Filters */}
+      <div className="p-4 bg-white border-b space-y-3">
+        <div className="relative">
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
           <Input
-            placeholder="Buscar por título ou ID..."
+            placeholder="Buscar tickets..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="text-sm"
+            className="pl-10"
           />
-          
-          <div className="flex gap-2">
-            <Select value={statusFilter} onValueChange={setStatusFilter}>
-              <SelectTrigger className="text-xs">
-                <SelectValue placeholder="Status" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">Todos</SelectItem>
-                <SelectItem value="new">Novo</SelectItem>
-                <SelectItem value="waiting_for_agent">Aguardando</SelectItem>
-                <SelectItem value="in_progress">Em andamento</SelectItem>
-              </SelectContent>
-            </Select>
-            
-            <Select value={priorityFilter} onValueChange={setPriorityFilter}>
-              <SelectTrigger className="text-xs">
-                <SelectValue placeholder="Prioridade" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">Todas</SelectItem>
-                <SelectItem value="critical">Crítica</SelectItem>
-                <SelectItem value="high">Alta</SelectItem>
-                <SelectItem value="medium">Média</SelectItem>
-                <SelectItem value="low">Baixa</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
+        </div>
 
-          {/* Warning for old tickets */}
-          {oldTickets > 0 && (
-            <div className="text-xs text-orange-600 flex items-center gap-1">
-              <AlertCircle className="h-3 w-3" />
-              {oldTickets} ticket{oldTickets > 1 ? 's' : ''} com mais de 24h
-            </div>
-          )}
+        <div className="flex flex-wrap gap-2">
+          <Button
+            variant={filterStatus === 'all' ? 'default' : 'outline'}
+            size="sm"
+            onClick={() => setFilterStatus('all')}
+          >
+            Todos ({tickets.length})
+          </Button>
+          <Button
+            variant={filterStatus === 'new' ? 'default' : 'outline'}
+            size="sm"
+            onClick={() => setFilterStatus('new')}
+          >
+            Novos ({tickets.filter(t => t.status === 'new').length})
+          </Button>
+          <Button
+            variant={filterStatus === 'waiting_for_agent' ? 'default' : 'outline'}
+            size="sm"
+            onClick={() => setFilterStatus('waiting_for_agent')}
+          >
+            Aguardando ({tickets.filter(t => t.status === 'waiting_for_agent').length})
+          </Button>
         </div>
       </div>
 
@@ -149,16 +105,16 @@ const TicketQueue: React.FC<TicketQueueProps> = ({
       <div className="flex-1 overflow-y-auto">
         {filteredTickets.length === 0 ? (
           <div className="p-6 text-center text-gray-500">
-            <AlertCircle className="h-8 w-8 mx-auto mb-2 text-gray-400" />
-            <p>Nenhum ticket encontrado</p>
+            <AlertCircle className="h-12 w-12 mx-auto mb-3 text-gray-300" />
+            <p className="text-sm">Nenhum ticket encontrado</p>
             {searchTerm && (
               <Button 
-                variant="ghost" 
+                variant="link" 
                 size="sm" 
                 onClick={() => setSearchTerm('')}
-                className="mt-2 text-xs"
+                className="mt-2"
               >
-                Limpar filtros
+                Limpar busca
               </Button>
             )}
           </div>
@@ -167,62 +123,66 @@ const TicketQueue: React.FC<TicketQueueProps> = ({
             {filteredTickets.map((ticket) => (
               <Card
                 key={ticket.id}
-                className={`cursor-pointer transition-all duration-200 hover:shadow-md border-l-4 ${getPriorityColor(ticket.priority)} ${
-                  selectedTicket?.id === ticket.id ? 'ring-2 ring-blue-500 shadow-md bg-blue-50' : ''
-                }`}
+                className={cn(
+                  "cursor-pointer transition-all duration-200 hover:shadow-md",
+                  selectedTicket?.id === ticket.id 
+                    ? "ring-2 ring-blue-500 bg-blue-50" 
+                    : "hover:bg-gray-50"
+                )}
                 onClick={() => onTicketSelect(ticket)}
               >
                 <CardContent className="p-3">
                   <div className="space-y-2">
-                    <div className="flex items-start justify-between">
-                      <div className="flex-1 min-w-0 flex items-center gap-2">
-                        {getPriorityIcon(ticket.priority)}
-                        <h3 className="font-medium text-sm text-gray-900 truncate">
-                          #{ticket.id.slice(-6)} - {ticket.title}
+                    {/* Header */}
+                    <div className="flex items-start justify-between gap-2">
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-2 mb-1">
+                          <span className="text-xs font-mono text-gray-500">
+                            #{ticket.id.slice(-6)}
+                          </span>
+                          <Badge className={cn("text-xs px-1.5 py-0.5", getPriorityColor(ticket.priority))}>
+                            {ticket.priority}
+                          </Badge>
+                        </div>
+                        <h3 className="font-medium text-sm text-gray-900 line-clamp-2 leading-tight">
+                          {ticket.title}
                         </h3>
                       </div>
-                      <Badge
-                        variant="outline"
-                        className={`${statusColors[ticket.status]} text-white text-xs ml-2 flex-shrink-0`}
-                      >
-                        {statusLabels[ticket.status]}
-                      </Badge>
-                    </div>
-                    
-                    <div className="flex items-center justify-between text-xs">
-                      <div className="flex items-center gap-2">
-                        <Badge variant="outline" className={
-                          ticket.priority === "critical" 
-                            ? "border-red-500 text-red-500" 
-                            : ticket.priority === "high"
-                              ? "border-orange-500 text-orange-500"
-                              : ticket.priority === "medium" 
-                                ? "border-yellow-500 text-yellow-500" 
-                                : "border-blue-500 text-blue-500"
-                        }>
-                          {priorityLabels[ticket.priority]}
-                        </Badge>
-                      </div>
-                      
-                      <div className={`flex items-center gap-1 ${getTicketAgeColor(ticket.createdAt)}`}>
-                        <Clock className="h-3 w-3" />
-                        <span>{getTimeAgo(ticket.createdAt)}</span>
-                      </div>
-                    </div>
-                    
-                    <div className="flex items-center gap-2 text-xs text-gray-500">
-                      <User className="h-3 w-3" />
-                      <span>Cliente: {ticket.userId}</span>
-                      <span>•</span>
-                      <span className="truncate">{ticket.category}</span>
                     </div>
 
-                    {ticket.aiProcessed && (
-                      <div className="flex items-center gap-1 text-xs">
-                        <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                        <span className="text-green-600">IA processada</span>
+                    {/* Description */}
+                    <p className="text-xs text-gray-600 line-clamp-2">
+                      {ticket.description}
+                    </p>
+
+                    {/* Footer */}
+                    <div className="flex items-center justify-between text-xs text-gray-500">
+                      <div className="flex items-center gap-3">
+                        <div className="flex items-center gap-1">
+                          <User className="h-3 w-3" />
+                          <span className="truncate max-w-20">
+                            {ticket.userId || 'Cliente'}
+                          </span>
+                        </div>
+                        <Badge className={cn("text-xs px-1.5 py-0.5", getStatusColor(ticket.status))}>
+                          <div className="flex items-center gap-1">
+                            {getStatusIcon(ticket.status)}
+                            <span className="hidden sm:inline">
+                              {ticket.status === 'new' ? 'Novo' :
+                               ticket.status === 'waiting_for_agent' ? 'Aguardando' :
+                               ticket.status === 'in_progress' ? 'Em Progresso' :
+                               'Resolvido'}
+                            </span>
+                          </div>
+                        </Badge>
                       </div>
-                    )}
+                      <span className="whitespace-nowrap">
+                        {formatDistanceToNow(new Date(ticket.createdAt), { 
+                          addSuffix: true, 
+                          locale: ptBR 
+                        })}
+                      </span>
+                    </div>
                   </div>
                 </CardContent>
               </Card>
