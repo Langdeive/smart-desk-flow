@@ -51,12 +51,25 @@ export function useUserPreferences() {
         }
 
         if (data) {
+          // Parse notifications from JSONB safely
+          let parsedNotifications = defaultPreferences.notifications;
+          if (data.notifications) {
+            try {
+              // Handle case where notifications is already an object or needs parsing
+              parsedNotifications = typeof data.notifications === 'string' 
+                ? JSON.parse(data.notifications) 
+                : data.notifications as NotificationSettings;
+            } catch {
+              parsedNotifications = defaultPreferences.notifications;
+            }
+          }
+
           setPreferences({
             avatar_url: data.avatar_url || undefined,
             department: data.department || undefined,
             timezone: data.timezone || defaultPreferences.timezone,
             language: data.language || defaultPreferences.language,
-            notifications: data.notifications || defaultPreferences.notifications
+            notifications: parsedNotifications
           });
         }
       } catch (error: any) {
@@ -86,7 +99,7 @@ export function useUserPreferences() {
           department: updatedPreferences.department,
           timezone: updatedPreferences.timezone,
           language: updatedPreferences.language,
-          notifications: updatedPreferences.notifications
+          notifications: updatedPreferences.notifications as any // Cast to bypass strict typing for JSONB
         });
 
       if (error) throw error;
