@@ -27,34 +27,37 @@ export function UserMenu({ user, onSignOut }: UserMenuProps) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" className="relative h-8 w-8 rounded-full">
+        <Button 
+          variant="ghost" 
+          className="relative h-8 w-8 rounded-full focus-visible:ring-2 focus-visible:ring-turquoise-vibrant focus-visible:ring-offset-2 focus-visible:ring-offset-white hover:bg-cyan-50"
+        >
           <Avatar className="h-8 w-8">
-            <AvatarFallback className="bg-primary text-primary-foreground font-semibold">
+            <AvatarFallback className="bg-turquoise-vibrant text-white font-semibold border-2 border-turquoise-vibrant">
               {userInitial}
             </AvatarFallback>
           </Avatar>
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-56" align="end" forceMount>
+      <DropdownMenuContent className="w-56 force-popover-white bg-white border-gray-200" align="end" forceMount>
         <DropdownMenuLabel className="font-normal">
           <div className="flex flex-col space-y-1">
-            <p className="text-sm font-medium leading-none">{user.name}</p>
-            <p className="text-xs leading-none text-muted-foreground">
+            <p className="text-sm font-medium leading-none text-gray-900">{user.name}</p>
+            <p className="text-xs leading-none text-gray-500">
               {user.email}
             </p>
           </div>
         </DropdownMenuLabel>
-        <DropdownMenuSeparator />
+        <DropdownMenuSeparator className="bg-gray-200" />
         <DropdownMenuGroup>
-          <DropdownMenuItem>
+          <DropdownMenuItem className="hover:bg-cyan-50 hover:text-turquoise-vibrant focus:bg-cyan-50 focus:text-turquoise-vibrant">
             <Link to="/profile" className="flex w-full">Perfil</Link>
           </DropdownMenuItem>
-          <DropdownMenuItem>
+          <DropdownMenuItem className="hover:bg-cyan-50 hover:text-turquoise-vibrant focus:bg-cyan-50 focus:text-turquoise-vibrant">
             <Link to="/settings" className="flex w-full">Configurações</Link>
           </DropdownMenuItem>
         </DropdownMenuGroup>
-        <DropdownMenuSeparator />
-        <DropdownMenuItem>
+        <DropdownMenuSeparator className="bg-gray-200" />
+        <DropdownMenuItem className="hover:bg-red-50 hover:text-red-600 focus:bg-red-50 focus:text-red-600">
           <button className="flex w-full text-left" onClick={onSignOut}>
             Sair
           </button>

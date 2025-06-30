@@ -172,6 +172,35 @@
   ring-color: #06b6d4 !important;
 }
 
+/* =================== FORÇA ESPECÍFICA PARA USER MENU =================== */
+.force-user-menu-clean {
+  background-color: #ffffff !important;
+  border-color: #e5e7eb !important;
+}
+
+.force-user-menu-clean * {
+  color: inherit !important;
+}
+
+.force-user-avatar {
+  background-color: #06b6d4 !important;
+  color: #ffffff !important;
+  border-color: #06b6d4 !important;
+}
+
+/* Remove qualquer amarelo residual de focus/ring */
+*:focus-visible {
+  outline: none !important;
+  ring-color: #06b6d4 !important;
+  border-color: #06b6d4 !important;
+}
+
+/* Override específico para botões de dropdown */
+button[data-state="open"] {
+  ring-color: #06b6d4 !important;
+  border-color: #06b6d4 !important;
+}
+
 /* =================== GRADIENTES LIMPOS SEM AMARELO =================== */
 .gradient-primary {
   background: linear-gradient(135deg, #1E3A8A 0%, #06B6D4 100%);
@@ -192,7 +221,7 @@
   background-clip: text;
 }
 
-/* Cache buster para forçar atualização - v2024.2 */
-.cache-buster-v2024-final {
-  content: "updated-final";
+/* Cache buster para forçar atualização - v2024.3 */
+.cache-buster-v2024-final-usermenu {
+  content: "updated-usermenu-final";
 }
