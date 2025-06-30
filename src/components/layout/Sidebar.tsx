@@ -40,6 +40,7 @@ export function Sidebar({ className }: SidebarProps) {
       title: "Suporte",
       items: [
         { label: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
+        { label: "Central de Atendimento", href: "/workspace", icon: Ticket },
         { label: "Tickets", href: "/tickets", icon: Ticket },
       ],
     },

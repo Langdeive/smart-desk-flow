@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Toaster } from 'sonner';
@@ -20,6 +19,7 @@ import Profile from '@/pages/Profile';
 import CompanyRegister from '@/pages/CompanyRegister';
 import PlanSelect from '@/pages/PlanSelect';
 import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
+import AgentWorkspace from '@/pages/AgentWorkspace';
 
 function App() {
   const queryClient = new QueryClient();
@@ -43,6 +43,14 @@ function App() {
                 element={
                   <ProtectedRoute>
                     <Dashboard />
+                  </ProtectedRoute>
+                } 
+              />
+              <Route 
+                path="/workspace" 
+                element={
+                  <ProtectedRoute allowedRoles={['admin', 'agent', 'owner', 'developer']}>
+                    <AgentWorkspace />
                   </ProtectedRoute>
                 } 
               />
