@@ -109,3 +109,14 @@
 .force-white-header * {
   color: inherit !important;
 }
+
+/* Workspace specific optimizations */
+#app-container {
+  overflow: hidden;
+}
+
+@media (min-width: 1024px) {
+  .workspace-layout {
+    height: calc(100vh - 3.5rem);
+  }
+}

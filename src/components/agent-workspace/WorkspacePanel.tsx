@@ -151,13 +151,13 @@ const WorkspacePanel: React.FC<WorkspacePanelProps> = ({
     );
   }
 
-  // Desktop layout - More Compact
+  // Desktop layout - Simplified
   return (
     <div className="h-full flex flex-col bg-white">
       {/* Compact Header */}
-      <div className="border-b px-4 py-2.5 flex-shrink-0">
+      <div className="border-b px-4 py-2 flex-shrink-0">
         <div className="flex items-start justify-between">
-          <div>
+          <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2 mb-1">
               <h2 className="text-base font-semibold text-gray-900">
                 #{ticket.id.slice(-6)}
@@ -220,7 +220,7 @@ const WorkspacePanel: React.FC<WorkspacePanelProps> = ({
           </Tabs>
         </div>
 
-        {/* Compact Right Sidebar - Reduced width */}
+        {/* Compact Right Sidebar */}
         <div className="hidden xl:block w-64 border-l bg-gray-50 overflow-y-auto flex-shrink-0">
           <div className="p-3 space-y-3">
             <WorkspaceActions

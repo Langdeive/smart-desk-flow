@@ -89,23 +89,6 @@ const AgentWorkspace = () => {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [prioritizedTickets, selectedTicket, isMobile]);
 
-  // Get user display name from user metadata or email
-  const getUserDisplayName = () => {
-    if (!user) return 'Usuário';
-    
-    // Try to get name from user_metadata first
-    if (user.user_metadata?.full_name) {
-      return user.user_metadata.full_name;
-    }
-    
-    // Fallback to first part of email
-    if (user.email) {
-      return user.email.split('@')[0];
-    }
-    
-    return 'Usuário';
-  };
-
   if (isLoading) {
     return (
       <AppLayout>
@@ -122,24 +105,9 @@ const AgentWorkspace = () => {
     return (
       <AppLayout>
         <div className="flex flex-col h-full">
-          {/* Compact Mobile Header */}
-          <div className="border-b bg-white px-3 py-2 flex-shrink-0">
-            <div className="flex items-center justify-between">
-              <div>
-                <h1 className="text-base font-bold text-gray-900">Central de Atendimento</h1>
-                <p className="text-xs text-gray-600">
-                  {prioritizedTickets.length} tickets aguardando
-                </p>
-              </div>
-              <div className="text-xs text-green-600 font-medium">
-                {getUserDisplayName()}
-              </div>
-            </div>
-          </div>
-
           {/* Mobile Tabs */}
           <Tabs value={activeTab} onValueChange={setActiveTab} className="flex-1 flex flex-col">
-            <TabsList className="grid w-full grid-cols-3 mx-3 mt-2 h-8">
+            <TabsList className="grid w-full grid-cols-3 mx-2 mt-2 h-8">
               <TabsTrigger value="queue" className="text-xs">
                 Fila ({prioritizedTickets.length})
               </TabsTrigger>
@@ -199,70 +167,44 @@ const AgentWorkspace = () => {
     );
   }
 
-  // Desktop Layout - More Compact
+  // Desktop Layout - Fixed positioning and spacing
   return (
     <AppLayout>
-      <div className="flex flex-col h-[calc(100vh-4rem)]">
-        {/* Compact Header */}
-        <div className="border-b bg-white px-4 py-2.5 flex-shrink-0">
-          <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-xl font-bold text-gray-900">Central de Atendimento</h1>
-              <p className="text-sm text-gray-600">
-                {prioritizedTickets.length} tickets aguardando atendimento
-              </p>
-            </div>
-            <div className="flex items-center gap-3">
-              <div className="text-sm">
-                <span className="font-medium text-green-600">
-                  Agente: {getUserDisplayName()}
-                </span>
-              </div>
-              <div className="text-xs text-gray-500">
-                <kbd className="px-1 py-0.5 bg-gray-100 rounded text-xs">J</kbd>/<kbd className="px-1 py-0.5 bg-gray-100 rounded text-xs">K</kbd> navegar • 
-                <kbd className="px-1 py-0.5 bg-gray-100 rounded ml-1 text-xs">Esc</kbd> fechar
-              </div>
-            </div>
-          </div>
-        </div>
+      <div className="flex-1 h-full">
+        <ResizablePanelGroup direction="horizontal" className="h-full">
+          {/* Ticket Queue Panel */}
+          <ResizablePanel defaultSize={30} minSize={25} maxSize={45}>
+            <TicketQueue
+              tickets={prioritizedTickets}
+              selectedTicket={selectedTicket}
+              onTicketSelect={handleTicketSelect}
+              onTicketUpdate={handleTicketUpdate}
+            />
+          </ResizablePanel>
 
-        {/* Desktop Content - Optimized Proportions */}
-        <div className="flex-1 overflow-hidden">
-          <ResizablePanelGroup direction="horizontal" className="h-full">
-            {/* Ticket Queue Panel - Smaller default size */}
-            <ResizablePanel defaultSize={30} minSize={25} maxSize={45}>
-              <TicketQueue
-                tickets={prioritizedTickets}
-                selectedTicket={selectedTicket}
-                onTicketSelect={handleTicketSelect}
+          <ResizableHandle withHandle />
+
+          {/* Workspace Panel */}
+          <ResizablePanel defaultSize={70} minSize={55}>
+            {selectedTicket ? (
+              <WorkspacePanel
+                ticket={selectedTicket}
                 onTicketUpdate={handleTicketUpdate}
+                onClose={() => setSelectedTicket(null)}
+                isMobile={false}
               />
-            </ResizablePanel>
-
-            <ResizableHandle withHandle />
-
-            {/* Workspace Panel - Larger default size */}
-            <ResizablePanel defaultSize={70} minSize={55}>
-              {selectedTicket ? (
-                <WorkspacePanel
-                  ticket={selectedTicket}
-                  onTicketUpdate={handleTicketUpdate}
-                  onClose={() => setSelectedTicket(null)}
-                  isMobile={false}
-                />
-              ) : (
-                <EmptyWorkspaceState
-                  ticketCount={prioritizedTickets.length}
-                  onSelectFirstTicket={() => {
-                    if (prioritizedTickets.length > 0) {
-                      setSelectedTicket(prioritizedTickets[0]);
-                    }
-                  }}
-                />
-              )}
-            </ResizablePanel>
-          </ResizablePanelGroup>
-        </div>
+            ) : (
+              <EmptyWorkspaceState
+                ticketCount={prioritizedTickets.length}
+                onSelectFirstTicket={() => {
+                  if (prioritizedTickets.length > 0) {
+                    setSelectedTicket(prioritizedTickets[0]);
+                  }
+                }}
+              />
+            )}
+          </ResizablePanel>
+        </ResizablePanelGroup>
       </div>
     </AppLayout>
   );
