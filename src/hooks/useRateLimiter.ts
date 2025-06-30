@@ -1,5 +1,5 @@
 
-import { useState, useCallback, useRef } from 'react';
+import React, { useState, useCallback, useRef } from 'react';
 import { SecureLogger } from '@/utils/secureLogger';
 
 interface RateLimitConfig {

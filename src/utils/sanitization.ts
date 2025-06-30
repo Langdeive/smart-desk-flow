@@ -9,7 +9,9 @@ const createDOMPurify = () => {
   purify.addHook('beforeSanitizeElements', (node) => {
     // Remove todos os elementos script
     if (node.nodeName && node.nodeName.toLowerCase() === 'script') {
-      node.remove();
+      if (node.parentNode) {
+        node.parentNode.removeChild(node);
+      }
     }
   });
   

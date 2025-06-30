@@ -21,6 +21,7 @@ interface LogContext {
   companyId?: string;
   action?: string;
   timestamp?: string;
+  [key: string]: any; // Permitir propriedades adicionais
 }
 
 // Lista de campos sensíveis que devem ser mascarados
