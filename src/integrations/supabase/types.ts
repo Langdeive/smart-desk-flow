@@ -827,6 +827,53 @@ export type Database = {
           },
         ]
       }
+      user_activity_logs: {
+        Row: {
+          action: string
+          company_id: string
+          created_at: string
+          details: Json | null
+          id: string
+          ip_address: unknown | null
+          resource_id: string | null
+          resource_type: string | null
+          user_agent: string | null
+          user_id: string
+        }
+        Insert: {
+          action: string
+          company_id: string
+          created_at?: string
+          details?: Json | null
+          id?: string
+          ip_address?: unknown | null
+          resource_id?: string | null
+          resource_type?: string | null
+          user_agent?: string | null
+          user_id: string
+        }
+        Update: {
+          action?: string
+          company_id?: string
+          created_at?: string
+          details?: Json | null
+          id?: string
+          ip_address?: unknown | null
+          resource_id?: string | null
+          resource_type?: string | null
+          user_agent?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_activity_logs_company_id_fkey"
+            columns: ["company_id"]
+            isOneToOne: false
+            referencedRelation: "companies"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       user_companies: {
         Row: {
           company_id: string | null
@@ -890,6 +937,54 @@ export type Database = {
           language?: string | null
           notifications?: Json | null
           timezone?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      user_security_settings: {
+        Row: {
+          account_locked_until: string | null
+          allowed_ip_addresses: string[] | null
+          created_at: string
+          failed_login_attempts: number | null
+          id: string
+          login_notifications: boolean | null
+          password_changed_at: string | null
+          recovery_codes: string[] | null
+          session_timeout: number | null
+          two_factor_enabled: boolean | null
+          two_factor_secret: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          account_locked_until?: string | null
+          allowed_ip_addresses?: string[] | null
+          created_at?: string
+          failed_login_attempts?: number | null
+          id?: string
+          login_notifications?: boolean | null
+          password_changed_at?: string | null
+          recovery_codes?: string[] | null
+          session_timeout?: number | null
+          two_factor_enabled?: boolean | null
+          two_factor_secret?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          account_locked_until?: string | null
+          allowed_ip_addresses?: string[] | null
+          created_at?: string
+          failed_login_attempts?: number | null
+          id?: string
+          login_notifications?: boolean | null
+          password_changed_at?: string | null
+          recovery_codes?: string[] | null
+          session_timeout?: number | null
+          two_factor_enabled?: boolean | null
+          two_factor_secret?: string | null
           updated_at?: string
           user_id?: string
         }
@@ -1048,6 +1143,17 @@ export type Database = {
         Args: { user_id: string; company_id: string }
         Returns: string
       }
+      get_user_role_statistics: {
+        Args: { p_user_id: string; p_company_id: string }
+        Returns: {
+          total_tickets: number
+          resolved_tickets: number
+          avg_resolution_time_hours: number
+          tickets_this_month: number
+          response_rate: number
+          satisfaction_score: number
+        }[]
+      }
       halfvec_avg: {
         Args: { "": number[] }
         Returns: unknown
@@ -1107,6 +1213,17 @@ export type Database = {
       l2_normalize: {
         Args: { "": string } | { "": unknown } | { "": unknown }
         Returns: unknown
+      }
+      log_user_activity: {
+        Args: {
+          p_user_id: string
+          p_company_id: string
+          p_action: string
+          p_resource_type?: string
+          p_resource_id?: string
+          p_details?: Json
+        }
+        Returns: string
       }
       match_documents: {
         Args: { query_embedding: string; match_count?: number; filter?: Json }

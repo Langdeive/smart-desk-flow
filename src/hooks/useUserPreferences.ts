@@ -56,9 +56,15 @@ export function useUserPreferences() {
           if (data.notifications) {
             try {
               // Handle case where notifications is already an object or needs parsing
-              parsedNotifications = typeof data.notifications === 'string' 
-                ? JSON.parse(data.notifications) 
-                : data.notifications as NotificationSettings;
+              if (typeof data.notifications === 'string') {
+                parsedNotifications = JSON.parse(data.notifications);
+              } else if (typeof data.notifications === 'object' && data.notifications !== null) {
+                // Validate that it has the correct structure
+                const notif = data.notifications as any;
+                if (typeof notif.email === 'boolean' && typeof notif.push === 'boolean' && typeof notif.in_app === 'boolean') {
+                  parsedNotifications = notif as NotificationSettings;
+                }
+              }
             } catch {
               parsedNotifications = defaultPreferences.notifications;
             }

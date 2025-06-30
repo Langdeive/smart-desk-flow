@@ -5,6 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useAuth } from '@/hooks/useAuth';
+import { useUserStatistics } from '@/hooks/useUserStatistics';
 import { Building2, Calendar, User, Briefcase } from 'lucide-react';
 
 interface ProfessionalInfoSectionProps {
@@ -14,6 +15,7 @@ interface ProfessionalInfoSectionProps {
 
 export function ProfessionalInfoSection({ department, onDepartmentChange }: ProfessionalInfoSectionProps) {
   const { user, role } = useAuth();
+  const { statistics, isLoading } = useUserStatistics();
 
   const roleLabels = {
     admin: 'Administrador',
@@ -105,23 +107,46 @@ export function ProfessionalInfoSection({ department, onDepartmentChange }: Prof
 
         <div className="border-t pt-4">
           <h4 className="font-medium text-gray-900 mb-2">Estatísticas Rápidas</h4>
-          <div className="grid gap-4 md:grid-cols-3">
-            <div className="text-center p-3 bg-gray-50 rounded-lg">
-              <div className="text-2xl font-bold text-turquoise-vibrant">-</div>
-              <div className="text-sm text-gray-600">Tickets Ativos</div>
+          {isLoading ? (
+            <div className="grid gap-4 md:grid-cols-3">
+              {[1, 2, 3].map((i) => (
+                <div key={i} className="text-center p-3 bg-gray-50 rounded-lg animate-pulse">
+                  <div className="h-6 bg-gray-300 rounded mb-2"></div>
+                  <div className="h-4 bg-gray-300 rounded"></div>
+                </div>
+              ))}
             </div>
-            <div className="text-center p-3 bg-gray-50 rounded-lg">
-              <div className="text-2xl font-bold text-turquoise-vibrant">-</div>
-              <div className="text-sm text-gray-600">Tickets Resolvidos</div>
+          ) : statistics ? (
+            <div className="grid gap-4 md:grid-cols-3">
+              <div className="text-center p-3 bg-gray-50 rounded-lg">
+                <div className="text-2xl font-bold text-turquoise-vibrant">{statistics.total_tickets}</div>
+                <div className="text-sm text-gray-600">Tickets Ativos</div>
+              </div>
+              <div className="text-center p-3 bg-gray-50 rounded-lg">
+                <div className="text-2xl font-bold text-turquoise-vibrant">{statistics.resolved_tickets}</div>
+                <div className="text-sm text-gray-600">Tickets Resolvidos</div>
+              </div>
+              <div className="text-center p-3 bg-gray-50 rounded-lg">
+                <div className="text-2xl font-bold text-turquoise-vibrant">{Math.round(statistics.avg_resolution_time_hours)}h</div>
+                <div className="text-sm text-gray-600">Tempo Médio</div>
+              </div>
             </div>
-            <div className="text-center p-3 bg-gray-50 rounded-lg">
-              <div className="text-2xl font-bold text-turquoise-vibrant">-</div>
-              <div className="text-sm text-gray-600">Tempo Médio</div>
+          ) : (
+            <div className="grid gap-4 md:grid-cols-3">
+              <div className="text-center p-3 bg-gray-50 rounded-lg">
+                <div className="text-2xl font-bold text-turquoise-vibrant">-</div>
+                <div className="text-sm text-gray-600">Tickets Ativos</div>
+              </div>
+              <div className="text-center p-3 bg-gray-50 rounded-lg">
+                <div className="text-2xl font-bold text-turquoise-vibrant">-</div>
+                <div className="text-sm text-gray-600">Tickets Resolvidos</div>
+              </div>
+              <div className="text-center p-3 bg-gray-50 rounded-lg">
+                <div className="text-2xl font-bold text-turquoise-vibrant">-</div>
+                <div className="text-sm text-gray-600">Tempo Médio</div>
+              </div>
             </div>
-          </div>
-          <p className="text-xs text-gray-500 mt-2 text-center">
-            Estatísticas detalhadas serão implementadas na Fase 3
-          </p>
+          )}
         </div>
       </CardContent>
     </Card>
