@@ -5,13 +5,14 @@ import { getAllTickets } from '@/services/ticketService';
 import { useAuth } from '@/hooks/useAuth';
 import TicketQueue from '@/components/agent-workspace/TicketQueue';
 import WorkspacePanel from '@/components/agent-workspace/WorkspacePanel';
+import EmptyWorkspaceState from '@/components/agent-workspace/EmptyWorkspaceState';
 import { Ticket } from '@/types';
 import { Loader2 } from 'lucide-react';
+import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from '@/components/ui/resizable';
 
 const AgentWorkspace = () => {
   const { user } = useAuth();
   const [selectedTicket, setSelectedTicket] = useState<Ticket | null>(null);
-  const [workspaceLayout, setWorkspaceLayout] = useState<'split' | 'full'>('split');
 
   const { data: tickets, isLoading, refetch } = useQuery({
     queryKey: ['tickets'],
@@ -38,6 +39,43 @@ const AgentWorkspace = () => {
   const handleTicketUpdate = () => {
     refetch();
   };
+
+  // Keyboard shortcuts
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      // Only handle shortcuts when not typing in input fields
+      if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) {
+        return;
+      }
+
+      switch (e.key.toLowerCase()) {
+        case 'j':
+          // Next ticket
+          if (prioritizedTickets.length > 0) {
+            const currentIndex = selectedTicket ? 
+              prioritizedTickets.findIndex(t => t.id === selectedTicket.id) : -1;
+            const nextIndex = (currentIndex + 1) % prioritizedTickets.length;
+            setSelectedTicket(prioritizedTickets[nextIndex]);
+          }
+          break;
+        case 'k':
+          // Previous ticket
+          if (prioritizedTickets.length > 0) {
+            const currentIndex = selectedTicket ? 
+              prioritizedTickets.findIndex(t => t.id === selectedTicket.id) : 0;
+            const prevIndex = currentIndex <= 0 ? prioritizedTickets.length - 1 : currentIndex - 1;
+            setSelectedTicket(prioritizedTickets[prevIndex]);
+          }
+          break;
+        case 'escape':
+          setSelectedTicket(null);
+          break;
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [prioritizedTickets, selectedTicket]);
 
   // Get user display name from user metadata or email
   const getUserDisplayName = () => {
@@ -67,7 +105,7 @@ const AgentWorkspace = () => {
 
   return (
     <div className="h-screen flex flex-col bg-gray-50">
-      <div className="border-b bg-white px-6 py-4">
+      <div className="border-b bg-white px-6 py-4 flex-shrink-0">
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-2xl font-bold text-gray-900">Central de Atendimento</h1>
@@ -81,31 +119,48 @@ const AgentWorkspace = () => {
                 Agente: {getUserDisplayName()}
               </span>
             </div>
+            <div className="text-xs text-gray-500">
+              <kbd className="px-1 py-0.5 bg-gray-100 rounded">J</kbd>/<kbd className="px-1 py-0.5 bg-gray-100 rounded">K</kbd> navegar • 
+              <kbd className="px-1 py-0.5 bg-gray-100 rounded ml-1">Esc</kbd> fechar
+            </div>
           </div>
         </div>
       </div>
 
-      <div className="flex-1 flex overflow-hidden">
-        {/* Ticket Queue Panel */}
-        <div className={`${workspaceLayout === 'split' ? 'w-1/3' : 'w-full'} border-r bg-white overflow-hidden`}>
-          <TicketQueue
-            tickets={prioritizedTickets}
-            selectedTicket={selectedTicket}
-            onTicketSelect={handleTicketSelect}
-            onTicketUpdate={handleTicketUpdate}
-          />
-        </div>
-
-        {/* Workspace Panel */}
-        {workspaceLayout === 'split' && selectedTicket && (
-          <div className="flex-1 overflow-hidden">
-            <WorkspacePanel
-              ticket={selectedTicket}
+      <div className="flex-1 overflow-hidden">
+        <ResizablePanelGroup direction="horizontal" className="h-full">
+          {/* Ticket Queue Panel */}
+          <ResizablePanel defaultSize={35} minSize={25} maxSize={50}>
+            <TicketQueue
+              tickets={prioritizedTickets}
+              selectedTicket={selectedTicket}
+              onTicketSelect={handleTicketSelect}
               onTicketUpdate={handleTicketUpdate}
-              onClose={() => setSelectedTicket(null)}
             />
-          </div>
-        )}
+          </ResizablePanel>
+
+          <ResizableHandle withHandle />
+
+          {/* Workspace Panel */}
+          <ResizablePanel defaultSize={65} minSize={50}>
+            {selectedTicket ? (
+              <WorkspacePanel
+                ticket={selectedTicket}
+                onTicketUpdate={handleTicketUpdate}
+                onClose={() => setSelectedTicket(null)}
+              />
+            ) : (
+              <EmptyWorkspaceState
+                ticketCount={prioritizedTickets.length}
+                onSelectFirstTicket={() => {
+                  if (prioritizedTickets.length > 0) {
+                    setSelectedTicket(prioritizedTickets[0]);
+                  }
+                }}
+              />
+            )}
+          </ResizablePanel>
+        </ResizablePanelGroup>
       </div>
     </div>
   );

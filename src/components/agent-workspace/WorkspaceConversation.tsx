@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
@@ -7,7 +7,7 @@ import { MessageList } from '@/components/MessageList';
 import { FileUploader } from '@/components/FileUploader';
 import { useToast } from '@/hooks/use-toast';
 import { Message, Attachment, Ticket } from '@/types';
-import { Send, Loader2 } from 'lucide-react';
+import { Send, Loader2, Save } from 'lucide-react';
 import { addMessageToTicket, uploadAttachment } from '@/services/ticketService';
 import { useAuth } from '@/hooks/useAuth';
 
@@ -16,19 +16,51 @@ interface WorkspaceConversationProps {
   messages: Message[];
   attachments: Attachment[];
   onTicketUpdate: () => void;
+  onTemplateContent?: (content: string) => void;
 }
 
 const WorkspaceConversation: React.FC<WorkspaceConversationProps> = ({
   ticket,
   messages,
   attachments,
-  onTicketUpdate
+  onTicketUpdate,
+  onTemplateContent
 }) => {
   const { toast } = useToast();
   const { user } = useAuth();
   const [newMessage, setNewMessage] = useState('');
   const [newFiles, setNewFiles] = useState<File[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+  // Auto-save draft to localStorage
+  useEffect(() => {
+    const draftKey = `draft_${ticket.id}`;
+    const savedDraft = localStorage.getItem(draftKey);
+    if (savedDraft && !newMessage) {
+      setNewMessage(savedDraft);
+    }
+  }, [ticket.id]);
+
+  // Save draft on message change
+  useEffect(() => {
+    const draftKey = `draft_${ticket.id}`;
+    if (newMessage.trim()) {
+      localStorage.setItem(draftKey, newMessage);
+    } else {
+      localStorage.removeItem(draftKey);
+    }
+  }, [newMessage, ticket.id]);
+
+  // Handle template content from parent
+  useEffect(() => {
+    if (onTemplateContent) {
+      onTemplateContent = (content: string) => {
+        setNewMessage(prev => prev ? `${prev}\n\n${content}` : content);
+        textareaRef.current?.focus();
+      };
+    }
+  }, [onTemplateContent]);
 
   const handleSendMessage = async () => {
     if (!newMessage.trim() && newFiles.length === 0) return;
@@ -53,6 +85,9 @@ const WorkspaceConversation: React.FC<WorkspaceConversationProps> = ({
         await Promise.all(uploadPromises);
       }
 
+      // Clear draft
+      localStorage.removeItem(`draft_${ticket.id}`);
+      
       setNewMessage('');
       setNewFiles([]);
       onTicketUpdate();
@@ -77,7 +112,21 @@ const WorkspaceConversation: React.FC<WorkspaceConversationProps> = ({
     if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) {
       e.preventDefault();
       handleSendMessage();
+    } else if (e.key === 's' && (e.ctrlKey || e.metaKey)) {
+      e.preventDefault();
+      // Manual save (already auto-saving)
+      toast({
+        title: 'Rascunho salvo',
+        description: 'Sua mensagem foi salva automaticamente.',
+      });
     }
+  };
+
+  const handleSaveDraft = () => {
+    toast({
+      title: 'Rascunho salvo',
+      description: 'Sua mensagem foi salva e pode ser retomada depois.',
+    });
   };
 
   return (
@@ -98,7 +147,8 @@ const WorkspaceConversation: React.FC<WorkspaceConversationProps> = ({
       <div className="border-t bg-white p-4">
         <div className="space-y-3">
           <Textarea
-            placeholder="Digite sua resposta... (Ctrl+Enter para enviar)"
+            ref={textareaRef}
+            placeholder="Digite sua resposta... (Ctrl+Enter para enviar, Ctrl+S para salvar rascunho)"
             className="min-h-[100px] resize-none"
             value={newMessage}
             onChange={(e) => setNewMessage(e.target.value)}
@@ -106,11 +156,23 @@ const WorkspaceConversation: React.FC<WorkspaceConversationProps> = ({
           />
           
           <div className="flex items-center justify-between">
-            <FileUploader
-              files={newFiles}
-              setFiles={setNewFiles}
-              maxFiles={3}
-            />
+            <div className="flex items-center gap-2">
+              <FileUploader
+                files={newFiles}
+                setFiles={setNewFiles}
+                maxFiles={3}
+              />
+              
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={handleSaveDraft}
+                className="text-xs"
+              >
+                <Save className="h-3 w-3 mr-1" />
+                Salvar Rascunho
+              </Button>
+            </div>
             
             <Button
               onClick={handleSendMessage}
@@ -126,8 +188,11 @@ const WorkspaceConversation: React.FC<WorkspaceConversationProps> = ({
             </Button>
           </div>
           
-          <div className="text-xs text-gray-500">
-            💡 Dica: Use Ctrl+Enter para enviar rapidamente
+          <div className="text-xs text-gray-500 flex items-center justify-between">
+            <span>💡 Dica: Use Ctrl+Enter para enviar rapidamente</span>
+            {newMessage.trim() && (
+              <span className="text-green-600">● Rascunho salvo automaticamente</span>
+            )}
           </div>
         </div>
       </div>

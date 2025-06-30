@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -24,6 +24,7 @@ const WorkspacePanel: React.FC<WorkspacePanelProps> = ({
   onClose
 }) => {
   const [activeTab, setActiveTab] = useState('conversation');
+  const conversationRef = useRef<{ addTemplateContent: (content: string) => void }>();
 
   const { data: messages = [], refetch: refetchMessages } = useQuery({
     queryKey: ['ticket-messages', ticket.id],
@@ -40,10 +41,29 @@ const WorkspacePanel: React.FC<WorkspacePanelProps> = ({
     refetchMessages();
   };
 
+  const handleTemplateSelect = (content: string) => {
+    // Switch to conversation tab if not already there
+    if (activeTab !== 'conversation') {
+      setActiveTab('conversation');
+    }
+    
+    // Add template content to conversation
+    if (conversationRef.current) {
+      conversationRef.current.addTemplateContent(content);
+    }
+  };
+
+  // Get client name from ticket data or user ID
+  const getClientName = () => {
+    // In a real app, you'd fetch client data from the database
+    // For now, we'll use the userId or a placeholder
+    return ticket.userId || 'Cliente';
+  };
+
   return (
     <div className="h-full flex flex-col bg-white">
       {/* Header */}
-      <div className="border-b px-6 py-4">
+      <div className="border-b px-6 py-4 flex-shrink-0">
         <div className="flex items-start justify-between">
           <div>
             <div className="flex items-center gap-2 mb-1">
@@ -60,7 +80,7 @@ const WorkspacePanel: React.FC<WorkspacePanelProps> = ({
             <div className="flex items-center gap-4 text-xs text-gray-500">
               <div className="flex items-center gap-1">
                 <User className="h-3 w-3" />
-                <span>Cliente: {ticket.userId}</span>
+                <span>Cliente: {getClientName()}</span>
               </div>
               <div className="flex items-center gap-1">
                 <Clock className="h-3 w-3" />
@@ -76,7 +96,7 @@ const WorkspacePanel: React.FC<WorkspacePanelProps> = ({
         {/* Main Content */}
         <div className="flex-1 flex flex-col">
           <Tabs value={activeTab} onValueChange={setActiveTab} className="flex-1 flex flex-col">
-            <TabsList className="w-full justify-start px-6 py-2">
+            <TabsList className="w-full justify-start px-6 py-2 flex-shrink-0">
               <TabsTrigger value="conversation" className="flex items-center gap-2">
                 <MessageSquare className="h-4 w-4" />
                 Conversa
@@ -90,6 +110,7 @@ const WorkspacePanel: React.FC<WorkspacePanelProps> = ({
             <div className="flex-1 overflow-hidden">
               <TabsContent value="conversation" className="h-full m-0">
                 <WorkspaceConversation
+                  ref={conversationRef}
                   ticket={ticket}
                   messages={messages}
                   attachments={attachments}
@@ -108,7 +129,7 @@ const WorkspacePanel: React.FC<WorkspacePanelProps> = ({
         </div>
 
         {/* Right Sidebar */}
-        <div className="w-80 border-l bg-gray-50 overflow-y-auto">
+        <div className="w-80 border-l bg-gray-50 overflow-y-auto flex-shrink-0">
           <div className="p-4 space-y-4">
             <WorkspaceActions
               ticket={ticket}
@@ -117,10 +138,9 @@ const WorkspacePanel: React.FC<WorkspacePanelProps> = ({
             
             <ResponseTemplates
               ticketCategory={ticket.category}
-              onTemplateSelect={(template) => {
-                // This will be handled by the conversation component
-                console.log('Template selected:', template);
-              }}
+              clientName={getClientName()}
+              ticketId={ticket.id}
+              onTemplateSelect={handleTemplateSelect}
             />
           </div>
         </div>
