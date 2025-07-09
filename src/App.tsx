@@ -5,6 +5,7 @@ import { Toaster } from 'sonner';
 import { AuthProvider } from '@/contexts/AuthContext';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { SecureCspHeaders } from "@/components/security/SecureCspHeaders";
+import Index from '@/pages/Index';
 import Login from '@/pages/Login';
 import Register from '@/pages/Register';
 import Dashboard from '@/pages/Dashboard';
@@ -129,8 +130,10 @@ function App() {
                 } 
               />
               
+              {/* Página inicial pública */}
+              <Route path="/" element={<Index />} />
+              
               {/* Redirecionamentos */}
-              <Route path="/" element={<Navigate to="/dashboard" replace />} />
               <Route path="*" element={<Navigate to="/login" replace />} />
             </Routes>
           </BrowserRouter>
