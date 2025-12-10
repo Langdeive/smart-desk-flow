@@ -7,10 +7,10 @@ export type Json =
   | Json[]
 
 export type Database = {
-  // Allows to automatically instanciate createClient with right options
+  // Allows to automatically instantiate createClient with right options
   // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
   __InternalSupabase: {
-    PostgrestVersion: "12.2.3 (519615d)"
+    PostgrestVersion: "13.0.4"
   }
   public: {
     Tables: {
@@ -348,7 +348,7 @@ export type Database = {
           created_at: string
           developer_id: string
           id: string
-          ip_address: unknown | null
+          ip_address: unknown
           new_value: Json | null
           old_value: Json | null
           resource_id: string | null
@@ -360,7 +360,7 @@ export type Database = {
           created_at?: string
           developer_id: string
           id?: string
-          ip_address?: unknown | null
+          ip_address?: unknown
           new_value?: Json | null
           old_value?: Json | null
           resource_id?: string | null
@@ -372,7 +372,7 @@ export type Database = {
           created_at?: string
           developer_id?: string
           id?: string
-          ip_address?: unknown | null
+          ip_address?: unknown
           new_value?: Json | null
           old_value?: Json | null
           resource_id?: string | null
@@ -839,7 +839,7 @@ export type Database = {
           created_at: string
           details: Json | null
           id: string
-          ip_address: unknown | null
+          ip_address: unknown
           resource_id: string | null
           resource_type: string | null
           user_agent: string | null
@@ -851,7 +851,7 @@ export type Database = {
           created_at?: string
           details?: Json | null
           id?: string
-          ip_address?: unknown | null
+          ip_address?: unknown
           resource_id?: string | null
           resource_type?: string | null
           user_agent?: string | null
@@ -863,7 +863,7 @@ export type Database = {
           created_at?: string
           details?: Json | null
           id?: string
-          ip_address?: unknown | null
+          ip_address?: unknown
           resource_id?: string | null
           resource_type?: string | null
           user_agent?: string | null
@@ -1111,222 +1111,115 @@ export type Database = {
     Functions: {
       approve_pending_article: {
         Args: {
-          p_pending_article_id: string
           p_agent_id: string
-          p_final_title?: string
           p_final_content?: string
           p_final_keywords?: string[]
+          p_final_title?: string
           p_is_public?: boolean
+          p_pending_article_id: string
         }
         Returns: string
       }
-      belongs_to_company: {
-        Args: { company_id: string }
-        Returns: boolean
-      }
-      binary_quantize: {
-        Args: { "": string } | { "": unknown }
-        Returns: unknown
-      }
-      cleanup_old_n8n_logs: {
-        Args: Record<PropertyKey, never>
-        Returns: number
-      }
+      belongs_to_company: { Args: { company_id: string }; Returns: boolean }
+      cleanup_old_n8n_logs: { Args: never; Returns: number }
       delete_documents_by_article_id: {
         Args: { article_id: string }
         Returns: undefined
       }
-      fix_inconsistent_user_companies: {
-        Args: Record<PropertyKey, never>
-        Returns: undefined
-      }
+      fix_inconsistent_user_companies: { Args: never; Returns: undefined }
       get_system_setting_value: {
         Args: { p_company_id: string; p_key: string }
         Returns: Json
       }
       get_user_role_in_company: {
-        Args: { user_id: string; company_id: string }
+        Args: { company_id: string; user_id: string }
         Returns: string
       }
       get_user_role_statistics: {
-        Args: { p_user_id: string; p_company_id: string }
+        Args: { p_company_id: string; p_user_id: string }
         Returns: {
-          total_tickets: number
-          resolved_tickets: number
           avg_resolution_time_hours: number
-          tickets_this_month: number
+          resolved_tickets: number
           response_rate: number
           satisfaction_score: number
+          tickets_this_month: number
+          total_tickets: number
         }[]
       }
-      halfvec_avg: {
-        Args: { "": number[] }
-        Returns: unknown
-      }
-      halfvec_out: {
-        Args: { "": unknown }
-        Returns: unknown
-      }
-      halfvec_send: {
-        Args: { "": unknown }
-        Returns: string
-      }
-      halfvec_typmod_in: {
-        Args: { "": unknown[] }
-        Returns: number
-      }
-      has_role: {
-        Args: { required_role: string }
-        Returns: boolean
-      }
-      hnsw_bit_support: {
-        Args: { "": unknown }
-        Returns: unknown
-      }
-      hnsw_halfvec_support: {
-        Args: { "": unknown }
-        Returns: unknown
-      }
-      hnsw_sparsevec_support: {
-        Args: { "": unknown }
-        Returns: unknown
-      }
-      hnswhandler: {
-        Args: { "": unknown }
-        Returns: unknown
-      }
+      has_role: { Args: { required_role: string }; Returns: boolean }
       is_event_enabled: {
         Args: { p_company_id: string; p_event_key: string }
         Returns: boolean
       }
-      ivfflat_bit_support: {
-        Args: { "": unknown }
-        Returns: unknown
-      }
-      ivfflat_halfvec_support: {
-        Args: { "": unknown }
-        Returns: unknown
-      }
-      ivfflathandler: {
-        Args: { "": unknown }
-        Returns: unknown
-      }
-      l2_norm: {
-        Args: { "": unknown } | { "": unknown }
-        Returns: number
-      }
-      l2_normalize: {
-        Args: { "": string } | { "": unknown } | { "": unknown }
-        Returns: unknown
-      }
       log_user_activity: {
         Args: {
-          p_user_id: string
-          p_company_id: string
           p_action: string
-          p_resource_type?: string
-          p_resource_id?: string
+          p_company_id: string
           p_details?: Json
+          p_resource_id?: string
+          p_resource_type?: string
+          p_user_id: string
         }
         Returns: string
       }
       match_documents: {
-        Args: { query_embedding: string; match_count?: number; filter?: Json }
+        Args: { filter?: Json; match_count?: number; query_embedding: string }
         Returns: {
-          id: number
           content: string
+          id: number
           metadata: Json
           similarity: number
         }[]
       }
       register_agent: {
         Args: {
-          nome: string
           email: string
           empresa_id: string
           funcao?: string
+          nome: string
         }
         Returns: Json
       }
       reject_pending_article: {
         Args: {
-          p_pending_article_id: string
           p_agent_id: string
+          p_pending_article_id: string
           p_rejection_reason: string
         }
         Returns: undefined
       }
-      retry_failed_n8n_requests: {
-        Args: Record<PropertyKey, never>
-        Returns: number
-      }
+      retry_failed_n8n_requests: { Args: never; Returns: number }
       send_to_n8n_webhook: {
         Args: {
           p_company_id: string
           p_event_type: string
-          p_resource_type: string
-          p_resource_id: string
           p_payload: Json
+          p_resource_id: string
+          p_resource_type: string
         }
         Returns: string
       }
-      sparsevec_out: {
-        Args: { "": unknown }
-        Returns: unknown
-      }
-      sparsevec_send: {
-        Args: { "": unknown }
-        Returns: string
-      }
-      sparsevec_typmod_in: {
-        Args: { "": unknown[] }
-        Returns: number
-      }
       user_belongs_to_company: {
-        Args: { user_id: string; company_id: string }
+        Args: { company_id: string; user_id: string }
         Returns: boolean
       }
       user_belongs_to_company_safe: {
-        Args: { user_id: string; company_id: string }
+        Args: { company_id: string; user_id: string }
         Returns: boolean
       }
       user_is_admin_or_owner: {
-        Args: { user_id: string; company_id: string }
+        Args: { company_id: string; user_id: string }
         Returns: boolean
       }
       validate_company_setup: {
         Args: { user_email: string }
         Returns: {
-          user_exists: boolean
           company_exists: boolean
-          user_company_link_exists: boolean
           company_id: string
+          user_company_link_exists: boolean
+          user_exists: boolean
           user_id: string
         }[]
-      }
-      vector_avg: {
-        Args: { "": number[] }
-        Returns: string
-      }
-      vector_dims: {
-        Args: { "": string } | { "": unknown }
-        Returns: number
-      }
-      vector_norm: {
-        Args: { "": string }
-        Returns: number
-      }
-      vector_out: {
-        Args: { "": string }
-        Returns: unknown
-      }
-      vector_send: {
-        Args: { "": string }
-        Returns: string
-      }
-      vector_typmod_in: {
-        Args: { "": unknown[] }
-        Returns: number
       }
     }
     Enums: {
