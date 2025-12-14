@@ -378,8 +378,8 @@ const Index = () => {
               <p className="text-muted-foreground max-w-2xl mx-auto">
                 Você define a régua de relacionamento. Nós implementamos a inteligência que garante que ela seja cumprida com 100% dos clientes, sem falha humana.
               </p>
-              <Button className="mt-6 bg-solveflow-green hover:bg-solveflow-green/90" size="lg" asChild>
-                <a href="#contato">Agendar Consultoria de CS</a>
+              <Button className="mt-6 bg-solveflow-green hover:bg-solveflow-green/90 text-white" size="lg" asChild>
+                <a href="#contato" className="text-white no-underline">Agendar Consultoria de CS</a>
               </Button>
             </div>
           </div>
