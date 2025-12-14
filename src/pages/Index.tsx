@@ -378,8 +378,8 @@ const Index = () => {
               <p className="text-muted-foreground max-w-2xl mx-auto">
                 Você define a régua de relacionamento. Nós implementamos a inteligência que garante que ela seja cumprida com 100% dos clientes, sem falha humana.
               </p>
-              <Button className="mt-6 bg-solveflow-green hover:bg-solveflow-green/90 text-white" size="lg" asChild>
-                <a href="#contato" className="text-white no-underline">Agendar Consultoria de CS</a>
+              <Button className="mt-6 bg-solveflow-green hover:bg-solveflow-green/90" size="lg" asChild>
+                <a href="#contato">Agendar Consultoria de CS</a>
               </Button>
             </div>
           </div>
@@ -659,7 +659,7 @@ const Index = () => {
               <div className="space-y-6">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Nome Completo
+                    Jaraguá do Sul, SC   
                   </label>
                   <input type="text" required className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-solveflow-blue focus:border-transparent transition-all" placeholder="Seu nome" value={formData.name} onChange={e => setFormData({
                   ...formData,
