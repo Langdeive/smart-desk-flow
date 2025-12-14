@@ -240,9 +240,7 @@ const Index = () => {
                 </div>
                 <h3 className="text-h3 font-bold text-foreground mb-3">Agente SDR (Pré-Vendas)</h3>
                 <p className="text-muted-foreground mb-4">
-                  SDR Digital que qualifica leads 24/7 usando o método BANT (Orçamento, Autoridade, Necessidade e Tempo). 
-                  Filtra curiosos, agenda reuniões e envia apenas os leads "quentes" para o seu time comercial fechar. 
-                  Integração nativa com seu CRM (Kommo, Pipedrive, HubSpot, etc).
+                  SDR Digital que qualifica leads 24/7 usando o método BANT (Orçamento, Autoridade, Necessidade e Tempo). Filtra curiosos, agenda reuniões e envia apenas os leads "quentes" para o seu time comercial fechar. Integramos com seu CRM.
                 </p>
                 <p className="text-sm text-muted-foreground mb-4">
                   <strong>Ideal para:</strong> Consultorias, Clínicas, SaaS, Imobiliárias e B2B High Ticket.
