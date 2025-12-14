@@ -1,19 +1,7 @@
 import { useState } from "react";
-import { 
-  MessageSquare, Target, Rocket, Check, ArrowRight, 
-  Phone, Mail, Building2, ChevronDown, Users, Zap,
-  Brain, Link2, BarChart3, Settings, Clock, Shield,
-  ShoppingBag, Briefcase, Laptop, Menu, X,
-  CheckCircle, Calendar, Star, Clipboard, LifeBuoy, Radar
-} from "lucide-react";
+import { MessageSquare, Target, Rocket, Check, ArrowRight, Phone, Mail, Building2, ChevronDown, Users, Zap, Brain, Link2, BarChart3, Settings, Clock, Shield, ShoppingBag, Briefcase, Laptop, Menu, X, CheckCircle, Calendar, Star, Clipboard, LifeBuoy, Radar } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
-
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 const Index = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [formData, setFormData] = useState({
@@ -22,18 +10,14 @@ const Index = () => {
     company: "",
     interest: ""
   });
-
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     // Webhook placeholder
     console.log("Form submitted:", formData);
     alert("Obrigado! Entraremos em contato em breve.");
   };
-
   const whatsappLink = "https://wa.me/5511999999999?text=Olá! Quero saber mais sobre os agentes de IA.";
-
-  return (
-    <div className="min-h-screen bg-background">
+  return <div className="min-h-screen bg-background">
       {/* Navigation */}
       <nav className="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-sm border-b border-border">
         <div className="container mx-auto px-6 py-4">
@@ -53,17 +37,13 @@ const Index = () => {
             </div>
 
             {/* Mobile Menu Button */}
-            <button 
-              className="md:hidden p-2"
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            >
+            <button className="md:hidden p-2" onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
               {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
             </button>
           </div>
 
           {/* Mobile Menu */}
-          {mobileMenuOpen && (
-            <div className="md:hidden pt-4 pb-2 animate-fade-in">
+          {mobileMenuOpen && <div className="md:hidden pt-4 pb-2 animate-fade-in">
               <div className="flex flex-col gap-4">
                 <a href="#produtos" className="text-sm text-muted-foreground hover:text-foreground" onClick={() => setMobileMenuOpen(false)}>Produtos</a>
                 <a href="#metodologia" className="text-sm text-muted-foreground hover:text-foreground" onClick={() => setMobileMenuOpen(false)}>Metodologia</a>
@@ -74,8 +54,7 @@ const Index = () => {
                   </a>
                 </Button>
               </div>
-            </div>
-          )}
+            </div>}
         </div>
       </nav>
 
@@ -95,22 +74,13 @@ const Index = () => {
                 Soluções Prontas. Consultoria Personalizada. Você Escolhe.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 mb-6">
-                <Button 
-                  size="lg" 
-                  className="bg-solveflow-green hover:bg-solveflow-green/90 text-white text-lg px-8 py-6 shadow-glow-green"
-                  asChild
-                >
+                <Button size="lg" className="bg-solveflow-green hover:bg-solveflow-green/90 text-white text-lg px-8 py-6 shadow-glow-green" asChild>
                   <a href="#contato">
                     Falar com Especialista
                     <ArrowRight className="ml-2" size={20} />
                   </a>
                 </Button>
-                <Button 
-                  size="lg" 
-                  variant="outline" 
-                  className="border-white/30 text-white hover:bg-white/10 text-lg px-8 py-6"
-                  asChild
-                >
+                <Button size="lg" variant="outline" className="border-white/30 text-white hover:bg-white/10 text-lg px-8 py-6" asChild>
                   <a href={whatsappLink} target="_blank" rel="noopener noreferrer">
                     💬 Mandar Mensagem Agora
                   </a>
@@ -172,32 +142,23 @@ const Index = () => {
           </div>
           
           <div className="grid md:grid-cols-3 gap-8 mb-16">
-            {[
-              {
-                icon: "📉",
-                title: "Sua Escalabilidade é Zero",
-                description: "Você atende bem porque está ali. Mas aumentar volume? Só contratando. Só que contratar é lento, caro e traz dependência."
-              },
-              {
-                icon: "💸",
-                title: "Leads Entram, Mas Não Saem com Venda",
-                description: "Sem follow-up automatizado e qualificação inteligente, leads esquecem de você. Concorrência não dorme."
-              },
-              {
-                icon: "⏰",
-                title: "Suporte Básico Rouba seu Tempo",
-                description: "Respostas repetidas, dúvidas simples, troubleshooting… ocupam horas que poderiam estar em vendas ou relacionamento."
-              }
-            ].map((problem, index) => (
-              <div 
-                key={index}
-                className="bg-white rounded-lg p-8 shadow-soft hover-lift border border-border"
-              >
+            {[{
+            icon: "📉",
+            title: "Sua Escalabilidade é Zero",
+            description: "Você atende bem porque está ali. Mas aumentar volume? Só contratando. Só que contratar é lento, caro e traz dependência."
+          }, {
+            icon: "💸",
+            title: "Leads Entram, Mas Não Saem com Venda",
+            description: "Sem follow-up automatizado e qualificação inteligente, leads esquecem de você. Concorrência não dorme."
+          }, {
+            icon: "⏰",
+            title: "Suporte Básico Rouba seu Tempo",
+            description: "Respostas repetidas, dúvidas simples, troubleshooting… ocupam horas que poderiam estar em vendas ou relacionamento."
+          }].map((problem, index) => <div key={index} className="bg-white rounded-lg p-8 shadow-soft hover-lift border border-border">
                 <span className="text-5xl mb-4 block">{problem.icon}</span>
                 <h3 className="text-h4 font-semibold text-foreground mb-3">{problem.title}</h3>
                 <p className="text-muted-foreground leading-relaxed">{problem.description}</p>
-              </div>
-            ))}
+              </div>)}
           </div>
 
           {/* Solution Sub-section */}
@@ -206,8 +167,7 @@ const Index = () => {
               Seus Agentes Não Tiram Férias. Não Pedem Aumento. Não Saem.
             </h3>
             <p className="text-lg text-blue-100 leading-relaxed mb-6 text-center max-w-4xl mx-auto">
-              Eles trabalham 24/7, aprendem constantemente, melhoram com o tempo. Se integram com seus sistemas (CRM, pagamentos, dados). 
-              Entendem seu negócio porque foram desenvolvidos especificamente para ele.
+              Eles trabalham 24/7, aprendem constantemente, melhoram com o tempo. Se integram ao seu CRM. Entendem seu negócio porque foram desenvolvidos especificamente para ele.
             </p>
             <p className="text-lg text-blue-100 leading-relaxed mb-6 text-center max-w-4xl mx-auto">
               Não é automação genérica. É <strong>consultoria em IA transformada em agentes inteligentes</strong> que escalam sua operação.
@@ -374,37 +334,31 @@ const Index = () => {
             </div>
 
             <div className="grid md:grid-cols-2 gap-8">
-              {[
-                {
-                  icon: <Clipboard className="text-solveflow-green" size={32} />,
-                  title: "Onboarding Programado (Dias 0-7)",
-                  problem: "Clientes cancelam porque não sabem usar o produto e ninguém ensinou.",
-                  solution: "Entrega uma sequência lógica de instruções, PDFs e vídeos tutoriais direto no WhatsApp do cliente. Garante que ele receba todo o material necessário para começar, sem seu time precisar enviar manualmente.",
-                  result: "Cliente educado e ativado na primeira semana."
-                },
-                {
-                  icon: <LifeBuoy className="text-solveflow-green" size={32} />,
-                  title: "Suporte Nível 1 (24/7)",
-                  problem: "Clientes esperam horas por uma resposta simples.",
-                  solution: "Resolve dúvidas frequentes sobre o produto e financeiro em 2 segundos, 24h por dia. Se o problema for crítico, ele escala imediatamente para um humano com todo o contexto da conversa.",
-                  result: "Fim da fila de espera e time focado apenas em casos complexos."
-                },
-                {
-                  icon: <Calendar className="text-solveflow-green" size={32} />,
-                  title: "Régua de Follow-up (Preventivo)",
-                  problem: 'Sua empresa "esquece" do cliente e só aparece para cobrar a renovação.',
-                  solution: "Executa check-ins automáticos em datas estratégicas definidas por você (ex: 30, 60, 90 dias). O sistema pergunta se está tudo bem e, ao detectar qualquer palavra de insatisfação na resposta, alerta seu time na hora.",
-                  result: "Relacionamento constante. O cliente sente que é cuidado o ano todo."
-                },
-                {
-                  icon: <Star className="text-solveflow-green" size={32} />,
-                  title: "NPS Acionável",
-                  problem: "Pesquisas de satisfação que ninguém responde ou vê.",
-                  solution: "Dispara a pesquisa de NPS no WhatsApp na hora certa. Se o cliente der nota baixa, o sistema acolhe, pergunta o motivo e notifica seu gerente em tempo real para intervir e salvar a conta.",
-                  result: "Detratores são identificados antes de cancelarem."
-                }
-              ].map((feature, index) => (
-                <div key={index} className="bg-white rounded-lg p-6 shadow-soft border border-border">
+              {[{
+              icon: <Clipboard className="text-solveflow-green" size={32} />,
+              title: "Onboarding Programado (Dias 0-7)",
+              problem: "Clientes cancelam porque não sabem usar o produto e ninguém ensinou.",
+              solution: "Entrega uma sequência lógica de instruções, PDFs e vídeos tutoriais direto no WhatsApp do cliente. Garante que ele receba todo o material necessário para começar, sem seu time precisar enviar manualmente.",
+              result: "Cliente educado e ativado na primeira semana."
+            }, {
+              icon: <LifeBuoy className="text-solveflow-green" size={32} />,
+              title: "Suporte Nível 1 (24/7)",
+              problem: "Clientes esperam horas por uma resposta simples.",
+              solution: "Resolve dúvidas frequentes sobre o produto e financeiro em 2 segundos, 24h por dia. Se o problema for crítico, ele escala imediatamente para um humano com todo o contexto da conversa.",
+              result: "Fim da fila de espera e time focado apenas em casos complexos."
+            }, {
+              icon: <Calendar className="text-solveflow-green" size={32} />,
+              title: "Régua de Follow-up (Preventivo)",
+              problem: 'Sua empresa "esquece" do cliente e só aparece para cobrar a renovação.',
+              solution: "Executa check-ins automáticos em datas estratégicas definidas por você (ex: 30, 60, 90 dias). O sistema pergunta se está tudo bem e, ao detectar qualquer palavra de insatisfação na resposta, alerta seu time na hora.",
+              result: "Relacionamento constante. O cliente sente que é cuidado o ano todo."
+            }, {
+              icon: <Star className="text-solveflow-green" size={32} />,
+              title: "NPS Acionável",
+              problem: "Pesquisas de satisfação que ninguém responde ou vê.",
+              solution: "Dispara a pesquisa de NPS no WhatsApp na hora certa. Se o cliente der nota baixa, o sistema acolhe, pergunta o motivo e notifica seu gerente em tempo real para intervir e salvar a conta.",
+              result: "Detratores são identificados antes de cancelarem."
+            }].map((feature, index) => <div key={index} className="bg-white rounded-lg p-6 shadow-soft border border-border">
                   <div className="flex items-center gap-4 mb-4">
                     <div className="w-14 h-14 bg-green-100 rounded-lg flex items-center justify-center flex-shrink-0">
                       {feature.icon}
@@ -416,8 +370,7 @@ const Index = () => {
                     <p className="text-sm text-muted-foreground">🟢 O que o SolveCS faz: {feature.solution}</p>
                     <p className="text-sm font-semibold text-solveflow-green">✓ {feature.result}</p>
                   </div>
-                </div>
-              ))}
+                </div>)}
             </div>
 
             <div className="mt-12 bg-white rounded-lg p-8 shadow-soft border border-border text-center">
@@ -460,17 +413,10 @@ const Index = () => {
                 </p>
                 <h4 className="font-semibold text-foreground mb-4">O Que Sua Empresa Ganha:</h4>
                 <ul className="space-y-3 mb-8">
-                  {[
-                    "Centralização do WhatsApp: Toda sua equipe atendendo em um único número, de forma organizada.",
-                    "Funil de Vendas Visual: Veja exatamente quantos leads estão em negociação e quanto dinheiro está na mesa.",
-                    "Histórico Completo: A IA registra cada conversa automaticamente. Nada se perde.",
-                    "Gestão à Vista: Relatórios de performance do time e das vendas em tempo real."
-                  ].map((item, index) => (
-                    <li key={index} className="flex items-start gap-3">
+                  {["Centralização do WhatsApp: Toda sua equipe atendendo em um único número, de forma organizada.", "Funil de Vendas Visual: Veja exatamente quantos leads estão em negociação e quanto dinheiro está na mesa.", "Histórico Completo: A IA registra cada conversa automaticamente. Nada se perde.", "Gestão à Vista: Relatórios de performance do time e das vendas em tempo real."].map((item, index) => <li key={index} className="flex items-start gap-3">
                       <Check className="text-solveflow-green flex-shrink-0 mt-0.5" size={20} />
                       <span className="text-muted-foreground">{item}</span>
-                    </li>
-                  ))}
+                    </li>)}
                 </ul>
               </div>
               <div className="bg-gray-50 rounded-lg p-8 border border-border">
@@ -505,41 +451,34 @@ const Index = () => {
 
           <div className="max-w-5xl mx-auto">
             <div className="grid md:grid-cols-4 gap-8">
-              {[
-                {
-                  step: "1",
-                  title: "Discovery & Estratégia",
-                  time: "45 min (Reunião)",
-                  description: "Reunião de alinhamento onde entendemos seu negócio, mapeamos suas regras de atendimento e definimos o tom de voz da IA. Você nos fornece os materiais, nós desenhamos a estratégia."
-                },
-                {
-                  step: "2",
-                  title: "Setup Técnico (Hands-off)",
-                  time: "5 a 10 Dias",
-                  description: "Nós trabalhamos, você aguarda. Configuramos a infraestrutura (VPS), conectamos seu WhatsApp, integramos o CRM e treinamos a inteligência artificial com seus dados."
-                },
-                {
-                  step: "3",
-                  title: "Homologação e Testes",
-                  time: "2 a 3 Dias",
-                  description: "Liberamos o acesso para você testar. Simulamos conversas reais e realizamos ajustes ilimitados nas respostas até que o comportamento da IA esteja perfeito."
-                },
-                {
-                  step: "4",
-                  title: "Go-Live e Onboarding",
-                  time: "1 Dia (Imediato)",
-                  description: "Ativamos a operação real. A partir daqui, iniciamos o acompanhamento de 30 dias, monitorando as conversas diariamente para garantir o resultado prometido."
-                }
-              ].map((item, index) => (
-                <div key={index} className="text-center">
+              {[{
+              step: "1",
+              title: "Discovery & Estratégia",
+              time: "45 min (Reunião)",
+              description: "Reunião de alinhamento onde entendemos seu negócio, mapeamos suas regras de atendimento e definimos o tom de voz da IA. Você nos fornece os materiais, nós desenhamos a estratégia."
+            }, {
+              step: "2",
+              title: "Setup Técnico (Hands-off)",
+              time: "5 a 10 Dias",
+              description: "Nós trabalhamos, você aguarda. Configuramos a infraestrutura (VPS), conectamos seu WhatsApp, integramos o CRM e treinamos a inteligência artificial com seus dados."
+            }, {
+              step: "3",
+              title: "Homologação e Testes",
+              time: "2 a 3 Dias",
+              description: "Liberamos o acesso para você testar. Simulamos conversas reais e realizamos ajustes ilimitados nas respostas até que o comportamento da IA esteja perfeito."
+            }, {
+              step: "4",
+              title: "Go-Live e Onboarding",
+              time: "1 Dia (Imediato)",
+              description: "Ativamos a operação real. A partir daqui, iniciamos o acompanhamento de 30 dias, monitorando as conversas diariamente para garantir o resultado prometido."
+            }].map((item, index) => <div key={index} className="text-center">
                   <div className="w-16 h-16 bg-solveflow-blue text-white rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-4">
                     {item.step}
                   </div>
                   <h3 className="text-h4 font-semibold text-foreground mb-1">{item.title}</h3>
                   <p className="text-sm text-solveflow-blue font-medium mb-3">⏱️ {item.time}</p>
                   <p className="text-sm text-muted-foreground">{item.description}</p>
-                </div>
-              ))}
+                </div>)}
             </div>
           </div>
 
@@ -567,48 +506,31 @@ const Index = () => {
           </div>
 
           <div className="grid md:grid-cols-3 gap-8">
-            {[
-              {
-                tag: "Agente de Atendimento",
-                tagColor: "bg-blue-100 text-solveflow-blue",
-                icon: <ShoppingBag className="text-pink-500" size={32} />,
-                title: "O E-commerce Sobrecarregado",
-                problem: 'A equipe gastava 4 horas por dia respondendo "Qual o valor do frete?" e "Tem estoque?". Nos finais de semana, 100% dos leads ficavam sem resposta até segunda-feira.',
-                solution: "Implementamos o Agente de Atendimento integrado ao estoque e frete.",
-                results: [
-                  "Zero espera: Clientes respondidos em 2 segundos, inclusive domingo às 23h.",
-                  "Economia: Redução de 90h/mês da equipe de suporte.",
-                  "Venda: Aumento de 15% na conversão por resposta imediata."
-                ]
-              },
-              {
-                tag: "Agente SDR",
-                tagColor: "bg-purple-100 text-solveflow-purple",
-                icon: <Briefcase className="text-solveflow-blue" size={32} />,
-                title: "A Consultoria B2B",
-                problem: "Marketing gerava 50 leads/dia, mas os vendedores demoravam horas para chamar. Resultado: falavam com leads frios ou curiosos sem dinheiro, desperdiçando tempo de senior.",
-                solution: "Agente SDR qualificando via BANT (Orçamento, Autoridade, Necessidade, Tempo) instantaneamente.",
-                results: [
-                  "Filtro: 70% dos curiosos descartados automaticamente.",
-                  "Eficiência: Vendedores só recebem leads prontos para fechar.",
-                  "Agenda: 3x mais reuniões qualificadas agendadas na mesma semana."
-                ]
-              },
-              {
-                tag: "SolveCS (Retenção)",
-                tagColor: "bg-green-100 text-solveflow-green",
-                icon: <Laptop className="text-solveflow-green" size={32} />,
-                title: "O SaaS de Assinatura",
-                problem: "Churn alto (8%) porque os clientes assinavam, não entendiam como usar a ferramenta e cancelavam no segundo mês sem avisar.",
-                solution: "Régua de Onboarding automatizada via WhatsApp + Monitoramento de risco.",
-                results: [
-                  "Ativação: 95% dos novos clientes completam o setup na 1ª semana.",
-                  "Retenção: Redução do Churn para 4.5% em 90 dias.",
-                  "ROI: R$ 12.000 preservados mensalmente em contratos que seriam perdidos."
-                ]
-              }
-            ].map((useCase, index) => (
-              <div key={index} className="bg-gray-50 rounded-lg p-6 shadow-soft border border-border">
+            {[{
+            tag: "Agente de Atendimento",
+            tagColor: "bg-blue-100 text-solveflow-blue",
+            icon: <ShoppingBag className="text-pink-500" size={32} />,
+            title: "O E-commerce Sobrecarregado",
+            problem: 'A equipe gastava 4 horas por dia respondendo "Qual o valor do frete?" e "Tem estoque?". Nos finais de semana, 100% dos leads ficavam sem resposta até segunda-feira.',
+            solution: "Implementamos o Agente de Atendimento integrado ao estoque e frete.",
+            results: ["Zero espera: Clientes respondidos em 2 segundos, inclusive domingo às 23h.", "Economia: Redução de 90h/mês da equipe de suporte.", "Venda: Aumento de 15% na conversão por resposta imediata."]
+          }, {
+            tag: "Agente SDR",
+            tagColor: "bg-purple-100 text-solveflow-purple",
+            icon: <Briefcase className="text-solveflow-blue" size={32} />,
+            title: "A Consultoria B2B",
+            problem: "Marketing gerava 50 leads/dia, mas os vendedores demoravam horas para chamar. Resultado: falavam com leads frios ou curiosos sem dinheiro, desperdiçando tempo de senior.",
+            solution: "Agente SDR qualificando via BANT (Orçamento, Autoridade, Necessidade, Tempo) instantaneamente.",
+            results: ["Filtro: 70% dos curiosos descartados automaticamente.", "Eficiência: Vendedores só recebem leads prontos para fechar.", "Agenda: 3x mais reuniões qualificadas agendadas na mesma semana."]
+          }, {
+            tag: "SolveCS (Retenção)",
+            tagColor: "bg-green-100 text-solveflow-green",
+            icon: <Laptop className="text-solveflow-green" size={32} />,
+            title: "O SaaS de Assinatura",
+            problem: "Churn alto (8%) porque os clientes assinavam, não entendiam como usar a ferramenta e cancelavam no segundo mês sem avisar.",
+            solution: "Régua de Onboarding automatizada via WhatsApp + Monitoramento de risco.",
+            results: ["Ativação: 95% dos novos clientes completam o setup na 1ª semana.", "Retenção: Redução do Churn para 4.5% em 90 dias.", "ROI: R$ 12.000 preservados mensalmente em contratos que seriam perdidos."]
+          }].map((useCase, index) => <div key={index} className="bg-gray-50 rounded-lg p-6 shadow-soft border border-border">
                 <span className={`inline-block px-3 py-1 rounded-full text-xs font-medium mb-4 ${useCase.tagColor}`}>
                   {useCase.tag}
                 </span>
@@ -628,14 +550,11 @@ const Index = () => {
                   <div>
                     <p className="text-sm font-medium text-foreground mb-2">📈 O Resultado:</p>
                     <ul className="space-y-1">
-                      {useCase.results.map((result, idx) => (
-                        <li key={idx} className="text-sm text-muted-foreground">• {result}</li>
-                      ))}
+                      {useCase.results.map((result, idx) => <li key={idx} className="text-sm text-muted-foreground">• {result}</li>)}
                     </ul>
                   </div>
                 </div>
-              </div>
-            ))}
+              </div>)}
           </div>
         </div>
       </section>
@@ -656,91 +575,72 @@ const Index = () => {
                 <p className="text-sm font-semibold text-muted-foreground uppercase tracking-wide mb-4">Sobre o Funcionamento</p>
               </div>
               
-              {[
-                {
-                  question: "O cliente vai perceber que está falando com um robô?",
-                  answer: 'Nossos agentes usam Inteligência Artificial Generativa. Eles entendem gírias, erros de português e áudios, respondendo de forma natural e empática. Porém, somos transparentes: se o cliente perguntar "você é um robô?", ele responderá que sim e oferecerá falar com um humano imediatamente.'
-                },
-                {
-                  question: "E se a IA responder algo errado?",
-                  answer: 'No período de Setup e Testes, nós simulamos centenas de cenários para garantir que isso não aconteça. Além disso, a IA é programada com uma "trava de segurança": se ela não tiver 100% de certeza da resposta, ela não inventa — ela transfere a conversa para o seu time humano.'
-                },
-                {
-                  question: "O que acontece se o cliente quiser falar com uma pessoa?",
-                  answer: 'O sistema detecta a intenção (ex: "quero falar com atendente" ou sinais de irritação) e transfere o chat para o seu time na hora. Você recebe a notificação no celular/computador e assume a conversa exatamente de onde a IA parou, com todo o histórico visível.'
-                }
-              ].map((faq, index) => (
-                <AccordionItem key={`func-${index}`} value={`func-${index}`} className="border border-border rounded-lg px-6 bg-white">
+              {[{
+              question: "O cliente vai perceber que está falando com um robô?",
+              answer: 'Nossos agentes usam Inteligência Artificial Generativa. Eles entendem gírias, erros de português e áudios, respondendo de forma natural e empática. Porém, somos transparentes: se o cliente perguntar "você é um robô?", ele responderá que sim e oferecerá falar com um humano imediatamente.'
+            }, {
+              question: "E se a IA responder algo errado?",
+              answer: 'No período de Setup e Testes, nós simulamos centenas de cenários para garantir que isso não aconteça. Além disso, a IA é programada com uma "trava de segurança": se ela não tiver 100% de certeza da resposta, ela não inventa — ela transfere a conversa para o seu time humano.'
+            }, {
+              question: "O que acontece se o cliente quiser falar com uma pessoa?",
+              answer: 'O sistema detecta a intenção (ex: "quero falar com atendente" ou sinais de irritação) e transfere o chat para o seu time na hora. Você recebe a notificação no celular/computador e assume a conversa exatamente de onde a IA parou, com todo o histórico visível.'
+            }].map((faq, index) => <AccordionItem key={`func-${index}`} value={`func-${index}`} className="border border-border rounded-lg px-6 bg-white">
                   <AccordionTrigger className="text-left font-semibold hover:no-underline">
                     {faq.question}
                   </AccordionTrigger>
                   <AccordionContent className="text-muted-foreground">
                     {faq.answer}
                   </AccordionContent>
-                </AccordionItem>
-              ))}
+                </AccordionItem>)}
 
               {/* Sobre Custos e Mensalidade */}
               <div className="mb-6 mt-8">
                 <p className="text-sm font-semibold text-muted-foreground uppercase tracking-wide mb-4">Sobre Custos e Mensalidade</p>
               </div>
               
-              {[
-                {
-                  question: 'O que significa "Zero Mensalidade Obrigatória"?',
-                  answer: "Para os Agentes de Atendimento e SDR, nós não cobramos \"aluguel\" do software. Você paga pelo desenvolvimento (Setup) e a estrutura é sua. Você terá apenas os custos de infraestrutura direto com os fornecedores (Servidor + Consumo de IA), que giram em torno de R$ 150 a R$ 300 mensais dependendo do volume. Nós configuramos tudo isso para você ficar no seu nome."
-                },
-                {
-                  question: "Vocês oferecem suporte depois da entrega?",
-                  answer: "Sim. Todos os projetos incluem 30 dias de acompanhamento intensivo. Após esse período, se você quiser que nossa equipe continue monitorando, otimizando as respostas e atualizando o sistema, oferecemos planos de suporte opcional (a partir de R$ 297/mês). Se não quiser contratar, o sistema continua funcionando e é todo seu."
-                },
-                {
-                  question: "Por que o Agente SolveCS tem mensalidade e os outros não?",
-                  answer: "O SolveCS é uma plataforma complexa de retenção que envolve 4 sistemas simultâneos (Onboarding, Follow-up, Suporte e NPS) e um Dashboard exclusivo hospedado em nossa infraestrutura de alta performance. Por isso, ele funciona no modelo de assinatura (SaaS) para garantir a estabilidade e evolução contínua das ferramentas."
-                }
-              ].map((faq, index) => (
-                <AccordionItem key={`custo-${index}`} value={`custo-${index}`} className="border border-border rounded-lg px-6 bg-white">
+              {[{
+              question: 'O que significa "Zero Mensalidade Obrigatória"?',
+              answer: "Para os Agentes de Atendimento e SDR, nós não cobramos \"aluguel\" do software. Você paga pelo desenvolvimento (Setup) e a estrutura é sua. Você terá apenas os custos de infraestrutura direto com os fornecedores (Servidor + Consumo de IA), que giram em torno de R$ 150 a R$ 300 mensais dependendo do volume. Nós configuramos tudo isso para você ficar no seu nome."
+            }, {
+              question: "Vocês oferecem suporte depois da entrega?",
+              answer: "Sim. Todos os projetos incluem 30 dias de acompanhamento intensivo. Após esse período, se você quiser que nossa equipe continue monitorando, otimizando as respostas e atualizando o sistema, oferecemos planos de suporte opcional (a partir de R$ 297/mês). Se não quiser contratar, o sistema continua funcionando e é todo seu."
+            }, {
+              question: "Por que o Agente SolveCS tem mensalidade e os outros não?",
+              answer: "O SolveCS é uma plataforma complexa de retenção que envolve 4 sistemas simultâneos (Onboarding, Follow-up, Suporte e NPS) e um Dashboard exclusivo hospedado em nossa infraestrutura de alta performance. Por isso, ele funciona no modelo de assinatura (SaaS) para garantir a estabilidade e evolução contínua das ferramentas."
+            }].map((faq, index) => <AccordionItem key={`custo-${index}`} value={`custo-${index}`} className="border border-border rounded-lg px-6 bg-white">
                   <AccordionTrigger className="text-left font-semibold hover:no-underline">
                     {faq.question}
                   </AccordionTrigger>
                   <AccordionContent className="text-muted-foreground">
                     {faq.answer}
                   </AccordionContent>
-                </AccordionItem>
-              ))}
+                </AccordionItem>)}
 
               {/* Técnico e Implementação */}
               <div className="mb-6 mt-8">
                 <p className="text-sm font-semibold text-muted-foreground uppercase tracking-wide mb-4">Técnico e Implementação</p>
               </div>
               
-              {[
-                {
-                  question: "Preciso ter um número novo de WhatsApp?",
-                  answer: "Não necessariamente. Podemos migrar seu número atual para o sistema. Porém, durante a Discovery Call, analisamos seu caso: para operações maiores, frequentemente recomendamos ter um número oficial para a IA e manter os vendedores com seus números, tudo centralizado no CRM."
-                },
-                {
-                  question: "Não tenho CRM, o agente funciona mesmo assim?",
-                  answer: "Funciona, mas você perde inteligência. Por isso, para clientes sem CRM, nós incluímos a implantação do Kommo CRM no projeto (consulte condições). Assim, você não ganha apenas um atendente de IA, mas organiza todo o seu processo comercial."
-                },
-                {
-                  question: "E se eu mudar meus preços ou horários depois?",
-                  answer: "É simples. Se você tiver nosso suporte mensal, basta nos avisar no WhatsApp e atualizamos na hora. Se não tiver, nós deixamos um painel administrativo fácil onde você mesmo pode alterar textos e informações da base de conhecimento sem precisar de programação."
-                },
-                {
-                  question: "Tem fidelidade ou multa de cancelamento?",
-                  answer: "Para os Agentes de Atendimento e SDR (Investimento Único), não existe cancelamento pois o produto é seu. Para o SolveCS e planos de Suporte, o contrato é mensal. Você pode cancelar a qualquer momento com aviso prévio de 30 dias, sem multas abusivas."
-                }
-              ].map((faq, index) => (
-                <AccordionItem key={`tec-${index}`} value={`tec-${index}`} className="border border-border rounded-lg px-6 bg-white">
+              {[{
+              question: "Preciso ter um número novo de WhatsApp?",
+              answer: "Não necessariamente. Podemos migrar seu número atual para o sistema. Porém, durante a Discovery Call, analisamos seu caso: para operações maiores, frequentemente recomendamos ter um número oficial para a IA e manter os vendedores com seus números, tudo centralizado no CRM."
+            }, {
+              question: "Não tenho CRM, o agente funciona mesmo assim?",
+              answer: "Funciona, mas você perde inteligência. Por isso, para clientes sem CRM, nós incluímos a implantação do Kommo CRM no projeto (consulte condições). Assim, você não ganha apenas um atendente de IA, mas organiza todo o seu processo comercial."
+            }, {
+              question: "E se eu mudar meus preços ou horários depois?",
+              answer: "É simples. Se você tiver nosso suporte mensal, basta nos avisar no WhatsApp e atualizamos na hora. Se não tiver, nós deixamos um painel administrativo fácil onde você mesmo pode alterar textos e informações da base de conhecimento sem precisar de programação."
+            }, {
+              question: "Tem fidelidade ou multa de cancelamento?",
+              answer: "Para os Agentes de Atendimento e SDR (Investimento Único), não existe cancelamento pois o produto é seu. Para o SolveCS e planos de Suporte, o contrato é mensal. Você pode cancelar a qualquer momento com aviso prévio de 30 dias, sem multas abusivas."
+            }].map((faq, index) => <AccordionItem key={`tec-${index}`} value={`tec-${index}`} className="border border-border rounded-lg px-6 bg-white">
                   <AccordionTrigger className="text-left font-semibold hover:no-underline">
                     {faq.question}
                   </AccordionTrigger>
                   <AccordionContent className="text-muted-foreground">
                     {faq.answer}
                   </AccordionContent>
-                </AccordionItem>
-              ))}
+                </AccordionItem>)}
             </Accordion>
           </div>
         </div>
@@ -763,51 +663,37 @@ const Index = () => {
                   <label className="block text-sm font-medium text-gray-700 mb-2">
                     Nome Completo
                   </label>
-                  <input
-                    type="text"
-                    required
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-solveflow-blue focus:border-transparent transition-all"
-                    placeholder="Seu nome"
-                    value={formData.name}
-                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                  />
+                  <input type="text" required className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-solveflow-blue focus:border-transparent transition-all" placeholder="Seu nome" value={formData.name} onChange={e => setFormData({
+                  ...formData,
+                  name: e.target.value
+                })} />
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
                     WhatsApp
                   </label>
-                  <input
-                    type="tel"
-                    required
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-solveflow-blue focus:border-transparent transition-all"
-                    placeholder="(11) 99999-9999"
-                    value={formData.whatsapp}
-                    onChange={(e) => setFormData({ ...formData, whatsapp: e.target.value })}
-                  />
+                  <input type="tel" required className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-solveflow-blue focus:border-transparent transition-all" placeholder="(11) 99999-9999" value={formData.whatsapp} onChange={e => setFormData({
+                  ...formData,
+                  whatsapp: e.target.value
+                })} />
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
                     Empresa
                   </label>
-                  <input
-                    type="text"
-                    required
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-solveflow-blue focus:border-transparent transition-all"
-                    placeholder="Nome da sua empresa"
-                    value={formData.company}
-                    onChange={(e) => setFormData({ ...formData, company: e.target.value })}
-                  />
+                  <input type="text" required className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-solveflow-blue focus:border-transparent transition-all" placeholder="Nome da sua empresa" value={formData.company} onChange={e => setFormData({
+                  ...formData,
+                  company: e.target.value
+                })} />
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
                     Qual agente te interessa?
                   </label>
-                  <select
-                    required
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-solveflow-blue focus:border-transparent transition-all"
-                    value={formData.interest}
-                    onChange={(e) => setFormData({ ...formData, interest: e.target.value })}
-                  >
+                  <select required className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-solveflow-blue focus:border-transparent transition-all" value={formData.interest} onChange={e => setFormData({
+                  ...formData,
+                  interest: e.target.value
+                })}>
                     <option value="">Selecione uma opção</option>
                     <option value="atendimento">Agente de Atendimento</option>
                     <option value="sdr">Agente SDR (Qualificação)</option>
@@ -816,11 +702,7 @@ const Index = () => {
                     <option value="outro">Outro / Não sei ainda</option>
                   </select>
                 </div>
-                <Button 
-                  type="submit" 
-                  size="lg" 
-                  className="w-full bg-solveflow-green hover:bg-solveflow-green/90 text-lg py-6"
-                >
+                <Button type="submit" size="lg" className="w-full bg-solveflow-green hover:bg-solveflow-green/90 text-lg py-6">
                   Falar com Especialista
                   <ArrowRight className="ml-2" size={20} />
                 </Button>
@@ -829,12 +711,7 @@ const Index = () => {
 
             <div className="mt-8">
               <p className="text-blue-200 mb-4">— OU —</p>
-              <Button 
-                variant="outline" 
-                size="lg" 
-                className="border-white/30 text-white hover:bg-white/10"
-                asChild
-              >
+              <Button variant="outline" size="lg" className="border-white/30 text-white hover:bg-white/10" asChild>
                 <a href={whatsappLink} target="_blank" rel="noopener noreferrer">
                   💬 Prefere falar direto? Manda mensagem
                 </a>
@@ -895,8 +772,6 @@ const Index = () => {
           </div>
         </div>
       </footer>
-    </div>
-  );
+    </div>;
 };
-
 export default Index;
