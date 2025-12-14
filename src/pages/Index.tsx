@@ -282,7 +282,7 @@ const Index = () => {
                   <Rocket className="text-solveflow-green" size={32} />
                 </div>
                 <h3 className="text-h3 font-bold text-foreground mb-1">SolveCS™</h3>
-                <p className="text-sm text-solveflow-green font-semibold mb-3">Plataforma de Retenção</p>
+                <p className="text-sm text-solveflow-green font-semibold mb-3">Um Único Objetivo: Reduzir Churn.</p>
                 <p className="text-muted-foreground mb-4">
                   Não é apenas um agente. É uma plataforma completa de CS que automatiza Onboarding, 
                   Follow-up, Suporte N1 e NPS. Monitora a saúde do cliente e previne cancelamentos.
