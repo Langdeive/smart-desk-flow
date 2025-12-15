@@ -2,9 +2,14 @@ import { useState } from "react";
 import { MessageSquare, Target, Rocket, Check, ArrowRight, Phone, Mail, Building2, ChevronDown, Users, Zap, Brain, Link2, BarChart3, Settings, Clock, Shield, ShoppingBag, Briefcase, Laptop, Menu, X, CheckCircle, Calendar, Star, Clipboard, LifeBuoy, Radar } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
+import { supabase } from "@/integrations/supabase/client";
 import solveflowLogo from "@/assets/solveflow-logo.png";
+
 const Index = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showSuccessDialog, setShowSuccessDialog] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -12,12 +17,39 @@ const Index = () => {
     company: "",
     interest: ""
   });
-  const handleSubmit = (e: React.FormEvent) => {
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Webhook placeholder
-    console.log("Form submitted:", formData);
-    alert("Obrigado! Entraremos em contato em breve.");
+    setIsSubmitting(true);
+    
+    try {
+      const { error } = await supabase
+        .from('landing_leads')
+        .insert({
+          name: formData.name,
+          email: formData.email,
+          whatsapp: formData.whatsapp,
+          company: formData.company,
+          interest: formData.interest
+        });
+
+      if (error) {
+        console.error('Error saving lead:', error);
+        alert('Ocorreu um erro. Por favor, tente novamente.');
+        return;
+      }
+
+      // Limpa o formulário e mostra dialog de sucesso
+      setFormData({ name: "", email: "", whatsapp: "", company: "", interest: "" });
+      setShowSuccessDialog(true);
+    } catch (err) {
+      console.error('Error:', err);
+      alert('Ocorreu um erro. Por favor, tente novamente.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
+
   const whatsappLink = "https://wa.me/5547999443087?text=Olá! Quero saber mais sobre os agentes de IA.";
   return <div className="min-h-screen bg-background">
       {/* Navigation */}
@@ -713,9 +745,9 @@ const Index = () => {
                     <option value="outro" className="text-gray-900">Outro / Não sei ainda</option>
                   </select>
                 </div>
-                <Button type="submit" size="lg" className="w-full bg-solveflow-green hover:bg-solveflow-green/90 text-lg py-6">
-                  Falar com Especialista
-                  <ArrowRight className="ml-2" size={20} />
+                <Button type="submit" size="lg" className="w-full bg-solveflow-green hover:bg-solveflow-green/90 text-lg py-6" disabled={isSubmitting}>
+                  {isSubmitting ? "Enviando..." : "Falar com Especialista"}
+                  {!isSubmitting && <ArrowRight className="ml-2" size={20} />}
                 </Button>
               </div>
             </form>
@@ -783,6 +815,26 @@ const Index = () => {
           </div>
         </div>
       </footer>
+
+      {/* Success Dialog */}
+      <Dialog open={showSuccessDialog} onOpenChange={setShowSuccessDialog}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-green-100">
+              <CheckCircle className="h-10 w-10 text-green-600" />
+            </div>
+            <DialogTitle className="text-center text-xl">Mensagem Enviada!</DialogTitle>
+            <DialogDescription className="text-center text-base">
+              Obrigado pelo seu interesse! Um de nossos especialistas entrará em contato em até 24 horas úteis.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="flex justify-center mt-4">
+            <Button onClick={() => setShowSuccessDialog(false)} className="bg-solveflow-blue hover:bg-solveflow-blue/90">
+              Entendi
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>;
 };
 export default Index;
