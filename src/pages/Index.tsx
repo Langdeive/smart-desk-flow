@@ -2,6 +2,7 @@ import { useState } from "react";
 import { MessageSquare, Target, Rocket, Check, ArrowRight, Phone, Mail, Building2, ChevronDown, Users, Zap, Brain, Link2, BarChart3, Settings, Clock, Shield, ShoppingBag, Briefcase, Laptop, Menu, X, CheckCircle, Calendar, Star, Clipboard, LifeBuoy, Radar } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import solveflowLogo from "@/assets/solveflow-logo.png";
 const Index = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [formData, setFormData] = useState({
@@ -23,7 +24,9 @@ const Index = () => {
       <nav className="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-sm border-b border-border">
         <div className="container mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
-            <a href="#" className="text-2xl font-bold text-gradient">Solveflow</a>
+            <a href="#" className="flex items-center">
+              <img src={solveflowLogo} alt="Solveflow" className="h-10" />
+            </a>
             
             {/* Desktop Menu */}
             <div className="hidden md:flex items-center gap-8">
@@ -734,7 +737,7 @@ const Index = () => {
         <div className="container mx-auto px-6">
           <div className="grid md:grid-cols-4 gap-12 mb-12">
             <div>
-              <h3 className="text-2xl font-bold text-white mb-4">Solveflow</h3>
+              <img src={solveflowLogo} alt="Solveflow" className="h-10 mb-4 brightness-0 invert" />
               <p className="text-sm leading-relaxed">
                 Consultoria de IA que automatiza sua operação com agentes inteligentes para WhatsApp.
               </p>
