@@ -6,6 +6,7 @@ const Index = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
+    email: "",
     whatsapp: "",
     company: "",
     interest: ""
@@ -16,7 +17,7 @@ const Index = () => {
     console.log("Form submitted:", formData);
     alert("Obrigado! Entraremos em contato em breve.");
   };
-  const whatsappLink = "https://wa.me/5511999999999?text=Olá! Quero saber mais sobre os agentes de IA.";
+  const whatsappLink = "https://wa.me/5547999443087?text=Olá! Quero saber mais sobre os agentes de IA.";
   return <div className="min-h-screen bg-background">
       {/* Navigation */}
       <nav className="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-sm border-b border-border">
@@ -659,7 +660,7 @@ const Index = () => {
               <div className="space-y-6">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Jaraguá do Sul, SC   
+                    Seu nome
                   </label>
                   <input type="text" required className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-solveflow-blue focus:border-transparent transition-all" placeholder="Seu nome" value={formData.name} onChange={e => setFormData({
                   ...formData,
@@ -668,9 +669,18 @@ const Index = () => {
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
+                    E-mail
+                  </label>
+                  <input type="email" required className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-solveflow-blue focus:border-transparent transition-all" placeholder="seu@email.com" value={formData.email} onChange={e => setFormData({
+                  ...formData,
+                  email: e.target.value
+                })} />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
                     WhatsApp
                   </label>
-                  <input type="tel" required className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-solveflow-blue focus:border-transparent transition-all" placeholder="(11) 99999-9999" value={formData.whatsapp} onChange={e => setFormData({
+                  <input type="tel" required className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-solveflow-blue focus:border-transparent transition-all" placeholder="(47) 99999-9999" value={formData.whatsapp} onChange={e => setFormData({
                   ...formData,
                   whatsapp: e.target.value
                 })} />
@@ -688,16 +698,16 @@ const Index = () => {
                   <label className="block text-sm font-medium text-gray-700 mb-2">
                     Qual agente te interessa?
                   </label>
-                  <select required className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-solveflow-blue focus:border-transparent transition-all" value={formData.interest} onChange={e => setFormData({
+                  <select required className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-solveflow-blue focus:border-transparent transition-all text-gray-900 bg-white" value={formData.interest} onChange={e => setFormData({
                   ...formData,
                   interest: e.target.value
                 })}>
-                    <option value="">Selecione uma opção</option>
-                    <option value="atendimento">Agente de Atendimento</option>
-                    <option value="sdr">Agente SDR (Qualificação)</option>
-                    <option value="cs">SolveCS (Retenção)</option>
-                    <option value="crm">CRM Kommo + Agente</option>
-                    <option value="outro">Outro / Não sei ainda</option>
+                    <option value="" className="text-gray-500">Selecione uma opção</option>
+                    <option value="atendimento" className="text-gray-900">Agente de Atendimento</option>
+                    <option value="sdr" className="text-gray-900">Agente SDR (Qualificação)</option>
+                    <option value="cs" className="text-gray-900">SolveCS (Retenção)</option>
+                    <option value="crm" className="text-gray-900">CRM Kommo + Agente</option>
+                    <option value="outro" className="text-gray-900">Outro / Não sei ainda</option>
                   </select>
                 </div>
                 <Button type="submit" size="lg" className="w-full bg-solveflow-green hover:bg-solveflow-green/90 text-lg py-6">
@@ -752,7 +762,7 @@ const Index = () => {
               <ul className="space-y-3 text-sm">
                 <li className="flex items-center gap-2">
                   <Phone size={16} />
-                  <span>(11) 99999-9999</span>
+                  <span>(47) 99944-3087</span>
                 </li>
                 <li className="flex items-center gap-2">
                   <Mail size={16} />
@@ -760,7 +770,7 @@ const Index = () => {
                 </li>
                 <li className="flex items-center gap-2">
                   <Building2 size={16} />
-                  <span>São Paulo, SP</span>
+                  <span>Jaraguá do Sul, SC</span>
                 </li>
               </ul>
             </div>
