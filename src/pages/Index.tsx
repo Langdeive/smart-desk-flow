@@ -697,7 +697,7 @@ const Index = () => {
                   <label className="block text-sm font-medium text-gray-700 mb-2">
                     Seu nome
                   </label>
-                  <input type="text" required className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-solveflow-blue focus:border-transparent transition-all" placeholder="Seu nome" value={formData.name} onChange={e => setFormData({
+                  <input type="text" required className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-solveflow-blue focus:border-transparent transition-all text-gray-900 bg-white" placeholder="Seu nome" value={formData.name} onChange={e => setFormData({
                   ...formData,
                   name: e.target.value
                 })} />
@@ -706,7 +706,7 @@ const Index = () => {
                   <label className="block text-sm font-medium text-gray-700 mb-2">
                     E-mail
                   </label>
-                  <input type="email" required className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-solveflow-blue focus:border-transparent transition-all" placeholder="seu@email.com" value={formData.email} onChange={e => setFormData({
+                  <input type="email" required className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-solveflow-blue focus:border-transparent transition-all text-gray-900 bg-white" placeholder="seu@email.com" value={formData.email} onChange={e => setFormData({
                   ...formData,
                   email: e.target.value
                 })} />
@@ -715,7 +715,7 @@ const Index = () => {
                   <label className="block text-sm font-medium text-gray-700 mb-2">
                     WhatsApp
                   </label>
-                  <input type="tel" required className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-solveflow-blue focus:border-transparent transition-all" placeholder="(47) 99999-9999" value={formData.whatsapp} onChange={e => setFormData({
+                  <input type="tel" required className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-solveflow-blue focus:border-transparent transition-all text-gray-900 bg-white" placeholder="(47) 99999-9999" value={formData.whatsapp} onChange={e => setFormData({
                   ...formData,
                   whatsapp: e.target.value
                 })} />
@@ -724,7 +724,7 @@ const Index = () => {
                   <label className="block text-sm font-medium text-gray-700 mb-2">
                     Empresa
                   </label>
-                  <input type="text" required className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-solveflow-blue focus:border-transparent transition-all" placeholder="Nome da sua empresa" value={formData.company} onChange={e => setFormData({
+                  <input type="text" required className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-solveflow-blue focus:border-transparent transition-all text-gray-900 bg-white" placeholder="Nome da sua empresa" value={formData.company} onChange={e => setFormData({
                   ...formData,
                   company: e.target.value
                 })} />
