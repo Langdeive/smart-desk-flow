@@ -473,6 +473,42 @@ export type Database = {
         }
         Relationships: []
       }
+      landing_leads: {
+        Row: {
+          company: string
+          contacted_at: string | null
+          created_at: string
+          email: string
+          id: string
+          interest: string
+          name: string
+          notes: string | null
+          whatsapp: string
+        }
+        Insert: {
+          company: string
+          contacted_at?: string | null
+          created_at?: string
+          email: string
+          id?: string
+          interest: string
+          name: string
+          notes?: string | null
+          whatsapp: string
+        }
+        Update: {
+          company?: string
+          contacted_at?: string | null
+          created_at?: string
+          email?: string
+          id?: string
+          interest?: string
+          name?: string
+          notes?: string | null
+          whatsapp?: string
+        }
+        Relationships: []
+      }
       messages: {
         Row: {
           content: string
