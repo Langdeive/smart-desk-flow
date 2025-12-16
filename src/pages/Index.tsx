@@ -429,74 +429,6 @@ const Index = () => {
         </div>
       </section>
 
-      {/* SolveCS Highlight Section */}
-      <section className="py-section-lg bg-gradient-to-br from-green-50 to-emerald-50">
-        <div className="container mx-auto px-6">
-          <div className="max-w-5xl mx-auto">
-            <div className="text-center mb-12">
-              <h2 className="text-h2 md:text-4xl font-bold text-foreground mb-4">
-                4 Sistemas Inteligentes Trabalhando Juntos.<br />
-                <span className="text-solveflow-green">Um Único Objetivo: Zero Churn.</span>
-              </h2>
-              <p className="text-lg text-muted-foreground">
-                Automatize a jornada do seu cliente com uma régua de comunicação infalível, do onboarding à renovação.
-              </p>
-            </div>
-
-            <div className="grid md:grid-cols-2 gap-8">
-              {[{
-              icon: <Clipboard className="text-solveflow-green" size={32} />,
-              title: "Onboarding Programado (Dias 0-7)",
-              problem: "Clientes cancelam porque não sabem usar o produto e ninguém ensinou.",
-              solution: "Entrega uma sequência lógica de instruções, PDFs e vídeos tutoriais direto no WhatsApp do cliente. Garante que ele receba todo o material necessário para começar, sem seu time precisar enviar manualmente.",
-              result: "Cliente educado e ativado na primeira semana."
-            }, {
-              icon: <LifeBuoy className="text-solveflow-green" size={32} />,
-              title: "Suporte Nível 1 (24/7)",
-              problem: "Clientes esperam horas por uma resposta simples.",
-              solution: "Resolve dúvidas frequentes sobre o produto e financeiro em 2 segundos, 24h por dia. Se o problema for crítico, ele escala imediatamente para um humano com todo o contexto da conversa.",
-              result: "Fim da fila de espera e time focado apenas em casos complexos."
-            }, {
-              icon: <Calendar className="text-solveflow-green" size={32} />,
-              title: "Régua de Follow-up (Preventivo)",
-              problem: 'Sua empresa "esquece" do cliente e só aparece para cobrar a renovação.',
-              solution: "Executa check-ins automáticos em datas estratégicas definidas por você (ex: 30, 60, 90 dias). O sistema pergunta se está tudo bem e, ao detectar qualquer palavra de insatisfação na resposta, alerta seu time na hora.",
-              result: "Relacionamento constante. O cliente sente que é cuidado o ano todo."
-            }, {
-              icon: <Star className="text-solveflow-green" size={32} />,
-              title: "NPS Acionável",
-              problem: "Pesquisas de satisfação que ninguém responde ou vê.",
-              solution: "Dispara a pesquisa de NPS no WhatsApp na hora certa. Se o cliente der nota baixa, o sistema acolhe, pergunta o motivo e notifica seu gerente em tempo real para intervir e salvar a conta.",
-              result: "Detratores são identificados antes de cancelarem."
-            }].map((feature, index) => <div key={index} className="bg-white rounded-lg p-6 shadow-soft border border-border">
-                  <div className="flex items-center gap-4 mb-4">
-                    <div className="w-14 h-14 bg-green-100 rounded-lg flex items-center justify-center flex-shrink-0">
-                      {feature.icon}
-                    </div>
-                    <h3 className="text-h4 font-semibold text-foreground">{feature.title}</h3>
-                  </div>
-                  <div className="space-y-3">
-                    <p className="text-sm text-red-600 font-medium">🔴 Onde outros falham: {feature.problem}</p>
-                    <p className="text-sm text-muted-foreground">🟢 O que o SolveCS faz: {feature.solution}</p>
-                    <p className="text-sm font-semibold text-solveflow-green">✓ {feature.result}</p>
-                  </div>
-                </div>)}
-            </div>
-
-            <div className="mt-12 bg-white rounded-lg p-8 shadow-soft border border-border text-center">
-              <h3 className="text-xl font-bold text-foreground mb-3">
-                "Não é Mágica. É Processo de CS Automatizado."
-              </h3>
-              <p className="text-muted-foreground max-w-2xl mx-auto">
-                Você define a régua de relacionamento. Nós implementamos a inteligência que garante que ela seja cumprida com 100% dos clientes, sem falha humana.
-              </p>
-              <Button className="mt-6 bg-solveflow-green hover:bg-solveflow-green/90" size="lg" asChild>
-                <a href="#contato">Agendar Consultoria de CS</a>
-              </Button>
-            </div>
-          </div>
-        </div>
-      </section>
 
       {/* CRM Kommo Section */}
       <section className="py-section-lg bg-white">
@@ -818,6 +750,7 @@ const Index = () => {
                     <option value="sdr" className="text-gray-900">Agente SDR (Qualificação)</option>
                     <option value="cs" className="text-gray-900">SolveCS (Retenção)</option>
                     <option value="crm" className="text-gray-900">CRM Kommo + Agente</option>
+                    <option value="consultoria" className="text-gray-900">Consultoria Estratégica</option>
                     <option value="outro" className="text-gray-900">Outro / Não sei ainda</option>
                   </select>
                 </div>
