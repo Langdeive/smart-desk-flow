@@ -353,6 +353,82 @@ const Index = () => {
         </div>
       </section>
 
+      {/* Consultoria Estratégica Section */}
+      <section className="py-section-lg bg-gradient-to-br from-slate-900 via-slate-800 to-blue-900 text-white">
+        <div className="container mx-auto px-6">
+          <div className="max-w-5xl mx-auto">
+            <div className="text-center mb-12">
+              <h2 className="text-h2 md:text-4xl font-bold mb-4">
+                Seu Desafio é Específico?{" "}
+                <span className="text-solveflow-green">Nós Criamos a Estratégia Ideal.</span>
+              </h2>
+              <h3 className="text-xl md:text-2xl text-slate-300 font-medium">
+                Nem todo problema se resolve com uma solução padrão. Vamos entender o seu cenário.
+              </h3>
+            </div>
+
+            <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-8 md:p-10 mb-12">
+              <p className="text-lg text-slate-200 leading-relaxed mb-4">
+                Os Agentes Solveflow resolvem com rapidez as dores mais comuns do mercado (Atendimento, Vendas e Retenção). 
+                Mas se a sua operação possui fluxos únicos ou gargalos que exigem um olhar clínico, o caminho é a <strong className="text-white">Consultoria</strong>.
+              </p>
+              <p className="text-lg text-solveflow-green font-medium">
+                Nós não empurramos tecnologia. Nós analisamos sua empresa para encontrar as oportunidades ocultas de eficiência.
+              </p>
+            </div>
+
+            <h4 className="text-xl font-semibold text-center mb-8 text-slate-200">Como Funciona a Consultoria:</h4>
+
+            <div className="grid md:grid-cols-3 gap-6 mb-12">
+              <div className="bg-white/5 backdrop-blur-sm rounded-xl p-6 border border-white/10 hover:bg-white/10 transition-all">
+                <div className="w-16 h-16 bg-blue-500/20 rounded-lg flex items-center justify-center mb-4 mx-auto">
+                  <span className="text-4xl">🔍</span>
+                </div>
+                <h5 className="text-lg font-semibold text-white mb-3 text-center">Diagnóstico Operacional</h5>
+                <p className="text-slate-300 text-sm leading-relaxed text-center">
+                  Primeiro, entendemos o seu negócio. Analisamos seus processos atuais para identificar onde estão os gargalos, 
+                  o desperdício de tempo e o dinheiro deixado na mesa.
+                </p>
+              </div>
+
+              <div className="bg-white/5 backdrop-blur-sm rounded-xl p-6 border border-white/10 hover:bg-white/10 transition-all">
+                <div className="w-16 h-16 bg-purple-500/20 rounded-lg flex items-center justify-center mb-4 mx-auto">
+                  <span className="text-4xl">🎯</span>
+                </div>
+                <h5 className="text-lg font-semibold text-white mb-3 text-center">A Regra 80/20 (Foco em Resultado)</h5>
+                <p className="text-slate-300 text-sm leading-relaxed text-center">
+                  Não vamos automatizar tudo. Vamos identificar os 20% de mudanças que trarão 80% do resultado imediato. 
+                  Definimos exatamente onde a IA deve atuar para gerar lucro ou economia real.
+                </p>
+              </div>
+
+              <div className="bg-white/5 backdrop-blur-sm rounded-xl p-6 border border-white/10 hover:bg-white/10 transition-all">
+                <div className="w-16 h-16 bg-green-500/20 rounded-lg flex items-center justify-center mb-4 mx-auto">
+                  <span className="text-4xl">🚀</span>
+                </div>
+                <h5 className="text-lg font-semibold text-white mb-3 text-center">Projeto e Implementação</h5>
+                <p className="text-slate-300 text-sm leading-relaxed text-center">
+                  Com a estratégia validada, desenhamos e implementamos a solução sob medida. Você recebe um sistema 
+                  otimizado para a sua realidade, focado exclusivamente no que traz retorno.
+                </p>
+              </div>
+            </div>
+
+            <div className="text-center">
+              <Button size="lg" className="bg-solveflow-green hover:bg-solveflow-green/90 text-white text-lg px-10 py-6 shadow-glow-green" asChild>
+                <a href="#contato">
+                  Solicitar Diagnóstico Operacional
+                  <ArrowRight className="ml-2" size={20} />
+                </a>
+              </Button>
+              <p className="text-slate-400 text-sm mt-4">
+                Vamos descobrir juntos onde sua empresa pode crescer.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* SolveCS Highlight Section */}
       <section className="py-section-lg bg-gradient-to-br from-green-50 to-emerald-50">
         <div className="container mx-auto px-6">
