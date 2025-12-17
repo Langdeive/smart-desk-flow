@@ -109,57 +109,29 @@ const Index = () => {
         <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-black/60" />
         
         <div className="container mx-auto px-6 relative z-10">
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
-            <div className="animate-fade-in-up">
-              <h1 className="text-4xl md:text-5xl lg:text-display font-extrabold leading-tight mb-6">
-                Você Gasta Tempo em Operação.{" "}
-                <span className="text-solveflow-cyan">Deveria Estar Focando no Crescimento.</span>
-              </h1>
-              <p className="text-xl md:text-2xl text-white font-semibold mb-4">
-                Nós Automatizamos Sua Operação com IA.
-              </p>
-              <p className="text-lg text-white/70 mb-8 leading-relaxed">
-                Soluções Prontas. Consultoria Personalizada. Você Escolhe.
-              </p>
-              <div className="flex flex-col sm:flex-row gap-4 mb-6">
-                <Button size="lg" className="bg-solveflow-cyan hover:bg-solveflow-cyan/90 text-solveflow-slate text-lg px-8 py-6 shadow-glow-cyan font-semibold" asChild>
-                  <a href="#contato">
-                    Falar com Especialista
-                    <ArrowRight className="ml-2" size={20} />
-                  </a>
-                </Button>
-                <Button size="lg" variant="outline" className="border-white/30 bg-white/5 text-white hover:bg-white/10 text-lg px-8 py-6" asChild>
-                  <a href={whatsappLink} target="_blank" rel="noopener noreferrer">
-                    💬 Mandar Mensagem Agora
-                  </a>
-                </Button>
-              </div>
-            </div>
-            
-            {/* WhatsApp Mockup */}
-            <div className="hidden lg:block animate-float">
-              <div className="bg-white rounded-3xl shadow-glow-mixed p-4 max-w-sm mx-auto">
-                <div className="bg-solveflow-purple rounded-t-2xl p-4 flex items-center gap-3">
-                  <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center">
-                    <MessageSquare className="text-white" size={20} />
-                  </div>
-                  <div>
-                    <p className="text-white font-semibold text-sm">Agente Solveflow</p>
-                    <p className="text-white/70 text-xs">Online agora</p>
-                  </div>
-                </div>
-                <div className="bg-solveflow-platinum p-4 space-y-3 min-h-[300px]">
-                  <div className="bg-white rounded-lg p-3 shadow-sm max-w-[80%]">
-                    <p className="text-sm text-solveflow-slate">Olá! 👋 Sou o assistente virtual. Como posso ajudar você hoje?</p>
-                  </div>
-                  <div className="bg-solveflow-purple rounded-lg p-3 shadow-sm max-w-[80%] ml-auto">
-                    <p className="text-sm text-white">Quero saber sobre os preços</p>
-                  </div>
-                  <div className="bg-white rounded-lg p-3 shadow-sm max-w-[80%]">
-                    <p className="text-sm text-solveflow-slate">Perfeito! Qual produto te interessa mais: Atendimento, Qualificação de Leads ou Redução de Churn?</p>
-                  </div>
-                </div>
-              </div>
+          <div className="max-w-4xl mx-auto text-center animate-fade-in-up">
+            <h1 className="text-4xl md:text-5xl lg:text-display font-extrabold leading-tight mb-6">
+              Você Gasta Tempo em Operação.{" "}
+              <span className="text-solveflow-cyan">Deveria Estar Focando no Crescimento.</span>
+            </h1>
+            <p className="text-xl md:text-2xl text-white font-semibold mb-4">
+              Nós Automatizamos Sua Operação com IA.
+            </p>
+            <p className="text-lg text-white/70 mb-8 leading-relaxed">
+              Soluções Prontas. Consultoria Personalizada. Você Escolhe.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Button size="lg" className="bg-solveflow-cyan hover:bg-solveflow-cyan/90 text-solveflow-slate text-lg px-8 py-6 shadow-glow-cyan font-semibold" asChild>
+                <a href="#contato">
+                  Falar com Especialista
+                  <ArrowRight className="ml-2" size={20} />
+                </a>
+              </Button>
+              <Button size="lg" variant="outline" className="border-white/30 bg-white/5 text-white hover:bg-white/10 text-lg px-8 py-6" asChild>
+                <a href={whatsappLink} target="_blank" rel="noopener noreferrer">
+                  💬 Mandar Mensagem Agora
+                </a>
+              </Button>
             </div>
           </div>
         </div>
