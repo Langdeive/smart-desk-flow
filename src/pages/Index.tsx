@@ -110,9 +110,9 @@ const Index = () => {
         
         <div className="container mx-auto px-6 relative z-10">
           <div className="max-w-4xl mx-auto text-center animate-fade-in-up">
-            <h1 className="text-4xl md:text-5xl lg:text-display font-extrabold leading-tight mb-6">
+            <h1 className="text-4xl md:text-5xl lg:text-display font-extrabold leading-tight mb-6 drop-shadow-[0_2px_10px_rgba(0,0,0,0.3)]">
               Você Gasta Tempo em Operação.{" "}
-              <span className="text-solveflow-cyan">Deveria Estar Focando no Crescimento.</span>
+              <span className="text-solveflow-cyan drop-shadow-[0_2px_8px_rgba(0,229,255,0.4)]">Deveria Estar Focando no Crescimento.</span>
             </h1>
             <p className="text-xl md:text-2xl text-white font-semibold mb-4">
               Nós Automatizamos Sua Operação com IA.
