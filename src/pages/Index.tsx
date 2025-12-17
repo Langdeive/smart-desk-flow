@@ -5,6 +5,7 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { supabase } from "@/integrations/supabase/client";
 import solveflowLogo from "@/assets/solveflow-logo.png";
+import heroBackground from "@/assets/hero-background.png";
 
 const Index = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -54,7 +55,7 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-background">
       {/* Navigation */}
-      <nav className="fixed top-0 left-0 right-0 z-50 bg-solveflow-platinum/95 backdrop-blur-sm border-b border-border">
+      <nav className="fixed top-0 left-0 right-0 z-50 bg-white/10 backdrop-blur-xl border-b border-white/20 shadow-lg">
         <div className="container mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
             <a href="#" className="flex items-center">
@@ -63,9 +64,9 @@ const Index = () => {
             
             {/* Desktop Menu */}
             <div className="hidden md:flex items-center gap-8">
-              <a href="#produtos" className="text-sm text-solveflow-slate/70 hover:text-solveflow-purple transition-colors">Produtos</a>
-              <a href="#metodologia" className="text-sm text-solveflow-slate/70 hover:text-solveflow-purple transition-colors">Metodologia</a>
-              <a href="#faq" className="text-sm text-solveflow-slate/70 hover:text-solveflow-purple transition-colors">FAQ</a>
+              <a href="#produtos" className="text-sm text-white/80 hover:text-solveflow-cyan transition-colors">Produtos</a>
+              <a href="#metodologia" className="text-sm text-white/80 hover:text-solveflow-cyan transition-colors">Metodologia</a>
+              <a href="#faq" className="text-sm text-white/80 hover:text-solveflow-cyan transition-colors">FAQ</a>
               <Button asChild className="bg-solveflow-purple hover:bg-solveflow-purple/90 text-white">
                 <a href={whatsappLink} target="_blank" rel="noopener noreferrer">
                   💬 Falar Agora
@@ -74,7 +75,7 @@ const Index = () => {
             </div>
 
             {/* Mobile Menu Button */}
-            <button className="md:hidden p-2 text-solveflow-slate" onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
+            <button className="md:hidden p-2 text-white" onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
               {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
             </button>
           </div>
@@ -83,9 +84,9 @@ const Index = () => {
           {mobileMenuOpen && (
             <div className="md:hidden pt-4 pb-2 animate-fade-in">
               <div className="flex flex-col gap-4">
-                <a href="#produtos" className="text-sm text-solveflow-slate/70 hover:text-solveflow-purple" onClick={() => setMobileMenuOpen(false)}>Produtos</a>
-                <a href="#metodologia" className="text-sm text-solveflow-slate/70 hover:text-solveflow-purple" onClick={() => setMobileMenuOpen(false)}>Metodologia</a>
-                <a href="#faq" className="text-sm text-solveflow-slate/70 hover:text-solveflow-purple" onClick={() => setMobileMenuOpen(false)}>FAQ</a>
+                <a href="#produtos" className="text-sm text-white/80 hover:text-solveflow-cyan" onClick={() => setMobileMenuOpen(false)}>Produtos</a>
+                <a href="#metodologia" className="text-sm text-white/80 hover:text-solveflow-cyan" onClick={() => setMobileMenuOpen(false)}>Metodologia</a>
+                <a href="#faq" className="text-sm text-white/80 hover:text-solveflow-cyan" onClick={() => setMobileMenuOpen(false)}>FAQ</a>
                 <Button asChild className="bg-solveflow-purple hover:bg-solveflow-purple/90 text-white w-full">
                   <a href={whatsappLink} target="_blank" rel="noopener noreferrer">
                     💬 Falar Agora
@@ -98,12 +99,14 @@ const Index = () => {
       </nav>
 
       {/* Hero Section */}
-      <section className="pt-32 pb-20 md:pt-40 md:pb-32 bg-gradient-hero bg-wave-pattern text-white overflow-hidden relative">
-        {/* Decorative elements */}
-        <div className="absolute inset-0 overflow-hidden">
-          <div className="absolute top-20 left-10 w-64 h-64 bg-solveflow-cyan/10 rounded-full blur-3xl"></div>
-          <div className="absolute bottom-20 right-10 w-96 h-96 bg-solveflow-purple/20 rounded-full blur-3xl"></div>
-        </div>
+      <section className="pt-32 pb-20 md:pt-40 md:pb-32 text-white overflow-hidden relative">
+        {/* Background Image */}
+        <div 
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+          style={{ backgroundImage: `url(${heroBackground})` }}
+        />
+        {/* Overlay for better text readability */}
+        <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-black/60" />
         
         <div className="container mx-auto px-6 relative z-10">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
