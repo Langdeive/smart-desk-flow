@@ -146,7 +146,7 @@ const Index = () => {
             </p>
             <p className="text-lg text-solveflow-slate font-medium">
               Projetos prontos em 14 dias. Consultoria estratégica sob demanda.<br />
-              <span className="text-solveflow-cyan font-semibold">Sem complicação. Sem venda de ferramenta.</span>
+              <span className="text-solveflow-purple font-semibold">Sem complicação. Sem venda de ferramenta.</span>
             </p>
           </div>
         </div>
@@ -237,7 +237,7 @@ const Index = () => {
                 <div className="border-t border-border pt-6 bg-solveflow-platinum/50 -mx-8 px-8 pb-6 -mb-8">
                   <p className="text-sm text-solveflow-slate/70 mb-1">Investimento Único</p>
                   <p className="text-3xl font-bold text-solveflow-slate">R$ 3.500 <span className="text-sm font-normal text-solveflow-slate/70">(setup)</span></p>
-                  <p className="text-lg font-semibold text-solveflow-cyan">ZERO Mensalidade Obrigatória</p>
+                  <p className="text-lg font-semibold text-solveflow-purple">ZERO Mensalidade Obrigatória</p>
                   <div className="mt-4 space-y-2 text-sm">
                     <p className="flex items-center gap-2 text-solveflow-slate/80"><Check size={16} className="text-solveflow-cyan" /> Atendimento 24/7 em WhatsApp</p>
                     <p className="flex items-center gap-2 text-solveflow-slate/80"><Check size={16} className="text-solveflow-cyan" /> Setup completo + Onboarding 30 dias</p>
@@ -278,7 +278,7 @@ const Index = () => {
                 <div className="border-t border-border pt-6 bg-solveflow-platinum/50 -mx-8 px-8 pb-6 -mb-8">
                   <p className="text-sm text-solveflow-slate/70 mb-1">Investimento Único</p>
                   <p className="text-3xl font-bold text-solveflow-slate">R$ 6.000 <span className="text-sm font-normal text-solveflow-slate/70">(setup)</span></p>
-                  <p className="text-lg font-semibold text-solveflow-cyan">ZERO Mensalidade Obrigatória</p>
+                  <p className="text-lg font-semibold text-solveflow-purple">ZERO Mensalidade Obrigatória</p>
                   <div className="mt-4 space-y-2 text-sm">
                     <p className="flex items-center gap-2 text-solveflow-slate/80"><Check size={16} className="text-solveflow-cyan" /> Qualificação BANT no WhatsApp</p>
                     <p className="flex items-center gap-2 text-solveflow-slate/80"><Check size={16} className="text-solveflow-cyan" /> Integração completa com CRM</p>
@@ -511,7 +511,7 @@ const Index = () => {
                     {item.step}
                   </div>
                   <h3 className="text-h4 font-semibold text-solveflow-slate mb-1">{item.title}</h3>
-                  <p className="text-sm text-solveflow-cyan font-medium mb-3">⏱️ {item.time}</p>
+                  <p className="text-sm text-solveflow-purple font-medium mb-3">⏱️ {item.time}</p>
                   <p className="text-sm text-solveflow-slate/70">{item.description}</p>
                 </div>
               ))}
@@ -529,75 +529,6 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Results Section */}
-      <section className="py-section-lg bg-white">
-        <div className="container mx-auto px-6">
-          <div className="text-center mb-16">
-            <h2 className="text-h2 md:text-4xl font-bold text-solveflow-slate mb-4">
-              Resultados Que Falam Mais Que Promessas
-            </h2>
-            <p className="text-lg text-solveflow-slate/70">
-              Veja como transformamos gargalos operacionais em lucro líquido usando nossos Agentes.
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-3 gap-8">
-            {[{
-              tag: "Agente de Atendimento",
-              tagColor: "bg-solveflow-purple/10 text-solveflow-purple",
-              icon: <ShoppingBag className="text-solveflow-purple" size={32} />,
-              title: "O E-commerce Sobrecarregado",
-              problem: 'A equipe gastava 4 horas por dia respondendo "Qual o valor do frete?" e "Tem estoque?". Nos finais de semana, 100% dos leads ficavam sem resposta até segunda-feira.',
-              solution: "Implementamos o Agente de Atendimento integrado ao estoque e frete.",
-              results: ["Zero espera: Clientes respondidos em 2 segundos, inclusive domingo às 23h.", "Economia: Redução de 90h/mês da equipe de suporte.", "Venda: Aumento de 15% na conversão por resposta imediata."]
-            }, {
-              tag: "Agente SDR",
-              tagColor: "bg-solveflow-purple/10 text-solveflow-purple",
-              icon: <Briefcase className="text-solveflow-purple" size={32} />,
-              title: "A Consultoria B2B",
-              problem: "Marketing gerava 50 leads/dia, mas os vendedores demoravam horas para chamar. Resultado: falavam com leads frios ou curiosos sem dinheiro, desperdiçando tempo de senior.",
-              solution: "Agente SDR qualificando via BANT (Orçamento, Autoridade, Necessidade, Tempo) instantaneamente.",
-              results: ["Filtro: 70% dos curiosos descartados automaticamente.", "Eficiência: Vendedores só recebem leads prontos para fechar.", "Agenda: 3x mais reuniões qualificadas agendadas na mesma semana."]
-            }, {
-              tag: "SolveCS (Retenção)",
-              tagColor: "bg-solveflow-cyan/10 text-solveflow-cyan",
-              icon: <Laptop className="text-solveflow-cyan" size={32} />,
-              title: "O SaaS de Assinatura",
-              problem: "Churn alto (8%) porque os clientes assinavam, não entendiam como usar a ferramenta e cancelavam no segundo mês sem avisar.",
-              solution: "Régua de Onboarding automatizada via WhatsApp + Monitoramento de risco.",
-              results: ["Ativação: 95% dos novos clientes completam o setup na 1ª semana.", "Retenção: Redução do Churn para 4.5% em 90 dias.", "ROI: R$ 12.000 preservados mensalmente em contratos que seriam perdidos."]
-            }].map((useCase, index) => (
-              <div key={index} className="bg-solveflow-platinum rounded-lg p-6 shadow-soft border border-border">
-                <span className={`inline-block px-3 py-1 rounded-full text-xs font-medium mb-4 ${useCase.tagColor}`}>
-                  {useCase.tag}
-                </span>
-                <div className="w-14 h-14 bg-white rounded-lg flex items-center justify-center mb-4 shadow-sm">
-                  {useCase.icon}
-                </div>
-                <h3 className="text-h4 font-semibold text-solveflow-slate mb-4">{useCase.title}</h3>
-                <div className="space-y-4">
-                  <div>
-                    <p className="text-sm font-medium text-red-600 mb-1">🔴 O Problema:</p>
-                    <p className="text-sm text-solveflow-slate/70">{useCase.problem}</p>
-                  </div>
-                  <div>
-                    <p className="text-sm font-medium text-solveflow-cyan mb-1">🟢 A Solução Solveflow:</p>
-                    <p className="text-sm text-solveflow-slate/70">{useCase.solution}</p>
-                  </div>
-                  <div>
-                    <p className="text-sm font-medium text-solveflow-slate mb-2">📈 O Resultado:</p>
-                    <ul className="space-y-1">
-                      {useCase.results.map((result, idx) => (
-                        <li key={idx} className="text-sm text-solveflow-slate/70">• {result}</li>
-                      ))}
-                    </ul>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
 
       {/* FAQ Section */}
       <section id="faq" className="py-section-lg bg-solveflow-platinum">
