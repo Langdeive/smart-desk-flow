@@ -114,14 +114,11 @@ const Index = () => {
         <div className="container mx-auto px-6 relative z-10">
           <div className="max-w-4xl mx-auto text-center animate-fade-in-up">
             <h1 className="text-4xl md:text-5xl lg:text-display font-extrabold leading-tight mb-6 drop-shadow-[0_2px_10px_rgba(0,0,0,0.3)]">
-              Você Gasta Tempo em Operação.{" "}
-              <span className="text-solveflow-cyan drop-shadow-[0_2px_8px_rgba(0,229,255,0.4)]">Deveria Estar Focando no Crescimento.</span>
+              Escale o seu faturamento em 10x{" "}
+              <span className="text-solveflow-cyan drop-shadow-[0_2px_8px_rgba(0,229,255,0.4)]">sem contratar um único novo funcionário</span>
             </h1>
-            <p className="text-xl md:text-2xl text-white font-semibold mb-4">
-              Nós Automatizamos Sua Operação com IA.
-            </p>
             <p className="text-lg text-white/70 mb-8 leading-relaxed">
-              Soluções Prontas. Consultoria Personalizada. Você Escolhe.
+              O seu teto de crescimento hoje é a sua capacidade manual. Cresça a sua margem, sem explodir os custos fixos.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button size="lg" className="bg-solveflow-cyan hover:bg-solveflow-cyan/90 text-solveflow-slate text-lg px-8 py-6 shadow-glow-cyan font-semibold" asChild>
@@ -143,13 +140,15 @@ const Index = () => {
       {/* Sub-Hero Section */}
       <section className="py-16 bg-white border-b border-border">
         <div className="container mx-auto px-6">
-          <div className="max-w-3xl mx-auto text-center">
-            <p className="text-lg md:text-xl text-solveflow-slate/70 leading-relaxed mb-4">
-              Solveflow é consultoria que trabalha com você para entender seus desafios operacionais e implementar IA que faz sentido.
+          <div className="max-w-4xl mx-auto text-center">
+            <h2 className="text-2xl md:text-3xl font-bold text-solveflow-slate mb-6">
+              A Solveflow é a camada de inteligência que faltava na sua operação.
+            </h2>
+            <p className="text-lg md:text-xl text-solveflow-slate/70 leading-relaxed mb-6">
+              Trabalhamos lado a lado com você para entender seus desafios reais. Não automatizamos processos por beleza; automatizamos para aumentar a margem de lucro e liberar seu tempo para o que importa: crescer.
             </p>
-            <p className="text-lg text-solveflow-slate font-medium">
-              Projetos prontos em 14 dias. Consultoria estratégica sob demanda.<br />
-              <span className="text-solveflow-purple font-semibold">Sem complicação. Sem venda de ferramenta.</span>
+            <p className="text-lg text-solveflow-purple font-semibold">
+              A Regra do 80/20: Focamos nas mudanças que trazem o maior retorno financeiro no menor tempo possível.
             </p>
           </div>
         </div>
@@ -160,23 +159,23 @@ const Index = () => {
         <div className="container mx-auto px-6">
           <div className="text-center mb-16">
             <h2 className="text-h2 md:text-4xl font-bold text-solveflow-slate mb-4">
-              Escale Seu Negócio Sem Contratar Mais Gente
+              Onde a sua empresa está deixando dinheiro na mesa?
             </h2>
           </div>
           
           <div className="grid md:grid-cols-3 gap-8 mb-16">
             {[{
-              icon: "📉",
-              title: "Sua Escalabilidade é Zero",
-              description: "Você atende bem porque está ali. Mas aumentar volume? Só contratando. Só que contratar é lento, caro e traz dependência."
+              icon: "🔗",
+              title: "Dependência de Presença Humana",
+              description: "Se você não está lá, as coisas param. Sua escalabilidade é zero porque o atendimento de qualidade é refém do esforço manual. É impossível fazer 10x mais vendas com a estrutura que você tem hoje."
             }, {
-              icon: "💸",
-              title: "Leads Entram, Mas Não Saem com Venda",
-              description: "Sem follow-up automatizado e qualificação inteligente, leads esquecem de você. Concorrência não dorme."
+              icon: "🔥",
+              title: "O Custo da Demora (Lead Burn)",
+              description: "O lead moderno tem a paciência de segundos. Se você não qualifica e atende no auge do interesse, você perde a venda. Nossa infraestrutura garante que 100% dos leads recebam atenção imediata."
             }, {
               icon: "⏰",
-              title: "Suporte Básico Rouba seu Tempo",
-              description: "Respostas repetidas, dúvidas simples, troubleshooting… ocupam horas que poderiam estar em vendas ou relacionamento."
+              title: "Ineficiência de Processos N1",
+              description: "Suporte básico e agendamentos roubam a energia do seu time. Automatizar a camada de atendimento é a única forma de liberar seu time comercial para o que realmente traz ROI: o relacionamento."
             }].map((problem, index) => (
               <div key={index} className="bg-white rounded-lg p-8 shadow-soft hover-lift border border-border">
                 <span className="text-5xl mb-4 block">{problem.icon}</span>
@@ -191,16 +190,16 @@ const Index = () => {
             <div className="absolute inset-0 bg-wave-pattern opacity-50"></div>
             <div className="relative z-10">
               <h3 className="text-2xl md:text-3xl font-bold mb-6 text-center">
-                Seus Agentes Não Tiram Férias. Não Pedem Aumento. Não Saem.
+                Sistemas Autônomos que Não Param. Sua Operação Também Não.
               </h3>
               <p className="text-lg text-white/70 leading-relaxed mb-6 text-center max-w-4xl mx-auto">
-                Eles trabalham 24/7, aprendem constantemente, melhoram com o tempo. Se integram ao seu CRM. Entendem seu negócio porque foram desenvolvidos especificamente para ele.
+                Diferente de uma equipe humana, sua Infraestrutura de IA opera com 100% de consistência 24 horas por dia, 7 dias por semana. Ela aprende com cada interação, integra-se perfeitamente ao seu CRM e executa processos complexos sem nunca perder o tom de voz da sua marca.
               </p>
               <p className="text-lg text-white/70 leading-relaxed mb-6 text-center max-w-4xl mx-auto">
-                Não é automação genérica. É <strong className="text-white">consultoria em IA transformada em agentes inteligentes</strong> que escalam sua operação.
+                Não entregamos uma automação genérica. Entregamos uma <strong className="text-white">Engenharia de Processos transformada em sistemas inteligentes</strong> que sustentam o seu crescimento.
               </p>
               <p className="text-xl font-semibold text-solveflow-cyan text-center">
-                Resultado: você cresce sem o custo e a complexidade de contratar, treinar e gerenciar pessoas.
+                Resultado: Você escala o faturamento eliminando o custo, o tempo de treinamento e a complexidade de gerenciar grandes equipes.
               </p>
             </div>
           </div>
@@ -212,8 +211,11 @@ const Index = () => {
         <div className="container mx-auto px-6">
           <div className="text-center mb-16">
             <h2 className="text-h2 md:text-4xl font-bold text-solveflow-slate mb-4">
-              Escolha o Agente Ideal para o Seu Negócio
+              Inicie com Infraestruturas Modulares e Validadas
             </h2>
+            <p className="text-lg text-solveflow-slate/70">
+              Projetos com 80% da estrutura já modelada para acelerar seu resultado. Escolha o pilar que sua operação precisa destravar agora.
+            </p>
           </div>
 
           <div className="grid lg:grid-cols-3 gap-8 mb-12">
@@ -223,39 +225,35 @@ const Index = () => {
                 <div className="w-16 h-16 bg-solveflow-purple/10 rounded-lg flex items-center justify-center mb-6">
                   <MessageSquare className="text-solveflow-purple" size={32} />
                 </div>
-                <h3 className="text-h3 font-bold text-solveflow-slate mb-3">Agente de Atendimento</h3>
+                <h3 className="text-h3 font-bold text-solveflow-slate mb-3">Central de Atendimento Autônoma 24/7</h3>
                 <p className="text-solveflow-slate/70 mb-4">
-                  Atendente IA disponível 24/7 que responde clientes em WhatsApp em 2-3 segundos. 
-                  Conhece seus produtos, preços, horários e políticas. Encaminha casos complexos pro seu time. 
-                  Registra tudo automaticamente.
+                  Escalabilidade infinita: atenda 10 ou 10.000 clientes com o mesmo custo operacional. Uma infraestrutura que conhece cada detalhe do seu negócio e responde com precisão cirúrgica, sem nunca precisar de treinamento ou férias.
                 </p>
                 <p className="text-sm text-solveflow-slate/70 mb-4">
-                  <strong className="text-solveflow-slate">Ideal para:</strong> E-commerce, lojas físicas, consultórios, prestadores de serviço.
+                  <strong className="text-solveflow-slate">Ideal para:</strong> E-commerce, Clínicas, Academias, Prestadores de Serviço e Empresas com alto volume de suporte.
                 </p>
                 <div className="space-y-2 mb-6">
                   <p className="text-sm text-solveflow-slate font-medium">Resultado esperado:</p>
-                  <p className="text-sm text-solveflow-slate/70">✓ 70-85% das conversas resolvidas automaticamente</p>
-                  <p className="text-sm text-solveflow-slate/70">✓ Economia de 40h/mês (R$ 2.000/mês em tempo do seu time)</p>
+                  <p className="text-sm text-solveflow-slate/70">✓ Até 85% das conversas resolvidas de forma totalmente autônoma.</p>
+                  <p className="text-sm text-solveflow-slate/70">✓ Economia direta de +40h/mês da sua equipe operacional.</p>
                 </div>
                 <div className="border-t border-border pt-6 bg-solveflow-platinum/50 -mx-8 px-8 pb-6 -mb-8">
-                  <p className="text-sm text-solveflow-slate/70 mb-1">Investimento Único</p>
-                  <p className="text-3xl font-bold text-solveflow-slate">R$ 3.500 <span className="text-sm font-normal text-solveflow-slate/70">(setup)</span></p>
-                  <p className="text-lg font-semibold text-solveflow-purple">ZERO Mensalidade Obrigatória</p>
-                  <div className="mt-4 space-y-2 text-sm">
-                    <p className="flex items-center gap-2 text-solveflow-slate/80"><Check size={16} className="text-solveflow-cyan" /> Atendimento 24/7 em WhatsApp</p>
-                    <p className="flex items-center gap-2 text-solveflow-slate/80"><Check size={16} className="text-solveflow-cyan" /> Setup completo + Onboarding 30 dias</p>
-                    <p className="flex items-center gap-2 text-solveflow-slate/80"><Check size={16} className="text-solveflow-cyan" /> Infraestrutura Própria (Você é o dono)</p>
-                    <p className="flex items-center gap-2 text-solveflow-slate/80"><Check size={16} className="text-solveflow-cyan" /> Painel de atendimento incluso</p>
-                    <p className="flex items-center gap-2 text-solveflow-slate/80"><Check size={16} className="text-solveflow-cyan" /> Consultoria de otimização</p>
+                  <p className="text-sm text-solveflow-slate/70 mb-1">Modelo de Investimento:</p>
+                  <p className="text-lg font-semibold text-solveflow-slate">Setup de Implementação + Manutenção de Inteligência</p>
+                  <p className="text-sm text-solveflow-slate/60 italic mb-4">(Valor sob diagnóstico consultivo)</p>
+                  <p className="text-sm text-solveflow-slate font-medium mb-2">Checklist de Entrega:</p>
+                  <div className="space-y-2 text-sm">
+                    <p className="flex items-center gap-2 text-solveflow-slate/80"><Check size={16} className="text-solveflow-cyan" /> Atendimento 24/7 em WhatsApp Oficial.</p>
+                    <p className="flex items-center gap-2 text-solveflow-slate/80"><Check size={16} className="text-solveflow-cyan" /> Setup completo com base de dados própria.</p>
+                    <p className="flex items-center gap-2 text-solveflow-slate/80"><Check size={16} className="text-solveflow-cyan" /> Infraestrutura Própria (Soberania de Dados).</p>
+                    <p className="flex items-center gap-2 text-solveflow-slate/80"><Check size={16} className="text-solveflow-cyan" /> Painel de gestão de atendimento incluso.</p>
+                    <p className="flex items-center gap-2 text-solveflow-slate/80"><Check size={16} className="text-solveflow-cyan" /> Otimização contínua da inteligência.</p>
                   </div>
-                  <p className="text-xs text-solveflow-slate/60 mt-4 italic">
-                    *Suporte mensal é 100% opcional. Você só contrata se quiser.
-                  </p>
                 </div>
               </div>
               <div className="px-8 pb-8 pt-6">
                 <Button className="w-full bg-solveflow-purple hover:bg-solveflow-purple/90 text-white" asChild>
-                  <a href="#contato">Quero Automatizar Atendimento</a>
+                  <a href="#contato">Implementar Atendimento Autônomo</a>
                 </Button>
               </div>
             </div>
@@ -266,36 +264,35 @@ const Index = () => {
                 <div className="w-16 h-16 bg-solveflow-purple/10 rounded-lg flex items-center justify-center mb-6">
                   <Target className="text-solveflow-purple" size={32} />
                 </div>
-                <h3 className="text-h3 font-bold text-solveflow-slate mb-3">Agente SDR (Pré-Vendas)</h3>
+                <h3 className="text-h3 font-bold text-solveflow-slate mb-3">Infraestrutura de Aceleração Comercial (SDR)</h3>
                 <p className="text-solveflow-slate/70 mb-4">
-                  SDR Digital que qualifica leads 24/7 usando o método BANT (Orçamento, Autoridade, Necessidade e Tempo). Filtra curiosos, agenda reuniões e envia apenas os leads "quentes" para o seu time comercial fechar. Integramos com seu CRM.
+                  Pare de queimar seu orçamento de marketing com leads que esfriam no WhatsApp. Implementamos o filtro BANT automático que qualifica o poder de compra e agenda reuniões, garantindo que seu vendedor só fale com quem tem dinheiro e urgência.
                 </p>
                 <p className="text-sm text-solveflow-slate/70 mb-4">
-                  <strong className="text-solveflow-slate">Ideal para:</strong> Consultorias, Clínicas, SaaS, Imobiliárias e B2B High Ticket.
+                  <strong className="text-solveflow-slate">Ideal para:</strong> Consultorias, Imobiliárias, SaaS, Clínicas e Vendas de Alto Ticket.
                 </p>
                 <div className="space-y-2 mb-6">
                   <p className="text-sm text-solveflow-slate font-medium">Resultado esperado:</p>
-                  <p className="text-sm text-solveflow-slate/70">✓ 3x mais reuniões agendadas</p>
-                  <p className="text-sm text-solveflow-slate/70">✓ Seu time só fala com quem tem dinheiro e urgência para comprar</p>
+                  <p className="text-sm text-solveflow-slate/70">✓ Aumento de até 3x no volume de reuniões qualificadas agendadas.</p>
+                  <p className="text-sm text-solveflow-slate/70">✓ Seu time comercial fala apenas com quem tem dinheiro e urgência.</p>
                 </div>
                 <div className="border-t border-border pt-6 bg-solveflow-platinum/50 -mx-8 px-8 pb-6 -mb-8">
-                  <p className="text-sm text-solveflow-slate/70 mb-1">Investimento Único</p>
-                  <p className="text-3xl font-bold text-solveflow-slate">R$ 6.000 <span className="text-sm font-normal text-solveflow-slate/70">(setup)</span></p>
-                  <p className="text-lg font-semibold text-solveflow-purple">ZERO Mensalidade Obrigatória</p>
-                  <div className="mt-4 space-y-2 text-sm">
-                    <p className="flex items-center gap-2 text-solveflow-slate/80"><Check size={16} className="text-solveflow-cyan" /> Qualificação BANT no WhatsApp</p>
-                    <p className="flex items-center gap-2 text-solveflow-slate/80"><Check size={16} className="text-solveflow-cyan" /> Integração completa com CRM</p>
-                    <p className="flex items-center gap-2 text-solveflow-slate/80"><Check size={16} className="text-solveflow-cyan" /> Notificação de Lead Quente pro Vendedor</p>
-                    <p className="flex items-center gap-2 text-solveflow-slate/80"><Check size={16} className="text-solveflow-cyan" /> Infraestrutura Própria (Você é o dono)</p>
+                  <p className="text-sm text-solveflow-slate/70 mb-1">Modelo de Investimento:</p>
+                  <p className="text-lg font-semibold text-solveflow-slate">Setup de Implementação + Manutenção de Inteligência</p>
+                  <p className="text-sm text-solveflow-slate/60 italic mb-4">(Valor sob diagnóstico consultivo)</p>
+                  <p className="text-sm text-solveflow-slate font-medium mb-2">Checklist de Entrega:</p>
+                  <div className="space-y-2 text-sm">
+                    <p className="flex items-center gap-2 text-solveflow-slate/80"><Check size={16} className="text-solveflow-cyan" /> Qualificação BANT automatizada no WhatsApp.</p>
+                    <p className="flex items-center gap-2 text-solveflow-slate/80"><Check size={16} className="text-solveflow-cyan" /> Integração completa e nativa com seu CRM.</p>
+                    <p className="flex items-center gap-2 text-solveflow-slate/80"><Check size={16} className="text-solveflow-cyan" /> Notificação imediata de "Lead Quente" para o vendedor.</p>
+                    <p className="flex items-center gap-2 text-solveflow-slate/80"><Check size={16} className="text-solveflow-cyan" /> Sistema de agendamento autônomo incluso.</p>
+                    <p className="flex items-center gap-2 text-solveflow-slate/80"><Check size={16} className="text-solveflow-cyan" /> Refinamento constante de scripts de conversão.</p>
                   </div>
-                  <p className="text-xs text-solveflow-slate/60 mt-4 italic">
-                    *Precisa de CRM? Implantamos o Kommo por +R$ 2.000 (opcional).
-                  </p>
                 </div>
               </div>
               <div className="px-8 pb-8 pt-6">
                 <Button className="w-full bg-solveflow-purple hover:bg-solveflow-purple/90 text-white" asChild>
-                  <a href="#contato">Quero Qualificar Mais Leads</a>
+                  <a href="#contato">Escalar Minhas Vendas</a>
                 </Button>
               </div>
             </div>
@@ -309,35 +306,35 @@ const Index = () => {
                 <div className="w-16 h-16 bg-solveflow-cyan/10 rounded-lg flex items-center justify-center mb-6">
                   <Rocket className="text-solveflow-cyan" size={32} />
                 </div>
-                <h3 className="text-h3 font-bold text-solveflow-slate mb-1">SolveCS™</h3>
-                <p className="text-sm text-solveflow-cyan font-semibold mb-3">Um Único Objetivo: Reduzir Churn.</p>
+                <h3 className="text-h3 font-bold text-solveflow-slate mb-1">SolveCS™ – Ecossistema de Sucesso do Cliente</h3>
                 <p className="text-solveflow-slate/70 mb-4">
-                  Não é apenas um agente. É uma plataforma completa de CS que automatiza Onboarding, 
-                  Follow-up, Suporte N1 e NPS. Monitora a saúde do cliente e previne cancelamentos.
+                  Maximize o valor de cada cliente que entra. Nossa infraestrutura gerencia o onboarding e o sucesso do cliente, garantindo que ele permaneça pagando por muito mais tempo e elevando a lucratividade vitalícia do seu negócio.
                 </p>
                 <p className="text-sm text-solveflow-slate/70 mb-4">
-                  <strong className="text-solveflow-slate">Ideal para:</strong> SaaS, Assinaturas e Empresas com Churn Alto.
+                  <strong className="text-solveflow-slate">Ideal para:</strong> SaaS, Clubes de Assinatura, Academias e Empresas com receita recorrente.
                 </p>
                 <div className="space-y-2 mb-6">
-                  <p className="text-sm text-solveflow-slate font-medium">Resultado:</p>
-                  <p className="text-sm text-solveflow-slate/70">✓ Redução de 25-35% no Churn (Cancelamento)</p>
+                  <p className="text-sm text-solveflow-slate font-medium">Resultado esperado:</p>
+                  <p className="text-sm text-solveflow-slate/70">✓ Redução média de 25-35% na taxa de Churn (Cancelamento).</p>
+                  <p className="text-sm text-solveflow-slate/70">✓ Aumento da lucratividade vitalícia por cada cliente conquistado.</p>
                 </div>
                 <div className="border-t border-border pt-6 bg-solveflow-cyan/5 -mx-8 px-8 pb-6 -mb-8">
-                  <p className="text-sm text-solveflow-slate/70 mb-1">Orçamento Sob Medida</p>
-                  <p className="text-2xl font-bold text-solveflow-slate">Solução Enterprise</p>
-                  <div className="mt-4 space-y-2 text-sm">
-                    <p className="flex items-center gap-2 text-solveflow-slate/80"><Check size={16} className="text-solveflow-cyan" /> 4 Sistemas: Onboarding, Follow-up, Suporte, NPS</p>
-                    <p className="flex items-center gap-2 text-solveflow-slate/80"><Check size={16} className="text-solveflow-cyan" /> Dashboard de Retenção Exclusivo</p>
-                    <p className="flex items-center gap-2 text-solveflow-slate/80"><Check size={16} className="text-solveflow-cyan" /> Infraestrutura Gerenciada pela Solveflow</p>
+                  <p className="text-sm text-solveflow-slate/70 mb-1">Modelo de Investimento:</p>
+                  <p className="text-lg font-semibold text-solveflow-slate">Solução Enterprise / Orçamento Sob Medida</p>
+                  <p className="text-sm text-solveflow-slate/60 italic mb-4">Foco total em redução de Churn e aumento de LTV.</p>
+                  <p className="text-sm text-solveflow-slate font-medium mb-2">Checklist de Entrega:</p>
+                  <div className="space-y-2 text-sm">
+                    <p className="flex items-center gap-2 text-solveflow-slate/80"><Check size={16} className="text-solveflow-cyan" /> 4 Sistemas: Onboarding, Follow-up, Suporte N1 e NPS.</p>
+                    <p className="flex items-center gap-2 text-solveflow-slate/80"><Check size={16} className="text-solveflow-cyan" /> Dashboard exclusivo de indicadores de Retenção.</p>
+                    <p className="flex items-center gap-2 text-solveflow-slate/80"><Check size={16} className="text-solveflow-cyan" /> Alerta de risco de cancelamento em tempo real.</p>
+                    <p className="flex items-center gap-2 text-solveflow-slate/80"><Check size={16} className="text-solveflow-cyan" /> Infraestrutura 100% gerenciada pela Solveflow.</p>
+                    <p className="flex items-center gap-2 text-solveflow-slate/80"><Check size={16} className="text-solveflow-cyan" /> Consultoria mensal de estratégia de CS inclusa.</p>
                   </div>
-                  <p className="text-xs text-solveflow-slate/60 mt-4 italic">
-                    *Foco total em redução de Churn e aumento de LTV.
-                  </p>
                 </div>
               </div>
               <div className="px-8 pb-8 pt-6">
                 <Button className="w-full bg-solveflow-cyan hover:bg-solveflow-cyan/90 text-solveflow-slate font-semibold" asChild>
-                  <a href="#contato">Quero Reduzir meu Churn</a>
+                  <a href="#contato">Blindar Minha Receita</a>
                 </Button>
               </div>
             </div>
@@ -352,35 +349,33 @@ const Index = () => {
           <div className="max-w-5xl mx-auto">
             <div className="text-center mb-12">
               <h2 className="text-h2 md:text-4xl font-bold mb-4">
-                Seu Desafio é Específico?{" "}
-                <span className="text-solveflow-cyan">Nós Criamos a Estratégia Ideal.</span>
+                Sua Operação Exige Exclusividade?{" "}
+                <span className="text-solveflow-cyan">Desenvolvemos sua Infraestrutura sob Medida.</span>
               </h2>
               <h3 className="text-xl md:text-2xl text-white/60 font-medium">
-                Nem todo problema se resolve com uma solução padrão. Vamos entender o seu cenário.
+                Nem todo gargalo operacional se resolve com padrões. Para empresas com fluxos complexos e regras de negócio únicas, criamos o seu Ecossistema de IA Personalizado.
               </h3>
             </div>
 
             <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-8 md:p-10 mb-12 border border-white/10">
               <p className="text-lg text-white/70 leading-relaxed mb-4">
-                Os Agentes Solveflow resolvem com rapidez as dores mais comuns do mercado (Atendimento, Vendas e Retenção). 
-                Mas se a sua operação possui fluxos únicos ou gargalos que exigem um olhar clínico, o caminho é a <strong className="text-white">Consultoria</strong>.
+                As soluções modulares da Solveflow resolvem com rapidez as dores de atendimento e vendas. No entanto, se a sua empresa possui integrações profundas com ERPs, processos logísticos complexos ou fluxos de dados sensíveis, o caminho é a <strong className="text-white">Engenharia Consultiva</strong>.
               </p>
               <p className="text-lg text-solveflow-cyan font-medium">
-                Nós não empurramos tecnologia. Nós analisamos sua empresa para encontrar as oportunidades ocultas de eficiência.
+                Nós não apenas instalamos tecnologia. Nós realizamos uma imersão na sua operação para projetar a infraestrutura proprietária que transformará ineficiência em lucro líquido.
               </p>
             </div>
 
-            <h4 className="text-xl font-semibold text-center mb-8 text-white/80">Como Funciona a Consultoria:</h4>
+            <h4 className="text-xl font-semibold text-center mb-8 text-white/80">Os Três Pilares da Consultoria:</h4>
 
             <div className="grid md:grid-cols-3 gap-6 mb-12">
               <div className="bg-white/5 backdrop-blur-sm rounded-xl p-6 border border-white/10 hover:bg-white/10 transition-all hover:border-solveflow-cyan/50">
                 <div className="w-16 h-16 bg-solveflow-purple/20 rounded-lg flex items-center justify-center mb-4 mx-auto">
                   <span className="text-4xl">🔍</span>
                 </div>
-                <h5 className="text-lg font-semibold text-white mb-3 text-center">Diagnóstico Operacional</h5>
+                <h5 className="text-lg font-semibold text-white mb-3 text-center">Diagnóstico de Engenharia Operacional</h5>
                 <p className="text-white/60 text-sm leading-relaxed text-center">
-                  Primeiro, entendemos o seu negócio. Analisamos seus processos atuais para identificar onde estão os gargalos, 
-                  o desperdício de tempo e o dinheiro deixado na mesa.
+                  Mapeamos cada etapa da sua jornada atual para identificar os pontos cegos onde o seu lucro está sendo drenado. Analisamos seus processos para definir exatamente onde a inteligência deve ser injetada para gerar o maior impacto financeiro.
                 </p>
               </div>
 
@@ -388,10 +383,9 @@ const Index = () => {
                 <div className="w-16 h-16 bg-solveflow-purple/20 rounded-lg flex items-center justify-center mb-4 mx-auto">
                   <span className="text-4xl">🎯</span>
                 </div>
-                <h5 className="text-lg font-semibold text-white mb-3 text-center">A Regra 80/20 (Foco em Resultado)</h5>
+                <h5 className="text-lg font-semibold text-white mb-3 text-center">Estratégia 80/20 focada em EBITDA</h5>
                 <p className="text-white/60 text-sm leading-relaxed text-center">
-                  Não vamos automatizar tudo. Vamos identificar os 20% de mudanças que trarão 80% do resultado imediato. 
-                  Definimos exatamente onde a IA deve atuar para gerar lucro ou economia real.
+                  Não automatizamos por beleza, mas por resultado. Identificamos os 20% de automações críticas que trarão 80% de retorno imediato sobre o seu investimento, otimizando sua margem sem aumentar seus custos fixos.
                 </p>
               </div>
 
@@ -399,10 +393,9 @@ const Index = () => {
                 <div className="w-16 h-16 bg-solveflow-cyan/20 rounded-lg flex items-center justify-center mb-4 mx-auto">
                   <span className="text-4xl">🚀</span>
                 </div>
-                <h5 className="text-lg font-semibold text-white mb-3 text-center">Projeto e Implementação</h5>
+                <h5 className="text-lg font-semibold text-white mb-3 text-center">Implementação de Ecossistema Integrado</h5>
                 <p className="text-white/60 text-sm leading-relaxed text-center">
-                  Com a estratégia validada, desenhamos e implementamos a solução sob medida. Você recebe um sistema 
-                  otimizado para a sua realidade, focado exclusivamente no que traz retorno.
+                  Com a estratégia validada, desenhamos e implementamos sua infraestrutura exclusiva. Entregamos um sistema proprietário totalmente integrado ao seu CRM e ERP, focado exclusivamente no que traz retorno real ao seu negócio.
                 </p>
               </div>
             </div>
@@ -410,79 +403,28 @@ const Index = () => {
             <div className="text-center">
               <Button size="lg" className="bg-solveflow-cyan hover:bg-solveflow-cyan/90 text-solveflow-slate text-lg px-10 py-6 shadow-glow-cyan font-semibold" asChild>
                 <a href="#contato">
-                  Solicitar Diagnóstico Operacional
+                  Solicitar Diagnóstico Estratégico
                   <ArrowRight className="ml-2" size={20} />
                 </a>
               </Button>
               <p className="text-white/50 text-sm mt-4">
-                Vamos descobrir juntos onde sua empresa pode crescer.
+                Vamos descobrir juntos onde sua empresa pode crescer com eficiência.
               </p>
             </div>
           </div>
         </div>
       </section>
 
-
-      {/* CRM Kommo Section */}
-      <section className="py-section-lg bg-white">
-        <div className="container mx-auto px-6">
-          <div className="max-w-4xl mx-auto">
-            <div className="text-center mb-12">
-              <h2 className="text-h2 md:text-4xl font-bold text-solveflow-slate mb-4">
-                Não Tem CRM?{" "}
-                <span className="text-gradient">Sem Problema.</span>
-              </h2>
-              <p className="text-lg text-solveflow-slate/70">
-                Nós implementamos a estrutura completa para você profissionalizar sua operação comercial.
-              </p>
-            </div>
-
-            <div className="grid md:grid-cols-2 gap-12 items-start">
-              <div>
-                <p className="text-solveflow-slate/70 mb-6 leading-relaxed">
-                  Para ter agentes de IA eficientes, você precisa de dados organizados.
-                </p>
-                <p className="text-solveflow-slate/70 mb-6 leading-relaxed">
-                  Somos parceiros oficiais do <strong className="text-solveflow-slate">Kommo CRM</strong> (antigo AmoCRM), a melhor ferramenta do mundo para vendas via WhatsApp. 
-                  Nós entregamos o sistema configurado, personalizado para o seu funil de vendas e integrado aos nossos Agentes.
-                </p>
-                <h4 className="font-semibold text-solveflow-slate mb-4">O Que Sua Empresa Ganha:</h4>
-                <ul className="space-y-3 mb-8">
-                  {["Centralização do WhatsApp: Toda sua equipe atendendo em um único número, de forma organizada.", "Funil de Vendas Visual: Veja exatamente quantos leads estão em negociação e quanto dinheiro está na mesa.", "Histórico Completo: A IA registra cada conversa automaticamente. Nada se perde.", "Gestão à Vista: Relatórios de performance do time e das vendas em tempo real."].map((item, index) => (
-                    <li key={index} className="flex items-start gap-3">
-                      <Check className="text-solveflow-cyan flex-shrink-0 mt-0.5" size={20} />
-                      <span className="text-solveflow-slate/70">{item}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-              <div className="bg-solveflow-platinum rounded-lg p-8 border border-border">
-                <h4 className="text-xl font-bold text-solveflow-slate mb-4 text-center">Setup de CRM Consultivo</h4>
-                <p className="text-solveflow-slate/70 text-center mb-6 leading-relaxed">
-                  Não vendemos apenas a licença. Entregamos a <strong className="text-solveflow-slate">Inteligência Comercial</strong>: 
-                  desenhamos as etapas do seu funil, configuramos automações e treinamos seu time para usar a ferramenta.
-                </p>
-                <Button className="w-full bg-solveflow-purple hover:bg-solveflow-purple/90 text-white" size="lg" asChild>
-                  <a href="#contato">Quero incluir CRM no meu projeto</a>
-                </Button>
-                <p className="text-xs text-center text-solveflow-slate/60 mt-4">
-                  Já usa outro CRM? Também integramos com Pipedrive, HubSpot e outros.
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
 
       {/* Methodology Section */}
       <section id="metodologia" className="py-section-lg bg-solveflow-platinum">
         <div className="container mx-auto px-6">
           <div className="text-center mb-16">
             <h2 className="text-h2 md:text-4xl font-bold text-solveflow-slate mb-4">
-              Metodologia de Implementação Consultiva
+              Metodologia de Implementação Ágil
             </h2>
             <p className="text-lg text-solveflow-slate/70">
-              Do contrato ao Go-Live em até 14 dias. Processo estruturado para você não perder tempo.
+              Do diagnóstico ao Go-Live em até 14 dias para soluções modulares. Processo de engenharia estruturado para você não perder tempo.
             </p>
           </div>
 
@@ -490,24 +432,25 @@ const Index = () => {
             <div className="grid md:grid-cols-4 gap-8">
               {[{
                 step: "1",
-                title: "Discovery & Estratégia",
-                time: "45 min (Reunião)",
-                description: "Reunião de alinhamento onde entendemos seu negócio, mapeamos suas regras de atendimento e definimos o tom de voz da IA. Você nos fornece os materiais, nós desenhamos a estratégia."
+                title: "Mapeamento & Estratégia",
+                time: "45 min (Reunião Técnica)",
+                description: "Reunião de alinhamento para entender os gargalos da sua operação, mapear regras de negócio e definir o tom de voz da inteligência. Identificamos os pontos de maior impacto para o seu ROI."
               }, {
                 step: "2",
-                title: "Setup Técnico (Hands-off)",
-                time: "5 a 10 Dias",
-                description: "Nós trabalhamos, você aguarda. Configuramos a infraestrutura (VPS), conectamos seu WhatsApp, integramos o CRM e treinamos a inteligência artificial com seus dados."
+                title: "Arquitetura & Setup (Hands-off)",
+                time: "5 a 10 Dias (Soluções Modulares)",
+                description: "Nossa equipe assume a execução. Configuramos sua infraestrutura (VPS), conectamos o WhatsApp, integramos seu CRM e treinamos a inteligência com seus dados proprietários.",
+                note: "Nota: Projetos de ecossistemas personalizados possuem cronograma de engenharia sob medida."
               }, {
                 step: "3",
-                title: "Homologação e Testes",
+                title: "Homologação & Estresse de Dados",
                 time: "2 a 3 Dias",
-                description: "Liberamos o acesso para você testar. Simulamos conversas reais e realizamos ajustes ilimitados nas respostas até que o comportamento da IA esteja perfeito."
+                description: "Liberamos o acesso para testes reais. Simulamos interações complexas e realizamos ajustes ilimitados nos prompts até que o comportamento da infraestrutura esteja impecável e seguro."
               }, {
                 step: "4",
-                title: "Go-Live e Onboarding",
-                time: "1 Dia (Imediato)",
-                description: "Ativamos a operação real. A partir daqui, iniciamos o acompanhamento de 30 dias, monitorando as conversas diariamente para garantir o resultado prometido."
+                title: "Ativação & Evolução (Go-Live)",
+                time: "Ativação Imediata",
+                description: "Ativamos a operação real. Iniciamos o acompanhamento de 30 dias com monitoramento diário de logs para garantir o desempenho prometido e o refinamento contínuo da inteligência."
               }].map((item, index) => (
                 <div key={index} className="text-center">
                   <div className="w-16 h-16 bg-solveflow-purple text-white rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-4 shadow-glow-purple">
@@ -516,6 +459,7 @@ const Index = () => {
                   <h3 className="text-h4 font-semibold text-solveflow-slate mb-1">{item.title}</h3>
                   <p className="text-sm text-solveflow-purple font-medium mb-3">⏱️ {item.time}</p>
                   <p className="text-sm text-solveflow-slate/70">{item.description}</p>
+                  {item.note && <p className="text-xs text-solveflow-slate/50 mt-2 italic">{item.note}</p>}
                 </div>
               ))}
             </div>
@@ -524,7 +468,7 @@ const Index = () => {
           <div className="text-center mt-12">
             <Button size="lg" className="bg-solveflow-purple hover:bg-solveflow-purple/90 text-white" asChild>
               <a href="#contato">
-                Começar Agora
+                Iniciar Minha Implementação
                 <ArrowRight className="ml-2" size={18} />
               </a>
             </Button>
@@ -550,14 +494,14 @@ const Index = () => {
               </div>
               
               {[{
-                question: "O cliente vai perceber que está falando com um robô?",
-                answer: 'Nossos agentes usam Inteligência Artificial Generativa. Eles entendem gírias, erros de português e áudios, respondendo de forma natural e empática. Porém, somos transparentes: se o cliente perguntar "você é um robô?", ele responderá que sim e oferecerá falar com um humano imediatamente.'
+                question: "O cliente vai perceber que está falando com uma Inteligência Artificial?",
+                answer: "Nossa infraestrutura utiliza Processamento de Linguagem Natural avançado e é treinada especificamente com os dados e a cultura da sua empresa. A comunicação é fluida, humana e respeita rigorosamente o tom de voz da sua marca. O objetivo é que o cliente sinta que está sendo atendido por um especialista ultra-eficiente que responde em 2 segundos."
               }, {
                 question: "E se a IA responder algo errado?",
-                answer: 'No período de Setup e Testes, nós simulamos centenas de cenários para garantir que isso não aconteça. Além disso, a IA é programada com uma "trava de segurança": se ela não tiver 100% de certeza da resposta, ela não inventa — ela transfere a conversa para o seu time humano.'
+                answer: 'No período de Setup e Homologação, simulamos centenas de cenários reais para blindar a operação. Além disso, a infraestrutura possui uma "trava de segurança": se ela não identificar 100% de certeza nos dados fornecidos, ela não inventa informações — ela realiza o transbordo inteligente para o seu time humano imediatamente.'
               }, {
                 question: "O que acontece se o cliente quiser falar com uma pessoa?",
-                answer: 'O sistema detecta a intenção (ex: "quero falar com atendente" ou sinais de irritação) e transfere o chat para o seu time na hora. Você recebe a notificação no celular/computador e assume a conversa exatamente de onde a IA parou, com todo o histórico visível.'
+                answer: "A transição é imediata e transparente. A IA identifica a intenção de falar com um consultor, registra todo o contexto da conversa no seu CRM e notifica seu time em tempo real para que eles assumam apenas a parte estratégica do fechamento."
               }].map((faq, index) => (
                 <AccordionItem key={`func-${index}`} value={`func-${index}`} className="border border-border rounded-lg px-6 bg-white">
                   <AccordionTrigger className="text-left font-semibold hover:no-underline text-solveflow-slate">
@@ -569,22 +513,19 @@ const Index = () => {
                 </AccordionItem>
               ))}
 
-              {/* Sobre Custos e Mensalidade */}
+              {/* Sobre Investimento e Gestão */}
               <div className="mb-6 mt-8">
-                <p className="text-sm font-semibold text-solveflow-slate/60 uppercase tracking-wide mb-4">Sobre Custos e Mensalidade</p>
+                <p className="text-sm font-semibold text-solveflow-slate/60 uppercase tracking-wide mb-4">Sobre Investimento e Gestão</p>
               </div>
               
               {[{
-                question: 'O que significa "Zero Mensalidade Obrigatória"?',
-                answer: "Para os Agentes de Atendimento e SDR, nós não cobramos \"aluguel\" do software. Você paga pelo desenvolvimento (Setup) e a estrutura é sua. Você terá apenas os custos de infraestrutura direto com os fornecedores (Servidor + Consumo de IA), que giram em torno de R$ 150 a R$ 300 mensais dependendo do volume. Nós configuramos tudo isso para você ficar no seu nome."
+                question: "Preciso me preocupar com a gestão técnica da infraestrutura?",
+                answer: "Não. A Solveflow entrega uma Solução Gerenciada de Ponta a Ponta. Nós somos os responsáveis por hospedar, monitorar e manter toda a inteligência rodando em nossos servidores seguros. Isso garante que você tenha o resultado (lucro e eficiência) sem precisar de uma equipe de TI interna para gerenciar a tecnologia."
               }, {
-                question: "Vocês oferecem suporte depois da entrega?",
-                answer: "Sim. Todos os projetos incluem 30 dias de acompanhamento intensivo. Após esse período, se você quiser que nossa equipe continue monitorando, otimizando as respostas e atualizando o sistema, oferecemos planos de suporte opcional (a partir de R$ 297/mês). Se não quiser contratar, o sistema continua funcionando e é todo seu."
-              }, {
-                question: "Por que o Agente SolveCS tem mensalidade e os outros não?",
-                answer: "O SolveCS é uma plataforma complexa de retenção que envolve 4 sistemas simultâneos (Onboarding, Follow-up, Suporte e NPS) e um Dashboard exclusivo hospedado em nossa infraestrutura de alta performance. Por isso, ele funciona no modelo de assinatura (SaaS) para garantir a estabilidade e evolução contínua das ferramentas."
+                question: "Existe fidelidade ou multa de cancelamento?",
+                answer: "Trabalhamos com o modelo de recorrência mensal sem multas abusivas. No entanto, como a infraestrutura de inteligência é gerenciada e evoluída pela Solveflow, o cancelamento da mensalidade implica na interrupção do sistema de IA, uma vez que a camada de processamento e segurança é provida por nós."
               }].map((faq, index) => (
-                <AccordionItem key={`custo-${index}`} value={`custo-${index}`} className="border border-border rounded-lg px-6 bg-white">
+                <AccordionItem key={`invest-${index}`} value={`invest-${index}`} className="border border-border rounded-lg px-6 bg-white">
                   <AccordionTrigger className="text-left font-semibold hover:no-underline text-solveflow-slate">
                     {faq.question}
                   </AccordionTrigger>
@@ -601,16 +542,16 @@ const Index = () => {
               
               {[{
                 question: "Preciso ter um número novo de WhatsApp?",
-                answer: "Não necessariamente. Podemos migrar seu número atual para o sistema. Porém, durante a Discovery Call, analisamos seu caso: para operações maiores, frequentemente recomendamos ter um número oficial para a IA e manter os vendedores com seus números, tudo centralizado no CRM."
+                answer: "Não é necessário. Podemos implementar a infraestrutura no seu número atual ou configurar um novo canal exclusivo para a IA, dependendo da sua estratégia de separação entre atendimento e vendas."
               }, {
-                question: "Não tenho CRM, o agente funciona mesmo assim?",
-                answer: "Funciona, mas você perde inteligência. Por isso, para clientes sem CRM, nós incluímos a implantação do Kommo CRM no projeto (consulte condições). Assim, você não ganha apenas um atendente de IA, mas organiza todo o seu processo comercial."
+                question: "Não tenho CRM, o sistema funciona mesmo assim?",
+                answer: 'Para que a IA tenha "memória" e gere inteligência de dados para o seu negócio, o CRM é fundamental. Caso você não possua um, nós implementamos e configuramos toda a estrutura de CRM como parte da nossa consultoria, garantindo que sua operação seja profissional e escalável.'
               }, {
-                question: "E se eu mudar meus preços ou horários depois?",
-                answer: "É simples. Se você tiver nosso suporte mensal, basta nos avisar no WhatsApp e atualizamos na hora. Se não tiver, nós deixamos um painel administrativo fácil onde você mesmo pode alterar textos e informações da base de conhecimento sem precisar de programação."
+                question: "E se eu mudar meus preços, produtos ou horários depois?",
+                answer: "A infraestrutura é modular. Através da nossa gestão mensal, realizamos todas as atualizações na base de conhecimento da IA sempre que o seu negócio mudar, garantindo que ela nunca entregue informações desatualizadas aos seus clientes."
               }, {
-                question: "Tem fidelidade ou multa de cancelamento?",
-                answer: "Para os Agentes de Atendimento e SDR (Investimento Único), não existe cancelamento pois o produto é seu. Para o SolveCS e planos de Suporte, o contrato é mensal. Você pode cancelar a qualquer momento com aviso prévio de 30 dias, sem multas abusivas."
+                question: "Qual é o prazo real de entrega?",
+                answer: "Para nossas soluções modulares e validadas (80/20), o Go-Live acontece em até 14 dias. Projetos de ecossistemas 100% personalizados exigem um cronograma de engenharia específico, definido logo após o diagnóstico operacional inicial."
               }].map((faq, index) => (
                 <AccordionItem key={`tec-${index}`} value={`tec-${index}`} className="border border-border rounded-lg px-6 bg-white">
                   <AccordionTrigger className="text-left font-semibold hover:no-underline text-solveflow-slate">
