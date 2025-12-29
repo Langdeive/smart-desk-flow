@@ -6,7 +6,6 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } f
 import { supabase } from "@/integrations/supabase/client";
 import solveflowLogo from "@/assets/solveflow-logo.png";
 import heroBackground from "@/assets/hero-background.png";
-
 const Index = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -18,29 +17,31 @@ const Index = () => {
     company: "",
     interest: ""
   });
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
-    
     try {
-      const { error } = await supabase
-        .from('landing_leads')
-        .insert({
-          name: formData.name,
-          email: formData.email,
-          whatsapp: formData.whatsapp,
-          company: formData.company,
-          interest: formData.interest
-        });
-
+      const {
+        error
+      } = await supabase.from('landing_leads').insert({
+        name: formData.name,
+        email: formData.email,
+        whatsapp: formData.whatsapp,
+        company: formData.company,
+        interest: formData.interest
+      });
       if (error) {
         console.error('Error saving lead:', error);
         alert('Ocorreu um erro. Por favor, tente novamente.');
         return;
       }
-
-      setFormData({ name: "", email: "", whatsapp: "", company: "", interest: "" });
+      setFormData({
+        name: "",
+        email: "",
+        whatsapp: "",
+        company: "",
+        interest: ""
+      });
       setShowSuccessDialog(true);
     } catch (err) {
       console.error('Error:', err);
@@ -49,11 +50,8 @@ const Index = () => {
       setIsSubmitting(false);
     }
   };
-
   const whatsappLink = "https://wa.me/5547999443087?text=Olá! Quero saber mais sobre os agentes de IA.";
-
-  return (
-    <div className="min-h-screen bg-background">
+  return <div className="min-h-screen bg-background">
       {/* Navigation */}
       <nav className="fixed top-0 left-0 right-0 z-50 bg-white/10 backdrop-blur-xl border-b border-white/20 shadow-lg">
         <div className="container mx-auto px-6 py-4">
@@ -81,8 +79,7 @@ const Index = () => {
           </div>
 
           {/* Mobile Menu */}
-          {mobileMenuOpen && (
-            <div className="md:hidden pt-4 pb-2 animate-fade-in">
+          {mobileMenuOpen && <div className="md:hidden pt-4 pb-2 animate-fade-in">
               <div className="flex flex-col gap-4">
                 <a href="#produtos" className="text-sm text-white/80 hover:text-solveflow-cyan" onClick={() => setMobileMenuOpen(false)}>Produtos</a>
                 <a href="#metodologia" className="text-sm text-white/80 hover:text-solveflow-cyan" onClick={() => setMobileMenuOpen(false)}>Metodologia</a>
@@ -93,21 +90,14 @@ const Index = () => {
                   </a>
                 </Button>
               </div>
-            </div>
-          )}
+            </div>}
         </div>
       </nav>
 
       {/* Hero Section */}
       <section className="pt-32 pb-20 md:pt-40 md:pb-32 text-white overflow-hidden relative">
         {/* Background Image with lazy loading */}
-        <img 
-          src={heroBackground}
-          alt=""
-          loading="eager"
-          decoding="async"
-          className="absolute inset-0 w-full h-full object-cover"
-        />
+        <img src={heroBackground} alt="" loading="eager" decoding="async" className="absolute inset-0 w-full h-full object-cover" />
         {/* Overlay for better text readability */}
         <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-black/60" />
         
@@ -115,7 +105,7 @@ const Index = () => {
           <div className="max-w-4xl mx-auto text-center animate-fade-in-up">
             <h1 className="text-4xl md:text-5xl lg:text-display font-extrabold leading-tight mb-6 drop-shadow-[0_2px_10px_rgba(0,0,0,0.3)]">
               Escale o seu faturamento em 10x{" "}
-              <span className="text-solveflow-cyan drop-shadow-[0_2px_8px_rgba(0,229,255,0.4)]">sem contratar um único novo funcionário</span>
+              <span className="text-solveflow-cyan drop-shadow-[0_2px_8px_rgba(0,229,255,0.4)]">sem aumentar sua operação, utilizando IA</span>
             </h1>
             <p className="text-lg text-white/70 mb-8 leading-relaxed">
               O seu teto de crescimento hoje é a sua capacidade manual. Cresça a sua margem, sem explodir os custos fixos.
@@ -165,24 +155,22 @@ const Index = () => {
           
           <div className="grid md:grid-cols-3 gap-8 mb-16">
             {[{
-              icon: "🔗",
-              title: "Dependência de Presença Humana",
-              description: "Se você não está lá, as coisas param. Sua escalabilidade é zero porque o atendimento de qualidade é refém do esforço manual. É impossível fazer 10x mais vendas com a estrutura que você tem hoje."
-            }, {
-              icon: "🔥",
-              title: "O Custo da Demora (Lead Burn)",
-              description: "O lead moderno tem a paciência de segundos. Se você não qualifica e atende no auge do interesse, você perde a venda. Nossa infraestrutura garante que 100% dos leads recebam atenção imediata."
-            }, {
-              icon: "⏰",
-              title: "Ineficiência de Processos N1",
-              description: "Suporte básico e agendamentos roubam a energia do seu time. Automatizar a camada de atendimento é a única forma de liberar seu time comercial para o que realmente traz ROI: o relacionamento."
-            }].map((problem, index) => (
-              <div key={index} className="bg-white rounded-lg p-8 shadow-soft hover-lift border border-border">
+            icon: "🔗",
+            title: "Dependência de Presença Humana",
+            description: "Se você não está lá, as coisas param. Sua escalabilidade é zero porque o atendimento de qualidade é refém do esforço manual. É impossível fazer 10x mais vendas com a estrutura que você tem hoje."
+          }, {
+            icon: "🔥",
+            title: "O Custo da Demora (Lead Burn)",
+            description: "O lead moderno tem a paciência de segundos. Se você não qualifica e atende no auge do interesse, você perde a venda. Nossa infraestrutura garante que 100% dos leads recebam atenção imediata."
+          }, {
+            icon: "⏰",
+            title: "Ineficiência de Processos N1",
+            description: "Suporte básico e agendamentos roubam a energia do seu time. Automatizar a camada de atendimento é a única forma de liberar seu time comercial para o que realmente traz ROI: o relacionamento."
+          }].map((problem, index) => <div key={index} className="bg-white rounded-lg p-8 shadow-soft hover-lift border border-border">
                 <span className="text-5xl mb-4 block">{problem.icon}</span>
                 <h3 className="text-h4 font-semibold text-solveflow-slate mb-3">{problem.title}</h3>
                 <p className="text-solveflow-slate/70 leading-relaxed">{problem.description}</p>
-              </div>
-            ))}
+              </div>)}
           </div>
 
           {/* Solution Sub-section */}
@@ -431,28 +419,27 @@ const Index = () => {
           <div className="max-w-5xl mx-auto">
             <div className="grid md:grid-cols-4 gap-8">
               {[{
-                step: "1",
-                title: "Mapeamento & Estratégia",
-                time: "45 min (Reunião Técnica)",
-                description: "Reunião de alinhamento para entender os gargalos da sua operação, mapear regras de negócio e definir o tom de voz da inteligência. Identificamos os pontos de maior impacto para o seu ROI."
-              }, {
-                step: "2",
-                title: "Arquitetura & Setup (Hands-off)",
-                time: "5 a 10 Dias (Soluções Modulares)",
-                description: "Nossa equipe assume a execução. Configuramos sua infraestrutura (VPS), conectamos o WhatsApp, integramos seu CRM e treinamos a inteligência com seus dados proprietários.",
-                note: "Nota: Projetos de ecossistemas personalizados possuem cronograma de engenharia sob medida."
-              }, {
-                step: "3",
-                title: "Homologação & Estresse de Dados",
-                time: "2 a 3 Dias",
-                description: "Liberamos o acesso para testes reais. Simulamos interações complexas e realizamos ajustes ilimitados nos prompts até que o comportamento da infraestrutura esteja impecável e seguro."
-              }, {
-                step: "4",
-                title: "Ativação & Evolução (Go-Live)",
-                time: "Ativação Imediata",
-                description: "Ativamos a operação real. Iniciamos o acompanhamento de 30 dias com monitoramento diário de logs para garantir o desempenho prometido e o refinamento contínuo da inteligência."
-              }].map((item, index) => (
-                <div key={index} className="text-center">
+              step: "1",
+              title: "Mapeamento & Estratégia",
+              time: "45 min (Reunião Técnica)",
+              description: "Reunião de alinhamento para entender os gargalos da sua operação, mapear regras de negócio e definir o tom de voz da inteligência. Identificamos os pontos de maior impacto para o seu ROI."
+            }, {
+              step: "2",
+              title: "Arquitetura & Setup (Hands-off)",
+              time: "5 a 10 Dias (Soluções Modulares)",
+              description: "Nossa equipe assume a execução. Configuramos sua infraestrutura (VPS), conectamos o WhatsApp, integramos seu CRM e treinamos a inteligência com seus dados proprietários.",
+              note: "Nota: Projetos de ecossistemas personalizados possuem cronograma de engenharia sob medida."
+            }, {
+              step: "3",
+              title: "Homologação & Estresse de Dados",
+              time: "2 a 3 Dias",
+              description: "Liberamos o acesso para testes reais. Simulamos interações complexas e realizamos ajustes ilimitados nos prompts até que o comportamento da infraestrutura esteja impecável e seguro."
+            }, {
+              step: "4",
+              title: "Ativação & Evolução (Go-Live)",
+              time: "Ativação Imediata",
+              description: "Ativamos a operação real. Iniciamos o acompanhamento de 30 dias com monitoramento diário de logs para garantir o desempenho prometido e o refinamento contínuo da inteligência."
+            }].map((item, index) => <div key={index} className="text-center">
                   <div className="w-16 h-16 bg-solveflow-purple text-white rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-4 shadow-glow-purple">
                     {item.step}
                   </div>
@@ -460,8 +447,7 @@ const Index = () => {
                   <p className="text-sm text-solveflow-purple font-medium mb-3">⏱️ {item.time}</p>
                   <p className="text-sm text-solveflow-slate/70">{item.description}</p>
                   {item.note && <p className="text-xs text-solveflow-slate/50 mt-2 italic">{item.note}</p>}
-                </div>
-              ))}
+                </div>)}
             </div>
           </div>
 
@@ -494,24 +480,22 @@ const Index = () => {
               </div>
               
               {[{
-                question: "O cliente vai perceber que está falando com uma Inteligência Artificial?",
-                answer: "Nossa infraestrutura utiliza Processamento de Linguagem Natural avançado e é treinada especificamente com os dados e a cultura da sua empresa. A comunicação é fluida, humana e respeita rigorosamente o tom de voz da sua marca. O objetivo é que o cliente sinta que está sendo atendido por um especialista ultra-eficiente que responde em 2 segundos."
-              }, {
-                question: "E se a IA responder algo errado?",
-                answer: 'No período de Setup e Homologação, simulamos centenas de cenários reais para blindar a operação. Além disso, a infraestrutura possui uma "trava de segurança": se ela não identificar 100% de certeza nos dados fornecidos, ela não inventa informações — ela realiza o transbordo inteligente para o seu time humano imediatamente.'
-              }, {
-                question: "O que acontece se o cliente quiser falar com uma pessoa?",
-                answer: "A transição é imediata e transparente. A IA identifica a intenção de falar com um consultor, registra todo o contexto da conversa no seu CRM e notifica seu time em tempo real para que eles assumam apenas a parte estratégica do fechamento."
-              }].map((faq, index) => (
-                <AccordionItem key={`func-${index}`} value={`func-${index}`} className="border border-border rounded-lg px-6 bg-white">
+              question: "O cliente vai perceber que está falando com uma Inteligência Artificial?",
+              answer: "Nossa infraestrutura utiliza Processamento de Linguagem Natural avançado e é treinada especificamente com os dados e a cultura da sua empresa. A comunicação é fluida, humana e respeita rigorosamente o tom de voz da sua marca. O objetivo é que o cliente sinta que está sendo atendido por um especialista ultra-eficiente que responde em 2 segundos."
+            }, {
+              question: "E se a IA responder algo errado?",
+              answer: 'No período de Setup e Homologação, simulamos centenas de cenários reais para blindar a operação. Além disso, a infraestrutura possui uma "trava de segurança": se ela não identificar 100% de certeza nos dados fornecidos, ela não inventa informações — ela realiza o transbordo inteligente para o seu time humano imediatamente.'
+            }, {
+              question: "O que acontece se o cliente quiser falar com uma pessoa?",
+              answer: "A transição é imediata e transparente. A IA identifica a intenção de falar com um consultor, registra todo o contexto da conversa no seu CRM e notifica seu time em tempo real para que eles assumam apenas a parte estratégica do fechamento."
+            }].map((faq, index) => <AccordionItem key={`func-${index}`} value={`func-${index}`} className="border border-border rounded-lg px-6 bg-white">
                   <AccordionTrigger className="text-left font-semibold hover:no-underline text-solveflow-slate">
                     {faq.question}
                   </AccordionTrigger>
                   <AccordionContent className="text-solveflow-slate/70">
                     {faq.answer}
                   </AccordionContent>
-                </AccordionItem>
-              ))}
+                </AccordionItem>)}
 
               {/* Sobre Investimento e Gestão */}
               <div className="mb-6 mt-8">
@@ -519,21 +503,19 @@ const Index = () => {
               </div>
               
               {[{
-                question: "Preciso me preocupar com a gestão técnica da infraestrutura?",
-                answer: "Não. A Solveflow entrega uma Solução Gerenciada de Ponta a Ponta. Nós somos os responsáveis por hospedar, monitorar e manter toda a inteligência rodando em nossos servidores seguros. Isso garante que você tenha o resultado (lucro e eficiência) sem precisar de uma equipe de TI interna para gerenciar a tecnologia."
-              }, {
-                question: "Existe fidelidade ou multa de cancelamento?",
-                answer: "Trabalhamos com o modelo de recorrência mensal sem multas abusivas. No entanto, como a infraestrutura de inteligência é gerenciada e evoluída pela Solveflow, o cancelamento da mensalidade implica na interrupção do sistema de IA, uma vez que a camada de processamento e segurança é provida por nós."
-              }].map((faq, index) => (
-                <AccordionItem key={`invest-${index}`} value={`invest-${index}`} className="border border-border rounded-lg px-6 bg-white">
+              question: "Preciso me preocupar com a gestão técnica da infraestrutura?",
+              answer: "Não. A Solveflow entrega uma Solução Gerenciada de Ponta a Ponta. Nós somos os responsáveis por hospedar, monitorar e manter toda a inteligência rodando em nossos servidores seguros. Isso garante que você tenha o resultado (lucro e eficiência) sem precisar de uma equipe de TI interna para gerenciar a tecnologia."
+            }, {
+              question: "Existe fidelidade ou multa de cancelamento?",
+              answer: "Trabalhamos com o modelo de recorrência mensal sem multas abusivas. No entanto, como a infraestrutura de inteligência é gerenciada e evoluída pela Solveflow, o cancelamento da mensalidade implica na interrupção do sistema de IA, uma vez que a camada de processamento e segurança é provida por nós."
+            }].map((faq, index) => <AccordionItem key={`invest-${index}`} value={`invest-${index}`} className="border border-border rounded-lg px-6 bg-white">
                   <AccordionTrigger className="text-left font-semibold hover:no-underline text-solveflow-slate">
                     {faq.question}
                   </AccordionTrigger>
                   <AccordionContent className="text-solveflow-slate/70">
                     {faq.answer}
                   </AccordionContent>
-                </AccordionItem>
-              ))}
+                </AccordionItem>)}
 
               {/* Técnico e Implementação */}
               <div className="mb-6 mt-8">
@@ -541,27 +523,25 @@ const Index = () => {
               </div>
               
               {[{
-                question: "Preciso ter um número novo de WhatsApp?",
-                answer: "Não é necessário. Podemos implementar a infraestrutura no seu número atual ou configurar um novo canal exclusivo para a IA, dependendo da sua estratégia de separação entre atendimento e vendas."
-              }, {
-                question: "Não tenho CRM, o sistema funciona mesmo assim?",
-                answer: 'Para que a IA tenha "memória" e gere inteligência de dados para o seu negócio, o CRM é fundamental. Caso você não possua um, nós implementamos e configuramos toda a estrutura de CRM como parte da nossa consultoria, garantindo que sua operação seja profissional e escalável.'
-              }, {
-                question: "E se eu mudar meus preços, produtos ou horários depois?",
-                answer: "A infraestrutura é modular. Através da nossa gestão mensal, realizamos todas as atualizações na base de conhecimento da IA sempre que o seu negócio mudar, garantindo que ela nunca entregue informações desatualizadas aos seus clientes."
-              }, {
-                question: "Qual é o prazo real de entrega?",
-                answer: "Para nossas soluções modulares e validadas (80/20), o Go-Live acontece em até 14 dias. Projetos de ecossistemas 100% personalizados exigem um cronograma de engenharia específico, definido logo após o diagnóstico operacional inicial."
-              }].map((faq, index) => (
-                <AccordionItem key={`tec-${index}`} value={`tec-${index}`} className="border border-border rounded-lg px-6 bg-white">
+              question: "Preciso ter um número novo de WhatsApp?",
+              answer: "Não é necessário. Podemos implementar a infraestrutura no seu número atual ou configurar um novo canal exclusivo para a IA, dependendo da sua estratégia de separação entre atendimento e vendas."
+            }, {
+              question: "Não tenho CRM, o sistema funciona mesmo assim?",
+              answer: 'Para que a IA tenha "memória" e gere inteligência de dados para o seu negócio, o CRM é fundamental. Caso você não possua um, nós implementamos e configuramos toda a estrutura de CRM como parte da nossa consultoria, garantindo que sua operação seja profissional e escalável.'
+            }, {
+              question: "E se eu mudar meus preços, produtos ou horários depois?",
+              answer: "A infraestrutura é modular. Através da nossa gestão mensal, realizamos todas as atualizações na base de conhecimento da IA sempre que o seu negócio mudar, garantindo que ela nunca entregue informações desatualizadas aos seus clientes."
+            }, {
+              question: "Qual é o prazo real de entrega?",
+              answer: "Para nossas soluções modulares e validadas (80/20), o Go-Live acontece em até 14 dias. Projetos de ecossistemas 100% personalizados exigem um cronograma de engenharia específico, definido logo após o diagnóstico operacional inicial."
+            }].map((faq, index) => <AccordionItem key={`tec-${index}`} value={`tec-${index}`} className="border border-border rounded-lg px-6 bg-white">
                   <AccordionTrigger className="text-left font-semibold hover:no-underline text-solveflow-slate">
                     {faq.question}
                   </AccordionTrigger>
                   <AccordionContent className="text-solveflow-slate/70">
                     {faq.answer}
                   </AccordionContent>
-                </AccordionItem>
-              ))}
+                </AccordionItem>)}
             </Accordion>
           </div>
         </div>
@@ -585,64 +565,46 @@ const Index = () => {
                   <label className="block text-sm font-medium text-solveflow-slate mb-2">
                     Seu nome
                   </label>
-                  <input 
-                    type="text" 
-                    required 
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-solveflow-purple focus:border-transparent transition-all text-solveflow-slate bg-white" 
-                    placeholder="Seu nome" 
-                    value={formData.name} 
-                    onChange={e => setFormData({ ...formData, name: e.target.value })} 
-                  />
+                  <input type="text" required className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-solveflow-purple focus:border-transparent transition-all text-solveflow-slate bg-white" placeholder="Seu nome" value={formData.name} onChange={e => setFormData({
+                  ...formData,
+                  name: e.target.value
+                })} />
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-solveflow-slate mb-2">
                     E-mail
                   </label>
-                  <input 
-                    type="email" 
-                    required 
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-solveflow-purple focus:border-transparent transition-all text-solveflow-slate bg-white" 
-                    placeholder="seu@email.com" 
-                    value={formData.email} 
-                    onChange={e => setFormData({ ...formData, email: e.target.value })} 
-                  />
+                  <input type="email" required className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-solveflow-purple focus:border-transparent transition-all text-solveflow-slate bg-white" placeholder="seu@email.com" value={formData.email} onChange={e => setFormData({
+                  ...formData,
+                  email: e.target.value
+                })} />
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-solveflow-slate mb-2">
                     WhatsApp
                   </label>
-                  <input 
-                    type="tel" 
-                    required 
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-solveflow-purple focus:border-transparent transition-all text-solveflow-slate bg-white" 
-                    placeholder="(47) 99999-9999" 
-                    value={formData.whatsapp} 
-                    onChange={e => setFormData({ ...formData, whatsapp: e.target.value })} 
-                  />
+                  <input type="tel" required className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-solveflow-purple focus:border-transparent transition-all text-solveflow-slate bg-white" placeholder="(47) 99999-9999" value={formData.whatsapp} onChange={e => setFormData({
+                  ...formData,
+                  whatsapp: e.target.value
+                })} />
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-solveflow-slate mb-2">
                     Empresa
                   </label>
-                  <input 
-                    type="text" 
-                    required 
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-solveflow-purple focus:border-transparent transition-all text-solveflow-slate bg-white" 
-                    placeholder="Nome da sua empresa" 
-                    value={formData.company} 
-                    onChange={e => setFormData({ ...formData, company: e.target.value })} 
-                  />
+                  <input type="text" required className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-solveflow-purple focus:border-transparent transition-all text-solveflow-slate bg-white" placeholder="Nome da sua empresa" value={formData.company} onChange={e => setFormData({
+                  ...formData,
+                  company: e.target.value
+                })} />
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-solveflow-slate mb-2">
                     Qual agente te interessa?
                   </label>
-                  <select 
-                    required 
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-solveflow-purple focus:border-transparent transition-all text-solveflow-slate bg-white" 
-                    value={formData.interest} 
-                    onChange={e => setFormData({ ...formData, interest: e.target.value })}
-                  >
+                  <select required className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-solveflow-purple focus:border-transparent transition-all text-solveflow-slate bg-white" value={formData.interest} onChange={e => setFormData({
+                  ...formData,
+                  interest: e.target.value
+                })}>
                     <option value="" className="text-solveflow-slate/50">Selecione uma opção</option>
                     <option value="atendimento" className="text-solveflow-slate">Agente de Atendimento</option>
                     <option value="sdr" className="text-solveflow-slate">Agente SDR (Qualificação)</option>
@@ -742,8 +704,6 @@ const Index = () => {
           </div>
         </DialogContent>
       </Dialog>
-    </div>
-  );
+    </div>;
 };
-
 export default Index;
