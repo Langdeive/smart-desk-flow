@@ -287,7 +287,7 @@ const Index = () => {
 
             {/* Agent 3 - CS (Highlight) */}
             <div className="bg-white rounded-lg shadow-glow-cyan hover-lift border-2 border-solveflow-cyan overflow-hidden relative">
-              <div className="absolute top-0 left-0 right-0 bg-solveflow-cyan text-solveflow-slate text-center py-2 text-sm font-semibold">
+              <div className="absolute top-0 left-0 right-0 bg-solveflow-cyan text-solveflow-slate text-center py-2 text-sm font-semibold text-primary-foreground">
                 🏆 EXCLUSIVO SOLVEFLOW
               </div>
               <div className="p-8 pt-14">
