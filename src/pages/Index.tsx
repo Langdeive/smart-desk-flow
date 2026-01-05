@@ -231,9 +231,9 @@ const Index = () => {
                   <p className="text-sm text-solveflow-slate/60 italic mb-4">(Valor sob diagnóstico consultivo)</p>
                   <p className="text-sm text-solveflow-slate font-medium mb-2">Checklist de Entrega:</p>
                   <div className="space-y-2 text-sm">
-                    <p className="flex items-center gap-2 text-solveflow-slate/80"><Check size={16} className="text-solveflow-cyan" /> Atendimento 24/7 em WhatsApp Oficial.</p>
+                    <p className="flex items-center gap-2 text-solveflow-slate/80"><Check size={16} className="text-solveflow-cyan" />Atendimento 24/7 em WhatsApp</p>
                     <p className="flex items-center gap-2 text-solveflow-slate/80"><Check size={16} className="text-solveflow-cyan" /> Setup completo com base de dados própria.</p>
-                    <p className="flex items-center gap-2 text-solveflow-slate/80"><Check size={16} className="text-solveflow-cyan" /> Infraestrutura Própria (Soberania de Dados).</p>
+                    
                     <p className="flex items-center gap-2 text-solveflow-slate/80"><Check size={16} className="text-solveflow-cyan" /> Painel de gestão de atendimento incluso.</p>
                     <p className="flex items-center gap-2 text-solveflow-slate/80"><Check size={16} className="text-solveflow-cyan" /> Otimização contínua da inteligência.</p>
                   </div>
@@ -273,7 +273,7 @@ const Index = () => {
                     <p className="flex items-center gap-2 text-solveflow-slate/80"><Check size={16} className="text-solveflow-cyan" /> Qualificação BANT automatizada no WhatsApp.</p>
                     <p className="flex items-center gap-2 text-solveflow-slate/80"><Check size={16} className="text-solveflow-cyan" /> Integração completa e nativa com seu CRM.</p>
                     <p className="flex items-center gap-2 text-solveflow-slate/80"><Check size={16} className="text-solveflow-cyan" /> Notificação imediata de "Lead Quente" para o vendedor.</p>
-                    <p className="flex items-center gap-2 text-solveflow-slate/80"><Check size={16} className="text-solveflow-cyan" /> Sistema de agendamento autônomo incluso.</p>
+                    
                     <p className="flex items-center gap-2 text-solveflow-slate/80"><Check size={16} className="text-solveflow-cyan" /> Refinamento constante de scripts de conversão.</p>
                   </div>
                 </div>
@@ -316,7 +316,7 @@ const Index = () => {
                     <p className="flex items-center gap-2 text-solveflow-slate/80"><Check size={16} className="text-solveflow-cyan" /> Dashboard exclusivo de indicadores de Retenção.</p>
                     <p className="flex items-center gap-2 text-solveflow-slate/80"><Check size={16} className="text-solveflow-cyan" /> Alerta de risco de cancelamento em tempo real.</p>
                     <p className="flex items-center gap-2 text-solveflow-slate/80"><Check size={16} className="text-solveflow-cyan" /> Infraestrutura 100% gerenciada pela Solveflow.</p>
-                    <p className="flex items-center gap-2 text-solveflow-slate/80"><Check size={16} className="text-solveflow-cyan" /> Consultoria mensal de estratégia de CS inclusa.</p>
+                    
                   </div>
                 </div>
               </div>
@@ -382,9 +382,7 @@ const Index = () => {
                   <span className="text-4xl">🚀</span>
                 </div>
                 <h5 className="text-lg font-semibold text-white mb-3 text-center">Implementação de Ecossistema Integrado</h5>
-                <p className="text-white/60 text-sm leading-relaxed text-center">
-                  Com a estratégia validada, desenhamos e implementamos sua infraestrutura exclusiva. Entregamos um sistema proprietário totalmente integrado ao seu CRM e ERP, focado exclusivamente no que traz retorno real ao seu negócio.
-                </p>
+                <p className="text-white/60 text-sm leading-relaxed text-center">Com a estratégia validada, desenhamos e implementamos sua infraestrutura exclusiva. Entregamos um sistema proprietário totalmente integrado ao seu CRM, focado exclusivamente no que traz retorno real ao seu negócio.</p>
               </div>
             </div>
 
