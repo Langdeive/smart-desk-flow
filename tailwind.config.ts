@@ -25,13 +25,13 @@ export default {
       colors: {
         // Brand colors - SolveFlow Identity
         "solveflow-purple": "#7B2CBF",      // Roxo Profundo
-        "solveflow-cyan": "#00E5FF",        // Ciano Elétrico
+        "solveflow-navy": "#1e2b55",        // Azul Escuro (antigo Ciano)
         "solveflow-platinum": "#F5F5F7",    // Platina Cinza
         "solveflow-slate": "#1A1A1A",       // Ardósia Preta
         
         // Legacy aliases (for gradual migration)
         "solveflow-blue": "#7B2CBF",
-        "solveflow-green": "#00E5FF",
+        "solveflow-cyan": "#1e2b55",        // Alias para compatibilidade
         
         // System colors
         border: "hsl(var(--border))",
@@ -91,8 +91,8 @@ export default {
         'medium': '0 4px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 30px -5px rgba(0, 0, 0, 0.04)',
         'strong': '0 10px 40px -10px rgba(0, 0, 0, 0.15)',
         'glow-purple': '0 0 40px rgba(123, 44, 191, 0.4)',
-        'glow-cyan': '0 0 40px rgba(0, 229, 255, 0.3)',
-        'glow-mixed': '0 0 60px rgba(123, 44, 191, 0.2), 0 0 30px rgba(0, 229, 255, 0.2)',
+        'glow-navy': '0 0 40px rgba(30, 43, 85, 0.3)',
+        'glow-mixed': '0 0 60px rgba(123, 44, 191, 0.2), 0 0 30px rgba(30, 43, 85, 0.2)',
       },
       spacing: {
         'section': '5rem',
@@ -120,8 +120,8 @@ export default {
           '50%': { opacity: '0.8' }
         },
         'glow': {
-          '0%, 100%': { boxShadow: '0 0 20px rgba(0, 229, 255, 0.3)' },
-          '50%': { boxShadow: '0 0 40px rgba(0, 229, 255, 0.5)' }
+          '0%, 100%': { boxShadow: '0 0 20px rgba(30, 43, 85, 0.3)' },
+          '50%': { boxShadow: '0 0 40px rgba(30, 43, 85, 0.5)' }
         },
         'accordion-down': {
           from: { height: '0' },

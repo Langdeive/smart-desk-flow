@@ -18,16 +18,16 @@
     --primary: 277 64% 46%;
     --primary-foreground: 0 0% 100%;
     
-    /* Ciano Elétrico - Cor secundária/destaque */
-    --secondary: 186 100% 50%;
-    --secondary-foreground: 0 0% 10%;
+    /* Azul Escuro - Cor secundária/destaque */
+    --secondary: 225 48% 23%;
+    --secondary-foreground: 0 0% 100%;
     
     --muted: 240 5% 92%;
     --muted-foreground: 0 0% 35%;
     
-    /* Ciano como accent */
-    --accent: 186 100% 50%;
-    --accent-foreground: 0 0% 10%;
+    /* Azul Escuro como accent */
+    --accent: 225 48% 23%;
+    --accent-foreground: 0 0% 100%;
     
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
@@ -51,14 +51,14 @@
     --primary: 277 64% 55%;
     --primary-foreground: 0 0% 100%;
     
-    --secondary: 186 100% 50%;
-    --secondary-foreground: 0 0% 10%;
+    --secondary: 225 48% 28%;
+    --secondary-foreground: 0 0% 100%;
     
     --muted: 0 0% 18%;
     --muted-foreground: 0 0% 65%;
     
-    --accent: 186 100% 50%;
-    --accent-foreground: 0 0% 10%;
+    --accent: 225 48% 28%;
+    --accent-foreground: 0 0% 100%;
     
     --destructive: 0 63% 45%;
     --destructive-foreground: 0 0% 100%;
@@ -118,9 +118,9 @@
   /* Neo-futuristic wave pattern */
   .bg-wave-pattern {
     background-image: 
-      radial-gradient(ellipse at 20% 50%, rgba(0, 229, 255, 0.08) 0%, transparent 50%),
+      radial-gradient(ellipse at 20% 50%, rgba(30, 43, 85, 0.08) 0%, transparent 50%),
       radial-gradient(ellipse at 80% 20%, rgba(123, 44, 191, 0.12) 0%, transparent 50%),
-      radial-gradient(ellipse at 60% 80%, rgba(0, 229, 255, 0.06) 0%, transparent 50%);
+      radial-gradient(ellipse at 60% 80%, rgba(30, 43, 85, 0.06) 0%, transparent 50%);
   }
   
   .animate-fade-in-up {
@@ -140,9 +140,9 @@
     box-shadow: 0 20px 40px rgba(123, 44, 191, 0.15);
   }
   
-  /* Cyan glow effect */
-  .glow-cyan {
-    box-shadow: 0 0 30px rgba(0, 229, 255, 0.3);
+  /* Navy glow effect */
+  .glow-navy {
+    box-shadow: 0 0 30px rgba(30, 43, 85, 0.3);
   }
   
   /* Purple glow effect */
@@ -158,7 +158,7 @@
     left: 0;
     right: 0;
     height: 1px;
-    background: linear-gradient(90deg, transparent, rgba(0, 229, 255, 0.5), transparent);
+    background: linear-gradient(90deg, transparent, rgba(30, 43, 85, 0.5), transparent);
   }
 }
 
