@@ -112,7 +112,7 @@ const Index = () => {
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button size="lg" className="bg-solveflow-cyan hover:bg-solveflow-cyan/90 text-solveflow-slate text-lg px-8 py-6 shadow-glow-cyan font-semibold" asChild>
-                <a href="#contato" className="text-primary-foreground">
+                <a href="#contato" className="text-slate-100">
                   Falar com Especialista
                   <ArrowRight className="ml-2" size={20} />
                 </a>
