@@ -322,7 +322,7 @@ const Index = () => {
               </div>
               <div className="px-8 pb-8 pt-6">
                 <Button className="w-full bg-solveflow-cyan hover:bg-solveflow-cyan/90 text-solveflow-slate font-semibold" asChild>
-                  <a href="#contato" className="text-primary-foreground">Blindar Minha Receita</a>
+                  <a href="#contato" className="text-slate-100">Blindar Minha Receita</a>
                 </Button>
               </div>
             </div>
