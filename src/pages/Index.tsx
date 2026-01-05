@@ -644,10 +644,9 @@ const Index = () => {
             <div>
               <h4 className="text-white font-semibold mb-4">Produtos</h4>
               <ul className="space-y-2 text-sm">
-                <li><a href="#produtos" className="hover:text-solveflow-cyan transition-colors">Agente de Atendimento</a></li>
-                <li><a href="#produtos" className="hover:text-solveflow-cyan transition-colors">Agente SDR</a></li>
-                <li><a href="#produtos" className="hover:text-solveflow-cyan transition-colors">SolveCS™</a></li>
-                <li><a href="#produtos" className="hover:text-solveflow-cyan transition-colors">Implantação Kommo</a></li>
+                <li><a href="#produtos" className="hover:text-solveflow-cyan transition-colors">Central de Atendimento Autônoma 24/7</a></li>
+                <li><a href="#produtos" className="hover:text-solveflow-cyan transition-colors">Infraestrutura de Aceleração Comercial (SDR)</a></li>
+                <li><a href="#produtos" className="hover:text-solveflow-cyan transition-colors">SolveCS™ – Ecossistema de Sucesso do Cliente</a></li>
               </ul>
             </div>
             <div>
