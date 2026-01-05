@@ -388,7 +388,7 @@ const Index = () => {
 
             <div className="text-center">
               <Button size="lg" className="bg-solveflow-cyan hover:bg-solveflow-cyan/90 text-solveflow-slate text-lg px-10 py-6 shadow-glow-cyan font-semibold" asChild>
-                <a href="#contato" className="text-primary-foreground">
+                <a href="#contato" className="text-slate-100">
                   Solicitar Diagnóstico Estratégico
                   <ArrowRight className="ml-2" size={20} />
                 </a>
