@@ -186,7 +186,7 @@ const Index = () => {
               <p className="text-lg text-white/70 leading-relaxed mb-6 text-center max-w-4xl mx-auto">
                 Não entregamos uma automação genérica. Entregamos uma <strong className="text-white">Engenharia de Processos transformada em sistemas inteligentes</strong> que sustentam o seu crescimento.
               </p>
-              <p className="text-xl font-semibold text-solveflow-cyan text-center">
+              <p className="text-xl font-semibold text-center text-green-400">
                 Resultado: Você escala o faturamento eliminando o custo, o tempo de treinamento e a complexidade de gerenciar grandes equipes.
               </p>
             </div>
