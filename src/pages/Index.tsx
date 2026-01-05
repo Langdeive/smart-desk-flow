@@ -107,7 +107,7 @@ const Index = () => {
               Escale o seu faturamento em 10x{" "}
               <span className="text-secondary bg-white\n">sem aumentar sua operação, utilizando IA</span>
             </h1>
-            <p className="text-lg text-white/70 mb-8 leading-relaxed">
+            <p className="text-lg mb-8 leading-relaxed text-secondary-foreground">
               O seu teto de crescimento hoje é a sua capacidade manual. Cresça a sua margem, sem explodir os custos fixos.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -662,15 +662,15 @@ const Index = () => {
               <h4 className="text-white font-semibold mb-4">Contato</h4>
               <ul className="space-y-3 text-sm">
                 <li className="flex items-center gap-2">
-                  <Phone size={16} className="text-solveflow-cyan" />
+                  <Phone size={16} className="" />
                   <span>(47) 99944-3087</span>
                 </li>
                 <li className="flex items-center gap-2">
-                  <Mail size={16} className="text-solveflow-cyan" />
+                  <Mail size={16} className="" />
                   <span>contato@solveflow.com.br</span>
                 </li>
                 <li className="flex items-center gap-2">
-                  <Building2 size={16} className="text-solveflow-cyan" />
+                  <Building2 size={16} className="" />
                   <span>Jaraguá do Sul, SC</span>
                 </li>
               </ul>
