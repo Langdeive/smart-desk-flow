@@ -436,7 +436,7 @@ const Index = () => {
               step: "4",
               title: "Ativação & Evolução (Go-Live)",
               time: "Ativação Imediata",
-              description: "Ativamos a operação real. Iniciamos o acompanhamento de 30 dias com monitoramento diário de logs para garantir o desempenho prometido e o refinamento contínuo da inteligência."
+              description: "Ativamos a operação real. Iniciamos o acompanhamento de 7 dias com monitoramento diário de logs para garantir o desempenho prometido e o refinamento contínuo da inteligência."
             }].map((item, index) => <div key={index} className="text-center">
                   <div className="w-16 h-16 bg-solveflow-purple text-white rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-4 shadow-glow-purple">
                     {item.step}
