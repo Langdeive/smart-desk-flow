@@ -338,7 +338,7 @@ const Index = () => {
             <div className="text-center mb-12">
               <h2 className="text-h2 md:text-4xl font-bold mb-4">
                 Sua Operação Exige Exclusividade?{" "}
-                <span className="text-solveflow-cyan text-blue-400">Desenvolvemos sua Infraestrutura sob Medida.</span>
+                <span className="text-green-400">Desenvolvemos sua Infraestrutura sob Medida.</span>
               </h2>
               <h3 className="text-xl md:text-2xl text-white/60 font-medium">
                 Nem todo gargalo operacional se resolve com padrões. Para empresas com fluxos complexos e regras de negócio únicas, criamos o seu Ecossistema de IA Personalizado.
@@ -349,7 +349,7 @@ const Index = () => {
               <p className="text-lg text-white/70 leading-relaxed mb-4">
                 As soluções modulares da Solveflow resolvem com rapidez as dores de atendimento e vendas. No entanto, se a sua empresa possui integrações profundas com ERPs, processos logísticos complexos ou fluxos de dados sensíveis, o caminho é a <strong className="text-white">Engenharia Consultiva</strong>.
               </p>
-              <p className="text-lg text-solveflow-cyan font-medium text-blue-400">
+              <p className="text-lg text-green-400 font-medium ">
                 Nós não apenas instalamos tecnologia. Nós realizamos uma imersão na sua operação para projetar a infraestrutura proprietária que transformará ineficiência em lucro líquido.
               </p>
             </div>
