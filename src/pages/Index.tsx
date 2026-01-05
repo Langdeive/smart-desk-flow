@@ -638,7 +638,7 @@ const Index = () => {
             <div>
               <img src={solveflowLogo} alt="Solveflow" className="h-10 mb-4 brightness-0 invert" />
               <p className="text-sm leading-relaxed">
-                Consultoria de IA que automatiza sua operação com agentes inteligentes para WhatsApp.
+                Consultoria de IA que automatiza sua operação com agentes inteligentes.
               </p>
             </div>
             <div>
