@@ -186,7 +186,7 @@ const Index = () => {
               <p className="text-lg text-white/70 leading-relaxed mb-6 text-center max-w-4xl mx-auto">
                 Não entregamos uma automação genérica. Entregamos uma <strong className="text-white">Engenharia de Processos transformada em sistemas inteligentes</strong> que sustentam o seu crescimento.
               </p>
-              <p className="text-xl font-semibold text-solveflow-cyan text-center text-primary-foreground">
+              <p className="text-xl font-semibold text-solveflow-cyan text-center">
                 Resultado: Você escala o faturamento eliminando o custo, o tempo de treinamento e a complexidade de gerenciar grandes equipes.
               </p>
             </div>
@@ -287,7 +287,7 @@ const Index = () => {
 
             {/* Agent 3 - CS (Highlight) */}
             <div className="bg-white rounded-lg shadow-glow-cyan hover-lift border-2 border-solveflow-cyan overflow-hidden relative">
-              <div className="absolute top-0 left-0 right-0 bg-solveflow-cyan text-solveflow-slate text-center py-2 text-sm font-semibold text-secondary-foreground bg-secondary">
+              <div className="absolute top-0 left-0 right-0 bg-solveflow-cyan text-solveflow-slate text-center py-2 text-sm font-semibold">
                 🏆 EXCLUSIVO SOLVEFLOW
               </div>
               <div className="p-8 pt-14">
@@ -322,7 +322,7 @@ const Index = () => {
               </div>
               <div className="px-8 pb-8 pt-6">
                 <Button className="w-full bg-solveflow-cyan hover:bg-solveflow-cyan/90 text-solveflow-slate font-semibold" asChild>
-                  <a href="#contato">Blindar Minha Receita</a>
+                  <a href="#contato" className="text-primary-foreground">Blindar Minha Receita</a>
                 </Button>
               </div>
             </div>
@@ -338,7 +338,7 @@ const Index = () => {
             <div className="text-center mb-12">
               <h2 className="text-h2 md:text-4xl font-bold mb-4">
                 Sua Operação Exige Exclusividade?{" "}
-                <span className="text-solveflow-cyan">Desenvolvemos sua Infraestrutura sob Medida.</span>
+                <span className="text-solveflow-cyan text-blue-400">Desenvolvemos sua Infraestrutura sob Medida.</span>
               </h2>
               <h3 className="text-xl md:text-2xl text-white/60 font-medium">
                 Nem todo gargalo operacional se resolve com padrões. Para empresas com fluxos complexos e regras de negócio únicas, criamos o seu Ecossistema de IA Personalizado.
@@ -349,7 +349,7 @@ const Index = () => {
               <p className="text-lg text-white/70 leading-relaxed mb-4">
                 As soluções modulares da Solveflow resolvem com rapidez as dores de atendimento e vendas. No entanto, se a sua empresa possui integrações profundas com ERPs, processos logísticos complexos ou fluxos de dados sensíveis, o caminho é a <strong className="text-white">Engenharia Consultiva</strong>.
               </p>
-              <p className="text-lg text-solveflow-cyan font-medium">
+              <p className="text-lg text-solveflow-cyan font-medium text-blue-400">
                 Nós não apenas instalamos tecnologia. Nós realizamos uma imersão na sua operação para projetar a infraestrutura proprietária que transformará ineficiência em lucro líquido.
               </p>
             </div>
@@ -388,7 +388,7 @@ const Index = () => {
 
             <div className="text-center">
               <Button size="lg" className="bg-solveflow-cyan hover:bg-solveflow-cyan/90 text-solveflow-slate text-lg px-10 py-6 shadow-glow-cyan font-semibold" asChild>
-                <a href="#contato">
+                <a href="#contato" className="text-primary-foreground">
                   Solicitar Diagnóstico Estratégico
                   <ArrowRight className="ml-2" size={20} />
                 </a>
