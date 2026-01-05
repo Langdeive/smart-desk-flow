@@ -105,13 +105,13 @@ const Index = () => {
           <div className="max-w-4xl mx-auto text-center animate-fade-in-up">
             <h1 className="text-4xl md:text-5xl lg:text-display font-extrabold leading-tight mb-6 drop-shadow-[0_2px_10px_rgba(0,0,0,0.3)]">
               Escale o seu faturamento em 10x{" "}
-              <span className="bg-white/90 text-solveflow-navy px-3 py-1 rounded-lg inline-block mt-2">sem aumentar sua operação, utilizando IA</span>
+              <span className="text-solveflow-cyan drop-shadow-[0_2px_8px_rgba(0,229,255,0.4)]">sem aumentar sua operação, utilizando IA</span>
             </h1>
             <p className="text-lg text-white/70 mb-8 leading-relaxed">
               O seu teto de crescimento hoje é a sua capacidade manual. Cresça a sua margem, sem explodir os custos fixos.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button size="lg" className="bg-solveflow-navy hover:bg-solveflow-navy/90 text-white text-lg px-8 py-6 shadow-glow-navy font-semibold" asChild>
+              <Button size="lg" className="bg-solveflow-cyan hover:bg-solveflow-cyan/90 text-solveflow-slate text-lg px-8 py-6 shadow-glow-cyan font-semibold" asChild>
                 <a href="#contato">
                   Falar com Especialista
                   <ArrowRight className="ml-2" size={20} />
@@ -186,7 +186,7 @@ const Index = () => {
               <p className="text-lg text-white/70 leading-relaxed mb-6 text-center max-w-4xl mx-auto">
                 Não entregamos uma automação genérica. Entregamos uma <strong className="text-white">Engenharia de Processos transformada em sistemas inteligentes</strong> que sustentam o seu crescimento.
               </p>
-              <p className="text-xl font-semibold text-solveflow-cyan text-center">
+              <p className="text-xl font-semibold text-solveflow-cyan text-center text-primary-foreground">
                 Resultado: Você escala o faturamento eliminando o custo, o tempo de treinamento e a complexidade de gerenciar grandes equipes.
               </p>
             </div>
@@ -287,7 +287,7 @@ const Index = () => {
 
             {/* Agent 3 - CS (Highlight) */}
             <div className="bg-white rounded-lg shadow-glow-cyan hover-lift border-2 border-solveflow-cyan overflow-hidden relative">
-              <div className="absolute top-0 left-0 right-0 bg-solveflow-cyan text-solveflow-slate text-center py-2 text-sm font-semibold">
+              <div className="absolute top-0 left-0 right-0 bg-solveflow-cyan text-solveflow-slate text-center py-2 text-sm font-semibold text-secondary-foreground bg-secondary">
                 🏆 EXCLUSIVO SOLVEFLOW
               </div>
               <div className="p-8 pt-14">
