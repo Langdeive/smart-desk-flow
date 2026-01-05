@@ -105,13 +105,13 @@ const Index = () => {
           <div className="max-w-4xl mx-auto text-center animate-fade-in-up">
             <h1 className="text-4xl md:text-5xl lg:text-display font-extrabold leading-tight mb-6 drop-shadow-[0_2px_10px_rgba(0,0,0,0.3)]">
               Escale o seu faturamento em 10x{" "}
-              <span className="text-solveflow-cyan drop-shadow-[0_2px_8px_rgba(0,229,255,0.4)]">sem aumentar sua operação, utilizando IA</span>
+              <span className="bg-white/90 text-solveflow-navy px-3 py-1 rounded-lg inline-block mt-2">sem aumentar sua operação, utilizando IA</span>
             </h1>
             <p className="text-lg text-white/70 mb-8 leading-relaxed">
               O seu teto de crescimento hoje é a sua capacidade manual. Cresça a sua margem, sem explodir os custos fixos.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button size="lg" className="bg-solveflow-cyan hover:bg-solveflow-cyan/90 text-solveflow-slate text-lg px-8 py-6 shadow-glow-cyan font-semibold" asChild>
+              <Button size="lg" className="bg-solveflow-navy hover:bg-solveflow-navy/90 text-white text-lg px-8 py-6 shadow-glow-navy font-semibold" asChild>
                 <a href="#contato">
                   Falar com Especialista
                   <ArrowRight className="ml-2" size={20} />
