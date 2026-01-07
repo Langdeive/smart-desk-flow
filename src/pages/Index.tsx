@@ -111,8 +111,8 @@ const Index = () => {
               O seu teto de crescimento hoje é a sua capacidade manual. Cresça a sua margem, sem explodir os custos fixos.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button size="lg" className="bg-solveflow-cyan hover:bg-solveflow-cyan/90 text-solveflow-slate text-lg px-8 py-6 shadow-glow-cyan font-semibold" asChild>
-                <a href="#contato" className="text-slate-100">
+              <Button size="lg" className="bg-solveflow-cyan hover:bg-solveflow-cyan/90 !text-white text-lg px-8 py-6 shadow-glow-cyan font-semibold" asChild>
+                <a href="#contato" className="!text-white">
                   Falar com Especialista
                   <ArrowRight className="ml-2" size={20} />
                 </a>
@@ -321,8 +321,8 @@ const Index = () => {
                 </div>
               </div>
               <div className="px-8 pb-8 pt-6">
-                <Button className="w-full bg-solveflow-cyan hover:bg-solveflow-cyan/90 text-solveflow-slate font-semibold" asChild>
-                  <a href="#contato" className="text-slate-100">Blindar Minha Receita</a>
+                <Button className="w-full bg-solveflow-cyan hover:bg-solveflow-cyan/90 !text-white font-semibold" asChild>
+                  <a href="#contato" className="!text-white">Blindar Minha Receita</a>
                 </Button>
               </div>
             </div>
@@ -387,8 +387,8 @@ const Index = () => {
             </div>
 
             <div className="text-center">
-              <Button size="lg" className="bg-solveflow-cyan hover:bg-solveflow-cyan/90 text-solveflow-slate text-lg px-10 py-6 shadow-glow-cyan font-semibold" asChild>
-                <a href="#contato" className="text-slate-100">
+              <Button size="lg" className="bg-solveflow-cyan hover:bg-solveflow-cyan/90 !text-white text-lg px-10 py-6 shadow-glow-cyan font-semibold" asChild>
+                <a href="#contato" className="!text-white">
                   Solicitar Diagnóstico Estratégico
                   <ArrowRight className="ml-2" size={20} />
                 </a>
