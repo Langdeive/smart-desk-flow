@@ -240,7 +240,7 @@ const Index = () => {
                 </div>
               </div>
               <div className="px-8 pb-8 pt-6">
-                <Button className="w-full bg-solveflow-purple hover:bg-solveflow-purple/90 text-white" asChild>
+                <Button className="w-full bg-solveflow-purple hover:bg-solveflow-purple/90 text-white" onClick={() => setFormData(prev => ({ ...prev, interest: 'atendimento' }))} asChild>
                   <a href="#contato">Implementar Atendimento Autônomo</a>
                 </Button>
               </div>
@@ -279,7 +279,7 @@ const Index = () => {
                 </div>
               </div>
               <div className="px-8 pb-8 pt-6">
-                <Button className="w-full bg-solveflow-purple hover:bg-solveflow-purple/90 text-white" asChild>
+                <Button className="w-full bg-solveflow-purple hover:bg-solveflow-purple/90 text-white" onClick={() => setFormData(prev => ({ ...prev, interest: 'sdr' }))} asChild>
                   <a href="#contato">Escalar Minhas Vendas</a>
                 </Button>
               </div>
@@ -321,7 +321,7 @@ const Index = () => {
                 </div>
               </div>
               <div className="px-8 pb-8 pt-6">
-                <Button className="w-full bg-solveflow-cyan hover:bg-solveflow-cyan/90 !text-white font-semibold" asChild>
+                <Button className="w-full bg-solveflow-cyan hover:bg-solveflow-cyan/90 !text-white font-semibold" onClick={() => setFormData(prev => ({ ...prev, interest: 'cs' }))} asChild>
                   <a href="#contato" className="!text-white">Blindar Minha Receita</a>
                 </Button>
               </div>
@@ -387,7 +387,7 @@ const Index = () => {
             </div>
 
             <div className="text-center">
-              <Button size="lg" className="bg-solveflow-cyan hover:bg-solveflow-cyan/90 !text-white text-lg px-10 py-6 shadow-glow-cyan font-semibold" asChild>
+              <Button size="lg" className="bg-solveflow-cyan hover:bg-solveflow-cyan/90 !text-white text-lg px-10 py-6 shadow-glow-cyan font-semibold" onClick={() => setFormData(prev => ({ ...prev, interest: 'consultoria' }))} asChild>
                 <a href="#contato" className="!text-white">
                   Solicitar Diagnóstico Estratégico
                   <ArrowRight className="ml-2" size={20} />
@@ -597,17 +597,16 @@ const Index = () => {
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-solveflow-slate mb-2">
-                    Qual agente te interessa?
+                    Qual solução te interessa?
                   </label>
                   <select required className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-solveflow-purple focus:border-transparent transition-all text-solveflow-slate bg-white" value={formData.interest} onChange={e => setFormData({
                   ...formData,
                   interest: e.target.value
                 })}>
                     <option value="" className="text-solveflow-slate/50">Selecione uma opção</option>
-                    <option value="atendimento" className="text-solveflow-slate">Agente de Atendimento</option>
-                    <option value="sdr" className="text-solveflow-slate">Agente SDR (Qualificação)</option>
-                    <option value="cs" className="text-solveflow-slate">SolveCS (Retenção)</option>
-                    <option value="crm" className="text-solveflow-slate">CRM Kommo + Agente</option>
+                    <option value="atendimento" className="text-solveflow-slate">Central de Atendimento Autônoma 24/7</option>
+                    <option value="sdr" className="text-solveflow-slate">Infraestrutura de Aceleração Comercial (SDR)</option>
+                    <option value="cs" className="text-solveflow-slate">SolveCS™ – Sucesso do Cliente</option>
                     <option value="consultoria" className="text-solveflow-slate">Consultoria Estratégica</option>
                     <option value="outro" className="text-solveflow-slate">Outro / Não sei ainda</option>
                   </select>
