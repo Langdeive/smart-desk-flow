@@ -16,6 +16,7 @@ export type Database = {
     Tables: {
       landing_leads: {
         Row: {
+          challenge: string | null
           company: string
           contacted_at: string | null
           created_at: string
@@ -24,9 +25,11 @@ export type Database = {
           interest: string
           name: string
           notes: string | null
+          role: string | null
           whatsapp: string
         }
         Insert: {
+          challenge?: string | null
           company: string
           contacted_at?: string | null
           created_at?: string
@@ -35,9 +38,11 @@ export type Database = {
           interest: string
           name: string
           notes?: string | null
+          role?: string | null
           whatsapp: string
         }
         Update: {
+          challenge?: string | null
           company?: string
           contacted_at?: string | null
           created_at?: string
@@ -46,6 +51,7 @@ export type Database = {
           interest?: string
           name?: string
           notes?: string | null
+          role?: string | null
           whatsapp?: string
         }
         Relationships: []
