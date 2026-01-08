@@ -12,10 +12,12 @@ const Index = () => {
   const [showSuccessDialog, setShowSuccessDialog] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
+    role: "",
     email: "",
     whatsapp: "",
     company: "",
-    interest: ""
+    interest: "",
+    challenge: ""
   });
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -37,10 +39,12 @@ const Index = () => {
       }
       setFormData({
         name: "",
+        role: "",
         email: "",
         whatsapp: "",
         company: "",
-        interest: ""
+        interest: "",
+        challenge: ""
       });
       setShowSuccessDialog(true);
     } catch (err) {
@@ -570,6 +574,15 @@ const Index = () => {
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-solveflow-slate mb-2">
+                    Sua Função
+                  </label>
+                  <input type="text" required className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-solveflow-purple focus:border-transparent transition-all text-solveflow-slate bg-white" placeholder="Ex: CEO, Gerente Comercial, Diretor de Operações..." value={formData.role} onChange={e => setFormData({
+                  ...formData,
+                  role: e.target.value
+                })} />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-solveflow-slate mb-2">
                     E-mail
                   </label>
                   <input type="email" required className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-solveflow-purple focus:border-transparent transition-all text-solveflow-slate bg-white" placeholder="seu@email.com" value={formData.email} onChange={e => setFormData({
@@ -610,6 +623,23 @@ const Index = () => {
                     <option value="consultoria" className="text-solveflow-slate">Consultoria Estratégica</option>
                     <option value="outro" className="text-solveflow-slate">Outro / Não sei ainda</option>
                   </select>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-solveflow-slate mb-2">
+                    Conte-nos qual seu desafio atual <span className="text-solveflow-slate/50 font-normal">(opcional)</span>
+                  </label>
+                  <textarea 
+                    maxLength={2000}
+                    rows={4}
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-solveflow-purple focus:border-transparent transition-all text-solveflow-slate bg-white resize-none" 
+                    placeholder="Descreva brevemente o desafio que você enfrenta hoje..." 
+                    value={formData.challenge} 
+                    onChange={e => setFormData({
+                      ...formData,
+                      challenge: e.target.value
+                    })} 
+                  />
+                  <p className="text-xs text-solveflow-slate/50 mt-1 text-right">{formData.challenge.length}/2000</p>
                 </div>
                 <Button type="submit" size="lg" className="w-full bg-solveflow-purple hover:bg-solveflow-purple/90 text-white text-lg py-6" disabled={isSubmitting}>
                   {isSubmitting ? "Enviando..." : "Falar com Especialista"}
