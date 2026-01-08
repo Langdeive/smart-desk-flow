@@ -27,10 +27,12 @@ const Index = () => {
         error
       } = await supabase.from('landing_leads').insert({
         name: formData.name,
+        role: formData.role,
         email: formData.email,
         whatsapp: formData.whatsapp,
         company: formData.company,
-        interest: formData.interest
+        interest: formData.interest,
+        challenge: formData.challenge || null
       });
       if (error) {
         console.error('Error saving lead:', error);
