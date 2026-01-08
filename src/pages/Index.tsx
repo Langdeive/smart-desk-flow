@@ -23,6 +23,7 @@ const Index = () => {
     e.preventDefault();
     setIsSubmitting(true);
     try {
+      // Save to Supabase
       const {
         error
       } = await supabase.from('landing_leads').insert({
@@ -39,6 +40,40 @@ const Index = () => {
         alert('Ocorreu um erro. Por favor, tente novamente.');
         return;
       }
+
+      // Send to CRM webhook
+      const webhookPayload = {
+        lead: {
+          name: formData.name,
+          role: formData.role,
+          email: formData.email,
+          whatsapp: formData.whatsapp,
+          company: formData.company
+        },
+        interest: {
+          solution: formData.interest,
+          challenge: formData.challenge || null
+        },
+        metadata: {
+          source: "landing_page",
+          submitted_at: new Date().toISOString(),
+          page_url: window.location.href
+        }
+      };
+
+      try {
+        await fetch('https://crm.solveflow.cloud/webhooks/workflows/157d0c3c-ffc4-466c-bf96-105e7723d0c2/84e246ed-fe53-4365-a350-bdb98bc7fcfb', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(webhookPayload)
+        });
+      } catch (webhookError) {
+        console.error('Webhook error:', webhookError);
+        // Continue even if webhook fails - lead is already saved in Supabase
+      }
+
       setFormData({
         name: "",
         role: "",
