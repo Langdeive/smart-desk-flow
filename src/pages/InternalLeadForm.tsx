@@ -224,7 +224,7 @@ const InternalLeadForm = () => {
           <Button
             type="submit"
             disabled={isSubmitting}
-            className="w-full mt-6 !text-white"
+            className="w-full mt-6 !bg-[#1e2b55] !text-white hover:!bg-[#162040]"
             size="lg"
           >
             {isSubmitting ? (
