@@ -224,7 +224,7 @@ const InternalLeadForm = () => {
           <Button
             type="submit"
             disabled={isSubmitting}
-            className="w-full mt-6"
+            className="w-full mt-6 !text-white"
             size="lg"
           >
             {isSubmitting ? (
