@@ -55,3 +55,6 @@ enable_confirmations = false
 
 [functions.n8n-webhook]
 verify_jwt = false
+
+[functions.submit-lead]
+verify_jwt = false

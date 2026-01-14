@@ -17,27 +17,37 @@ const Index = () => {
     whatsapp: "",
     company: "",
     interest: "",
-    challenge: ""
+    challenge: "",
+    website: "" // Honeypot field
   });
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
     try {
-      // Save to Supabase
-      const {
-        error
-      } = await supabase.from('landing_leads').insert({
-        name: formData.name,
-        role: formData.role,
-        email: formData.email,
-        whatsapp: formData.whatsapp,
-        company: formData.company,
-        interest: formData.interest,
-        challenge: formData.challenge || null
+      // Submit via secure edge function with rate limiting and validation
+      const response = await supabase.functions.invoke('submit-lead', {
+        body: {
+          name: formData.name,
+          role: formData.role,
+          email: formData.email,
+          whatsapp: formData.whatsapp,
+          company: formData.company,
+          interest: formData.interest,
+          challenge: formData.challenge || null,
+          website: formData.website // Honeypot
+        }
       });
-      if (error) {
-        console.error('Error saving lead:', error);
+
+      if (response.error) {
+        console.error('Error saving lead:', response.error);
         alert('Ocorreu um erro. Por favor, tente novamente.');
+        return;
+      }
+
+      const result = response.data;
+      if (!result?.success) {
+        const errorMessage = result?.details?.join(', ') || result?.error || 'Erro desconhecido';
+        alert(errorMessage);
         return;
       }
 
@@ -81,7 +91,8 @@ const Index = () => {
         whatsapp: "",
         company: "",
         interest: "",
-        challenge: ""
+        challenge: "",
+        website: ""
       });
       setShowSuccessDialog(true);
     } catch (err) {
