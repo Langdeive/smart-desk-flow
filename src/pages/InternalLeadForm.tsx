@@ -100,13 +100,6 @@ const InternalLeadForm = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
-    // Client-side validation
-    if (formData.telefone.replace(/\D/g, '').length < 8) {
-      toast.error("Telefone deve ter pelo menos 8 dígitos");
-      return;
-    }
-    
     setIsSubmitting(true);
 
     try {
@@ -303,14 +296,13 @@ const InternalLeadForm = () => {
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="telefone">Telefone *</Label>
+            <Label htmlFor="telefone">Telefone</Label>
             <Input
               id="telefone"
               type="tel"
               placeholder="Ex: 47999304397"
               value={formData.telefone}
               onChange={(e) => handleChange("telefone", e.target.value)}
-              required
               maxLength={20}
               className="bg-muted/50"
             />
