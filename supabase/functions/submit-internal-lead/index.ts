@@ -119,8 +119,9 @@ Deno.serve(async (req) => {
       errors.push('Nome da pessoa deve ter pelo menos 2 caracteres');
     }
 
+    // Optional phone field with validation only if provided
     const telefone = typeof body.telefone === 'string' ? sanitizeString(body.telefone, 20) : '';
-    if (!isValidPhone(telefone)) {
+    if (telefone && !isValidPhone(telefone)) {
       errors.push('Telefone inválido (mínimo 8 dígitos)');
     }
 
