@@ -100,6 +100,13 @@ const InternalLeadForm = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // Client-side validation
+    if (formData.telefone.replace(/\D/g, '').length < 8) {
+      toast.error("Telefone deve ter pelo menos 8 dígitos");
+      return;
+    }
+    
     setIsSubmitting(true);
 
     try {
@@ -121,6 +128,18 @@ const InternalLeadForm = () => {
 
       if (error) {
         console.error("Edge function error:", error);
+        // Try to parse error message from response
+        const errorBody = error.message || error.context?.body;
+        if (typeof errorBody === 'string') {
+          try {
+            const parsed = JSON.parse(errorBody);
+            const errorMessage = parsed?.details?.join(', ') || parsed?.error || 'Erro ao enviar';
+            toast.error(errorMessage);
+            return;
+          } catch {
+            // Not JSON, use as-is
+          }
+        }
         toast.error("Erro ao enviar. Tente novamente.");
         return;
       }
