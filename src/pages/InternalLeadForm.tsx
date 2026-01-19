@@ -16,6 +16,7 @@ interface FormData {
   telefone: string;
   email: string;
   cidade: string;
+  instagram: string;
   comentario: string;
   decisor: string;
 }
@@ -44,6 +45,7 @@ const InternalLeadForm = () => {
     telefone: "",
     email: "",
     cidade: "",
+    instagram: "",
     comentario: "",
     decisor: "",
   });
@@ -113,6 +115,7 @@ const InternalLeadForm = () => {
           telefone: formData.telefone,
           email: formData.email,
           cidade: formData.cidade,
+          instagram: formData.instagram,
           comentario: formData.comentario,
           decisor: formData.decisor,
           website: honeypot, // Honeypot field
@@ -155,6 +158,7 @@ const InternalLeadForm = () => {
         telefone: "",
         email: "",
         cidade: "",
+        instagram: "",
         comentario: "",
         decisor: "",
       });
@@ -329,6 +333,19 @@ const InternalLeadForm = () => {
               value={formData.cidade}
               onChange={(e) => handleChange("cidade", e.target.value)}
               maxLength={100}
+              className="bg-muted/50"
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="instagram">Instagram</Label>
+            <Input
+              id="instagram"
+              type="url"
+              placeholder="Ex: https://instagram.com/empresa"
+              value={formData.instagram}
+              onChange={(e) => handleChange("instagram", e.target.value)}
+              maxLength={255}
               className="bg-muted/50"
             />
           </div>
