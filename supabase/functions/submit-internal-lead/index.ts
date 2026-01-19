@@ -134,6 +134,7 @@ Deno.serve(async (req) => {
     }
 
     const cidade = typeof body.cidade === 'string' ? sanitizeString(body.cidade, 100) : '';
+    const instagram = typeof body.instagram === 'string' ? sanitizeString(body.instagram, 255) : '';
     const comentario = typeof body.comentario === 'string' ? sanitizeString(body.comentario, 1000) : '';
     
     const validDecisor = ['sim', 'nao', 'talvez'];
@@ -172,6 +173,7 @@ Deno.serve(async (req) => {
         phone: telefone,
         email: email || null,
         city: cidade || null,
+        instagram: instagram || null,
         is_decision_maker: decisor || null
       },
       notes: comentario || null,
