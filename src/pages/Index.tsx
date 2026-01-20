@@ -156,11 +156,11 @@ const Index = () => {
         <div className="container mx-auto px-6 relative z-10">
           <div className="max-w-4xl mx-auto text-center animate-fade-in-up">
             <h1 className="text-4xl md:text-5xl lg:text-display font-extrabold leading-tight mb-6 drop-shadow-[0_2px_10px_rgba(0,0,0,0.3)]">
-              Escale o seu faturamento em 10x{" "}
-              <span className="text-secondary bg-white">sem aumentar sua operação, utilizando IA</span>
+              Transforme sua operação atual em um{" "}
+              <span className="text-secondary bg-white">Negócio Autogerenciável com IA</span>
             </h1>
             <p className="text-lg mb-8 leading-relaxed text-secondary-foreground">
-              O seu teto de crescimento hoje é a sua capacidade manual. Cresça a sua margem, sem explodir os custos fixos.
+              Projetos de automação com IA sob medida para operações que precisam de escala. Eliminamos as tarefas que travam o seu dia e garantimos uma estrutura que trabalha por você, e não o contrário.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button size="lg" className="bg-solveflow-cyan hover:bg-solveflow-cyan/90 !text-white text-lg px-8 py-6 shadow-glow-cyan font-semibold" asChild>
