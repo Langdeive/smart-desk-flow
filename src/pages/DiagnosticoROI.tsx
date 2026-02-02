@@ -112,14 +112,14 @@ const DiagnosticoROI = () => {
         {/* Step 1: Landing */}
         {step === 1 && (
           <div className="max-w-3xl mx-auto text-center animate-fade-in-up">
-            <div className="inline-flex items-center gap-2 bg-turquoise-vibrant/10 border border-turquoise-vibrant/30 rounded-full px-4 py-2 mb-8">
-              <Sparkles className="w-4 h-4 text-turquoise-vibrant" />
-              <span className="text-sm text-turquoise-vibrant font-medium">Calculadora de ROI para Mentores</span>
+            <div className="inline-flex items-center gap-2 bg-white/10 border border-white/20 rounded-full px-4 py-2 mb-8">
+              <Sparkles className="w-4 h-4 text-white" />
+              <span className="text-sm text-white font-medium">Calculadora de ROI para Mentores</span>
             </div>
             
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-white leading-tight mb-6">
               Quanto custa o seu{" "}
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-turquoise-vibrant to-purple-intense">
+              <span className="block mt-2 text-turquoise-vibrant">
                 tempo operacional?
               </span>
             </h1>
