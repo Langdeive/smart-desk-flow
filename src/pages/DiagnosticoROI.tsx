@@ -292,7 +292,7 @@ const DiagnosticoROI = () => {
 
             {/* Cards de Métricas */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
-              <Card className="bg-gradient-to-br from-turquoise-vibrant/20 to-turquoise-vibrant/5 border-turquoise-vibrant/30 backdrop-blur-sm">
+              <Card className="bg-slate-800 border-turquoise-vibrant/30">
                 <CardContent className="pt-6">
                   <div className="flex items-center gap-3 mb-4">
                     <div className="p-3 bg-turquoise-vibrant/20 rounded-xl">
@@ -307,7 +307,7 @@ const DiagnosticoROI = () => {
                 </CardContent>
               </Card>
 
-              <Card className="bg-gradient-to-br from-red-500/20 to-red-500/5 border-red-500/30 backdrop-blur-sm">
+              <Card className="bg-slate-800 border-red-500/30">
                 <CardContent className="pt-6">
                   <div className="flex items-center gap-3 mb-4">
                     <div className="p-3 bg-red-500/20 rounded-xl">
@@ -323,7 +323,7 @@ const DiagnosticoROI = () => {
               </Card>
 
               {aumentoCapacidade > 0 && (
-                <Card className="bg-gradient-to-br from-purple-intense/20 to-purple-intense/5 border-purple-intense/30 backdrop-blur-sm">
+                <Card className="bg-slate-800 border-purple-intense/30">
                   <CardContent className="pt-6">
                     <div className="flex items-center gap-3 mb-4">
                       <div className="p-3 bg-purple-intense/20 rounded-xl">
