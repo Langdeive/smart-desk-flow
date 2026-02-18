@@ -17,7 +17,7 @@ const PoliticaPrivacidade = () => {
           <section>
             <h2 className="text-xl font-semibold text-foreground">1. Introdução</h2>
             <p>
-              A <strong>SolveFlow</strong> ("nós", "nosso" ou "empresa"), inscrita no CNPJ sob o nº [INSERIR CNPJ], com sede em Jaraguá do Sul/SC, Brasil, é responsável pelo tratamento dos seus dados pessoais. Esta Política de Privacidade descreve como coletamos, usamos, armazenamos, compartilhamos e protegemos suas informações pessoais quando você utiliza nosso site, aplicativos e serviços ("Serviços").
+              A <strong>SolveFlow</strong> ("nós", "nosso" ou "empresa"), inscrita no CNPJ sob o nº 62.108.514/0001-12, com sede em Jaraguá do Sul/SC, Brasil, é responsável pelo tratamento dos seus dados pessoais. Esta Política de Privacidade descreve como coletamos, usamos, armazenamos, compartilhamos e protegemos suas informações pessoais quando você utiliza nosso site, aplicativos e serviços ("Serviços").
             </p>
             <p>
               Ao acessar ou utilizar nossos Serviços, você concorda com as práticas descritas nesta Política. Caso não concorde, por favor, não utilize nossos Serviços.
