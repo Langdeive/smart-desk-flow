@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import { MessageSquare, Target, Rocket, Check, ArrowRight, Phone, Mail, Building2, ChevronDown, Users, Zap, Brain, Link2, BarChart3, Settings, Clock, Shield, ShoppingBag, Briefcase, Laptop, Menu, X, CheckCircle, Calendar, Star, Clipboard, LifeBuoy, Radar } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
@@ -753,8 +754,12 @@ const Index = () => {
               </ul>
             </div>
           </div>
-          <div className="border-t border-white/10 pt-8 text-center text-sm">
+          <div className="border-t border-white/10 pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-sm">
             <p>© {new Date().getFullYear()} Solveflow. Todos os direitos reservados.</p>
+            <div className="flex gap-6">
+              <Link to="/politica-de-privacidade" className="hover:text-white/80 transition-colors">Política de Privacidade</Link>
+              <Link to="/termos-de-uso" className="hover:text-white/80 transition-colors">Termos de Uso</Link>
+            </div>
           </div>
         </div>
       </footer>
