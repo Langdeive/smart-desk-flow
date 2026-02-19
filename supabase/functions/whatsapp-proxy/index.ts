@@ -14,22 +14,33 @@ serve(async (req) => {
   try {
     const body = await req.json();
 
-    const response = await fetch("https://n8n.solveflow.cloud/webhook/whatsapp-send", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(body),
-    });
+    const WEBHOOKS = [
+      "https://n8n.solveflow.cloud/webhook/whatsapp-send",
+      "https://n8n.solveflow.cloud/webhook-test/whatsapp-send",
+    ];
 
-    let data: unknown;
-    const contentType = response.headers.get("content-type") ?? "";
-    if (contentType.includes("application/json")) {
-      data = await response.json();
-    } else {
-      data = await response.text();
-    }
+    const results = await Promise.allSettled(
+      WEBHOOKS.map((url) =>
+        fetch(url, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(body),
+        }).then(async (res) => {
+          const ct = res.headers.get("content-type") ?? "";
+          const data = ct.includes("application/json") ? await res.json() : await res.text();
+          return { url, status: res.status, ok: res.ok, data };
+        })
+      )
+    );
 
-    return new Response(JSON.stringify(data), {
-      status: response.status,
+    const responses = results.map((r) =>
+      r.status === "fulfilled" ? r.value : { url: "unknown", ok: false, error: r.reason?.message }
+    );
+
+    const allOk = responses.every((r) => r.ok);
+
+    return new Response(JSON.stringify({ results: responses }), {
+      status: allOk ? 200 : 207,
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
   } catch (err) {
