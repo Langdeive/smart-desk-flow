@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -18,25 +19,19 @@ export default function WhatsAppSend() {
     setResponse(null);
 
     try {
-      const res = await fetch("https://n8n.solveflow.cloud/webhook/whatsapp-send", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
+      const { data, error } = await supabase.functions.invoke("whatsapp-proxy", {
+        body: {
           phone_number_id: phoneNumberId,
           template_name: templateName,
           destinatario,
-        }),
+        },
       });
 
-      let data: unknown;
-      const contentType = res.headers.get("content-type");
-      if (contentType && contentType.includes("application/json")) {
-        data = await res.json();
+      if (error) {
+        setResponse({ data: { error: error.message }, ok: false });
       } else {
-        data = await res.text();
+        setResponse({ data, ok: true });
       }
-
-      setResponse({ data, ok: res.ok });
     } catch (err) {
       setResponse({ data: { error: String(err) }, ok: false });
     } finally {
