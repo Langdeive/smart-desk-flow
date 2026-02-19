@@ -9,6 +9,7 @@ import DiagnosticoROI from "@/pages/DiagnosticoROI";
 import PoliticaPrivacidade from "@/pages/PoliticaPrivacidade";
 import TermosDeUso from "@/pages/TermosDeUso";
 import NotFound from "@/pages/NotFound";
+import WhatsAppSend from "@/pages/WhatsAppSend";
 
 const queryClient = new QueryClient();
 
@@ -24,6 +25,7 @@ const App = () => (
           <Route path="/diagnostico" element={<DiagnosticoROI />} />
           <Route path="/politica-de-privacidade" element={<PoliticaPrivacidade />} />
           <Route path="/termos-de-uso" element={<TermosDeUso />} />
+          <Route path="/whatsapp-send" element={<WhatsAppSend />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
