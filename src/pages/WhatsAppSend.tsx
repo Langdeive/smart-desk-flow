@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -13,25 +12,38 @@ export default function WhatsAppSend() {
   const [loading, setLoading] = useState(false);
   const [response, setResponse] = useState<{ data: unknown; ok: boolean } | null>(null);
 
+  const EDGE_FN_URL = `https://jqtuzbldregwglevlhrw.supabase.co/functions/v1/whatsapp-proxy`;
+  const ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpxdHV6YmxkcmVnd2dsZXZsaHJ3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDE5MTI5NjIsImV4cCI6MjA1NzQ4ODk2Mn0.bhd499qbEtWuRUSqVW5nXoguZaB3EuFop5ucVhXkmhQ";
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setResponse(null);
 
     try {
-      const { data, error } = await supabase.functions.invoke("whatsapp-proxy", {
-        body: {
+      const res = await fetch(EDGE_FN_URL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "apikey": ANON_KEY,
+          "Authorization": `Bearer ${ANON_KEY}`,
+        },
+        body: JSON.stringify({
           phone_number_id: phoneNumberId,
           template_name: templateName,
           destinatario,
-        },
+        }),
       });
 
-      if (error) {
-        setResponse({ data: { error: error.message }, ok: false });
+      let data: unknown;
+      const contentType = res.headers.get("content-type") ?? "";
+      if (contentType.includes("application/json")) {
+        data = await res.json();
       } else {
-        setResponse({ data, ok: true });
+        data = await res.text();
       }
+
+      setResponse({ data, ok: res.ok });
     } catch (err) {
       setResponse({ data: { error: String(err) }, ok: false });
     } finally {
